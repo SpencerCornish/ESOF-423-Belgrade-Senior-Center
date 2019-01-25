@@ -1,41 +1,25 @@
 {
   "name": "belgrade-senior-center",
-  "version": "0.0.1",
-  "description": "## Better readme coming soon",
-  "main": "index.js",
-  "scripts": {
-    "test": "jest",
-    "dev": "./node_modules/.bin/webpack-dev-server --config ./webpack/webpack.dev.config.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/SpencerCornish/belgrade-senior-center.git"
-  },
-  "author": "",
-  "license": "GPL-3.0-or-later",
-  "bugs": {
-    "url": "https://github.com/SpencerCornish/belgrade-senior-center/issues"
-  },
-  "homepage": "https://github.com/SpencerCornish/belgrade-senior-center#readme",
+  "version": "0.1.0",
+  "private": true,
   "dependencies": {
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
-    "webpack": "^4.28.4"
+    "react-scripts": "2.1.3"
   },
-  "devDependencies": {
-    "@babel/core": "^7.2.2",
-    "@babel/preset-env": "^7.2.3",
-    "@babel/preset-react": "^7.0.0",
-    "babel-jest": "^23.6.0",
-    "babel-loader": "^8.0.5",
-    "bulma": "^0.7.2",
-    "css-loader": "^2.1.0",
-    "jest": "^23.6.0",
-    "react-test-renderer": "^16.7.0",
-    "sass": "^1.16.1",
-    "sass-loader": "^7.1.0",
-    "style-loader": "^0.23.1",
-    "webpack-cli": "^3.2.1",
-    "webpack-dev-server": "^3.1.14"
-  }
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
