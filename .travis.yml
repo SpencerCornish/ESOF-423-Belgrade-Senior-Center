@@ -1,17 +1,30 @@
-language: node_js
-cache: npm
-node_js:
-  - "11"
-script:
-  - npm run build
-  - npm run test
-  - npm run coverage
+language: dart
+dart:
+  - "stable"
+cache:
+  directories:
+    - $HOME/.pub_cache/
 
-before_deploy:
-  - "cd functions && npm install && cd .."
+jobs:
+  include:
+    - stage: "Testing"
+      name: "Unit Tests"
+      before_script:
+        - "pub get"
+      script:
+        - "pub run test --platform chrome"
+    - stage: "Coverage"
+      name: "Report Code Coverage"
+      before_script:
+        - "pub get"
+      script:
+        - "pub run test --platform chrome"
+# Fix deploy once Dart is done
+# before_deploy:
+#   - "cd functions && npm install && cd .."
 
-deploy:
-  provider: firebase
-  skip_cleanup: true
-  on:
-    branch: "master"
+# deploy:
+#   provider: firebase
+#   skip_cleanup: true
+#   on:
+#     branch: "master"
