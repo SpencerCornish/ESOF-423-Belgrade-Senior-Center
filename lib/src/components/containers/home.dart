@@ -23,6 +23,36 @@ class Home extends PComponent<HomeProps> {
 
   @override
   VNode render() => new VDivElement()
-    ..text = "hello world!"
-    ..className = 'tag';
+    ..className = 'container'
+    ..children = [
+      new VDivElement()
+        ..className = 'columns is-centered'
+        ..children = [
+          new VDivElement()
+            ..className = 'column has-text-centered'
+            ..children = [
+              new Vh1()
+                ..className = 'title'
+                ..text = "Belgrade Senior Center",
+            ],
+        ],
+      new VDivElement()
+        ..className = 'columns is-centered'
+        ..children = [
+          new VDivElement()
+            ..className = 'column is-narrow has-text-centered'
+            ..children = [
+              new VButtonElement()
+                ..className = 'button is-info'
+                ..text = "Development Documentation",
+            ],
+          new VDivElement()
+            ..className = 'column is-narrow has-text-centered'
+            ..children = [
+              new VButtonElement()
+                ..className = 'button is-info'
+                ..text = "User Documentation",
+            ],
+        ],
+    ];
 }

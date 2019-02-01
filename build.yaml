@@ -7,9 +7,8 @@ targets:
         # These are globs for the entrypoints you want to compile.
         generate_for:
           - web/**.dart
-        options:
+        release_options:
           compiler: dart2js
-          # List any dart2js specific args here, or omit it.
           dart2js_args:
             - --minify
             - --show-package-warnings
