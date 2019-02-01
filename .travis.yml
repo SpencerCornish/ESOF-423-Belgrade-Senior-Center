@@ -34,7 +34,7 @@ jobs:
 
 # before deploying, get dependencies for firebase functions
 before_deploy:
-  - cd functions && npm install && cd ..
+  - npm --prefix functions install
   - pub get
   - webdev build --release
 deploy:
@@ -42,10 +42,6 @@ deploy:
     skip_cleanup: true
     on:
       branch: master
-  # - provider: firebase
-  # skip_cleanup: true
-  # on:
-  #   branch: development
 
 # Send slack notifications
 notifications:
