@@ -1,11 +1,13 @@
 language: dart
 dart:
-  - "stable"
+  - stable
 
 # Cache the packages cache, so we download a lot less stuff over and over again
 cache:
   directories:
     - "$HOME/.pub_cache/"
+    - "$HOME/.npm"
+    - "$HOME/belgrade-senior-center/functions/node_modules"
 
 jobs:
   include:
@@ -51,4 +53,4 @@ notifications:
       secure: jAit9TEzkbnjjB1YDLJr0DnLFwU0J9VbjrrSSvWp3WSxPJHkelSZf3YUv0UnZaPvJ5k4eboOfkNf4xW0KyG+57xQI+AEXQB+JmkHCuAm16y2FWLx1/VH5U2dZoAhRQfvM2PeSGFSeP34HdV0Lo40lPlLCS/GbdiEZd6oIyuY7Xme2wJemQffLURR+zH+qNy1JtgEgIpMm0fh52QsLEqs/KoJ0+DC2wV0nT2BvumvHCJluZosnq0f2Cp34H+XR37bGnEnFNKj5gTPeQ9dufiLnjMmZYkLZjBpW88F9jlWdYZ5G80bsvbxuwkHJbxJGb0o4RGRVC/egTvaztP/1d4Uo/IRt/Dfxfql5Sz5lJycOpIr3XulmBspn4r1S7suxeaiGpYqYIacox98nYhEZ38rnPgVe5fIZMhN7G7TZzpYcHBQ/xICC78xKpYJdiLYkP86FcEjDilZOIBKlhX7/QlAi8hN7vs/AdHDV3XjRRMcGCFgG8WY5117vh3eF0CUGP35koZ/8kxEZ96Os8EhVtTc3RNojsH/3/s/dRRThcaX47Iraaf5XgWCyPDUBmICHhh9P8m/ykqgGSGorfb68N7gQhrKo2d2REsWJiqgRCfmoyR56NLRvEruIAn+OP/iqFIfFDx0PuoUygBINmui1C2a6+bc9hJzOKZJRf9PVixdma0=
     on_success: change
     on_failure: always
-    # on_pull_requests: false
+    on_pull_requests: false
