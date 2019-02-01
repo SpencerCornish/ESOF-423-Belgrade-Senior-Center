@@ -12,12 +12,12 @@ jobs:
     - stage: Static Analysis
       name: Formatting and static analysis
       before_script:
-      - pub get
-      - npm --prefix functions install
+        - pub get
+        - npm --prefix functions install
       script:
-      - pub run dart_dev analyze
-      - pub run dart_dev format --check
-      - npm --prefix functions run lint
+        - pub run dart_dev analyze
+        - pub run dart_dev format --check
+        - npm --prefix functions run lint
 
     - stage: Unit Testing
       name: Run unit tests for dart and js functions
@@ -36,9 +36,9 @@ before_deploy:
   - webdev build --release
 deploy:
   - provider: firebase
-  skip_cleanup: true
-  on:
-    branch: master
+    skip_cleanup: true
+    on:
+      branch: master
   # - provider: firebase
   # skip_cleanup: true
   # on:
