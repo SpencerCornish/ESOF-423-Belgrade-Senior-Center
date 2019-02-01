@@ -21,10 +21,13 @@ dependencies:
 
 dev_dependencies:
   test: ^1.5.3
-  coverage:
+  coverage: ^0.12.4
   build_runner: ^1.2.3
   built_value_generator: ^6.3.0
   build_web_compilers: ^1.0.0
+  build_test: ^0.10.6
+  dart_dev: ^2.0.3
+  dart_style: ^1.2.0
   sass: ^1.16.0
 
 web:
