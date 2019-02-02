@@ -37,6 +37,8 @@ before_deploy:
   - npm --prefix functions install
   - pub get
   - pub run build_runner build --delete-conflicting-outputs
+  - pub global activate webdev
+  - webdev build --release
 deploy:
   - provider: firebase
     skip_cleanup: true
