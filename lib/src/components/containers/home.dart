@@ -42,15 +42,17 @@ class Home extends PComponent<HomeProps> {
           new VDivElement()
             ..className = 'column is-narrow has-text-centered'
             ..children = [
-              new VButtonElement()
+              new VAnchorElement()
                 ..className = 'button is-info'
+                ..href = "https://github.com/SpencerCornish/belgrade-senior-center/blob/master/README.md"
                 ..text = "Development Documentation",
             ],
           new VDivElement()
             ..className = 'column is-narrow has-text-centered'
             ..children = [
-              new VButtonElement()
+              new VAnchorElement()
                 ..className = 'button is-info'
+                ..href = "https://github.com/SpencerCornish/belgrade-senior-center/blob/master/USERREADME.md"
                 ..text = "User Documentation",
             ],
         ],
