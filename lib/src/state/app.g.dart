@@ -13,10 +13,8 @@ class _$AppActions extends AppActions {
   factory _$AppActions() => new _$AppActions._();
   _$AppActions._() : super._();
 
-  final ActionDispatcher<int> increment =
-      new ActionDispatcher<int>('AppActions-increment');
-  final ActionDispatcher<int> decrement =
-      new ActionDispatcher<int>('AppActions-decrement');
+  final ActionDispatcher<int> increment = new ActionDispatcher<int>('AppActions-increment');
+  final ActionDispatcher<int> decrement = new ActionDispatcher<int>('AppActions-decrement');
 
   @override
   void setDispatcher(Dispatcher dispatcher) {
@@ -26,10 +24,8 @@ class _$AppActions extends AppActions {
 }
 
 class AppActionsNames {
-  static final ActionName<int> increment =
-      new ActionName<int>('AppActions-increment');
-  static final ActionName<int> decrement =
-      new ActionName<int>('AppActions-decrement');
+  static final ActionName<int> increment = new ActionName<int>('AppActions-increment');
+  static final ActionName<int> decrement = new ActionName<int>('AppActions-decrement');
 }
 
 // **************************************************************************
@@ -40,8 +36,7 @@ class _$App extends App {
   @override
   final int count;
 
-  factory _$App([void updates(AppBuilder b)]) =>
-      (new AppBuilder()..update(updates)).build();
+  factory _$App([void updates(AppBuilder b)]) => (new AppBuilder()..update(updates)).build();
 
   _$App._({this.count}) : super._() {
     if (count == null) {
@@ -50,8 +45,7 @@ class _$App extends App {
   }
 
   @override
-  App rebuild(void updates(AppBuilder b)) =>
-      (toBuilder()..update(updates)).build();
+  App rebuild(void updates(AppBuilder b)) => (toBuilder()..update(updates)).build();
 
   @override
   AppBuilder toBuilder() => new AppBuilder()..replace(this);
