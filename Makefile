@@ -16,8 +16,8 @@ format: ## Format the dart files
 	@dartfmt -w -l 120 .
 
 dart-serve:
-	@webdev serve
+	@webdev serve --no-release
 
 
-build-js:  ## build to JS
-	@webdev build
+build-js:  ## build to minified, release js
+	@webdev build --release
