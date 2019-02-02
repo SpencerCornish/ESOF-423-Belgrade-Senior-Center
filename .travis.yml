@@ -36,7 +36,7 @@ jobs:
 before_deploy:
   - npm --prefix functions install
   - pub get
-  - pub run build_runner build --delete-conflicting-outputs
+  - find . -name "*.g.dart" -type f -delete
   - pub global activate webdev
   - webdev build --release
 deploy:
