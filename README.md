@@ -69,7 +69,7 @@ install                        Runs pub get to get dependencies
 serve                          Serves the frontend app with ddevc
 ```
 
-to run locally, type `make serve`. This will serve Just-in-time compiled dart code in javascipt, and automatically recompile for codechanges. to build the real, minified production javascript, run `make firebase-serve`. This will also run the Firebase Cloud Functions locally. This must be reran to regenerate.
+To run locally, type `make serve`. This will serve Just-in-time compiled dart code in javascipt, and automatically recompile for codechanges. to build the real, minified production javascript, run `make firebase-serve`. This will also run the Firebase Cloud Functions locally. This must be reran to regenerate.
 
 ## Directions for Testing Source Code
 
