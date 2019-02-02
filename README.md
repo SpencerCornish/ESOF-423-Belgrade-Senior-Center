@@ -79,7 +79,7 @@ To run locally, type `make serve`. This will serve Just-in-time compiled dart co
 
 ## Setting up Automated Weekly Build and Test
 
-The automated build system is run on **Travis CI**. All commits get tested, and the suite runs against master once a day. this is configured in the `.travis.yml` file in the root of the repository. 
+The automated build system is run on **Travis CI**. All commits get tested, and the suite runs against master once a day. This is configured in the `.travis.yml` file in the root of the repository. 
 
 ## Releasing New Versions
 
