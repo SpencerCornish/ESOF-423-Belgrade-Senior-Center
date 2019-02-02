@@ -1,8 +1,8 @@
-# Read me for users
+# User Documentation
 
 ## Description  
 
-This webapp was built to allow the Belgrade Senior Center to easily manage clients information and schedules.  Clients are able to schedule 
+This webapp was built to allow the Belgrade Senior Center to easily manage client's information and schedules.  Client's are able to schedule 
 meals and classes via the app, volunteers are able to /TODO/, and admins are able to easily compile reports and add new clients to the database.
 The goal of this webapp is to make an easy to use tool for Belgrade Senior Center so they can continue providing their services to the community.  
 
@@ -12,7 +12,7 @@ Go to the webapp at [link](https://bsc-development.firebaseapp.com/) and use awa
 
 ## How to run
 
-To run the webapp simply open in your web browser of choice, and follow the directions on the site.
+To run the webapp, simply open in your web browser of choice, and follow the directions on the site.
 
 ## How to use
 
