@@ -10,8 +10,7 @@ class _$User extends User {
   @override
   final String uid;
 
-  factory _$User([void updates(UserBuilder b)]) =>
-      (new UserBuilder()..update(updates)).build();
+  factory _$User([void updates(UserBuilder b)]) => (new UserBuilder()..update(updates)).build();
 
   _$User._({this.uid}) : super._() {
     if (uid == null) {
@@ -20,8 +19,7 @@ class _$User extends User {
   }
 
   @override
-  User rebuild(void updates(UserBuilder b)) =>
-      (toBuilder()..update(updates)).build();
+  User rebuild(void updates(UserBuilder b)) => (toBuilder()..update(updates)).build();
 
   @override
   UserBuilder toBuilder() => new UserBuilder()..replace(this);
