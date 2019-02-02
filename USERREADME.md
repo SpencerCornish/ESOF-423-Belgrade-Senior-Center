@@ -12,7 +12,7 @@ Go to the webapp at [link](https://bsc-development.firebaseapp.com/) and use awa
 
 ## How to run
 
-To run the webapp simply open in your web browser of choice, and follow the directions on the site.
+To run the webapp, simply open in your web browser of choice, and follow the directions on the site.
 
 ## How to use
 
