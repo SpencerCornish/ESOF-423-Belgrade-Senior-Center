@@ -33,4 +33,52 @@ class FirebaseClient {
   Future _onAuthChanged(fb.User user) async {
     print("Auth Changed :: $user");
   }
+
+  // getMembers (with role or all?)
+  getMembers(){
+    return _refs.userRef().get();
+  }
+  // getMeals (by date/date range?)
+  getMeals(){
+    return _refs.userRef().get();
+  }
+  // getClasses (by day, range?)
+  getClasses(){
+    return _refs.userRef().get();
+  }
+
+  //create new user/class/meal
+  createUser(name, email, phone, password, role, classes){
+      _refs.userRef().add({
+        "name": name,
+        "email": email,
+        "phone_number": phone,
+        "password": password,
+        "role": role
+      });
+  }
+
+  createClass(name, start, end, instructor, location, capacity){
+      _refs.classRef().add({
+        "name": name,
+        "start_time": start,
+        "end_time": end,
+        "instructor": instructor,
+        "location": location,
+        "capacity": capacity
+      });
+  }
+
+  createMeal(start, end, menu){
+      _refs.mealRef().add({
+        "start_time": start,
+        "end_time": end,
+        "menu": menu
+      });
+  }  
+  //update existing user/class/meal (especially date)
+  
+
+  //delete existing
+  
 }
