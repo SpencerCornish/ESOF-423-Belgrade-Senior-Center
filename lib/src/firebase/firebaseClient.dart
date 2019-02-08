@@ -77,8 +77,39 @@ class FirebaseClient {
       });
   }  
   //update existing user/class/meal (especially date)
-  
+  updateUser(String documentID, String key, value){
+    Map update = new Map<String, Object>();
+    update.putIfAbsent(key, value);
+    
+    _refs.userRef().document(documentID)
+      .set(update, merge : true);
+  }
 
+  updateClass(String documentID, String key, value){
+    Map update = new Map<String, Object>();
+    update.putIfAbsent(key, value);
+    
+    _refs.classRef().document(documentID)
+      .set(update, merge : true);
+  }
+
+  updateMeal(String documentID, String key, value){
+    Map update = new Map<String, Object>();
+    update.putIfAbsent(key, value);
+    
+    _refs.mealRef().document(documentID)
+      .set(update, merge : true);
+  }
   //delete existing
-  
+  deleteUser(String documentID){
+    _refs.userRef().document(documentID).delete();
+  }
+
+  deleteClass(String documentID){
+    _refs.classRef().document(documentID).delete();
+  }
+
+  deleteMeal(String documentID){
+    _refs.mealRef().document(documentID).delete();
+  }
 }
