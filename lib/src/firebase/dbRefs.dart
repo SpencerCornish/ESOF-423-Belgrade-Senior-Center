@@ -5,15 +5,27 @@ class DbRefs {
 
   DbRefs(this._fs);
 
-  userRef(){
-    _fs.collection('users');
+  /// [allUsers] returns all documents from the users collection
+  allUsers(){
+    return _fs.collection('users');
   }
 
-  mealRef(){
-    _fs.collection('meals');
+  /// [user] takes a unique identifier for a user, and returns a DocumentReference to a specific user
+  user(String uid) => _fs.collection('users').doc(uid);
+
+  ///[allMeals] returns all documents for the meal collection meals
+  allMeal(){
+    return _fs.collection('meals');
   }
 
-  classRef(){
-    _fs.collection('classes');
+  /// [meal] takes a unique identifier for a meal, and returns a DocumentReference to a specific meal
+  meal(String uid) => _fs.collection('meals').doc(uid);
+
+  ///[allClasses] returns all documents from the classes collection
+  allClasses(){
+    return _fs.collection('classes');
   }
+
+  /// [singleClass] takes a unique identifier for a class, and returns a DocumentReference to a specific class
+  singleClass(String uid) => _fs.collection('classes').doc(uid);
 }
