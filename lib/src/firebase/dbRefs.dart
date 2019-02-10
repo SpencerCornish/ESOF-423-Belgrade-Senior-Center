@@ -14,7 +14,7 @@ class DbRefs {
   user(String uid) => _fs.collection('users').doc(uid);
 
   ///[allMeals] returns all documents for the meal collection meals
-  allMeal(){
+  allMeals(){
     return _fs.collection('meals');
   }
 
