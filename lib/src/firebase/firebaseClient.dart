@@ -35,23 +35,26 @@ class FirebaseClient {
   }
 
   // getMembers (TODO: with role or all?)
-  
+
   /// [getAllMembers] get all member documents
   getAllMembers() => _refs.allUsers().get();
+
   /// [getMember] get just one member document by unique identifier
   getMember(String uid) => _refs.user(uid).get();
 
   // getMeals (TODO: by date/date range?)
-  
+
   /// [getAllMeals] get all meal documents
   getAllMeals() => _refs.allMeals().get();
+
   /// [getMeal] get just one meal document by unique identifier
   getMeal(String uid) => _refs.meal(uid).get();
 
   // getClasses (TODO: by day, range?)
-  
+
   /// [getAllClasses] this will get all class documents
   getAllClasses() => _refs.allClasses().get();
+
   /// [getClass] get a single class document by unique identifier
   getClass(String uid) => _refs.singleClass(uid).get();
 
