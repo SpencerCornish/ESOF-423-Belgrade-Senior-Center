@@ -36,33 +36,21 @@ class FirebaseClient {
 
   // getMembers (TODO: with role or all?)
   //this will get all
-  getAllMembers(){
-    return _refs.allUsers().get();
-  }
+  getAllMembers() => _refs.allUsers().get();
   //...and just one
-  getMember(String uid){
-    return _refs.user(uid).get();
-  }
+  getMember(String uid) => _refs.user(uid).get();
 
   // getMeals (TODO: by date/date range?)
   //this will get all
-  getAllMeals(){
-    return _refs.allMeals().get();
-  }
+  getAllMeals() => _refs.allMeals().get();
   //...and just one
-  getMeal(String uid){
-    return _refs.meal(uid).get();
-  }
+  getMeal(String uid) => _refs.meal(uid).get();
 
   // getClasses (TODO: by day, range?)
   //this will get all
-  getAllClasses(){
-    return _refs.allClasses().get();
-  }
+  getAllClasses() => _refs.allClasses().get();
   //...and just one
-  getclass(String uid){
-    return _refs.singleClass(uid).get();
-  }
+  getclass(String uid) => _refs.singleClass(uid).get();
 
   //create new user/class/meal
   createUser(String name, String email, String phone, String password, String role, List classes){
