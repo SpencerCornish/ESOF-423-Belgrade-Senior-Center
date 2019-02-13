@@ -11,13 +11,13 @@ class DbRefs {
   /// [user] takes a unique identifier for a user, and returns a DocumentReference to a specific user
   user(String uid) => _fs.collection('users').doc(uid);
 
-  ///[allMeals] returns all documents for the meal collection meals
+  /// [allMeals] returns all documents for the meal collection meals
   allMeals() => _fs.collection('meals');
 
   /// [meal] takes a unique identifier for a meal, and returns a DocumentReference to a specific meal
   meal(String uid) => _fs.collection('meals').doc(uid);
 
-  ///[allClasses] returns all documents from the classes collection
+  /// [allClasses] returns all documents from the classes collection
   allClasses() => _fs.collection('classes');
 
   /// [singleClass] takes a unique identifier for a class, and returns a DocumentReference to a specific class
