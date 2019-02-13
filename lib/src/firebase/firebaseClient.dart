@@ -53,55 +53,48 @@ class FirebaseClient {
   getclass(String uid) => _refs.singleClass(uid).get();
 
   //create new user/class/meal
-  createUser(String name, String email, String phone, String password, String role, List classes){
-      _refs.allUsers().add({
-        "name": name,
-        "email": email,
-        "phone_number": phone,
-        "password": password,
-        "role": role
-      });
+  createUser(String name, String email, String phone, String password, String role, List classes) {
+    _refs.allUsers().add({"name": name, "email": email, "phone_number": phone, "password": password, "role": role});
   }
-  createClass(String name, String start, String end, String instructor, String location, int capacity){
-      _refs.allClasses().add({
-        "name": name,
-        "start_time": start,
-        "end_time": end,
-        "instructor": instructor,
-        "location": location,
-        "capacity": capacity
-      });
+
+  createClass(String name, String start, String end, String instructor, String location, int capacity) {
+    _refs.allClasses().add({
+      "name": name,
+      "start_time": start,
+      "end_time": end,
+      "instructor": instructor,
+      "location": location,
+      "capacity": capacity
+    });
   }
-  createMeal(String start, String end, List menu){
-      _refs.allMeals().add({
-        "start_time": start,
-        "end_time": end,
-        "menu": menu
-      });
-  }  
+
+  createMeal(String start, String end, List menu) {
+    _refs.allMeals().add({"start_time": start, "end_time": end, "menu": menu});
+  }
 
   //update existing user/class/meal
-  updateUser(String documentID, String key, Object value){
-    _refs.user(documentID)
-      .set(key, value, merge : true);
+  updateUser(String documentID, String key, Object value) {
+    _refs.user(documentID).set(key, value, merge: true);
   }
-  updateClass(String documentID, String key, Object value){    
-    _refs.singleClass(documentID)
-      .set(key, value, merge : true);
+
+  updateClass(String documentID, String key, Object value) {
+    _refs.singleClass(documentID).set(key, value, merge: true);
   }
-  updateMeal(String documentID, String key, Object value){
-    _refs.meal(documentID)
-      .set(key: value, merge : true);
+
+  updateMeal(String documentID, String key, Object value) {
+    _refs.meal(documentID).set(key: value, merge: true);
   }
 
   //delete existing
-  deleteUser(String documentID){
+  deleteUser(String documentID) {
     _refs.user(documentID).delete();
   }
-  deleteClass(String documentID){
+
+  deleteClass(String documentID) {
     _refs.singleClass(documentID).delete();
   }
-  deleteMeal(String documentID){
+
+  deleteMeal(String documentID) {
     _refs.meal(documentID).delete();
   }
 }
