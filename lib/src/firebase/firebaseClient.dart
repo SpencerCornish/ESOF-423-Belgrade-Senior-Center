@@ -60,7 +60,13 @@ class FirebaseClient {
 
   /// [createUser] create new user document
   createUser(String name, String email, String phone, String password, String role, List classes) {
-    _refs.allUsers().add({"name": name, "email": email, "phone_number": phone, "password": password, "role": role});
+    _refs.allUsers().add({
+      "name": name,
+      "email": email,
+      "phone_number": phone,
+      "password": password,
+      "role": role,
+    });
   }
 
   /// [createClass] create new class document
@@ -71,13 +77,17 @@ class FirebaseClient {
       "end_time": end.toIso8601String(),
       "instructor": instructor,
       "location": location,
-      "capacity": capacity
+      "capacity": capacity,
     });
   }
 
   /// [createMeal] create new meal document
   createMeal(DateTime start, DateTime end, List menu) {
-    _refs.allMeals().add({"start_time": start.toIso8601String(), "end_time": end.toIso8601String(), "menu": menu});
+    _refs.allMeals().add({
+      "start_time": start.toIso8601String(),
+      "end_time": end.toIso8601String(),
+      "menu": menu,
+    });
   }
 
   /// [updateUser] update existing user by unique identifier. key is any user field and value is the new value
