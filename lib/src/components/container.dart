@@ -9,6 +9,7 @@ import '../constants.dart';
 
 // Containers and components
 import './containers/home.dart';
+import './containers/dashboard.dart';
 
 // State
 import '../state/app.dart';
@@ -58,6 +59,10 @@ class Container extends PComponent<ContainerProps> {
                 componentFactory: (params) => _renderHome(),
                 useAsDefault: true, // if no route is matched this route will be used
               ),
+              new Route(
+                path: Routes.dashboard,
+                componentFactory: (params) => _renderDashboard(),
+              ),
             ],
           ),
         ],
@@ -66,4 +71,6 @@ class Container extends PComponent<ContainerProps> {
     ];
 
   _renderHome() => new Home(new HomeProps()..actions = props.storeContainer.store.actions);
+
+  _renderDashboard() => new Dashboard(new DashboardProps()..actions = props.storeContainer.store.actions);
 }

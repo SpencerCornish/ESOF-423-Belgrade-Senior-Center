@@ -6,7 +6,7 @@ import 'package:firebase/firebase.dart' as fb;
 
 part 'user.g.dart';
 
-/// [User]
+/// [User] is a model for the user database document
 abstract class User implements Built<User, UserBuilder> {
   String get uid;
 

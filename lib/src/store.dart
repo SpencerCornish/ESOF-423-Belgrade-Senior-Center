@@ -41,7 +41,7 @@ class StoreContainer {
     App app = new App();
 
     // TODO: Setup server connection Middleware
-    List<Middleware<App, AppBuilder, AppActions>> middlewares = []; //createServerMiddleware(_client)];
+    List<Middleware<App, AppBuilder, AppActions>> middlewares = [createServerMiddleware(_client)];
     if (document.domain.contains("localhost")) middlewares.add(loggingMiddleware);
 
     store = new Store<App, AppBuilder, AppActions>(reducerBuilder.build(), app, _actions, middleware: middlewares);

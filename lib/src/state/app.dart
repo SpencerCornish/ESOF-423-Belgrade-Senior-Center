@@ -3,6 +3,8 @@ library app;
 import 'package:built_value/built_value.dart';
 import 'package:built_redux/built_redux.dart';
 
+import '../middleware/serverMiddleware.dart';
+
 part 'app.g.dart';
 
 abstract class AppActions extends ReduxActions {
@@ -11,6 +13,8 @@ abstract class AppActions extends ReduxActions {
 
   /// [decrement] is an example action
   ActionDispatcher<int> get decrement;
+
+  ServerMiddlewareActions serverActions;
 
   // factory to create on instance of the generated implementation of AppActions
   AppActions._();

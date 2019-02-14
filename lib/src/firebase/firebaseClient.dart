@@ -33,4 +33,24 @@ class FirebaseClient {
   Future _onAuthChanged(fb.User user) async {
     print("Auth Changed :: $user");
   }
+
+  Future<bool> signInAdmin(String email, String password) async {
+    try {
+      final userCred = await _auth.signInWithEmailAndPassword(email, password);
+      if (userCred != null) {
+        return true;
+      }
+    } on fb.FirebaseError catch (e) {
+      if (e.code == "auth/user-not-found") {
+        print("user did not exist!");
+      } else if (e.code == "auth/wrong-password") {
+        print("Incorrect Password!!");
+      } else {
+        print("e.code: ${e.code}");
+      }
+    } catch (e) {
+      print("Unexpected error with sign in: $e");
+    }
+    return false;
+  }
 }
