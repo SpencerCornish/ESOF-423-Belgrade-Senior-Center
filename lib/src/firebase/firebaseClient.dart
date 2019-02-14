@@ -50,10 +50,24 @@ class FirebaseClient {
   /// [getMeal] get just one meal document by unique identifier
   getMeal(String uid) => _refs.meal(uid).get();
 
-  // getClasses (TODO: by day, range?)
+  // getClasses (TODO: by range, by capacity?)
 
   /// [getAllClasses] this will get all class documents
   getAllClasses() => _refs.allClasses().get();
+
+  /// [getClassByStartDate] return a group of documents by start date
+  getClassByStartDate(DateTime date) {
+    final start = new DateTime(date.year, date.month, date.day);
+    final end = new DateTime(date.year, date.month, date.day, 23, 59, 59);
+
+    return _refs
+        .allClasses()
+        .where("start_time", "=>", start.toIso8601String())
+        .where("start_time", "<=", end.toIso8601String());
+  }
+
+  /// [getClassTaughtBy] return a group of documents by instructor
+  getClassTaughtBy(String instructor) => _refs.allClasses().where("instructor", "==", instructor);
 
   /// [getClass] get a single class document by unique identifier
   getClass(String uid) => _refs.singleClass(uid).get();
