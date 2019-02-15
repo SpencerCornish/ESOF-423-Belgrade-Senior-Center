@@ -41,18 +41,22 @@ class Home extends PComponent<HomeProps> {
         ..className = 'columns is-centered margin-top'
         ..children = [
           new VDivElement()
-            ..className = 'column is-narrow'
+            ..className = 'column is-one-third'
             ..children = [
               new VDivElement()
                 ..className = 'box'
                 ..children = [
                   new Vh1()
-                    ..className = 'title is-4 has-text-centered'
+                    ..className = 'title has-text-centered'
                     ..text = 'Belgrade Senior Center',
                   new Vh1()
                     ..className = 'subtitle has-text-centered'
                     ..text = 'Member Management Portal',
                   props.redirectCode != '' ? _renderNotification(props.redirectCode) : new VDivElement(),
+                  props.authState == AuthState.PASS_RESET_SENT
+                      ? _renderNotification(
+                          "Password reset email sent! Please check your email for further instructions.")
+                      : new VDivElement(),
                   _renderSignIn(),
                   // Form Here
                 ],
@@ -128,7 +132,7 @@ class Home extends PComponent<HomeProps> {
           _renderHint(props.authState == AuthState.ERR_PASSWORD ? 'Invalid Password' : ''),
         ],
       new VDivElement()
-        ..className = 'field is-grouped'
+        ..className = 'field is-grouped is-grouped-right'
         ..children = [
           new VDivElement()
             ..className = 'control'
@@ -161,7 +165,7 @@ class Home extends PComponent<HomeProps> {
     ..className = 'help is-danger'
     ..text = message;
 
-  _renderNotification(String message) => new VDivElement()
+  _renderNotification(String message) => VDivElement()
     ..className = 'notification is-info'
     ..text = message;
 
