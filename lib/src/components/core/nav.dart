@@ -121,6 +121,6 @@ class Nav extends PComponent<NavProps> {
     ];
 
   _onLogOutClick(_) async {
-    props.actions.serverActions.logOut();
+    props.actions.server.logOut();
   }
 }
