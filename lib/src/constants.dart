@@ -1,7 +1,5 @@
 import 'package:email_validator/email_validator.dart';
 
-//  TODO: Put constant values here :)
-
 /// [Routes] defines URIs for the application
 class Routes {
   /// Route to the base (or Home) of the app
@@ -10,6 +8,12 @@ class Routes {
   static const dashboard = '/dashboard';
 
   // TODO: Fill in more routes here
+}
+
+enum Role {
+  ADMIN,
+  VOLUNTEER,
+  MEMBER,
 }
 
 /// Validates email addresses

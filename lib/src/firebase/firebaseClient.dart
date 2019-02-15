@@ -30,9 +30,16 @@ class FirebaseClient {
     _auth.onAuthStateChanged.listen(_onAuthChanged);
   }
 
-  Future _onAuthChanged(fb.User user) async {
-    print("Auth Changed :: $user");
+  Future _onAuthChanged(fb.User fbUser) async {
+    print("Auth Changed :: $fbUser");
+    User newUser;
+    if (fbUser != null) {
+      newUser = new User.fromFirebase(fbUser, null);
+    }
+    _actions.setUser(newUser);
   }
+
+  Future logOut() async => _auth.signOut();
 
   Future<bool> signInAdmin(String email, String password) async {
     try {

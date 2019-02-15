@@ -28,7 +28,8 @@ abstract class ServerMiddlewareActions extends ReduxActions {
 }
 
 createServerMiddleware(FirebaseClient client) => (new MiddlewareBuilder<App, AppBuilder, AppActions>()
-      ..add<AdminSignInPayload>(ServerMiddlewareActionsNames.signInAdmin, _signInAdmin(client)))
+      ..add<AdminSignInPayload>(ServerMiddlewareActionsNames.signInAdmin, _signInAdmin(client))
+      ..add<AdminSignInPayload>(ServerMiddlewareActionsNames.logOut, _logOut(client)))
     .build();
 
 _signInAdmin(FirebaseClient client) => (
@@ -37,3 +38,10 @@ _signInAdmin(FirebaseClient client) => (
       Action<AdminSignInPayload> action,
     ) async =>
         client.signInAdmin(action.payload.email, action.payload.password);
+
+_logOut(FirebaseClient client) => (
+      MiddlewareApi<App, AppBuilder, AppActions> api,
+      ActionHandler next,
+      Action<AdminSignInPayload> action,
+    ) async =>
+        client.logOut();

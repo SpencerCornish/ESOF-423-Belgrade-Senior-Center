@@ -13,25 +13,21 @@ class _$AppActions extends AppActions {
   factory _$AppActions() => new _$AppActions._();
   _$AppActions._() : super._();
 
-  final ActionDispatcher<int> increment =
-      new ActionDispatcher<int>('AppActions-increment');
-  final ActionDispatcher<int> decrement =
-      new ActionDispatcher<int>('AppActions-decrement');
+  final ActionDispatcher<User> setUser = new ActionDispatcher<User>('AppActions-setUser');
+  final ActionDispatcher<bool> setLoading = new ActionDispatcher<bool>('AppActions-setLoading');
   final ServerMiddlewareActions serverActions = new ServerMiddlewareActions();
 
   @override
   void setDispatcher(Dispatcher dispatcher) {
-    increment.setDispatcher(dispatcher);
-    decrement.setDispatcher(dispatcher);
+    setUser.setDispatcher(dispatcher);
+    setLoading.setDispatcher(dispatcher);
     serverActions.setDispatcher(dispatcher);
   }
 }
 
 class AppActionsNames {
-  static final ActionName<int> increment =
-      new ActionName<int>('AppActions-increment');
-  static final ActionName<int> decrement =
-      new ActionName<int>('AppActions-decrement');
+  static final ActionName<User> setUser = new ActionName<User>('AppActions-setUser');
+  static final ActionName<bool> setLoading = new ActionName<bool>('AppActions-setLoading');
 }
 
 // **************************************************************************
@@ -40,20 +36,20 @@ class AppActionsNames {
 
 class _$App extends App {
   @override
-  final int count;
+  final User user;
+  @override
+  final bool isLoading;
 
-  factory _$App([void updates(AppBuilder b)]) =>
-      (new AppBuilder()..update(updates)).build();
+  factory _$App([void updates(AppBuilder b)]) => (new AppBuilder()..update(updates)).build();
 
-  _$App._({this.count}) : super._() {
-    if (count == null) {
-      throw new BuiltValueNullFieldError('App', 'count');
+  _$App._({this.user, this.isLoading}) : super._() {
+    if (isLoading == null) {
+      throw new BuiltValueNullFieldError('App', 'isLoading');
     }
   }
 
   @override
-  App rebuild(void updates(AppBuilder b)) =>
-      (toBuilder()..update(updates)).build();
+  App rebuild(void updates(AppBuilder b)) => (toBuilder()..update(updates)).build();
 
   @override
   AppBuilder toBuilder() => new AppBuilder()..replace(this);
@@ -61,32 +57,37 @@ class _$App extends App {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is App && count == other.count;
+    return other is App && user == other.user && isLoading == other.isLoading;
   }
 
   @override
   int get hashCode {
-    return $jf($jc(0, count.hashCode));
+    return $jf($jc($jc(0, user.hashCode), isLoading.hashCode));
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('App')..add('count', count)).toString();
+    return (newBuiltValueToStringHelper('App')..add('user', user)..add('isLoading', isLoading)).toString();
   }
 }
 
 class AppBuilder implements Builder<App, AppBuilder> {
   _$App _$v;
 
-  int _count;
-  int get count => _$this._count;
-  set count(int count) => _$this._count = count;
+  UserBuilder _user;
+  UserBuilder get user => _$this._user ??= new UserBuilder();
+  set user(UserBuilder user) => _$this._user = user;
+
+  bool _isLoading;
+  bool get isLoading => _$this._isLoading;
+  set isLoading(bool isLoading) => _$this._isLoading = isLoading;
 
   AppBuilder();
 
   AppBuilder get _$this {
     if (_$v != null) {
-      _count = _$v.count;
+      _user = _$v.user?.toBuilder();
+      _isLoading = _$v.isLoading;
       _$v = null;
     }
     return this;
@@ -107,7 +108,19 @@ class AppBuilder implements Builder<App, AppBuilder> {
 
   @override
   _$App build() {
-    final _$result = _$v ?? new _$App._(count: count);
+    _$App _$result;
+    try {
+      _$result = _$v ?? new _$App._(user: _user?.build(), isLoading: isLoading);
+    } catch (_) {
+      String _$failedField;
+      try {
+        _$failedField = 'user';
+        _user?.build();
+      } catch (e) {
+        throw new BuiltValueNestedFieldError('App', _$failedField, e.toString());
+      }
+      rethrow;
+    }
     replace(_$result);
     return _$result;
   }

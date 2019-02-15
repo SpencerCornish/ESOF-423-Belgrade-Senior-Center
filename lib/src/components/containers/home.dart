@@ -135,9 +135,6 @@ class Home extends PComponent<HomeProps> {
                 ..text = 'Submit',
             ],
         ],
-      new VAnchorElement()
-        ..onClick = ((_) => history.push(Routes.dashboard))
-        ..text = "Click Me",
     ];
 
   _onSubmitClick(_) {

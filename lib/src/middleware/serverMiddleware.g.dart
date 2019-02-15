@@ -14,10 +14,8 @@ class _$ServerMiddlewareActions extends ServerMiddlewareActions {
   _$ServerMiddlewareActions._() : super._();
 
   final ActionDispatcher<AdminSignInPayload> signInAdmin =
-      new ActionDispatcher<AdminSignInPayload>(
-          'ServerMiddlewareActions-signInAdmin');
-  final ActionDispatcher<Null> logOut =
-      new ActionDispatcher<Null>('ServerMiddlewareActions-logOut');
+      new ActionDispatcher<AdminSignInPayload>('ServerMiddlewareActions-signInAdmin');
+  final ActionDispatcher<Null> logOut = new ActionDispatcher<Null>('ServerMiddlewareActions-logOut');
 
   @override
   void setDispatcher(Dispatcher dispatcher) {
@@ -29,6 +27,5 @@ class _$ServerMiddlewareActions extends ServerMiddlewareActions {
 class ServerMiddlewareActionsNames {
   static final ActionName<AdminSignInPayload> signInAdmin =
       new ActionName<AdminSignInPayload>('ServerMiddlewareActions-signInAdmin');
-  static final ActionName<Null> logOut =
-      new ActionName<Null>('ServerMiddlewareActions-logOut');
+  static final ActionName<Null> logOut = new ActionName<Null>('ServerMiddlewareActions-logOut');
 }

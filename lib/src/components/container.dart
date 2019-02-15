@@ -56,7 +56,7 @@ class Container extends PComponent<ContainerProps> {
               // Default homepage route
               new Route(
                 path: Routes.home,
-                componentFactory: (params) => _renderHome(),
+                componentFactory: (params) => appState.user == null ? _renderHome() : _redirect(Routes.dashboard),
                 useAsDefault: true, // if no route is matched this route will be used
               ),
               new Route(
@@ -70,7 +70,14 @@ class Container extends PComponent<ContainerProps> {
       // new DebugPanel(new DebugPanelProps()..actions = props.storeContainer.store.actions),
     ];
 
+  _redirect(String newRoute) {
+    new Future.delayed(Duration(milliseconds: 100), (() => history.push(newRoute)));
+    return new VDivElement();
+  }
+
   _renderHome() => new Home(new HomeProps()..actions = props.storeContainer.store.actions);
 
-  _renderDashboard() => new Dashboard(new DashboardProps()..actions = props.storeContainer.store.actions);
+  _renderDashboard() => new Dashboard(new DashboardProps()
+    ..actions = props.storeContainer.store.actions
+    ..user = appState.user);
 }

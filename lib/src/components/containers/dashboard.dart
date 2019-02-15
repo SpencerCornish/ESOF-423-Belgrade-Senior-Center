@@ -4,13 +4,17 @@ import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
 import 'package:wui_builder/vhtml.dart';
 
+import '../core/nav.dart';
 import '../../constants.dart';
+
+import '../../model/user.dart';
 
 import '../../state/app.dart';
 import '../../middleware/serverMiddleware.dart';
 
 class DashboardProps {
   AppActions actions;
+  User user;
 }
 
 class Dashboard extends PComponent<DashboardProps> {
@@ -26,12 +30,18 @@ class Dashboard extends PComponent<DashboardProps> {
 
   @override
   VNode render() => new VDivElement()
-    ..className = 'container'
     ..children = [
+      new Nav(new NavProps()
+        ..actions = props.actions
+        ..user = props.user),
       new VDivElement()
-        ..className = 'columns is-centered margin-top'
+        ..className = 'container'
         ..children = [
-          new VParagraphElement()..text = "Whaddup!",
+          new VDivElement()
+            ..className = 'columns is-centered margin-top'
+            ..children = [
+              new VParagraphElement()..text = "Whaddup!",
+            ],
         ],
     ];
 }
