@@ -53,6 +53,17 @@ class Home extends PComponent<HomeProps> {
                 ..className = 'button is-info'
                 ..text = "User Documentation",
             ],
+          new VDivElement()
+            ..className = 'column is-narrow has-text-centered'
+            ..children = [
+              new VButtonElement()
+                ..className = 'button is-info'
+                ..text = "Form Creation"
+                ..onClick = _onFormCreationClick,
+            ],
         ],
     ];
+
+  ///create the function that will be temporarly used during creation of the form page as an on click
+  _onFormCreationClick(_) => history.push(Routes.forms);
 }

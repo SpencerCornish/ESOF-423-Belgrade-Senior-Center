@@ -9,6 +9,7 @@ import '../constants.dart';
 
 // Containers and components
 import './containers/home.dart';
+import './containers/forms.dart';
 
 // State
 import '../state/app.dart';
@@ -32,7 +33,8 @@ class Container extends PComponent<ContainerProps> {
 
   @override
   void componentWillMount() {
-    storeContainerSub = props.storeContainer.store.stream.listen((_) => updateOnAnimationFrame());
+    storeContainerSub = props.storeContainer.store.stream
+        .listen((_) => updateOnAnimationFrame());
   }
 
   @override
@@ -56,7 +58,12 @@ class Container extends PComponent<ContainerProps> {
               new Route(
                 path: Routes.home,
                 componentFactory: (params) => _renderHome(),
-                useAsDefault: true, // if no route is matched this route will be used
+                useAsDefault:
+                    true, // if no route is matched this route will be used
+              ),
+              new Route(
+                path: Routes.forms,
+                componentFactory: (params) => _renderForms(),
               ),
             ],
           ),
@@ -65,5 +72,12 @@ class Container extends PComponent<ContainerProps> {
       // new DebugPanel(new DebugPanelProps()..actions = props.storeContainer.store.actions),
     ];
 
-  _renderHome() => new Home(new HomeProps()..actions = props.storeContainer.store.actions);
+  _renderHome() =>
+      new Home(new HomeProps()..actions = props.storeContainer.store.actions);
+
+///Method used to render the forms page
+  _renderForms() =>
+      new Forms(new FormsProps()..actions = props.storeContainer.store.actions);
+
+
 }
