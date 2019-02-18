@@ -23,13 +23,15 @@ class AdminSignInPayload {
 abstract class ServerMiddlewareActions extends ReduxActions {
   ActionDispatcher<AdminSignInPayload> signInAdmin;
   ActionDispatcher<Null> logOut;
+  ActionDispatcher<String> resetPassword;
   ServerMiddlewareActions._();
   factory ServerMiddlewareActions() => new _$ServerMiddlewareActions();
 }
 
 createServerMiddleware(FirebaseClient client) => (new MiddlewareBuilder<App, AppBuilder, AppActions>()
       ..add<AdminSignInPayload>(ServerMiddlewareActionsNames.signInAdmin, _signInAdmin(client))
-      ..add<AdminSignInPayload>(ServerMiddlewareActionsNames.logOut, _logOut(client)))
+      ..add<Null>(ServerMiddlewareActionsNames.logOut, _logOut(client))
+      ..add<String>(ServerMiddlewareActionsNames.resetPassword, _resetPassword(client)))
     .build();
 
 _signInAdmin(FirebaseClient client) => (
@@ -42,6 +44,13 @@ _signInAdmin(FirebaseClient client) => (
 _logOut(FirebaseClient client) => (
       MiddlewareApi<App, AppBuilder, AppActions> api,
       ActionHandler next,
-      Action<AdminSignInPayload> action,
+      Action<Null> action,
     ) async =>
         client.logOut();
+
+_resetPassword(FirebaseClient client) => (
+      MiddlewareApi<App, AppBuilder, AppActions> api,
+      ActionHandler next,
+      Action<String> action,
+    ) async =>
+        client.resetPassword(action.payload);
