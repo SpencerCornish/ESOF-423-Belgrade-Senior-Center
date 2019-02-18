@@ -13,8 +13,10 @@ class _$AppActions extends AppActions {
   factory _$AppActions() => new _$AppActions._();
   _$AppActions._() : super._();
 
-  final ActionDispatcher<User> setUser = new ActionDispatcher<User>('AppActions-setUser');
-  final ActionDispatcher<bool> setLoading = new ActionDispatcher<bool>('AppActions-setLoading');
+  final ActionDispatcher<User> setUser =
+      new ActionDispatcher<User>('AppActions-setUser');
+  final ActionDispatcher<bool> setLoading =
+      new ActionDispatcher<bool>('AppActions-setLoading');
   final ServerMiddlewareActions serverActions = new ServerMiddlewareActions();
 
   @override
@@ -26,8 +28,10 @@ class _$AppActions extends AppActions {
 }
 
 class AppActionsNames {
-  static final ActionName<User> setUser = new ActionName<User>('AppActions-setUser');
-  static final ActionName<bool> setLoading = new ActionName<bool>('AppActions-setLoading');
+  static final ActionName<User> setUser =
+      new ActionName<User>('AppActions-setUser');
+  static final ActionName<bool> setLoading =
+      new ActionName<bool>('AppActions-setLoading');
 }
 
 // **************************************************************************
@@ -40,7 +44,8 @@ class _$App extends App {
   @override
   final bool isLoading;
 
-  factory _$App([void updates(AppBuilder b)]) => (new AppBuilder()..update(updates)).build();
+  factory _$App([void updates(AppBuilder b)]) =>
+      (new AppBuilder()..update(updates)).build();
 
   _$App._({this.user, this.isLoading}) : super._() {
     if (isLoading == null) {
@@ -49,7 +54,8 @@ class _$App extends App {
   }
 
   @override
-  App rebuild(void updates(AppBuilder b)) => (toBuilder()..update(updates)).build();
+  App rebuild(void updates(AppBuilder b)) =>
+      (toBuilder()..update(updates)).build();
 
   @override
   AppBuilder toBuilder() => new AppBuilder()..replace(this);
@@ -67,7 +73,10 @@ class _$App extends App {
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('App')..add('user', user)..add('isLoading', isLoading)).toString();
+    return (newBuiltValueToStringHelper('App')
+          ..add('user', user)
+          ..add('isLoading', isLoading))
+        .toString();
   }
 }
 
@@ -117,7 +126,8 @@ class AppBuilder implements Builder<App, AppBuilder> {
         _$failedField = 'user';
         _user?.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError('App', _$failedField, e.toString());
+        throw new BuiltValueNestedFieldError(
+            'App', _$failedField, e.toString());
       }
       rethrow;
     }
