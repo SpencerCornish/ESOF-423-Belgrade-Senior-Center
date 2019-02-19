@@ -44,4 +44,13 @@ abstract class Activity implements Built<Activity, ActivityBuilder> {
       ..location = firestoreData['location']
       ..name = firestoreData['name']
       );
+  Map<String, dynamic> toFirestore() => {
+    'uid':uid,
+    'capacity':capacity,
+    'start_time':startTime.toIso8601String(),
+    'end_time':endTime.toIso8601String(),
+    'instructor':instructor,
+    'location':location,
+    'name':name,
+  };
 }

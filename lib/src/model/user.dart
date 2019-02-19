@@ -85,4 +85,23 @@ abstract class User implements Built<User, UserBuilder> {
       ..position = firestoreData['position']
       ..services = firestoreData['services']
       );
+
+  Map<String, dynamic> toFirestore() => {
+    'uid':uid,
+    'first_name':firstName,
+    'last_name':lastName,
+    'email':email,
+    'phoneNumber':phoneNumber,
+    'address':address,
+    'role':role,
+    'dietary_restrictions':dietaryRestrictions,
+    'emergency_contacts':emergencyContacts,
+    'membership_start':membershipStart.toIso8601String(),
+    'membership_renewal':membershipRenewal.toIso8601String(),
+    'disabilities':disabilities,
+    'forms':forms,
+    'medical_issues':medicalIssues,
+    'position':position,
+    'services':services,
+  };
 }

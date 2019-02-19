@@ -33,4 +33,11 @@ abstract class Meal implements Built<Meal, MealBuilder> {
       ..endTime = DateTime.parse(firestoreData['end_time'])
       ..menu =firestoreData['menu']
       );
+
+  Map<String, dynamic> toFirestore() => {
+    'uid':uid,
+    'start_time':startTime.toIso8601String(),
+    'end_time':endTime.toIso8601String(),
+    'menu':menu,
+  };
 }
