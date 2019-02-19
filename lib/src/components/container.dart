@@ -10,6 +10,7 @@ import '../constants.dart';
 // Containers and components
 import './containers/home.dart';
 import './containers/dashboard.dart';
+import './core/debug.dart';
 
 // State
 import '../state/app.dart';
@@ -68,7 +69,7 @@ class Container extends PComponent<ContainerProps> {
           ),
         ],
       // new Footer(new FooterProps()..actions = props.storeContainer.store.actions),
-      // new DebugPanel(new DebugPanelProps()..actions = props.storeContainer.store.actions),
+      new DebugNavigator(new DebugNavigatorProps()..actions = props.storeContainer.store.actions),
     ];
 
   _redirect(String newRoute) {
