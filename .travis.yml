@@ -12,28 +12,30 @@ cache:
 
 jobs:
   include:
-    - stage: Static Analysis
-      name: Formatting and static analysis
-      before_script:
-        - pub get
-        - npm --prefix functions install
-      script:
-        - pub run dart_dev analyze
-        - pub run dart_dev format --check
-        - npm --prefix functions run lint
+    # - stage: Static Analysis
+    #   name: Formatting and static analysis
+    #   before_script:
+    #     - pub get
+    #     - npm --prefix functions install
+    #   script:
+    #     - pub run dart_dev analyze
+    #     - pub run dart_dev format --check
+    #     - npm --prefix functions run lint
 
-    - stage: Unit Testing
-      name: Run unit tests for dart and js functions
-      before_script:
-        - pub get
-        - npm --prefix functions install
-      script:
-        - pub run dart_dev test
-        - pub run dart_dev test -p chrome
-        - npm --prefix functions run test
+    # - stage: Unit Testing
+    #   name: Run unit tests for dart and js functions
+    #   before_script:
+    #     - pub get
+    #     - npm --prefix functions install
+    #   script:
+    #     - pub run dart_dev test
+    #     - pub run dart_dev test -p chrome
+    #     - npm --prefix functions run test
     - stage: Functional Testing
       name: Run Sauce Labs Functional Tests
       before_script:
+        - nvm install 11
+        - nvm use 11
         - npm i -g selenium-side-runner
       script:
         - selenium-side-runner -c "tunnel-identifier=$TRAVIS_JOB_NUMBER" -s "http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@localhost:4445" test/selenium/bsc-functional.side
