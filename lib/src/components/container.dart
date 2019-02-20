@@ -64,6 +64,10 @@ class Container extends PComponent<ContainerProps> {
                 path: Routes.dashboard,
                 componentFactory: (params) => _renderDashboard(),
               ),
+              new Route(
+                path: Routes.storedData,
+                componentFactory: (params) => _renderStoredData(),
+              )
             ],
           ),
         ],
@@ -87,6 +91,10 @@ class Container extends PComponent<ContainerProps> {
     ..emailPrefill = emailPrefill ?? '');
 
   _renderDashboard() => new Dashboard(new DashboardProps()
+    ..actions = props.storeContainer.store.actions
+    ..user = appState.user);
+
+  _renderStoredData() => new Dashboard(new DashboardProps()
     ..actions = props.storeContainer.store.actions
     ..user = appState.user);
 }

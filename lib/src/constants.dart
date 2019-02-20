@@ -12,6 +12,8 @@ class Routes {
 
   static const dashboard = '/dashboard';
 
+  static const storedData = '/stored_data';
+
   // TODO: Fill in more routes here
 }
 
