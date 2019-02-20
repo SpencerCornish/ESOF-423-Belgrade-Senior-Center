@@ -12,12 +12,12 @@ import '../../model/user.dart';
 import '../../state/app.dart';
 import '../../middleware/serverMiddleware.dart';
 
-class DashboardProps {
+class StoredDataProps {
   AppActions actions;
   User user;
 }
 
-class StoredData extends PComponent<DashboardProps> {
+class StoredData extends PComponent<StoredDataProps> {
   StoredData(props) : super(props);
 
   History _history;
@@ -40,6 +40,8 @@ class StoredData extends PComponent<DashboardProps> {
           new VDivElement()
             ..className = 'columns is-centered margin-top'
             ..children = [
+              new VParagraphElement()..text = "Whaddup!",
+              new VParagraphElement()..text = "Whaddup!",
               new VParagraphElement()..text = "Whaddup!",
             ],
         ],
