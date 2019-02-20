@@ -34,7 +34,7 @@ class FirebaseClient {
     print("Auth Changed :: $fbUser");
     User newUser;
     if (fbUser != null) {
-      newUser = new User.fromFirebase(fbUser, null);
+      newUser = new User.fromFirebase(fbUser, null, {});
     }
     _actions.setUser(newUser);
   }
