@@ -10,6 +10,7 @@ import '../constants.dart';
 // Containers and components
 import './containers/home.dart';
 import './containers/dashboard.dart';
+import './core/debug.dart';
 
 // State
 import '../state/app.dart';
@@ -59,6 +60,7 @@ class Container extends PComponent<ContainerProps> {
                 componentFactory: (params) => appState.user == null ? _renderHome() : _redirect(Routes.dashboard),
                 useAsDefault: true, // if no route is matched this route will be used
               ),
+              new Route(path: Routes.resetContinue, componentFactory: (params) => _renderResetContinue(params)),
               new Route(
                 path: Routes.dashboard,
                 componentFactory: (params) => _renderDashboard(),
@@ -67,7 +69,7 @@ class Container extends PComponent<ContainerProps> {
           ),
         ],
       // new Footer(new FooterProps()..actions = props.storeContainer.store.actions),
-      // new DebugPanel(new DebugPanelProps()..actions = props.storeContainer.store.actions),
+      new DebugNavigator(new DebugNavigatorProps()..actions = props.storeContainer.store.actions),
     ];
 
   _redirect(String newRoute) {
@@ -75,7 +77,15 @@ class Container extends PComponent<ContainerProps> {
     return new VDivElement();
   }
 
-  _renderHome() => new Home(new HomeProps()..actions = props.storeContainer.store.actions);
+  _renderResetContinue(Map<String, String> params) => _renderHome(
+      redirectCode: 'Password reset successful. Please enter your new password below.',
+      emailPrefill: baseToString(params['email_hash']));
+
+  _renderHome({String redirectCode, String emailPrefill}) => new Home(new HomeProps()
+    ..actions = props.storeContainer.store.actions
+    ..authState = appState.authState
+    ..redirectCode = redirectCode ?? ''
+    ..emailPrefill = emailPrefill ?? '');
 
   _renderDashboard() => new Dashboard(new DashboardProps()
     ..actions = props.storeContainer.store.actions

@@ -37,27 +37,32 @@ class FirebaseClient {
       newUser = new User.fromFirebase(fbUser, null, {});
     }
     _actions.setUser(newUser);
+    _actions.setAuthState(fbUser == null ? AuthState.INAUTHENTIC : AuthState.SUCCESS);
   }
 
   Future logOut() async => _auth.signOut();
 
-  Future<bool> signInAdmin(String email, String password) async {
+  Future signInAdmin(String email, String password) async {
+    await _actions.setAuthState(AuthState.LOADING);
     try {
-      final userCred = await _auth.signInWithEmailAndPassword(email, password);
-      if (userCred != null) {
-        return true;
-      }
+      await _auth.signInWithEmailAndPassword(email, password);
     } on fb.FirebaseError catch (e) {
       if (e.code == "auth/user-not-found") {
-        print("user did not exist!");
+        _actions.setAuthState(AuthState.ERR_NOT_FOUND);
       } else if (e.code == "auth/wrong-password") {
-        print("Incorrect Password!!");
+        _actions.setAuthState(AuthState.ERR_PASSWORD);
       } else {
-        print("e.code: ${e.code}");
+        _actions.setAuthState(AuthState.ERR_OTHER);
       }
     } catch (e) {
-      print("Unexpected error with sign in: $e");
+      _actions.setAuthState(AuthState.ERR_OTHER);
     }
-    return false;
+  }
+
+  resetPassword(String email) {
+    // TODO: Adjust this redurect url as needed.
+    _auth.sendPasswordResetEmail(email,
+        new fb.ActionCodeSettings(url: "https://bsc-development.firebaseapp.com/pw_reset/${stringToBase(email)}"));
+    _actions.setAuthState(AuthState.PASS_RESET_SENT);
   }
 }

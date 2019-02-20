@@ -17,13 +17,16 @@ class _$AppActions extends AppActions {
       new ActionDispatcher<User>('AppActions-setUser');
   final ActionDispatcher<bool> setLoading =
       new ActionDispatcher<bool>('AppActions-setLoading');
-  final ServerMiddlewareActions serverActions = new ServerMiddlewareActions();
+  final ActionDispatcher<AuthState> setAuthState =
+      new ActionDispatcher<AuthState>('AppActions-setAuthState');
+  final ServerMiddlewareActions server = new ServerMiddlewareActions();
 
   @override
   void setDispatcher(Dispatcher dispatcher) {
     setUser.setDispatcher(dispatcher);
     setLoading.setDispatcher(dispatcher);
-    serverActions.setDispatcher(dispatcher);
+    setAuthState.setDispatcher(dispatcher);
+    server.setDispatcher(dispatcher);
   }
 }
 
@@ -32,6 +35,8 @@ class AppActionsNames {
       new ActionName<User>('AppActions-setUser');
   static final ActionName<bool> setLoading =
       new ActionName<bool>('AppActions-setLoading');
+  static final ActionName<AuthState> setAuthState =
+      new ActionName<AuthState>('AppActions-setAuthState');
 }
 
 // **************************************************************************
@@ -43,13 +48,18 @@ class _$App extends App {
   final User user;
   @override
   final bool isLoading;
+  @override
+  final AuthState authState;
 
   factory _$App([void updates(AppBuilder b)]) =>
       (new AppBuilder()..update(updates)).build();
 
-  _$App._({this.user, this.isLoading}) : super._() {
+  _$App._({this.user, this.isLoading, this.authState}) : super._() {
     if (isLoading == null) {
       throw new BuiltValueNullFieldError('App', 'isLoading');
+    }
+    if (authState == null) {
+      throw new BuiltValueNullFieldError('App', 'authState');
     }
   }
 
@@ -63,19 +73,24 @@ class _$App extends App {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is App && user == other.user && isLoading == other.isLoading;
+    return other is App &&
+        user == other.user &&
+        isLoading == other.isLoading &&
+        authState == other.authState;
   }
 
   @override
   int get hashCode {
-    return $jf($jc($jc(0, user.hashCode), isLoading.hashCode));
+    return $jf($jc(
+        $jc($jc(0, user.hashCode), isLoading.hashCode), authState.hashCode));
   }
 
   @override
   String toString() {
     return (newBuiltValueToStringHelper('App')
           ..add('user', user)
-          ..add('isLoading', isLoading))
+          ..add('isLoading', isLoading)
+          ..add('authState', authState))
         .toString();
   }
 }
@@ -91,12 +106,17 @@ class AppBuilder implements Builder<App, AppBuilder> {
   bool get isLoading => _$this._isLoading;
   set isLoading(bool isLoading) => _$this._isLoading = isLoading;
 
+  AuthState _authState;
+  AuthState get authState => _$this._authState;
+  set authState(AuthState authState) => _$this._authState = authState;
+
   AppBuilder();
 
   AppBuilder get _$this {
     if (_$v != null) {
       _user = _$v.user?.toBuilder();
       _isLoading = _$v.isLoading;
+      _authState = _$v.authState;
       _$v = null;
     }
     return this;
@@ -119,7 +139,9 @@ class AppBuilder implements Builder<App, AppBuilder> {
   _$App build() {
     _$App _$result;
     try {
-      _$result = _$v ?? new _$App._(user: _user?.build(), isLoading: isLoading);
+      _$result = _$v ??
+          new _$App._(
+              user: _user?.build(), isLoading: isLoading, authState: authState);
     } catch (_) {
       String _$failedField;
       try {

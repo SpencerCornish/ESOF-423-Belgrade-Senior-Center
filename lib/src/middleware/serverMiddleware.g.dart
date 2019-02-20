@@ -18,11 +18,14 @@ class _$ServerMiddlewareActions extends ServerMiddlewareActions {
           'ServerMiddlewareActions-signInAdmin');
   final ActionDispatcher<Null> logOut =
       new ActionDispatcher<Null>('ServerMiddlewareActions-logOut');
+  final ActionDispatcher<String> resetPassword =
+      new ActionDispatcher<String>('ServerMiddlewareActions-resetPassword');
 
   @override
   void setDispatcher(Dispatcher dispatcher) {
     signInAdmin.setDispatcher(dispatcher);
     logOut.setDispatcher(dispatcher);
+    resetPassword.setDispatcher(dispatcher);
   }
 }
 
@@ -31,4 +34,6 @@ class ServerMiddlewareActionsNames {
       new ActionName<AdminSignInPayload>('ServerMiddlewareActions-signInAdmin');
   static final ActionName<Null> logOut =
       new ActionName<Null>('ServerMiddlewareActions-logOut');
+  static final ActionName<String> resetPassword =
+      new ActionName<String>('ServerMiddlewareActions-resetPassword');
 }
