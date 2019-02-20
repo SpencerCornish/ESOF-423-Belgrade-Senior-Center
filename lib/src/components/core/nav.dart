@@ -26,8 +26,6 @@ class Nav extends PComponent<NavProps> {
   @override
   void componentWillUpdate(NavProps nextProps, Null nextState) {
     super.componentWillUpdate(nextProps, nextState);
-
-    if (nextProps.user == null) history.push(Routes.home);
   }
 
   @override
