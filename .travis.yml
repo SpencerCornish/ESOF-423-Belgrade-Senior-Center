@@ -37,8 +37,13 @@ jobs:
         - nvm install 11
         - nvm use 11
         - npm i -g selenium-side-runner
+        - pub get
+        - find . -name "*.g.dart" -type f -delete
+        - pub global activate webdev
+        - webdev serve &
+        - sleep 30
       script:
-        - selenium-side-runner -c "tunnel-identifier=$TRAVIS_JOB_NUMBER browser=chrome platform=MAC" -s "http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@localhost:4445" test/selenium/bsc-functional.side
+        - selenium-side-runner -c "browserName=chrome platform=MAC tunnel-identifier=$TRAVIS_JOB_NUMBER" -s "http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@localhost:4445" test/selenium/bsc-functional.side
 
 addons:
   sauce_connect: true

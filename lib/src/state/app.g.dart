@@ -13,9 +13,12 @@ class _$AppActions extends AppActions {
   factory _$AppActions() => new _$AppActions._();
   _$AppActions._() : super._();
 
-  final ActionDispatcher<User> setUser = new ActionDispatcher<User>('AppActions-setUser');
-  final ActionDispatcher<bool> setLoading = new ActionDispatcher<bool>('AppActions-setLoading');
-  final ActionDispatcher<AuthState> setAuthState = new ActionDispatcher<AuthState>('AppActions-setAuthState');
+  final ActionDispatcher<User> setUser =
+      new ActionDispatcher<User>('AppActions-setUser');
+  final ActionDispatcher<bool> setLoading =
+      new ActionDispatcher<bool>('AppActions-setLoading');
+  final ActionDispatcher<AuthState> setAuthState =
+      new ActionDispatcher<AuthState>('AppActions-setAuthState');
   final ServerMiddlewareActions server = new ServerMiddlewareActions();
 
   @override
@@ -28,9 +31,12 @@ class _$AppActions extends AppActions {
 }
 
 class AppActionsNames {
-  static final ActionName<User> setUser = new ActionName<User>('AppActions-setUser');
-  static final ActionName<bool> setLoading = new ActionName<bool>('AppActions-setLoading');
-  static final ActionName<AuthState> setAuthState = new ActionName<AuthState>('AppActions-setAuthState');
+  static final ActionName<User> setUser =
+      new ActionName<User>('AppActions-setUser');
+  static final ActionName<bool> setLoading =
+      new ActionName<bool>('AppActions-setLoading');
+  static final ActionName<AuthState> setAuthState =
+      new ActionName<AuthState>('AppActions-setAuthState');
 }
 
 // **************************************************************************
@@ -45,7 +51,8 @@ class _$App extends App {
   @override
   final AuthState authState;
 
-  factory _$App([void updates(AppBuilder b)]) => (new AppBuilder()..update(updates)).build();
+  factory _$App([void updates(AppBuilder b)]) =>
+      (new AppBuilder()..update(updates)).build();
 
   _$App._({this.user, this.isLoading, this.authState}) : super._() {
     if (isLoading == null) {
@@ -57,7 +64,8 @@ class _$App extends App {
   }
 
   @override
-  App rebuild(void updates(AppBuilder b)) => (toBuilder()..update(updates)).build();
+  App rebuild(void updates(AppBuilder b)) =>
+      (toBuilder()..update(updates)).build();
 
   @override
   AppBuilder toBuilder() => new AppBuilder()..replace(this);
@@ -65,12 +73,16 @@ class _$App extends App {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is App && user == other.user && isLoading == other.isLoading && authState == other.authState;
+    return other is App &&
+        user == other.user &&
+        isLoading == other.isLoading &&
+        authState == other.authState;
   }
 
   @override
   int get hashCode {
-    return $jf($jc($jc($jc(0, user.hashCode), isLoading.hashCode), authState.hashCode));
+    return $jf($jc(
+        $jc($jc(0, user.hashCode), isLoading.hashCode), authState.hashCode));
   }
 
   @override
@@ -127,14 +139,17 @@ class AppBuilder implements Builder<App, AppBuilder> {
   _$App build() {
     _$App _$result;
     try {
-      _$result = _$v ?? new _$App._(user: _user?.build(), isLoading: isLoading, authState: authState);
+      _$result = _$v ??
+          new _$App._(
+              user: _user?.build(), isLoading: isLoading, authState: authState);
     } catch (_) {
       String _$failedField;
       try {
         _$failedField = 'user';
         _user?.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError('App', _$failedField, e.toString());
+        throw new BuiltValueNestedFieldError(
+            'App', _$failedField, e.toString());
       }
       rethrow;
     }
