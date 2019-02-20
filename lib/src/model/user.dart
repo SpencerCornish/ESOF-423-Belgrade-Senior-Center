@@ -68,40 +68,39 @@ abstract class User implements Built<User, UserBuilder> {
 
   factory User.fromFirebase(fb.User fbUser, fb.UserInfo additionalInfo, Map<String, dynamic> firestoreData) =>
       new User((UserBuilder builder) => builder
-      ..uid = fbUser.uid
-      ..firstName = firestoreData['first_name']
-      ..lastName = firestoreData['last_name']
-      ..email = firestoreData['email']
-      ..phoneNumber = firestoreData['phone_number']
-      ..address = firestoreData['address']
-      ..role = firestoreData['role']
-      ..dietaryRestrictions = firestoreData['dietary_restrictions']
-      ..emergencyContacts = firestoreData['emergency_contacts']
-      ..membershipStart = DateTime.parse(firestoreData['membership_start'])
-      ..membershipRenewal = DateTime.parse(firestoreData['membership_renewal'])
-      ..disabilities = firestoreData['disabilities']
-      ..forms = firestoreData['forms']
-      ..medicalIssues = firestoreData['medical_issues']
-      ..position = firestoreData['position']
-      ..services = firestoreData['services']
-      );
+        ..uid = fbUser.uid
+        ..firstName = firestoreData['first_name']
+        ..lastName = firestoreData['last_name']
+        ..email = firestoreData['email']
+        ..phoneNumber = firestoreData['phone_number']
+        ..address = firestoreData['address']
+        ..role = firestoreData['role']
+        ..dietaryRestrictions = firestoreData['dietary_restrictions']
+        ..emergencyContacts = firestoreData['emergency_contacts']
+        ..membershipStart = DateTime.parse(firestoreData['membership_start'])
+        ..membershipRenewal = DateTime.parse(firestoreData['membership_renewal'])
+        ..disabilities = firestoreData['disabilities']
+        ..forms = firestoreData['forms']
+        ..medicalIssues = firestoreData['medical_issues']
+        ..position = firestoreData['position']
+        ..services = firestoreData['services']);
 
   Map<String, dynamic> toFirestore() => {
-    'uid':uid,
-    'first_name':firstName,
-    'last_name':lastName,
-    'email':email,
-    'phoneNumber':phoneNumber,
-    'address':address,
-    'role':role,
-    'dietary_restrictions':dietaryRestrictions,
-    'emergency_contacts':emergencyContacts,
-    'membership_start':membershipStart.toIso8601String(),
-    'membership_renewal':membershipRenewal.toIso8601String(),
-    'disabilities':disabilities,
-    'forms':forms,
-    'medical_issues':medicalIssues,
-    'position':position,
-    'services':services,
-  };
+        'uid': uid,
+        'first_name': firstName,
+        'last_name': lastName,
+        'email': email,
+        'phoneNumber': phoneNumber,
+        'address': address,
+        'role': role,
+        'dietary_restrictions': dietaryRestrictions,
+        'emergency_contacts': emergencyContacts,
+        'membership_start': membershipStart.toIso8601String(),
+        'membership_renewal': membershipRenewal.toIso8601String(),
+        'disabilities': disabilities,
+        'forms': forms,
+        'medical_issues': medicalIssues,
+        'position': position,
+        'services': services,
+      };
 }
