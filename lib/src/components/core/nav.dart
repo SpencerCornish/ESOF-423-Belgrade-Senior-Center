@@ -102,6 +102,7 @@ class Nav extends PComponent<NavProps> {
                         ..children = [
                           new VParagraphElement()
                             ..className = 'has-text-grey'
+                            ..id = 'nav-username'
                             ..text = props.user?.uid,
                         ],
                       new VDivElement()

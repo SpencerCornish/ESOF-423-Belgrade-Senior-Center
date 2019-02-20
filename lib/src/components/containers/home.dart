@@ -163,6 +163,7 @@ class Home extends PComponent<HomeProps> {
 
   _renderHint(String message) => new VParagraphElement()
     ..className = 'help is-danger'
+    ..id = 'hint'
     ..text = message;
 
   _renderNotification(String message) => VDivElement()

@@ -31,6 +31,16 @@ jobs:
         - pub run dart_dev test
         - pub run dart_dev test -p chrome
         - npm --prefix functions run test
+    - stage: Functional Testing
+      name: Run Sauce Labs Functional Tests
+      before_script:
+        - npm i -g selenium-side-runner
+      script:
+        - selenium-side-runner -c "tunnel-identifier=$TRAVIS_JOB_NUMBER" -s "http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@localhost:4445" test/selenium/bsc-functional.side
+
+addons:
+  sauce_connect: true
+
 
 # before deploying, get dependencies for firebase functions
 before_deploy:
