@@ -10,6 +10,7 @@ import '../constants.dart';
 // Containers and components
 import './containers/home.dart';
 import './containers/dashboard.dart';
+import './containers/storeddata.dart';
 import './core/debug.dart';
 
 // State
@@ -95,7 +96,7 @@ class Container extends PComponent<ContainerProps> {
     ..actions = props.storeContainer.store.actions
     ..user = appState.user);
 
-  _renderStoredData() => new Dashboard(new DashboardProps()
+  _renderStoredData() => new StoredData(new StoredDataProps()
     ..actions = props.storeContainer.store.actions
     ..user = appState.user);
 }

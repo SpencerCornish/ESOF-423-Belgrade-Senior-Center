@@ -37,12 +37,48 @@ class StoredData extends PComponent<StoredDataProps> {
       new VDivElement()
         ..className = 'container'
         ..children = [
-          new VDivElement()
-            ..className = 'columns is-centered margin-top'
+          new Vtable()
+            ..className = 'table is-striped is-fullwidth'
             ..children = [
-              new VParagraphElement()..text = "Whaddup!",
-              new VParagraphElement()..text = "Whaddup!",
-              new VParagraphElement()..text = "Whaddup!",
+              new VTableRowElement()
+                ..className = 'tr'
+                ..children = [
+                  new VTableCellElement()
+                    ..className = 'title is-5'
+                    ..text = "ID",
+                  new VTableCellElement()
+                    ..className = 'title is-5'
+                    ..text = "Name",
+                  new VTableCellElement()
+                    ..className = 'title is-5'
+                    ..text = "Number",
+                ],
+              new VTableRowElement()
+                ..className = 'tr'
+                ..children = [
+                  new VTableCellElement()
+                    ..className = 'td'
+                    ..text = "1",
+                  new VTableCellElement()
+                    ..className = 'td'
+                    ..text = "bob",
+                  new VTableCellElement()
+                    ..className = 'td'
+                    ..text = "56",
+                ],
+              new VTableRowElement()
+                ..className = 'tr'
+                ..children = [
+                  new VTableCellElement()
+                    ..className = 'td'
+                    ..text = "2",
+                  new VTableCellElement()
+                    ..className = 'td'
+                    ..text = "fred",
+                  new VTableCellElement()
+                    ..className = 'td'
+                    ..text = "780",
+                ],
             ],
         ],
     ];
