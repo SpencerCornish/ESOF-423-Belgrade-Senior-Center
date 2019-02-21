@@ -9,7 +9,7 @@ install: ## Runs pub get to get dependencies
 
 serve: install dart-serve ## Serves the frontend app with the Dev Compiler
 
-firebase-serve: install build ## Serves built JS files locally using Firebase Local
+firebase-serve: install build-js ## Serves built JS files locally using Firebase Local
 	@firebase serve
 
 format: ## Format the dart files
@@ -21,5 +21,5 @@ analyze: ## Look for errors in the dart files
 dart-serve:
 	@webdev serve --no-release
 
-build:
+build-js:
 	@webdev build --release
