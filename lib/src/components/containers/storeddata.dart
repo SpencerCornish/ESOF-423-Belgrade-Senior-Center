@@ -17,6 +17,7 @@ class StoredDataProps {
   User user;
 }
 
+/// [StoredData] class / page to show a visual representation of current stored data
 class StoredData extends PComponent<StoredDataProps> {
   StoredData(props) : super(props);
 
@@ -28,6 +29,7 @@ class StoredData extends PComponent<StoredDataProps> {
   VNode emailInputNode;
   VNode passwordInputNode;
 
+  /// [createRows] Scaling function to make rows based on amount of information available
   List<VNode> createRows() {
     List<VNode> nodeList = new List();
     nodeList.add(titleRow());
@@ -49,7 +51,7 @@ class StoredData extends PComponent<StoredDataProps> {
     return nodeList;
   }
 
-//title row
+  /// [titleRow] helper function to create the title row
   VNode titleRow() {
     return (new VTableRowElement()
       ..className = 'tr'
