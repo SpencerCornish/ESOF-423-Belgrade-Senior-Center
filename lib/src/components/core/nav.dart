@@ -110,6 +110,7 @@ class Nav extends PComponent<NavProps> {
                         ..children = [
                           new VAnchorElement()
                             ..className = 'button is-danger'
+                            ..id = 'log-out-button'
                             ..onClick = _onLogOutClick
                             ..text = 'Log Out',
                         ],

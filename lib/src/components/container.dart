@@ -63,7 +63,7 @@ class Container extends PComponent<ContainerProps> {
               new Route(path: Routes.resetContinue, componentFactory: (params) => _renderResetContinue(params)),
               new Route(
                 path: Routes.dashboard,
-                componentFactory: (params) => _renderDashboard(),
+                componentFactory: (params) => appState.user == null ? _redirect(Routes.home) : _renderDashboard(),
               ),
             ],
           ),
