@@ -77,9 +77,13 @@ class StoredData extends PComponent<StoredDataProps> {
       new VDivElement()
         ..className = 'container'
         ..children = [
-          new Vtable()
-            ..className = 'table is-striped is-fullwidth'
-            ..children = createRows(),
-        ]
+          new VDivElement()
+            ..className = 'columns is-centered margin-top'
+            ..children = [
+              new Vtable()
+                ..className = 'table is-striped is-fullwidth'
+                ..children = createRows(),
+            ]
+        ],
     ];
 }
