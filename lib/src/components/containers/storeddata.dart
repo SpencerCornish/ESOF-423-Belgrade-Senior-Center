@@ -28,6 +28,44 @@ class StoredData extends PComponent<StoredDataProps> {
   VNode emailInputNode;
   VNode passwordInputNode;
 
+  List<VNode> createRows() {
+    List<VNode> nodeList = new List();
+    nodeList.add(titleRow());
+    for (var i = 0; i < 5; i++) {
+      nodeList.add(new VTableRowElement()
+        ..className = 'tr'
+        ..children = [
+          new VTableCellElement()
+            ..className = 'td'
+            ..text = i.toString(),
+          new VTableCellElement()
+            ..className = 'td'
+            ..text = "bob",
+          new VTableCellElement()
+            ..className = 'td'
+            ..text = "56",
+        ]);
+    }
+    return nodeList;
+  }
+
+//title row
+  VNode titleRow() {
+    return (new VTableRowElement()
+      ..className = 'tr'
+      ..children = [
+        new VTableCellElement()
+          ..className = 'title is-5'
+          ..text = "ID",
+        new VTableCellElement()
+          ..className = 'title is-5'
+          ..text = "Name",
+        new VTableCellElement()
+          ..className = 'title is-5'
+          ..text = "Number",
+      ]);
+  }
+
   @override
   VNode render() => new VDivElement()
     ..children = [
@@ -39,47 +77,7 @@ class StoredData extends PComponent<StoredDataProps> {
         ..children = [
           new Vtable()
             ..className = 'table is-striped is-fullwidth'
-            ..children = [
-              new VTableRowElement()
-                ..className = 'tr'
-                ..children = [
-                  new VTableCellElement()
-                    ..className = 'title is-5'
-                    ..text = "ID",
-                  new VTableCellElement()
-                    ..className = 'title is-5'
-                    ..text = "Name",
-                  new VTableCellElement()
-                    ..className = 'title is-5'
-                    ..text = "Number",
-                ],
-              new VTableRowElement()
-                ..className = 'tr'
-                ..children = [
-                  new VTableCellElement()
-                    ..className = 'td'
-                    ..text = "1",
-                  new VTableCellElement()
-                    ..className = 'td'
-                    ..text = "bob",
-                  new VTableCellElement()
-                    ..className = 'td'
-                    ..text = "56",
-                ],
-              new VTableRowElement()
-                ..className = 'tr'
-                ..children = [
-                  new VTableCellElement()
-                    ..className = 'td'
-                    ..text = "2",
-                  new VTableCellElement()
-                    ..className = 'td'
-                    ..text = "fred",
-                  new VTableCellElement()
-                    ..className = 'td'
-                    ..text = "780",
-                ],
-            ],
-        ],
+            ..children = createRows(),
+        ]
     ];
 }
