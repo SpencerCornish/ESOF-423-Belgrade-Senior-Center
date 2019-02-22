@@ -31,7 +31,7 @@ jobs:
         - find . -name "*.g.dart" -type f -delete
         - pub global activate webdev
         - webdev build --release        
-        - firebase serve --only hosting --non-interactive > /dev/null
+        - firebase serve --only hosting --non-interactive &> /dev/null
         - npm --prefix test/functional install
       script:
         - npm --prefix test/functional run test
