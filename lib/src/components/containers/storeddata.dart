@@ -29,30 +29,37 @@ class StoredData extends PComponent<StoredDataProps> {
   VNode emailInputNode;
   VNode passwordInputNode;
 
+  /// [createCol] Scaling function for width based on number of types of info
+  List<VNode> createCol() {
+    List<VNode> nodeList = new List();
+    // TODO : for each collection item in current row make a colomn element
+    List<String> items = ["bob", "57"];
+    for (var item in items) {
+      nodeList.add(
+        new VTableCellElement()
+          ..className = 'td'
+          ..text = item,
+      );
+    }
+    return nodeList;
+  }
+
   /// [createRows] Scaling function to make rows based on amount of information available
   List<VNode> createRows() {
     List<VNode> nodeList = new List();
     nodeList.add(titleRow());
-    for (var i = 0; i < 5; i++) {
+    // TODO for each user/meal/activity create a row
+    for (var i = 0; i < 2; i++) {
       nodeList.add(new VTableRowElement()
         ..className = 'tr'
-        ..children = [
-          new VTableCellElement()
-            ..className = 'td'
-            ..text = i.toString(),
-          new VTableCellElement()
-            ..className = 'td'
-            ..text = "bob",
-          new VTableCellElement()
-            ..className = 'td'
-            ..text = "56",
-        ]);
+        ..children = createCol());
     }
     return nodeList;
   }
 
   /// [titleRow] helper function to create the title row
   VNode titleRow() {
+    // TODO : for each collection item in current row make a colomn element by collection type
     return (new VTableRowElement()
       ..className = 'tr'
       ..children = [
