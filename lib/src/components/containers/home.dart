@@ -71,6 +71,7 @@ class Home extends PComponent<HomeProps> {
             ..children = [
               new VAnchorElement()
                 ..className = 'button is-text has-text-grey'
+                ..id = 'dev-doc-button'
                 ..href = "https://github.com/SpencerCornish/belgrade-senior-center/blob/master/README.md"
                 ..text = "Development Documentation",
             ],
@@ -79,6 +80,7 @@ class Home extends PComponent<HomeProps> {
             ..children = [
               new VAnchorElement()
                 ..className = 'button is-text has-text-grey'
+                ..id = 'user-doc-button'
                 ..href = "https://github.com/SpencerCornish/belgrade-senior-center/blob/master/USERREADME.md"
                 ..text = "User Documentation",
             ],

@@ -33,7 +33,7 @@ afterAll(() => {
   browser.close();
 });
 
-describe("Login form", () => {
+describe("Home Page", () => {
   test("successful login and logout", async () => {
     await page.goto(APP);
     await page.waitForSelector("#home-container");
@@ -46,7 +46,7 @@ describe("Login form", () => {
     await page.click("#login-submit-button");
     await page.waitForNavigation();
 
-    // TODO: Check diaplayed userdata here
+    // TODO: Check displayed userdata here
 
     await page.click("#log-out-button");
     await page.waitForSelector("#home-container");
@@ -103,5 +103,23 @@ describe("Login form", () => {
     await page.click("#login-submit-button");
 
     await page.waitForSelector("#hint-invalidpassword");
+  }, 16000);
+
+  test("navigates to Readme on User Doc click", async () => {
+    await page.goto(APP);
+    await page.waitForSelector("#home-container");
+
+    await page.click("#user-doc-button");
+
+    expect(await page.evaluate(() => document.URL)).toBe("https://github.com/SpencerCornish/belgrade-senior-center/blob/master/USERREADME.md");
+  }, 16000);
+
+  test("navigates to Readme on Dev Doc click", async () => {
+    await page.goto(APP);
+    await page.waitForSelector("#home-container");
+
+    await page.click("#dev-doc-button");
+
+    expect(await page.evaluate(() => document.URL)).toBe("https://github.com/SpencerCornish/belgrade-senior-center/blob/master/README.md");
   }, 16000);
 });
