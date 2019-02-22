@@ -107,9 +107,9 @@ class Home extends PComponent<HomeProps> {
                 ..className = 'icon is-small is-left'
                 ..children = [new Vi()..className = "fas fa-user"],
             ],
-          _renderHint(props.authState == AuthState.ERR_EMAIL ? 'Invalid Email' : '',),
+          _renderHint(props.authState == AuthState.ERR_EMAIL ? 'Invalid Email' : ''),
           _renderHint(props.authState == AuthState.ERR_NOT_FOUND ? 'Email Not Found' : ''),
-          _renderHint(props.authState == AuthState.ERR_NOT_FOUND ? 'Unexpected error. Please try again.' : ''),
+          _renderHint(props.authState == AuthState.ERR_OTHER ? 'Unexpected error. Please try again.' : ''),
         ],
       new VDivElement()
         ..className = 'field'
