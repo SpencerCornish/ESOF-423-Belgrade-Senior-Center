@@ -12,17 +12,21 @@ cache:
 
 jobs:
   include:
-    - stage: Static Analysis and Unit Testing
+    - stage: Testing
       name: Formatting and static analysis
       before_script:
         - npm --prefix functions install
       script:
         - pub run dart_dev analyze
+        name: "Static Analysis"
         - pub run dart_dev format --check
+        name: "Formatting: Dart"
         - npm --prefix functions run lint
-        - find . -name "*.g.dart" -type f -delete
-        - pub run dart_dev test -p chrome
+        name: "Formatting: Firebase functions"
+        - find . -name "*.g.dart" -type f -delete && pub run dart_dev test
+        name: "Dart unit testing"
         - npm --prefix functions run test
+        name: "Firebase functions unit testing"
 
     - stage: Functional Testing
       name: Run Puppeteer Functional Tests
