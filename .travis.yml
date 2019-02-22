@@ -20,7 +20,7 @@ jobs:
         - pub run dart_dev analyze
         - pub run dart_dev format --check
         - npm --prefix functions run lint
-        - find . -name "*.g.dart" -type f -delete && pub run dart_dev test -p
+        - find . -name "*.g.dart" -type f -delete && pub run dart_dev test
         - npm --prefix functions run test
 
     - stage: Functional Testing
