@@ -2,9 +2,6 @@ library meal;
 
 import 'package:built_value/built_value.dart';
 import 'package:built_collection/built_collection.dart';
-import 'package:firebase/firebase.dart' as fb;
-
-import '../constants.dart';
 
 part 'meal.g.dart';
 
@@ -26,11 +23,15 @@ abstract class Meal implements Built<Meal, MealBuilder> {
   Meal._();
   factory Meal([updates(MealBuilder b)]) = _$Meal;
 
-  factory Meal.frmFirebase(Map<String, dynamic> firestoreData) => new Meal((MealBuilder builder) => builder
+  factory Meal.fromFirebase(Map<String, dynamic> firestoreData) => new Meal((MealBuilder builder) => builder
     ..uid = firestoreData['uid']
     ..startTime = DateTime.parse(firestoreData['start_time'])
     ..endTime = DateTime.parse(firestoreData['end_time'])
-    ..menu = firestoreData['menu']);
+    //Old
+    ..menu =firestoreData['menu']
+    //New
+    //..menu = new BuiltList<String>.from(firestoreData['menu'])
+    );
 
   Map<String, dynamic> toFirestore() => {
         'uid': uid,
