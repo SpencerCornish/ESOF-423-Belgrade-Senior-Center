@@ -13,6 +13,7 @@ import './dbRefs.dart';
 import '../constants.dart';
 
 import '../model/user.dart';
+import '../model/emergencyContact.dart';
 
 class FirebaseClient {
   final DbRefs _refs;
@@ -149,18 +150,18 @@ class FirebaseClient {
   }
 
   /// [updateUser] update existing user by unique identifier. key is any user field and value is the new value
-  updateUser(String documentID, String key, Object value) {
-    _refs.user(documentID).set(key, value, merge: true);
+  updateUser(String documentID, Map<String, dynamic> value) {
+    _refs.user(documentID).set(value, fs.SetOptions(merge: true));
   }
 
   /// [updateClass] update existing class by unique identifier. key is any class field and value is the new value
-  updateClass(String documentID, String key, Object value) {
-    _refs.singleClass(documentID).set(key, value, merge: true);
+  updateClass(String documentID, Map<String, dynamic> value) {
+    _refs.singleClass(documentID).set(value, fs.SetOptions(merge: true));
   }
 
   /// [updateMeal] update existing meal by unique identifier. key is any meal field and value is the new value
-  updateMeal(String documentID, String key, Object value) {
-    _refs.meal(documentID).set(key: value, merge: true);
+  updateMeal(String documentID, Map<String, dynamic> value) {
+    _refs.meal(documentID).set(value, fs.SetOptions(merge: true));
   }
 
   /// [deleteUser] delete existing user by unique identifier
