@@ -69,9 +69,6 @@ class StoredData extends PComponent<StoredDataProps> {
         new VTableCellElement()
           ..className = 'title is-5'
           ..text = "Name",
-        new VTableCellElement()
-          ..className = 'title is-5'
-          ..text = "Number",
       ]);
   }
 
@@ -85,12 +82,49 @@ class StoredData extends PComponent<StoredDataProps> {
         ..className = 'container'
         ..children = [
           new VDivElement()
-            ..className = 'columns is-centered margin-top'
+            ..className = 'columns'
             ..children = [
-              new Vtable()
-                ..className = 'table is-striped is-fullwidth'
-                ..children = createRows(),
-            ]
+              new VDivElement()
+                ..className = 'column is-full is centered'
+                ..children = [
+                  new VDivElement()
+                    ..className = 'columns'
+                    ..children = [
+                      new VDivElement()
+                        ..className = 'column is-3 is-offset-8'
+                        ..children = [
+                          new VDivElement()
+                            ..className = 'field'
+                            ..children = [
+                              new VParagraphElement()
+                                ..className = 'control has-icons-left'
+                                ..children = [
+                                  new VInputElement()
+                                    ..className = 'input'
+                                    ..placeholder = 'Search'
+                                    ..type = 'text',
+                                  new VSpanElement()
+                                    ..className = 'icon is-left'
+                                    ..children = [new Vi()..className = 'fas fa-search'],
+                                ],
+                            ],
+                        ],
+                      new VDivElement()..className = 'column is-1',
+                    ],
+                  new VDivElement()
+                    ..className = 'columns is-mobile'
+                    ..children = [
+                      new VDivElement()
+                        ..className = 'column is-offset-1-mobile is-offset-1-tablet'
+                        ..children = [
+                          new VTableElement()
+                            ..className = 'table is-striped is-fullwidth'
+                            ..children = createRows(),
+                        ],
+                      new VDivElement()..className = 'column is-1',
+                    ],
+                ],
+            ],
         ],
     ];
 }
