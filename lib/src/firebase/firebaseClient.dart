@@ -13,6 +13,7 @@ import './dbRefs.dart';
 import '../constants.dart';
 
 import '../model/user.dart';
+import '../model/emergencyContact.dart';
 
 class FirebaseClient {
   final DbRefs _refs;
@@ -34,8 +35,7 @@ class FirebaseClient {
     print("Auth Changed :: $fbUser");
     User newUser;
     if (fbUser != null) {
-      // TODO: Retrieve the database userdata here, and pass it into this factory too
-      newUser = new User.fromFirebase(fbUser, null);
+      newUser = new User.fromFirebase(fbUser, {}, new BuiltList<EmergencyContact>());
     }
     _actions.setUser(newUser);
     _actions.setAuthState(fbUser == null ? AuthState.INAUTHENTIC : AuthState.SUCCESS);
