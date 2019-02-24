@@ -30,7 +30,40 @@ class FirebaseClient {
     _auth.onAuthStateChanged.listen(_onAuthChanged);
   }
 
-  Future _onAuthChanged(fb.User user) async {
-    print("Auth Changed :: $user");
+  Future _onAuthChanged(fb.User fbUser) async {
+    print("Auth Changed :: $fbUser");
+    User newUser;
+    if (fbUser != null) {
+      // TODO: Retrieve the database userdata here, and pass it into this factory too
+      newUser = new User.fromFirebase(fbUser, null);
+    }
+    _actions.setUser(newUser);
+    _actions.setAuthState(fbUser == null ? AuthState.INAUTHENTIC : AuthState.SUCCESS);
+  }
+
+  Future logOut() async => _auth.signOut();
+
+  Future signInAdmin(String email, String password) async {
+    await _actions.setAuthState(AuthState.LOADING);
+    try {
+      await _auth.signInWithEmailAndPassword(email, password);
+    } on fb.FirebaseError catch (e) {
+      if (e.code == "auth/user-not-found") {
+        _actions.setAuthState(AuthState.ERR_NOT_FOUND);
+      } else if (e.code == "auth/wrong-password") {
+        _actions.setAuthState(AuthState.ERR_PASSWORD);
+      } else {
+        _actions.setAuthState(AuthState.ERR_OTHER);
+      }
+    } catch (e) {
+      _actions.setAuthState(AuthState.ERR_OTHER);
+    }
+  }
+
+  resetPassword(String email) {
+    // TODO: Adjust this redurect url as needed.
+    _auth.sendPasswordResetEmail(email,
+        new fb.ActionCodeSettings(url: "https://bsc-development.firebaseapp.com/pw_reset/${stringToBase(email)}"));
+    _actions.setAuthState(AuthState.PASS_RESET_SENT);
   }
 }

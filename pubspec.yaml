@@ -11,6 +11,8 @@ dependencies:
   build: ^1.1.0
   built_redux: ^7.5.2
   built_value: ^6.3.0
+  crypto: ^2.0.6
+  email_validator: "^1.0.0"
   firebase: ^5.0.2
   intl: ^0.15.7
   sentry_client: ^4.2.1

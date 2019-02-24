@@ -39,77 +39,119 @@ class Forms extends PComponent<FormsProps> {
         ],
     ];
 
-  ///create the text boxes that are used to create new users
+  //create the text boxes that are used to create new users
   VNode _userCreation() => new VDivElement()
-    ..className = 'field'
+    ..className = 'box'
     ..children = [
-      //field for first name
+      //create the First Name Input field
       new VDivElement()
-        ..className = 'label'
-        ..text = "First Name"
+        ..className = 'field is-grouped'
         ..children = [
-          new VInputElement()
-            ..className = 'input'
-            ..type = "name"
-            ..id = 'fName-input'
-            ..placeholder = "First Name"
+          new VDivElement()
+            ..className = 'field is-horizontal'
+            ..children = [
+              new VDivElement()
+                ..className = 'field-body'
+                ..children = [
+                  new VDivElement()
+                    ..className = 'field-label is-normal'
+                    ..children = [
+                      new VLabelElement()
+                        ..className = 'label'
+                        ..text = "First Name"
+                    ],
+
+                  new VParagraphElement()
+                    ..className = 'control'
+                    ..children = [
+                      new VDivElement()
+                        ..className = 'field-label'
+                        ..children = [
+                          new VInputElement()
+                            ..className = 'input'
+                            ..id = 'fName-input'
+                            ..placeholder = "First Name"
+                        ],
+                    ],
+                  //creat the Last Name Input Field
+                  new VDivElement()
+                    ..className = 'field-label is-normal'
+                    ..children = [
+                      new VLabelElement()
+                        ..className = 'label'
+                        ..text = "Last Name"
+                    ],
+                  new VParagraphElement()
+                    ..className = 'control is-expanded'
+                    ..children = [
+                      new VDivElement()
+                        ..className = 'field-label is-expanded'
+                        ..children = [
+                          new VInputElement()
+                            ..className = 'input'
+                            ..id = 'lName-input'
+                            ..placeholder = "Last Name"
+                        ],
+                    ]
+                ],
+            ],
         ],
-      //field field last name
+
+      //create the Email Input field
       new VDivElement()
-        ..className = 'label'
-        ..text = "Last Name"
+        ..className = 'field'
         ..children = [
+          new VLabelElement()
+            ..className = 'label'
+            ..text = "Email",
           new VInputElement()
             ..className = 'input'
-            ..type = "Last Name"
-            ..id = 'lName-input'
-            ..placeholder = "Last Name"
-        ],
-      //field for email
-      new VDivElement()
-        ..className = 'label'
-        ..text = "Email"
-        ..children = [
-          new VInputElement()
-            ..className = 'input'
-            ..type = "Email"
             ..id = 'email-input'
             ..placeholder = "Email@email.email"
+            ..type = 'email'
         ],
-      //field for phone number
+      //create the Phone Number Input field
       new VDivElement()
-        ..className = 'label'
-        ..text = "Phone Number"
+        ..className = 'field'
         ..children = [
+          new VLabelElement()
+            ..className = 'label'
+            ..text = "Phone Number",
           new VInputElement()
             ..className = 'input'
-            ..type = "Phone Number"
             ..id = 'phoneNum-input'
             ..placeholder = "1234567891"
+            ..type = 'tel'
         ],
-      //field for cell phone
+      //create the Cell Phone Number Input field
       new VDivElement()
-        ..className = 'label'
-        ..text = "Cell Number"
+        ..className = 'field'
         ..children = [
+          new VLabelElement()
+            ..className = 'label'
+            ..text = "Cell Number",
           new VInputElement()
             ..className = 'input'
-            ..type = "Cell Number"
             ..id = 'cellNum-input'
             ..placeholder = "1234567891"
+            ..type = 'tel'
         ],
-      //field for address
+      //create the Address Input field
       new VDivElement()
-        ..className = 'label'
-        ..text = "Address"
+        ..className = 'field'
         ..children = [
+          new VLabelElement()
+            ..className = 'label'
+            ..text = "Address",
           new VInputElement()
             ..className = 'input'
-            ..type = "Address"
             ..id = 'address-input'
             ..placeholder = "US Only"
         ],
-      //used for the user type dropdown menu
+
+      //TODO: Add a field for profile picture
+
+      //create the drop down menu for establishing the time of user
       new VDivElement()
         ..className = 'dropdown is-active'
         ..children = [
@@ -120,7 +162,7 @@ class Forms extends PComponent<FormsProps> {
                 ..className = 'button is-dropdown-menu'
                 ..children = [
                   new VSpanElement()
-                    ..text = "Dropdown Button"
+                    ..text = "Role"
                     ..children = [
                       new VSpanElement()
                         ..className = 'icon'
@@ -128,18 +170,21 @@ class Forms extends PComponent<FormsProps> {
                     ],
                   new VDivElement()
                     ..className = 'dropdown-menu'
-                    //..id = 'dropdown-menu'
+                    ..id = 'dropdown-menu'
                     ..children = [
                       new VDivElement()
                         ..className = 'dropdown-content'
                         ..children = [
                           new VDivElement()
                             ..className = 'dropdown-item'
-                            ..text = "Member"
-                        ],
+                            ..text = "Member",
                           new VDivElement()
                             ..className = 'dropdown-item'
-                            ..text = "Volunteer"
+                            ..text = "Volunteer",
+                          new VDivElement()
+                            ..className = 'dropdown-item'
+                            ..text = "Admin",
+                        ],
                     ]
                 ]
             ]

@@ -22,3 +22,4 @@ N/A at this time.
 
 Please submit a GitHub issue [here](https://github.com/SpencerCornish/belgrade-senior-center/issues).  
 Make sure to include the browser you are using, the operating system of your device and contact info for yourself
+Here is a link for how to write a good bug report, please refrence it before submitting yours. [Link](https://docs.oracle.com/javase/8/docs/technotes/guides/troubleshoot/bugreports002.html#CHDBFAEE)
