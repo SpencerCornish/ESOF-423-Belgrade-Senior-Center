@@ -109,7 +109,8 @@ describe("Home Page", () => {
     await page.goto(APP);
     await page.waitForSelector("#home-container");
 
-    await page.click("#user-doc-button");
+    page.click("#user-doc-button");
+    await page.waitForNavigation();
 
     expect(await page.evaluate(() => document.URL)).toBe("https://github.com/SpencerCornish/belgrade-senior-center/blob/master/USERREADME.md");
   }, 16000);
@@ -118,8 +119,9 @@ describe("Home Page", () => {
     await page.goto(APP);
     await page.waitForSelector("#home-container");
 
-    await page.click("#dev-doc-button");
-
+    page.click("#dev-doc-button");
+    await page.waitForNavigation();
+    
     expect(await page.evaluate(() => document.URL)).toBe("https://github.com/SpencerCornish/belgrade-senior-center/blob/master/README.md");
   }, 16000);
 });
