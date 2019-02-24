@@ -84,13 +84,12 @@ abstract class User implements Built<User, UserBuilder> {
         ..membershipStart = DateTime.parse(firestoreData['membership_start'])
         ..membershipRenewal = DateTime.parse(firestoreData['membership_renewal'])
         ..disabilities = firestoreData['disabilities']
-        ..forms = firestoreData['forms']
+        ..forms = BuiltList<String>.from(firestoreData['forms']).toBuilder()
         ..medicalIssues = firestoreData['medical_issues']
         ..position = firestoreData['position']
-        ..services = firestoreData['services']);
+        ..services = BuiltList<String>.from(firestoreData['services']).toBuilder());
 
   Map<String, dynamic> toFirestore() => {
-        'uid': uid,
         'first_name': firstName,
         'last_name': lastName,
         'email': email,

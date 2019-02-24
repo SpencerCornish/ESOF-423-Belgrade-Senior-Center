@@ -21,9 +21,17 @@ class AdminSignInPayload {
 
 // Actions to be handled ONLY by this middleware
 abstract class ServerMiddlewareActions extends ReduxActions {
+  /// [signInAdmin] starts the sign in process for administrators
   ActionDispatcher<AdminSignInPayload> signInAdmin;
+
+  /// [logOut] deauths the current user
   ActionDispatcher<Null> logOut;
+
+  /// [resetPassword] attempts to send a reset email to the provided email
   ActionDispatcher<String> resetPassword;
+
+  ActionDispatcher<User> updateOrCreateUser;
+
   ServerMiddlewareActions._();
   factory ServerMiddlewareActions() => new _$ServerMiddlewareActions();
 }
@@ -31,7 +39,8 @@ abstract class ServerMiddlewareActions extends ReduxActions {
 createServerMiddleware(FirebaseClient client) => (new MiddlewareBuilder<App, AppBuilder, AppActions>()
       ..add<AdminSignInPayload>(ServerMiddlewareActionsNames.signInAdmin, _signInAdmin(client))
       ..add<Null>(ServerMiddlewareActionsNames.logOut, _logOut(client))
-      ..add<String>(ServerMiddlewareActionsNames.resetPassword, _resetPassword(client)))
+      ..add<String>(ServerMiddlewareActionsNames.resetPassword, _resetPassword(client))
+      ..add<User>(ServerMiddlewareActionsNames.updateOrCreateUser, _addOrUpdateUser(client)))
     .build();
 
 _signInAdmin(FirebaseClient client) => (
@@ -54,3 +63,11 @@ _resetPassword(FirebaseClient client) => (
       Action<String> action,
     ) async =>
         client.resetPassword(action.payload);
+
+_addOrUpdateUser(FirebaseClient client) => (
+      MiddlewareApi<App, AppBuilder, AppActions> api,
+      ActionHandler next,
+      Action<User> action,
+    ) async {
+      client.addOrUpdateUser(action.payload.toFirestore());
+    };

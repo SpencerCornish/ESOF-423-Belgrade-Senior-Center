@@ -102,7 +102,7 @@ class Nav extends PComponent<NavProps> {
                         ..children = [
                           new VParagraphElement()
                             ..className = 'has-text-grey'
-                            ..text = props.user?.uid,
+                            ..text = "Welcome, ${props.user?.firstName} ${props.user?.lastName}!",
                         ],
                       new VDivElement()
                         ..className = 'column is-narrow'
