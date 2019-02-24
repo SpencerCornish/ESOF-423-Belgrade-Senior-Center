@@ -35,7 +35,7 @@ abstract class User implements Built<User, UserBuilder> {
   /// [dietaryRestrictions] is a comma separated list of restricted dietary items for the user
   String get dietaryRestrictions;
 
-  /// [emergencyContacts] is a built list of [EmergencyContact] objects
+  /// [emergencyContacts] is a built list of [EmergencyContact] objects, held here as their uuid's
   BuiltList<String> get emergencyContacts;
 
   /// [membershipStart] is a DateTime object representing the time at which the user's membership began
