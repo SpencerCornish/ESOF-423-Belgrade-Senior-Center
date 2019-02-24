@@ -31,15 +31,26 @@ class FirebaseClient {
   }
 
   Future _onAuthChanged(fb.User fbUser) async {
-    print("Auth Changed :: $fbUser");
     User newUser;
-    if (fbUser != null) {
-      // TODO: Retrieve the database userdata here, and pass it into this factory too
-      newUser = new User.fromFirebase(fbUser, null);
-    }
+    // Log in event
+    fbUser != null ? await _userLoginEvent(fbUser) : await _userLogoutEvent(fbUser);
+
     _actions.setUser(newUser);
     _actions.setAuthState(fbUser == null ? AuthState.INAUTHENTIC : AuthState.SUCCESS);
   }
+
+  Future _userLoginEvent(fb.User userPayload) async {
+    fs.DocumentSnapshot userDbData = await _refs.user(userPayload.uid).get();
+    if (!userDbData.exists) {
+      // Create a new user here
+    }
+    // Retrieved data
+    print(userDbData.data());
+    // User cacheUser = new User.fromFirebase(userPayload, null, userDbData.data());
+
+  }
+
+  Future _userLogoutEvent(fb.User userPayload) async {}
 
   Future logOut() async => _auth.signOut();
 
@@ -60,7 +71,7 @@ class FirebaseClient {
     }
   }
 
-  resetPassword(String email) {
+  void resetPassword(String email) {
     // TODO: Adjust this redurect url as needed.
     _auth.sendPasswordResetEmail(email,
         new fb.ActionCodeSettings(url: "https://bsc-development.firebaseapp.com/pw_reset/${stringToBase(email)}"));
