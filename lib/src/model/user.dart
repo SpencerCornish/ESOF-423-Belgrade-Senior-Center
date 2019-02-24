@@ -4,6 +4,8 @@ import 'package:built_value/built_value.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:firebase/firebase.dart' as fb;
 
+import './emergencyContact.dart';
+
 part 'user.g.dart';
 
 /// [User] is a model for the user database document
@@ -11,7 +13,6 @@ abstract class User implements Built<User, UserBuilder> {
   /// [uid] is the unique identifier for the user
   String get uid;
 
-  /// TODO: Hudrate these fields when creating a user model
   /// [firstName] required
   String get firstName;
 
@@ -24,6 +25,9 @@ abstract class User implements Built<User, UserBuilder> {
   /// [phoneNumber] may be an empty string
   String get phoneNumber;
 
+  /// [mobleNumber] may be an empty string
+  String get mobileNumber;
+
   /// [address] US only
   String get address;
 
@@ -35,8 +39,8 @@ abstract class User implements Built<User, UserBuilder> {
   /// [dietaryRestrictions] is a comma separated list of restricted dietary items for the user
   String get dietaryRestrictions;
 
-  /// [emergencyContacts] is a built list of [EmergencyContact] objects, held here as their uuid's
-  BuiltList<String> get emergencyContacts;
+  /// [emergencyContacts] is a built list of [EmergencyContact] objects
+  BuiltList<EmergencyContact> get emergencyContacts;
 
   /// [membershipStart] is a DateTime object representing the time at which the user's membership began
   DateTime get membershipStart;
@@ -64,17 +68,19 @@ abstract class User implements Built<User, UserBuilder> {
   User._();
   factory User([updates(UserBuilder b)]) = _$User;
 
-  factory User.fromFirebase(fb.User fbUser, fb.UserInfo additionalInfo, Map<String, dynamic> firestoreData) =>
+  factory User.fromFirebase(
+          fb.User fbUser, Map<String, dynamic> firestoreData, BuiltList<EmergencyContact> emergencyContact) =>
       new User((UserBuilder builder) => builder
         ..uid = fbUser.uid
         ..firstName = firestoreData['first_name']
         ..lastName = firestoreData['last_name']
         ..email = firestoreData['email']
         ..phoneNumber = firestoreData['phone_number']
+        ..mobileNumber = firestoreData['mobile_number']
         ..address = firestoreData['address']
         ..role = firestoreData['role']
         ..dietaryRestrictions = firestoreData['dietary_restrictions']
-        ..emergencyContacts = firestoreData['emergency_contacts']
+        ..emergencyContacts = emergencyContact.toBuilder()
         ..membershipStart = DateTime.parse(firestoreData['membership_start'])
         ..membershipRenewal = DateTime.parse(firestoreData['membership_renewal'])
         ..disabilities = firestoreData['disabilities']
@@ -88,7 +94,8 @@ abstract class User implements Built<User, UserBuilder> {
         'first_name': firstName,
         'last_name': lastName,
         'email': email,
-        'phoneNumber': phoneNumber,
+        'phone_number': phoneNumber,
+        'mobile_number': phoneNumber,
         'address': address,
         'role': role,
         'dietary_restrictions': dietaryRestrictions,

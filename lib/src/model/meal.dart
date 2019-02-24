@@ -27,16 +27,12 @@ abstract class Meal implements Built<Meal, MealBuilder> {
     ..uid = firestoreData['uid']
     ..startTime = DateTime.parse(firestoreData['start_time'])
     ..endTime = DateTime.parse(firestoreData['end_time'])
-    //Old
-    ..menu =firestoreData['menu']
-    //New
-    //..menu = new BuiltList<String>.from(firestoreData['menu'])
-    );
+    ..menu = new BuiltList<String>.from(firestoreData['menu']).toBuilder());
 
   Map<String, dynamic> toFirestore() => {
         'uid': uid,
         'start_time': startTime.toIso8601String(),
         'end_time': endTime.toIso8601String(),
-        'menu': menu,
+        'menu': menu.toList(),
       };
 }

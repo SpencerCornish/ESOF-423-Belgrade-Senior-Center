@@ -18,13 +18,15 @@ class _$User extends User {
   @override
   final String phoneNumber;
   @override
+  final String mobileNumber;
+  @override
   final String address;
   @override
   final String role;
   @override
   final String dietaryRestrictions;
   @override
-  final BuiltList<String> emergencyContacts;
+  final BuiltList<EmergencyContact> emergencyContacts;
   @override
   final DateTime membershipStart;
   @override
@@ -48,6 +50,7 @@ class _$User extends User {
       this.lastName,
       this.email,
       this.phoneNumber,
+      this.mobileNumber,
       this.address,
       this.role,
       this.dietaryRestrictions,
@@ -74,6 +77,9 @@ class _$User extends User {
     }
     if (phoneNumber == null) {
       throw new BuiltValueNullFieldError('User', 'phoneNumber');
+    }
+    if (mobileNumber == null) {
+      throw new BuiltValueNullFieldError('User', 'mobileNumber');
     }
     if (address == null) {
       throw new BuiltValueNullFieldError('User', 'address');
@@ -125,6 +131,7 @@ class _$User extends User {
         lastName == other.lastName &&
         email == other.email &&
         phoneNumber == other.phoneNumber &&
+        mobileNumber == other.mobileNumber &&
         address == other.address &&
         role == other.role &&
         dietaryRestrictions == other.dietaryRestrictions &&
@@ -153,10 +160,12 @@ class _$User extends User {
                                             $jc(
                                                 $jc(
                                                     $jc(
-                                                        $jc($jc($jc(0, uid.hashCode), firstName.hashCode),
-                                                            lastName.hashCode),
-                                                        email.hashCode),
-                                                    phoneNumber.hashCode),
+                                                        $jc(
+                                                            $jc($jc($jc(0, uid.hashCode), firstName.hashCode),
+                                                                lastName.hashCode),
+                                                            email.hashCode),
+                                                        phoneNumber.hashCode),
+                                                    mobileNumber.hashCode),
                                                 address.hashCode),
                                             role.hashCode),
                                         dietaryRestrictions.hashCode),
@@ -178,6 +187,7 @@ class _$User extends User {
           ..add('lastName', lastName)
           ..add('email', email)
           ..add('phoneNumber', phoneNumber)
+          ..add('mobileNumber', mobileNumber)
           ..add('address', address)
           ..add('role', role)
           ..add('dietaryRestrictions', dietaryRestrictions)
@@ -216,6 +226,10 @@ class UserBuilder implements Builder<User, UserBuilder> {
   String get phoneNumber => _$this._phoneNumber;
   set phoneNumber(String phoneNumber) => _$this._phoneNumber = phoneNumber;
 
+  String _mobileNumber;
+  String get mobileNumber => _$this._mobileNumber;
+  set mobileNumber(String mobileNumber) => _$this._mobileNumber = mobileNumber;
+
   String _address;
   String get address => _$this._address;
   set address(String address) => _$this._address = address;
@@ -228,9 +242,11 @@ class UserBuilder implements Builder<User, UserBuilder> {
   String get dietaryRestrictions => _$this._dietaryRestrictions;
   set dietaryRestrictions(String dietaryRestrictions) => _$this._dietaryRestrictions = dietaryRestrictions;
 
-  ListBuilder<String> _emergencyContacts;
-  ListBuilder<String> get emergencyContacts => _$this._emergencyContacts ??= new ListBuilder<String>();
-  set emergencyContacts(ListBuilder<String> emergencyContacts) => _$this._emergencyContacts = emergencyContacts;
+  ListBuilder<EmergencyContact> _emergencyContacts;
+  ListBuilder<EmergencyContact> get emergencyContacts =>
+      _$this._emergencyContacts ??= new ListBuilder<EmergencyContact>();
+  set emergencyContacts(ListBuilder<EmergencyContact> emergencyContacts) =>
+      _$this._emergencyContacts = emergencyContacts;
 
   DateTime _membershipStart;
   DateTime get membershipStart => _$this._membershipStart;
@@ -269,6 +285,7 @@ class UserBuilder implements Builder<User, UserBuilder> {
       _lastName = _$v.lastName;
       _email = _$v.email;
       _phoneNumber = _$v.phoneNumber;
+      _mobileNumber = _$v.mobileNumber;
       _address = _$v.address;
       _role = _$v.role;
       _dietaryRestrictions = _$v.dietaryRestrictions;
@@ -309,6 +326,7 @@ class UserBuilder implements Builder<User, UserBuilder> {
               lastName: lastName,
               email: email,
               phoneNumber: phoneNumber,
+              mobileNumber: mobileNumber,
               address: address,
               role: role,
               dietaryRestrictions: dietaryRestrictions,

@@ -9,7 +9,7 @@ abstract class Activity implements Built<Activity, ActivityBuilder> {
   /// [uid] is the unique identifier for the activity
   String get uid;
 
-  /// [capacity] May be -1 as a N/A
+  /// [capacity] May be -1 for unlimited
   int get capacity;
 
   /// [endTime] required
@@ -38,6 +38,7 @@ abstract class Activity implements Built<Activity, ActivityBuilder> {
     ..instructor = firestoreData['instructor']
     ..location = firestoreData['location']
     ..name = firestoreData['name']);
+
   Map<String, dynamic> toFirestore() => {
         'uid': uid,
         'capacity': capacity,
