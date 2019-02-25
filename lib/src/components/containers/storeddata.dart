@@ -87,7 +87,7 @@ class StoredData extends PComponent<StoredDataProps> {
                 ..className = 'column is-four-fifths'
                 ..children = [
                   new VDivElement()
-                    ..className = 'columns is-centered'
+                    ..className = 'columns is-mobile is-centered'
                     ..children = [
                       new VDivElement()
                         ..className = 'column is-narrow'
