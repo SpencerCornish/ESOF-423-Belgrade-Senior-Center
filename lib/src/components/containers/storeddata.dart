@@ -20,7 +20,7 @@ class StoredDataProps {
 /// [StoredData] class / page to show a visual representation of current stored data
 class StoredData extends PComponent<StoredDataProps> {
   StoredData(props) : super(props);
-  // TODO : for each collection item in current row make a colomn element
+  // TODO : change to props of actual data
   List<String> items = ["bob", "57", "15589", 'this thing', "bob", "57", "15589", 'this thing', "15589"];
   History _history;
 
@@ -33,7 +33,6 @@ class StoredData extends PComponent<StoredDataProps> {
   /// [createCol] Scaling function for width based on number of types of info
   List<VNode> createCol() {
     List<VNode> nodeList = new List();
-
     for (var item in items) {
       nodeList.add(
         new VTableCellElement()
@@ -48,7 +47,6 @@ class StoredData extends PComponent<StoredDataProps> {
   List<VNode> createRows() {
     List<VNode> nodeList = new List();
     nodeList.addAll(titleRow());
-    // TODO for each user/meal/activity create a row
     for (var i = 0; i < 16; i++) {
       nodeList.add(new VTableRowElement()
         ..className = 'tr'
@@ -61,6 +59,7 @@ class StoredData extends PComponent<StoredDataProps> {
   List<VNode> titleRow() {
     List<VNode> nodeList = new List();
     int i = 0;
+    //TODO: get prop attribute to set as title
     for (var item in items) {
       i++;
       nodeList.add(
@@ -85,7 +84,7 @@ class StoredData extends PComponent<StoredDataProps> {
             ..className = 'columns is-mobile margin-top is-centered'
             ..children = [
               new VDivElement()
-                ..className = 'column is-offset-1-mobile is-offset-1-tablet is-10'
+                ..className = 'column is-four-fifths'
                 ..children = [
                   new VDivElement()
                     ..className = 'box'
@@ -98,7 +97,7 @@ class StoredData extends PComponent<StoredDataProps> {
                             ..children = [
                               new VInputElement()
                                 ..className = 'input'
-                                ..placeholder = 'Search'
+                                ..placeholder = 'Filter'
                                 ..type = 'text',
                               new VSpanElement()
                                 ..className = 'icon is-left'
