@@ -26,6 +26,9 @@ class Container extends PComponent<ContainerProps> {
   /// Ease of use getter for appState
   App get appState => props.storeContainer.store.state;
 
+  /// Ease of use getter for actions
+  AppActions get actions => props.storeContainer.store.actions;
+
   Container(props) : super(props);
 
   /// Browser history entrypoint, to control page navigation
@@ -34,6 +37,9 @@ class Container extends PComponent<ContainerProps> {
 
   @override
   void componentWillMount() {
+    // Get all the users from the database
+    actions.server.fetchAllMembers();
+
     storeContainerSub = props.storeContainer.store.stream.listen((_) => updateOnAnimationFrame());
   }
 
@@ -57,18 +63,20 @@ class Container extends PComponent<ContainerProps> {
               // Default homepage route. Redirect to the dashboard if the user is authenticated
               new Route(
                 path: Routes.home,
-                componentFactory: (params) =>
-                    appState.authState == AuthState.SUCCESS ? _renderHome() : _redirect(Routes.dashboard),
+                componentFactory: (_) => _renderHome(),
                 useAsDefault: true,
               ),
               new Route(path: Routes.resetContinue, componentFactory: (params) => _renderResetContinue(params)),
-              new Route(path: Routes.dashboard, componentFactory: (params) => _renderDashboard()),
+              new Route(path: Routes.dashboard, componentFactory: (_) => _renderIfAuthenticated(_renderDashboard())),
             ],
           ),
         ],
       // new Footer(new FooterProps()..actions = props.storeContainer.store.actions),
       new DebugNavigator(new DebugNavigatorProps()..actions = props.storeContainer.store.actions),
     ];
+
+  // Only renders if the user is properly authenticated. Otherwise, bail to the homepage
+  _renderIfAuthenticated(VNode page) => appState.authState == AuthState.SUCCESS ? page : _redirect(Routes.home);
 
   // Helper for performing quick redirects, typically in the case of fresh authentication
   _redirect(String newRoute) {

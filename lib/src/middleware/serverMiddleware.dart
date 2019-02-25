@@ -27,7 +27,12 @@ abstract class ServerMiddlewareActions extends ReduxActions {
   /// [resetPassword] attempts to send a reset email to the provided email
   ActionDispatcher<String> resetPassword;
 
+  /// [updateOrCreateUser] attempts to update a user record. If it is unsuccessful, it creates a new one.
   ActionDispatcher<User> updateOrCreateUser;
+
+  // TODO: Authenticate this call
+  /// [fetchAllMembers] fetches the list of all Members in the database.
+  ActionDispatcher<Null> fetchAllMembers;
 
   ServerMiddlewareActions._();
   factory ServerMiddlewareActions() => new _$ServerMiddlewareActions();
@@ -37,7 +42,8 @@ createServerMiddleware(FirebaseClient client) => (new MiddlewareBuilder<App, App
       ..add<AdminSignInPayload>(ServerMiddlewareActionsNames.signInAdmin, _signInAdmin(client))
       ..add<Null>(ServerMiddlewareActionsNames.logOut, _logOut(client))
       ..add<String>(ServerMiddlewareActionsNames.resetPassword, _resetPassword(client))
-      ..add<User>(ServerMiddlewareActionsNames.updateOrCreateUser, _addOrUpdateUser(client)))
+      ..add<User>(ServerMiddlewareActionsNames.updateOrCreateUser, _addOrUpdateUser(client))
+      ..add<Null>(ServerMiddlewareActionsNames.fetchAllMembers, _fetchAllMembers(client)))
     .build();
 
 _signInAdmin(FirebaseClient client) => (
@@ -67,4 +73,13 @@ _addOrUpdateUser(FirebaseClient client) => (
       Action<User> action,
     ) async {
       client.addOrUpdateUser(action.payload.toFirestore());
+    };
+
+_fetchAllMembers(FirebaseClient client) => (
+      MiddlewareApi<App, AppBuilder, AppActions> api,
+      ActionHandler next,
+      Action<Null> action,
+    ) async {
+      final memberMap = await client.getAllMembers();
+      api.actions.setUserMap(memberMap);
     };

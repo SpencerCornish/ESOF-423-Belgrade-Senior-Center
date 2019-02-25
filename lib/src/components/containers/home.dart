@@ -23,6 +23,13 @@ class Home extends PComponent<HomeProps> {
 
   /// Browser history entrypoint, to control page navigation
   History get history => _history ?? findHistoryInContext(context);
+  @override
+  void componentWillMount() {
+    if (props.authState == AuthState.SUCCESS) {
+      history.push(Routes.dashboard);
+    }
+    super.componentWillMount();
+  }
 
   @override
   void componentDidMount() {
@@ -31,6 +38,14 @@ class Home extends PComponent<HomeProps> {
       history.push(Routes.home);
     }
     super.componentDidMount();
+  }
+
+  @override
+  void componentWillUpdate(HomeProps nextProps, Null nextState) {
+    if (nextProps.authState == AuthState.SUCCESS) {
+      history.push(Routes.dashboard);
+    }
+    super.componentWillUpdate(nextProps, nextState);
   }
 
   @override

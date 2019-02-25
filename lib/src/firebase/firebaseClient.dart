@@ -64,7 +64,8 @@ class FirebaseClient {
 
       addOrUpdateUser(newUser.toFirestore(), documentID: userPayload.uid);
     } else {
-      newUser = new User.fromFirebase(userPayload, userDbData.data(), new BuiltList<EmergencyContact>());
+      newUser =
+          new User.fromFirebase(userPayload.uid, userDbData.data(), new BuiltList<EmergencyContact>(), userPayload);
     }
     return newUser;
   }
@@ -97,7 +98,14 @@ class FirebaseClient {
   // getMembers (TODO: with role or all?)
 
   /// [getAllMembers] get all member documents
-  getAllMembers() => _refs.allUsers().get();
+  Future<BuiltMap<String, User>> getAllMembers() async {
+    Map<String, User> dataSet = <String, User>{};
+    fs.QuerySnapshot result = await _refs.allUsers().get();
+    for (fs.DocumentSnapshot doc in result.docs) {
+      dataSet[doc.id] = new User.fromFirebase(doc.id, doc.data(), new BuiltList<EmergencyContact>());
+    }
+    return new BuiltMap<String, User>.from(dataSet);
+  }
 
   /// [getMember] get just one member document by unique identifier
   getMember(String uid) => _refs.user(uid).get();
@@ -109,8 +117,6 @@ class FirebaseClient {
 
   /// [getMeal] get just one meal document by unique identifier
   getMeal(String uid) => _refs.meal(uid).get();
-
-  // getClasses (TODO: by range, by capacity?)
 
   /// [getAllClasses] this will get all class documents
   getAllClasses() => _refs.allClasses().get();

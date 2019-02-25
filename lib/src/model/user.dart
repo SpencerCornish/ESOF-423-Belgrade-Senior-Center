@@ -69,12 +69,16 @@ abstract class User implements Built<User, UserBuilder> {
   factory User([updates(UserBuilder b)]) = _$User;
 
   factory User.fromFirebase(
-          fb.User fbUser, Map<String, dynamic> firestoreData, BuiltList<EmergencyContact> emergencyContact) =>
+    String id,
+    Map<String, dynamic> firestoreData,
+    BuiltList<EmergencyContact> emergencyContact, [
+    fb.User fbAuthData,
+  ]) =>
       new User((UserBuilder builder) => builder
-        ..uid = fbUser.uid
+        ..uid = fbAuthData?.uid ?? id
         ..firstName = firestoreData['first_name']
         ..lastName = firestoreData['last_name']
-        ..email = firestoreData['email']
+        ..email = fbAuthData?.uid ?? firestoreData['email']
         ..phoneNumber = firestoreData['phone_number']
         ..mobileNumber = firestoreData['mobile_number']
         ..address = firestoreData['address']

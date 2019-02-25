@@ -150,7 +150,7 @@ class Nav extends PComponent<NavProps> {
             ],
         ],
     ];
-    
+
   _onNewMemberClick(_) => print('Navigate to new member form');
 
   _onNewMealClick(_) => print('Navigate to new meal form');
