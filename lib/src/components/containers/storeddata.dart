@@ -20,7 +20,8 @@ class StoredDataProps {
 /// [StoredData] class / page to show a visual representation of current stored data
 class StoredData extends PComponent<StoredDataProps> {
   StoredData(props) : super(props);
-
+  // TODO : for each collection item in current row make a colomn element
+  List<String> items = ["bob", "57", "15589", 'this thing', "bob", "57", "15589", 'this thing', "15589"];
   History _history;
 
   /// Browser history entrypoint, to control page navigation
@@ -32,8 +33,7 @@ class StoredData extends PComponent<StoredDataProps> {
   /// [createCol] Scaling function for width based on number of types of info
   List<VNode> createCol() {
     List<VNode> nodeList = new List();
-    // TODO : for each collection item in current row make a colomn element
-    List<String> items = ["bob", "57"];
+
     for (var item in items) {
       nodeList.add(
         new VTableCellElement()
@@ -47,9 +47,9 @@ class StoredData extends PComponent<StoredDataProps> {
   /// [createRows] Scaling function to make rows based on amount of information available
   List<VNode> createRows() {
     List<VNode> nodeList = new List();
-    nodeList.add(titleRow());
+    nodeList.addAll(titleRow());
     // TODO for each user/meal/activity create a row
-    for (var i = 0; i < 2; i++) {
+    for (var i = 0; i < 16; i++) {
       nodeList.add(new VTableRowElement()
         ..className = 'tr'
         ..children = createCol());
@@ -58,18 +58,18 @@ class StoredData extends PComponent<StoredDataProps> {
   }
 
   /// [titleRow] helper function to create the title row
-  VNode titleRow() {
-    // TODO : for each collection item in current row make a colomn element by collection type
-    return (new VTableRowElement()
-      ..className = 'tr'
-      ..children = [
+  List<VNode> titleRow() {
+    List<VNode> nodeList = new List();
+    int i = 0;
+    for (var item in items) {
+      i++;
+      nodeList.add(
         new VTableCellElement()
-          ..className = 'title is-5'
-          ..text = "ID",
-        new VTableCellElement()
-          ..className = 'title is-5'
-          ..text = "Name",
-      ]);
+          ..className = 'title is-4'
+          ..text = "Title " + i.toString(),
+      );
+    }
+    return nodeList;
   }
 
   @override
@@ -82,46 +82,32 @@ class StoredData extends PComponent<StoredDataProps> {
         ..className = 'container'
         ..children = [
           new VDivElement()
-            ..className = 'columns'
+            ..className = 'columns is-mobile margin-top is-centered'
             ..children = [
               new VDivElement()
-                ..className = 'column is-full is centered'
+                ..className = 'column is-offset-1-mobile is-offset-1-tablet is-10'
                 ..children = [
                   new VDivElement()
-                    ..className = 'columns'
+                    ..className = 'box'
                     ..children = [
                       new VDivElement()
-                        ..className = 'column is-3 is-offset-8'
+                        ..className = 'field'
                         ..children = [
-                          new VDivElement()
-                            ..className = 'field'
+                          new VParagraphElement()
+                            ..className = 'control has-icons-left'
                             ..children = [
-                              new VParagraphElement()
-                                ..className = 'control has-icons-left'
-                                ..children = [
-                                  new VInputElement()
-                                    ..className = 'input'
-                                    ..placeholder = 'Search'
-                                    ..type = 'text',
-                                  new VSpanElement()
-                                    ..className = 'icon is-left'
-                                    ..children = [new Vi()..className = 'fas fa-search'],
-                                ],
+                              new VInputElement()
+                                ..className = 'input'
+                                ..placeholder = 'Search'
+                                ..type = 'text',
+                              new VSpanElement()
+                                ..className = 'icon is-left'
+                                ..children = [new Vi()..className = 'fas fa-search'],
                             ],
                         ],
-                      new VDivElement()..className = 'column is-1',
-                    ],
-                  new VDivElement()
-                    ..className = 'columns is-mobile'
-                    ..children = [
-                      new VDivElement()
-                        ..className = 'column is-offset-1-mobile is-offset-1-tablet'
-                        ..children = [
-                          new VTableElement()
-                            ..className = 'table is-striped is-fullwidth'
-                            ..children = createRows(),
-                        ],
-                      new VDivElement()..className = 'column is-1',
+                      new VTableElement()
+                        ..className = 'table is-striped is-fullwidth'
+                        ..children = createRows(),
                     ],
                 ],
             ],
