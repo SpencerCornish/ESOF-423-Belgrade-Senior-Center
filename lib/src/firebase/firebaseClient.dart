@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:firebase/firestore.dart' as fs;
 import 'package:firebase/firebase.dart' as fb;
 
@@ -39,6 +38,7 @@ class FirebaseClient {
   }
 
   Future _userLoginEvent(fb.User userPayload) async {
+    //TODO: Set up emergency contacts
     User newUser;
     fs.DocumentSnapshot userDbData = await _refs.user(userPayload.uid).get();
     if (!userDbData.exists) {

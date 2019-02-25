@@ -1,10 +1,7 @@
 library serverMiddleware;
 
 import 'package:built_redux/built_redux.dart';
-import 'package:built_collection/built_collection.dart';
-import 'package:firebase/firebase.dart' as fb;
 
-import '../constants.dart';
 import '../firebase/firebaseClient.dart';
 import '../state/app.dart';
 

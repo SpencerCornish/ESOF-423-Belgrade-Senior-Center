@@ -1,6 +1,5 @@
 import 'package:email_validator/email_validator.dart';
 import 'dart:convert';
-import 'package:crypto/crypto.dart';
 
 /// [Routes] defines URIs for the application
 class Routes {

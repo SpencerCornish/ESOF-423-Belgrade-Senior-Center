@@ -1,4 +1,3 @@
-import 'dart:html' hide History;
 
 import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';

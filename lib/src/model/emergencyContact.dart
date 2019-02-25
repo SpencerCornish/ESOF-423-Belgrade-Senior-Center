@@ -1,7 +1,6 @@
 library emergencyContact;
 
 import 'package:built_value/built_value.dart';
-import 'package:built_collection/built_collection.dart';
 
 part 'emergencyContact.g.dart';
 
