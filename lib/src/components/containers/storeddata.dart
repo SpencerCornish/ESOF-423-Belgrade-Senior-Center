@@ -87,10 +87,10 @@ class StoredData extends PComponent<StoredDataProps> {
                 ..className = 'column is-four-fifths'
                 ..children = [
                   new VDivElement()
-                    ..className = 'columns is-mobile'
+                    ..className = 'columns is-centered'
                     ..children = [
                       new VDivElement()
-                        ..className = 'column'
+                        ..className = 'column is-narrow'
                         ..children = [
                           new Vh1()
                             ..className = 'title'
@@ -104,33 +104,17 @@ class StoredData extends PComponent<StoredDataProps> {
                     ..className = 'box'
                     ..children = [
                       new VDivElement()
-                        ..className = 'columns is-mobile is-centered'
+                        ..className = 'buttons are-medium is-centered'
                         ..children = [
-                          new VDivElement()
-                            ..className = 'buttons are-medium'
-                            ..children = [
-                              new VDivElement()
-                                ..className = 'column'
-                                ..children = [
-                                  new Va()
-                                    ..className = 'button'
-                                    ..text = 'Users'
-                                ],
-                              new VDivElement()
-                                ..className = 'column'
-                                ..children = [
-                                  new Va()
-                                    ..className = 'button'
-                                    ..text = 'Activity',
-                                ],
-                              new VDivElement()
-                                ..className = 'column'
-                                ..children = [
-                                  new Va()
-                                    ..className = 'button'
-                                    ..text = 'Meals',
-                                ],
-                            ],
+                          new Va()
+                            ..className = 'button'
+                            ..text = 'Users',
+                          new Va()
+                            ..className = 'button'
+                            ..text = 'Activity',
+                          new Va()
+                            ..className = 'button'
+                            ..text = 'Meals',
                         ],
                       new VDivElement()
                         ..className = 'field'
