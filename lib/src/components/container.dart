@@ -102,6 +102,11 @@ class Container extends PComponent<ContainerProps> {
     ..actions = props.storeContainer.store.actions
     ..user = appState.user);
 
+  _renderViewMember() => new viewMember(new viewMemberProps()
+    ..actions = props.storeContainer.store.actions
+    ..user = appState.user
+    ..userMap = appState.userMap);
+
   _renderDebug() => (document.domain.contains("localhost"))
       ? new DebugNavigator(new DebugNavigatorProps()..actions = props.storeContainer.store.actions)
       : new Vspan();
