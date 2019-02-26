@@ -33,7 +33,7 @@ class Forms extends PComponent<FormsProps> {
             ..children = [
               new Vh1()
                 ..className = 'title'
-                ..text = "User, Class, and Meal Creation",
+                ..text = "User Creation",
               _userCreation(),
             ],
         ],
@@ -54,48 +54,109 @@ class Forms extends PComponent<FormsProps> {
                 ..className = 'field-body'
                 ..children = [
                   new VDivElement()
-                    ..className = 'field-label is-normal'
+                    ..className = 'field'
                     ..children = [
                       new VLabelElement()
                         ..className = 'label'
                         ..text = "First Name"
                     ],
-
-                  new VParagraphElement()
-                    ..className = 'control'
+                  new VDivElement()
+                    ..className = 'field is-horizontal'
                     ..children = [
-                      new VDivElement()
-                        ..className = 'field-label'
+                      new VParagraphElement()
+                        ..className = 'control'
                         ..children = [
                           new VInputElement()
                             ..className = 'input'
                             ..id = 'fName-input'
                             ..placeholder = "First Name"
                         ],
-                    ],
-                  //creat the Last Name Input Field
-                  new VDivElement()
-                    ..className = 'field-label is-normal'
-                    ..children = [
-                      new VLabelElement()
-                        ..className = 'label'
-                        ..text = "Last Name"
-                    ],
-                  new VParagraphElement()
-                    ..className = 'control is-expanded'
-                    ..children = [
-                      new VDivElement()
-                        ..className = 'field-label is-expanded'
+                      new VParagraphElement()
+                        ..className = 'field'
                         ..children = [
-                          new VInputElement()
-                            ..className = 'input'
-                            ..id = 'lName-input'
-                            ..placeholder = "Last Name"
-                        ],
+                          new VDivElement()
+                            ..className = 'field is-horizontal'
+                            ..children = [
+                              new VDivElement()
+                                ..className = 'field-label is-normal'
+                                ..id = 'lName-lab'
+                                ..children = [
+                                  new VLabelElement()
+                                    ..className = 'label'
+                                    //..id = 'lName-lab'
+                                    ..text = "Last Name"
+                                ],
+                              new VDivElement()
+                                ..className = 'field'
+                                ..children = [
+                                  new VParagraphElement()
+                                    ..className = 'control is-expanded'
+                                    ..children = [
+                                      new VInputElement()
+                                        ..className = 'input'
+                                        ..id = 'lName-input'
+                                        ..placeholder = "Last Name"
+                                    ]
+                                ]
+                            ]
+                        ]
                     ]
-                ],
+                ]
             ],
         ],
+
+      // new VDivElement()
+      //   ..className = 'field is-grouped'
+      //   ..children = [
+      //     new VDivElement()
+      //       ..className = 'field is-horizontal'
+      //       ..children = [
+      //         new VDivElement()
+      //           ..className = 'field-body'
+      //           ..children = [
+      //             new VDivElement()
+      //               ..className = 'field-label is-normal'
+      //               ..children = [
+      //                 new VLabelElement()
+      //                   ..className = 'label'
+      //                   ..text = "First Name"
+      //               ],
+
+      //             new VParagraphElement()
+      //               ..className = 'control'
+      //               ..children = [
+      //                 new VDivElement()
+      //                   ..className = 'field-label'
+      //                   ..children = [
+      //                     new VInputElement()
+      //                       ..className = 'input'
+      //                       ..id = 'fName-input'
+      //                       ..placeholder = "First Name"
+      //                   ],
+      //               ],
+      //             //creat the Last Name Input Field
+      //             new VDivElement()
+      //               ..className = 'field-label is-normal'
+      //               ..children = [
+      //                 new VLabelElement()
+      //                   ..className = 'label'
+      //                   ..text = "Last Name"
+      //               ],
+      //             new VParagraphElement()
+      //               ..className = 'control is-expanded'
+      //               ..children = [
+      //                 new VDivElement()
+      //                   ..className = 'field-label is-expanded'
+      //                   ..children = [
+      //                     new VInputElement()
+      //                       ..className = 'input'
+      //                       ..id = 'lName-input'
+      //                       ..placeholder = "Last Name"
+      //                   ],
+      //               ]
+      //           ],
+      //       ],
+      //   ],
 
       //create the Email Input field
       new VDivElement()
