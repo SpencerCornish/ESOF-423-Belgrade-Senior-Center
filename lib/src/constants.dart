@@ -1,6 +1,5 @@
 import 'package:email_validator/email_validator.dart';
 import 'dart:convert';
-import 'package:crypto/crypto.dart';
 
 /// [Routes] defines URIs for the application
 class Routes {
@@ -8,7 +7,7 @@ class Routes {
   static const home = '/';
 
   /// Route for forms page where new users, meals, and classes can be created
-  static const forms = '/forms';
+  static const createMember = '/new/member';
   
   /// Route used after a password reset
   static const resetContinue = '/pw_reset/:email_hash';

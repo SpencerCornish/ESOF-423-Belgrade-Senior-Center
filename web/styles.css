@@ -1,7 +1,20 @@
 .margin-top {
-  margin-top: 2rem;
+    margin-top: 2rem;
 }
 
 #lName-lab {
   padding-left: 15px;
+}
+#fName-lab {
+  padding-top: 5px;
+  padding-right: 10px;
+  padding-left: 78px;
+}
+
+#debug-snapped {
+    position: fixed;
+    left: 0px;
+    bottom: 0px;
+    /* height: 30px; */
+    width: 100%;
 }
