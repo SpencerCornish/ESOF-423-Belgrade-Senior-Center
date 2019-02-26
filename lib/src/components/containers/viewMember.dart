@@ -3,6 +3,7 @@ import 'dart:html' hide History;
 import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
 import 'package:wui_builder/vhtml.dart';
+import 'package:built_collection/built_collection.dart';
 
 import '../core/nav.dart';
 import '../../constants.dart';
@@ -12,16 +13,16 @@ import '../../model/user.dart';
 import '../../state/app.dart';
 import '../../middleware/serverMiddleware.dart';
 
-class StoredDataProps {
+class viewMemberProps {
   AppActions actions;
   User user;
+  BuiltMap<String, User> userMap;
 }
 
-/// [StoredData] class / page to show a visual representation of current stored data
-class StoredData extends PComponent<StoredDataProps> {
-  StoredData(props) : super(props);
-  // TODO : change to props of actual data
-  List<String> items = ["bob", "57", "15589", 'this thing', "bob", "57", "15589", 'this thing', "15589"];
+/// [viewMember] class / page to show a visual representation of current stored data
+class viewMember extends PComponent<viewMemberProps> {
+  viewMember(props) : super(props);
+  List<String> title = ["Last", "First", "Address", "Phone", "Start"];
   History _history;
 
   /// Browser history entrypoint, to control page navigation
@@ -30,42 +31,47 @@ class StoredData extends PComponent<StoredDataProps> {
   VNode emailInputNode;
   VNode passwordInputNode;
 
-  /// [createCol] Scaling function for width based on number of types of info
-  List<VNode> createCol() {
-    List<VNode> nodeList = new List();
-    for (var item in items) {
-      nodeList.add(
-        new VTableCellElement()
-          ..className = 'td'
-          ..text = item,
-      );
-    }
-    return nodeList;
-  }
-
   /// [createRows] Scaling function to make rows based on amount of information available
   List<VNode> createRows() {
     List<VNode> nodeList = new List();
     nodeList.addAll(titleRow());
-    for (var i = 0; i < 16; i++) {
+    for (User user in props.userMap.values) {
       nodeList.add(new VTableRowElement()
         ..className = 'tr'
-        ..children = createCol());
+        ..children = [
+          new VTableCellElement()
+            ..className = tdClass(user.lastName)
+            ..text = checkText(user.lastName),
+          new VTableCellElement()
+            ..className = tdClass(user.firstName)
+            ..text = checkText(user.firstName),
+          new VTableCellElement()
+            ..className = tdClass(user.address)
+            ..text = checkText(user.address),
+          new VTableCellElement()
+            ..className = tdClass(user.phoneNumber)
+            ..text = checkText(user.phoneNumber),
+          new VTableCellElement()
+            ..className = tdClass(user.membershipStart.toString())
+            ..text =
+                checkText("${user.membershipStart.month}/${user.membershipStart.day}/${user.membershipStart.year}"),
+        ]);
     }
     return nodeList;
   }
 
+  String checkText(String text) => text != '' ? text : "N/A";
+
+  String tdClass(String text) => text != '' ? 'td' : "td has-text-grey";
+
   /// [titleRow] helper function to create the title row
   List<VNode> titleRow() {
     List<VNode> nodeList = new List();
-    int i = 0;
-    //TODO: get prop attribute to set as title
-    for (var item in items) {
-      i++;
+    for (String title in title) {
       nodeList.add(
         new VTableCellElement()
           ..className = 'title is-5'
-          ..text = "Title " + i.toString(),
+          ..text = title,
       );
     }
     return nodeList;
@@ -87,7 +93,7 @@ class StoredData extends PComponent<StoredDataProps> {
                 ..className = 'column is-four-fifths'
                 ..children = [
                   new VDivElement()
-                    ..className = 'box'
+                    ..className = 'box is-4'
                     ..children = [
                       new VDivElement()
                         ..className = 'columns is-mobile'
@@ -97,10 +103,10 @@ class StoredData extends PComponent<StoredDataProps> {
                             ..children = [
                               new Vh4()
                                 ..className = 'title is-4'
-                                ..text = 'Stored Data',
+                                ..text = 'Member Data',
                               new Vh1()
                                 ..className = 'subtitle is-7'
-                                ..text = ' as of: ' + DateTime.now().toString().split(" ")[0],
+                                ..text = " as of: ${DateTime.now().month}/${DateTime.now().day}/${DateTime.now().year}",
                             ],
                           new VDivElement()..className = 'column',
                           new VDivElement()
@@ -114,7 +120,7 @@ class StoredData extends PComponent<StoredDataProps> {
                                     ..children = [
                                       new VInputElement()
                                         ..className = 'input'
-                                        ..placeholder = 'Filter'
+                                        ..placeholder = 'Search'
                                         ..type = 'text',
                                       new VSpanElement()
                                         ..className = 'icon is-left'
@@ -124,7 +130,7 @@ class StoredData extends PComponent<StoredDataProps> {
                             ],
                         ],
                       new VTableElement()
-                        ..className = 'table is-striped is-fullwidth'
+                        ..className = 'table is-narrow is-striped is-fullwidth'
                         ..children = createRows(),
                     ],
                 ],

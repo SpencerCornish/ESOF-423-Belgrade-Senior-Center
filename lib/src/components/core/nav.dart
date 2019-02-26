@@ -5,6 +5,7 @@ import 'package:wui_builder/vhtml.dart';
 import '../../state/app.dart';
 
 import '../../model/user.dart';
+import '../../constants.dart';
 
 class NavProps {
   AppActions actions;
@@ -157,7 +158,7 @@ class Nav extends PComponent<NavProps> {
 
   _onNewActivityClick(_) => print('Navigate to new activity form');
 
-  _onViewMembersClick(_) => print('Navigate to view member list');
+  _onViewMembersClick(_) => history.push(Routes.viewMember);
 
   _onViewMealsClick(_) => print('Navigate to view meals list');
 

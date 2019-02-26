@@ -10,7 +10,7 @@ import '../constants.dart';
 // Containers and components
 import './containers/home.dart';
 import './containers/dashboard.dart';
-import './containers/storeddata.dart';
+import './containers/viewmember.dart';
 import './core/debug.dart';
 
 // State
@@ -69,7 +69,7 @@ class Container extends PComponent<ContainerProps> {
               ),
               new Route(path: Routes.resetContinue, componentFactory: (params) => _renderResetContinue(params)),
               new Route(path: Routes.dashboard, componentFactory: (_) => _renderIfAuthenticated(_renderDashboard())),
-              new Route(path: Routes.storedData, componentFactory: (_) => _renderIfAuthenticated(_renderStoredData())),
+              new Route(path: Routes.viewMember, componentFactory: (_) => _renderIfAuthenticated(_renderViewMember())),
             ],
           ),
         ],
@@ -101,7 +101,8 @@ class Container extends PComponent<ContainerProps> {
     ..actions = props.storeContainer.store.actions
     ..user = appState.user);
 
-  _renderStoredData() => new StoredData(new StoredDataProps()
+  _renderViewMember() => new viewMember(new viewMemberProps()
     ..actions = props.storeContainer.store.actions
-    ..user = appState.user);
+    ..user = appState.user
+    ..userMap = appState.userMap);
 }
