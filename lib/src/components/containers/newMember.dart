@@ -97,8 +97,7 @@ class NewMember extends PComponent<NewMemberProps> {
                                         ..className = 'field is-horizontal'
                                         ..children = [
                                           new VDivElement()
-                                            ..className =
-                                                'field-label is-normal'
+                                            ..className = 'field-label is-normal'
                                             ..id = 'lName-lab'
                                             ..children = [
                                               new VLabelElement()
@@ -110,8 +109,7 @@ class NewMember extends PComponent<NewMemberProps> {
                                             ..className = 'field'
                                             ..children = [
                                               new VParagraphElement()
-                                                ..className =
-                                                    'control is-expanded'
+                                                ..className = 'control is-expanded'
                                                 ..children = [
                                                   new VInputElement()
                                                     ..className = 'input'
@@ -262,9 +260,7 @@ class NewMember extends PComponent<NewMemberProps> {
                                 ..children = [
                                   new VSpanElement()
                                     ..className = 'icon'
-                                    ..children = [
-                                      new Vi()..className = "fas fa-angle-down"
-                                    ]
+                                    ..children = [new Vi()..className = "fas fa-angle-down"]
                                 ],
                               new VDivElement()
                                 ..className = 'dropdown-menu'

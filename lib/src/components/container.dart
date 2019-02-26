@@ -38,8 +38,7 @@ class Container extends PComponent<ContainerProps> {
 
   @override
   void componentWillMount() {
-    storeContainerSub = props.storeContainer.store.stream
-        .listen((_) => updateOnAnimationFrame());
+    storeContainerSub = props.storeContainer.store.stream.listen((_) => updateOnAnimationFrame());
     // Get all the users from the database
     actions.server.fetchAllMembers();
 
@@ -82,10 +81,10 @@ class Container extends PComponent<ContainerProps> {
       new DebugNavigator(new DebugNavigatorProps()..actions = props.storeContainer.store.actions),
     ];
 
-///Method used to render the CreateMember page
-  _renderCreateMember() =>
-      new NewMember(new NewMemberProps()..actions = props.storeContainer.store.actions..user = appState.user);
-
+  ///Method used to render the CreateMember page
+  _renderCreateMember() => new NewMember(new NewMemberProps()
+    ..actions = props.storeContainer.store.actions
+    ..user = appState.user);
 
   // Only renders if the user is properly authenticated. Otherwise, bail to the homepage
   _renderIfAuthenticated(VNode page) => appState.authState == AuthState.SUCCESS ? page : _redirect(Routes.home);

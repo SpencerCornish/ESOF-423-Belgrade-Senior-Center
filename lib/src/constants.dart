@@ -8,14 +8,13 @@ class Routes {
 
   /// Route for forms page where new users, meals, and classes can be created
   static const createMember = '/new/member';
-  
+
   /// Route used after a password reset
   static const resetContinue = '/pw_reset/:email_hash';
 
   static const dashboard = '/dashboard';
 
   // TODO: Fill in more routes here
-
 
 }
 
