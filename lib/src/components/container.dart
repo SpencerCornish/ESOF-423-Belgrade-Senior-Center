@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:html' hide History;
 
 // External Dependencies
 import 'package:wui_builder/components.dart';
@@ -74,7 +75,7 @@ class Container extends PComponent<ContainerProps> {
           ),
         ],
       // new Footer(new FooterProps()..actions = props.storeContainer.store.actions),
-      new DebugNavigator(new DebugNavigatorProps()..actions = props.storeContainer.store.actions),
+      _renderDebug(),
     ];
 
   // Only renders if the user is properly authenticated. Otherwise, bail to the homepage
@@ -101,8 +102,7 @@ class Container extends PComponent<ContainerProps> {
     ..actions = props.storeContainer.store.actions
     ..user = appState.user);
 
-  _renderViewMember() => new viewMember(new viewMemberProps()
-    ..actions = props.storeContainer.store.actions
-    ..user = appState.user
-    ..userMap = appState.userMap);
+  _renderDebug() => (document.domain.contains("localhost"))
+      ? new DebugNavigator(new DebugNavigatorProps()..actions = props.storeContainer.store.actions)
+      : new Vspan();
 }
