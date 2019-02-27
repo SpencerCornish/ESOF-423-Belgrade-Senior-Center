@@ -1,6 +1,10 @@
 language: dart
 dart:
   - stable
+addons:
+  apt:
+    packages:
+      - libnss3
 
 cache:
   directories:
@@ -25,6 +29,8 @@ jobs:
 
     - stage: Functional Testing
       name: Puppeteer functional tests
+      before_install:
+        - "sysctl kernel.unprivileged_userns_clone=1"
       before_script:
         - nvm install 10
         - npm install -g firebase-tools
