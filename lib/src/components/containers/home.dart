@@ -51,6 +51,7 @@ class Home extends PComponent<HomeProps> {
   @override
   VNode render() => new VDivElement()
     ..className = 'container'
+    ..id = 'home-container'
     ..children = [
       new VDivElement()
         ..className = 'columns is-centered margin-top'
@@ -85,6 +86,7 @@ class Home extends PComponent<HomeProps> {
             ..children = [
               new VAnchorElement()
                 ..className = 'button is-text has-text-grey'
+                ..id = 'dev-doc-button'
                 ..href = "https://github.com/SpencerCornish/belgrade-senior-center/blob/master/README.md"
                 ..text = "Development Documentation",
             ],
@@ -93,6 +95,7 @@ class Home extends PComponent<HomeProps> {
             ..children = [
               new VAnchorElement()
                 ..className = 'button is-text has-text-grey'
+                ..id = 'user-doc-button'
                 ..href = "https://github.com/SpencerCornish/belgrade-senior-center/blob/master/USERREADME.md"
                 ..text = "User Documentation",
             ],
@@ -123,7 +126,7 @@ class Home extends PComponent<HomeProps> {
             ],
           _renderHint(props.authState == AuthState.ERR_EMAIL ? 'Invalid Email' : ''),
           _renderHint(props.authState == AuthState.ERR_NOT_FOUND ? 'Email Not Found' : ''),
-          _renderHint(props.authState == AuthState.ERR_NOT_FOUND ? 'Unexpected error. Please try again.' : ''),
+          _renderHint(props.authState == AuthState.ERR_OTHER ? 'Unexpected error. Please try again.' : ''),
         ],
       new VDivElement()
         ..className = 'field'
@@ -154,6 +157,7 @@ class Home extends PComponent<HomeProps> {
             ..children = [
               new VButtonElement()
                 ..className = 'button is-text'
+                ..id = 'reset-pass-button'
                 ..onClick = _onResetPasswordClick
                 ..text = 'Reset Password',
             ],
@@ -162,6 +166,7 @@ class Home extends PComponent<HomeProps> {
             ..children = [
               new VButtonElement()
                 ..className = 'button'
+                ..id = 'cancel-button'
                 ..onClick = _onCancelClick
                 ..text = 'Cancel',
             ],
@@ -170,6 +175,7 @@ class Home extends PComponent<HomeProps> {
             ..children = [
               new VButtonElement()
                 ..className = 'button is-link ${props.authState == AuthState.LOADING ? 'is-loading' : ''}'
+                ..id = 'login-submit-button'
                 ..onClick = _onSubmitClick
                 ..text = 'Submit',
             ],
@@ -178,6 +184,7 @@ class Home extends PComponent<HomeProps> {
 
   _renderHint(String message) => new VParagraphElement()
     ..className = 'help is-danger'
+    ..id = 'hint-${message.replaceAll(' ', '').toLowerCase()}'
     ..text = message;
 
   _renderNotification(String message) => VDivElement()

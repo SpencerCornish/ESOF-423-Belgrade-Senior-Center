@@ -2,7 +2,6 @@ language: dart
 dart:
   - stable
 
-# Cache the packages cache, so we download a lot less stuff over and over again
 cache:
   directories:
     - "$HOME/.pub_cache/"
@@ -12,27 +11,32 @@ cache:
 
 jobs:
   include:
-    - stage: Static Analysis
+
+    - stage: Unit Testing
       name: Formatting and static analysis
       before_script:
-        - pub get
         - npm --prefix functions install
       script:
         - pub run dart_dev analyze
         - pub run dart_dev format --check
         - npm --prefix functions run lint
-
-    - stage: Unit Testing
-      name: Run unit tests for dart and js functions
-      before_script:
-        - pub get
-        - npm --prefix functions install
-      script:
-        - pub run dart_dev test
-        - pub run dart_dev test -p chrome
+        - find . -name "*.g.dart" -type f -delete && pub run dart_dev test
         - npm --prefix functions run test
 
-# before deploying, get dependencies for firebase functions
+    - stage: Functional Testing
+      name: Puppeteer functional tests
+      before_script:
+        - nvm install 10
+        - npm install -g firebase-tools
+        - find . -name "*.g.dart" -type f -delete
+        - pub global activate webdev
+        - webdev build --release        
+        - firebase serve --only hosting --non-interactive &> /dev/null &
+        - npm --prefix test/functional install
+      script:
+        - npm --prefix test/functional run test
+
+
 before_deploy:
   - npm --prefix functions install
   - pub get
