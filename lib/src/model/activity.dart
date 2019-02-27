@@ -40,7 +40,7 @@ abstract class Activity implements Built<Activity, ActivityBuilder> {
     ..name = firestoreData['name']);
 
   Map<String, dynamic> toFirestore() => {
-        'uid': uid,
+        'uuid': uid,
         'capacity': capacity,
         'start_time': startTime.toIso8601String(),
         'end_time': endTime.toIso8601String(),
