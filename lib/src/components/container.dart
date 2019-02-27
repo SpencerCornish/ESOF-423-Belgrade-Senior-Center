@@ -11,7 +11,7 @@ import '../constants.dart';
 // Containers and components
 import './containers/home.dart';
 import './containers/dashboard.dart';
-import './containers/viewmember.dart';
+import './containers/viewMember.dart';
 import './core/debug.dart';
 
 // State
