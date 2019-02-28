@@ -33,19 +33,8 @@ class NewMember extends PComponent<NewMemberProps> {
       new VDivElement()
         ..className = 'container'
         ..children = [
-          new VDivElement()
-            ..className = 'columns is-centered'
-            ..children = [
-              new VDivElement()
-                ..className = 'column has-text-centered'
-                ..children = [
-                  new Vh1()
-                    ..className = 'title'
-                    ..text = "User Creation",
-                  _userCreation(),
-                ],
-            ]
-        ],
+          _userCreation(),
+        ]
     ];
 
   //create the text boxes that are used to create new users
@@ -61,7 +50,19 @@ class NewMember extends PComponent<NewMemberProps> {
               new VDivElement()
                 ..className = 'box'
                 ..children = [
-                  //create the First Name Input field
+                  //create the Title of Box
+                  new VDivElement()
+                    ..className = 'field is-grouped is-grouped-left'
+                    ..children = [
+                      new VDivElement()
+                        ..className = 'cloumn has-text-centered'
+                        ..children = [
+                          new Vh1()
+                            ..className = 'title'
+                            ..text = "User Creation"
+                        ]
+                    ],
+                  //create the First and Last Name Input field
                   new VDivElement()
                     ..className = 'field is-grouped'
                     ..children = [
@@ -97,19 +98,20 @@ class NewMember extends PComponent<NewMemberProps> {
                                         ..className = 'field is-horizontal'
                                         ..children = [
                                           new VDivElement()
-                                            ..className = 'field-label is-normal'
+                                            ..className =
+                                                'field-label is-normal'
                                             ..id = 'lName-lab'
                                             ..children = [
                                               new VLabelElement()
                                                 ..className = 'label'
-                                                //..id = 'lName-lab'
                                                 ..text = "Last Name"
                                             ],
                                           new VDivElement()
                                             ..className = 'field'
                                             ..children = [
                                               new VParagraphElement()
-                                                ..className = 'control is-expanded'
+                                                ..className =
+                                                    'control is-expanded'
                                                 ..children = [
                                                   new VInputElement()
                                                     ..className = 'input'
@@ -156,61 +158,68 @@ class NewMember extends PComponent<NewMemberProps> {
 
                   //create the Phone Number Input field
                   new VDivElement()
-                    ..className = 'field is-horizontal'
+                    ..className = 'field is-grouped'
                     ..children = [
                       new VDivElement()
-                        ..className = 'field-label is-normal'
-                        ..children = [
-                          new VLabelElement()
-                            ..className = 'label'
-                            ..text = "Phone Number",
-                        ],
-                      new VDivElement()
-                        ..className = 'field-body'
+                        ..className = 'field is-horizontal'
                         ..children = [
                           new VDivElement()
-                            ..className = 'field'
+                            ..className = 'field-body'
                             ..children = [
                               new VDivElement()
-                                ..className = 'control'
+                                ..className = 'field'
+                                ..id = 'phoneNum-label'
                                 ..children = [
-                                  new VInputElement()
-                                    ..className = 'input'
-                                    ..id = 'phoneNum-input'
-                                    ..placeholder = "1234567891"
-                                    ..type = 'tel'
-                                ]
-                            ]
-                        ]
-                    ],
-
-                  //create the Cell Phone Number Input field
-                  new VDivElement()
-                    ..className = 'field is-horizontal'
-                    ..children = [
-                      new VDivElement()
-                        ..className = 'field-label is-normal'
-                        ..children = [
-                          new VLabelElement()
-                            ..className = 'label'
-                            ..text = "Cell Number",
-                        ],
-                      new VDivElement()
-                        ..className = 'field-body'
-                        ..children = [
-                          new VDivElement()
-                            ..className = 'field'
-                            ..children = [
+                                  new VLabelElement()
+                                    ..className = 'label'
+                                    ..text = "Phone Number",
+                                ],
                               new VDivElement()
-                                ..className = 'control'
+                                ..className = 'field is-horizontal'
                                 ..children = [
-                                  new VInputElement()
-                                    ..className = 'input'
-                                    ..id = 'cellNum-input'
-                                    ..placeholder = "1234567891"
-                                    ..type = 'tel'
+                                  new VParagraphElement()
+                                    ..className = 'control'
+                                    ..children = [
+                                      new VInputElement()
+                                        ..className = 'input'
+                                        ..id = 'phoneNum-input'
+                                        ..placeholder = "1234567891"
+                                        ..type = 'tel'
+                                    ],
+                                  //create the Cell Phone Number Input field
+                                  new VParagraphElement()
+                                    ..className = 'field'
+                                    ..children = [
+                                      new VDivElement()
+                                        ..className = 'field is-horizontal'
+                                        ..children = [
+                                          new VDivElement()
+                                            ..className =
+                                                'field-label is-normal'
+                                            ..id = 'cellNum-label'
+                                            ..children = [
+                                              new VLabelElement()
+                                                ..className = 'label'
+                                                ..text = "Cell Number"
+                                            ],
+                                          new VDivElement()
+                                            ..className = 'field'
+                                            ..children = [
+                                              new VParagraphElement()
+                                                ..className =
+                                                    'control is-expanded'
+                                                ..children = [
+                                                  new VInputElement()
+                                                    ..className = 'input'
+                                                    ..id = 'cellNum-input'
+                                                    ..placeholder = "1234567891"
+                                                    ..type = 'tel'
+                                                ]
+                                            ]
+                                        ]
+                                    ]
                                 ]
-                            ]
+                            ],
                         ]
                     ],
 
@@ -243,48 +252,222 @@ class NewMember extends PComponent<NewMemberProps> {
                         ]
                     ],
 
-                  //TODO: Add a field for profile picture
-
-                  //create the drop down menu for establishing the time of user
+                  //create the Dietary Restrictions Input field
                   new VDivElement()
-                    ..className = 'dropdown is-active'
+                    ..className = 'field is-horizontal'
                     ..children = [
                       new VDivElement()
-                        ..className = 'dropdown-trigger'
+                        ..className = 'field-label is-normal'
                         ..children = [
-                          new VAnchorElement()
-                            ..className = 'button is-dropdown-menu'
+                          new VLabelElement()
+                            ..className = 'label'
+                            ..text = "Dietary Restrictions",
+                        ],
+                      new VDivElement()
+                        ..className = 'field-body'
+                        ..children = [
+                          new VDivElement()
+                            ..className = 'field'
                             ..children = [
-                              new VSpanElement()
-                                ..text = "Role"
-                                ..children = [
-                                  new VSpanElement()
-                                    ..className = 'icon'
-                                    ..children = [new Vi()..className = "fas fa-angle-down"]
-                                ],
                               new VDivElement()
-                                ..className = 'dropdown-menu'
-                                ..id = 'dropdown-menu'
+                                ..className = 'control'
                                 ..children = [
-                                  new VDivElement()
-                                    ..className = 'dropdown-content'
-                                    ..children = [
-                                      new VDivElement()
-                                        ..className = 'dropdown-item'
-                                        ..text = "Member",
-                                      new VDivElement()
-                                        ..className = 'dropdown-item'
-                                        ..text = "Volunteer",
-                                      new VDivElement()
-                                        ..className = 'dropdown-item'
-                                        ..text = "Admin",
-                                    ],
+                                  new VInputElement()
+                                    ..className = 'input'
+                                    ..id = 'diet-input'
+                                    ..placeholder = "e.g. Lactose Intolerant"
                                 ]
                             ]
+                        ]
+                    ],
+
+                  //create the Disabilities Input field
+                  new VDivElement()
+                    ..className = 'field is-horizontal'
+                    ..children = [
+                      new VDivElement()
+                        ..className = 'field-label is-normal'
+                        ..children = [
+                          new VLabelElement()
+                            ..className = 'label'
+                            ..text = "Disabilities",
+                        ],
+                      new VDivElement()
+                        ..className = 'field-body'
+                        ..children = [
+                          new VDivElement()
+                            ..className = 'field'
+                            ..children = [
+                              new VDivElement()
+                                ..className = 'control'
+                                ..children = [
+                                  new VInputElement()
+                                    ..className = 'input'
+                                    ..id = 'disabilities-input'
+                                    ..placeholder = "e.g. Blind"
+                                ]
+                            ]
+                        ]
+                    ],
+
+                  //create the Medical Issue Input field
+                  new VDivElement()
+                    ..className = 'field is-horizontal'
+                    ..children = [
+                      new VDivElement()
+                        ..className = 'field-label is-normal'
+                        ..children = [
+                          new VLabelElement()
+                            ..className = 'label'
+                            ..text = "Medical Issues",
+                        ],
+                      new VDivElement()
+                        ..className = 'field-body'
+                        ..children = [
+                          new VDivElement()
+                            ..className = 'field'
+                            ..children = [
+                              new VDivElement()
+                                ..className = 'control'
+                                ..children = [
+                                  new VInputElement()
+                                    ..className = 'input'
+                                    ..id = 'medicalIssue-input'
+                                    ..placeholder = "e.g. ADD/ADHD"
+                                ]
+                            ]
+                        ]
+                    ],
+
+                  //create the Membership Start Date Input field
+                  new VDivElement()
+                    ..className = 'field is-grouped'
+                    ..children = [
+                      new VDivElement()
+                        ..className = 'field is-horizontal'
+                        ..children = [
+                          new VDivElement()
+                            ..className = 'field-body'
+                            ..children = [
+                              new VDivElement()
+                                ..className = 'field'
+                                ..id = 'memStart-label'
+                                ..children = [
+                                  new VLabelElement()
+                                    ..className = 'label'
+                                    ..text = "Membership Start",
+                                ],
+                              new VDivElement()
+                                ..className = 'field is-horizontal'
+                                ..children = [
+                                  new VParagraphElement()
+                                    ..className = 'control'
+                                    ..children = [
+                                      new VInputElement()
+                                        ..className = 'input'
+                                        ..id = 'memStart-input'
+                                        ..type = 'date'
+                                    ],
+                                  //create the Membership Renewal Date Input field
+                                  new VParagraphElement()
+                                    ..className = 'field'
+                                    ..children = [
+                                      new VDivElement()
+                                        ..className = 'field is-horizontal'
+                                        ..children = [
+                                          new VDivElement()
+                                            ..className =
+                                                'field-label is-normal'
+                                            ..id = 'memRenew-label'
+                                            ..children = [
+                                              new VLabelElement()
+                                                ..className = 'label'
+                                                ..text = "Membership Renewal"
+                                            ],
+                                          new VDivElement()
+                                            ..className = 'field'
+                                            ..children = [
+                                              new VParagraphElement()
+                                                ..className =
+                                                    'control is-expanded'
+                                                ..children = [
+                                                  new VInputElement()
+                                                    ..className = 'input'
+                                                    ..id = 'memRenew-input'
+                                                    ..type = 'date'
+                                                ]
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ],
+                        ]
+                    ],
+
+                  //TODO: Add a field for profile picture
+
+                  //create the drop down menu for establishing the type of user
+                  new VDivElement()
+                    ..className = 'columns is-centered'
+                    ..children = [
+                      new VDivElement()
+                        ..className = 'dropdown is-active'
+                        ..children = [
+                          new VDivElement()
+                            ..className = 'dropdown-trigger'
+                            ..children = [
+                              new VAnchorElement()
+                                ..className =
+                                    'button is-dropdown-menu is-centered'
+                                ..children = [
+                                  new VSpanElement()
+                                    ..text = "Role"
+                                    ..children = [
+                                      new VSpanElement()
+                                        ..className = 'icon'
+                                        ..children = [
+                                          new Vi()
+                                            ..className = "fas fa-angle-down"
+                                        ]
+                                    ],
+                                  new VDivElement()
+                                    ..className = 'dropdown-menu'
+                                    ..id = 'dropdown-menu'
+                                    ..children = [
+                                      new VDivElement()
+                                        ..className = 'dropdown-content'
+                                        ..children = [
+                                          new VDivElement()
+                                            ..className = 'dropdown-item'
+                                            ..text = "Member",
+                                          new VDivElement()
+                                            ..className = 'dropdown-item'
+                                            ..text = "Volunteer",
+                                          new VDivElement()
+                                            ..className = 'dropdown-item'
+                                            ..text = "Admin",
+                                        ],
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ],
+                  new VDivElement()
+                    ..className = 'field is-grouped is-grouped-right'
+                    ..children = [
+                      new VDivElement()
+                        ..className = 'control'
+                        ..children = [
+                          new VAnchorElement()
+                            ..className = 'button is-link'
+                            ..text = "Submit"
+                          // ..onClick = (_) =>
                         ]
                     ]
                 ]
             ]
         ]
     ];
+
+  //VNode _submitClick() =>
 }
