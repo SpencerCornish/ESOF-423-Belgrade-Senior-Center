@@ -6,6 +6,7 @@ void main() {
     'uuid': "123456789",
     'start_time': "2019-02-27T12:05:46.173",
     'end_time': "2019-02-27T12:05:58.478",
+    // TODO: Array
     'menu':""
   });
   Meal testing;
