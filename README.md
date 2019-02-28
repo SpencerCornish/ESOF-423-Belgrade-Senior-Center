@@ -75,7 +75,10 @@ To run locally, type `make serve`. This will serve Just-in-time compiled dart co
 ## Directions for Testing Source Code
 
 - To run Dart tests, run `make test`.
-- To run js tests for the firebase serverless functions, run `npm install` in the functions directory, then `npm run test`.
+- To run functional js tests for the firebase serverless functions:
+  - Navigate to test/functional
+  - run `npm install` in the functions directory
+  - run `npm run test`.
 
 ## Setting up Automated Weekly Build and Test
 

@@ -16,7 +16,7 @@ To run the webapp, simply open in your web browser of choice, and follow the dir
 
 ## How to use
 
-When the page is loaded you must login or create a new acount to login for the first time, this step uses Google authentication for security. You will then be redirected to a dashboard page that will show any Alerts, upcoming events, or membership renewals that will be defined by users /*TODO for a later release*/. On the top left of every page there is a navigation bar where that links to every other page on the site.
+When the page is loaded you must login /*TODO create a new acount to login for the first time*/, this step uses Google authentication for security. You will then be redirected to a dashboard page that will show any Alerts, upcoming events, or membership renewals that will be defined by users /*TODO for a later release*/. On the top left of every page there is a navigation bar where that links to every other page on the site.
 
 Under the `New` tab there are links to different forms that will create a user, meal or activity and store the information in the main database when submited. /Currently only users is set up/
 
