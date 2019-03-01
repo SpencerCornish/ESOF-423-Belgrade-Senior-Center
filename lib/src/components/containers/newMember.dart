@@ -462,7 +462,7 @@ class NewMember extends PComponent<NewMemberProps> {
                           new VAnchorElement()
                             ..className = 'button is-link'
                             ..text = "Submit"
-                          // ..onClick = (_) =>
+                           ..onClick = _submitClick
                         ]
                     ]
                 ]
@@ -474,18 +474,30 @@ class NewMember extends PComponent<NewMemberProps> {
   //will need to send fName-input, lName-input, email-input, 
   //cellNum-input, phoneNum-input, address-input, diet-input, 
   //disabilities-input, medicalIssue-input, memStart-input , and memRenew-input, and role type to database
-  _submitClick() {
-    InputElement first = querySelector('fName-input');
-    InputElement last = querySelector('fName-input');
-    InputElement email = querySelector('fName-input');
-    InputElement cell = querySelector('fName-input');
-    InputElement phone = querySelector('fName-input');
-    InputElement address = querySelector('fName-input');
-    InputElement diet = querySelector('fName-input');
-    InputElement disability = querySelector('fName-input');
-    InputElement medical = querySelector('fName-input');
-    InputElement memStart = querySelector('fName-input');
-    InputElement memRenew = querySelector('fName-input');
+  _submitClick(_) {
+    InputElement first = querySelector('#fName-input');
+    InputElement last = querySelector('#lName-input');
+    InputElement email = querySelector('#email-input');
+    InputElement cell = querySelector('#cellNum-input');
+    InputElement phone = querySelector('#phoneNum-input');
+    InputElement address = querySelector('#address-input');
+    InputElement diet = querySelector('#diet-input');
+    InputElement disability = querySelector('#disabilities-input');
+    InputElement medical = querySelector('#medicalIssue-input');
+    InputElement memStart = querySelector('#memStart-input');
+    InputElement memRenew = querySelector('#memRenew-input');
 
+
+    print(first.value);
+    print(last.value);
+    print(email.value);
+    print(cell.value);
+    print(phone.value);
+    print(address.value);
+    print(diet.value);
+    print(disability.value);
+    print(medical.value);
+    print(memStart.value);
+    print(memRenew.value);
   }
 }
