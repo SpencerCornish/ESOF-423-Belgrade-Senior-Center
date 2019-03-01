@@ -7,17 +7,19 @@ help:
 install: ## Runs pub get to get dependencies
 	@pub get
 
-serve: install dart-serve ## Serves the frontend app with ddevc
+serve: install dart-serve ## Serves the frontend app with the Dev Compiler
 
-firebase-serve: install build ## Serves built JS files locally
+firebase-serve: install build-js ## Serves built JS files locally using Firebase Local
 	@firebase serve
 
 format: ## Format the dart files
-	@dartfmt -w -l 120 .
+	@pub run dart_dev format
+
+analyze: ## Look for errors in the dart files
+	@pub run dart_dev analyze
 
 dart-serve:
 	@webdev serve --no-release
 
-
-build-js:  ## build to minified, release js
+build-js:
 	@webdev build --release

@@ -15,19 +15,37 @@ class _$AppActions extends AppActions {
 
   final ActionDispatcher<User> setUser = new ActionDispatcher<User>('AppActions-setUser');
   final ActionDispatcher<bool> setLoading = new ActionDispatcher<bool>('AppActions-setLoading');
-  final ServerMiddlewareActions serverActions = new ServerMiddlewareActions();
+  final ActionDispatcher<AuthState> setAuthState = new ActionDispatcher<AuthState>('AppActions-setAuthState');
+  final ActionDispatcher<BuiltMap<String, User>> setUserMap =
+      new ActionDispatcher<BuiltMap<String, User>>('AppActions-setUserMap');
+  final ActionDispatcher<BuiltMap<String, Activity>> setActivityMap =
+      new ActionDispatcher<BuiltMap<String, Activity>>('AppActions-setActivityMap');
+  final ActionDispatcher<BuiltMap<String, Meal>> setMealMap =
+      new ActionDispatcher<BuiltMap<String, Meal>>('AppActions-setMealMap');
+  final ServerMiddlewareActions server = new ServerMiddlewareActions();
 
   @override
   void setDispatcher(Dispatcher dispatcher) {
     setUser.setDispatcher(dispatcher);
     setLoading.setDispatcher(dispatcher);
-    serverActions.setDispatcher(dispatcher);
+    setAuthState.setDispatcher(dispatcher);
+    setUserMap.setDispatcher(dispatcher);
+    setActivityMap.setDispatcher(dispatcher);
+    setMealMap.setDispatcher(dispatcher);
+    server.setDispatcher(dispatcher);
   }
 }
 
 class AppActionsNames {
   static final ActionName<User> setUser = new ActionName<User>('AppActions-setUser');
   static final ActionName<bool> setLoading = new ActionName<bool>('AppActions-setLoading');
+  static final ActionName<AuthState> setAuthState = new ActionName<AuthState>('AppActions-setAuthState');
+  static final ActionName<BuiltMap<String, User>> setUserMap =
+      new ActionName<BuiltMap<String, User>>('AppActions-setUserMap');
+  static final ActionName<BuiltMap<String, Activity>> setActivityMap =
+      new ActionName<BuiltMap<String, Activity>>('AppActions-setActivityMap');
+  static final ActionName<BuiltMap<String, Meal>> setMealMap =
+      new ActionName<BuiltMap<String, Meal>>('AppActions-setMealMap');
 }
 
 // **************************************************************************
@@ -39,12 +57,32 @@ class _$App extends App {
   final User user;
   @override
   final bool isLoading;
+  @override
+  final AuthState authState;
+  @override
+  final BuiltMap<String, User> userMap;
+  @override
+  final BuiltMap<String, Activity> activityMap;
+  @override
+  final BuiltMap<String, Meal> mealMap;
 
   factory _$App([void updates(AppBuilder b)]) => (new AppBuilder()..update(updates)).build();
 
-  _$App._({this.user, this.isLoading}) : super._() {
+  _$App._({this.user, this.isLoading, this.authState, this.userMap, this.activityMap, this.mealMap}) : super._() {
     if (isLoading == null) {
       throw new BuiltValueNullFieldError('App', 'isLoading');
+    }
+    if (authState == null) {
+      throw new BuiltValueNullFieldError('App', 'authState');
+    }
+    if (userMap == null) {
+      throw new BuiltValueNullFieldError('App', 'userMap');
+    }
+    if (activityMap == null) {
+      throw new BuiltValueNullFieldError('App', 'activityMap');
+    }
+    if (mealMap == null) {
+      throw new BuiltValueNullFieldError('App', 'mealMap');
     }
   }
 
@@ -57,17 +95,33 @@ class _$App extends App {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is App && user == other.user && isLoading == other.isLoading;
+    return other is App &&
+        user == other.user &&
+        isLoading == other.isLoading &&
+        authState == other.authState &&
+        userMap == other.userMap &&
+        activityMap == other.activityMap &&
+        mealMap == other.mealMap;
   }
 
   @override
   int get hashCode {
-    return $jf($jc($jc(0, user.hashCode), isLoading.hashCode));
+    return $jf($jc(
+        $jc($jc($jc($jc($jc(0, user.hashCode), isLoading.hashCode), authState.hashCode), userMap.hashCode),
+            activityMap.hashCode),
+        mealMap.hashCode));
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('App')..add('user', user)..add('isLoading', isLoading)).toString();
+    return (newBuiltValueToStringHelper('App')
+          ..add('user', user)
+          ..add('isLoading', isLoading)
+          ..add('authState', authState)
+          ..add('userMap', userMap)
+          ..add('activityMap', activityMap)
+          ..add('mealMap', mealMap))
+        .toString();
   }
 }
 
@@ -82,12 +136,32 @@ class AppBuilder implements Builder<App, AppBuilder> {
   bool get isLoading => _$this._isLoading;
   set isLoading(bool isLoading) => _$this._isLoading = isLoading;
 
+  AuthState _authState;
+  AuthState get authState => _$this._authState;
+  set authState(AuthState authState) => _$this._authState = authState;
+
+  MapBuilder<String, User> _userMap;
+  MapBuilder<String, User> get userMap => _$this._userMap ??= new MapBuilder<String, User>();
+  set userMap(MapBuilder<String, User> userMap) => _$this._userMap = userMap;
+
+  MapBuilder<String, Activity> _activityMap;
+  MapBuilder<String, Activity> get activityMap => _$this._activityMap ??= new MapBuilder<String, Activity>();
+  set activityMap(MapBuilder<String, Activity> activityMap) => _$this._activityMap = activityMap;
+
+  MapBuilder<String, Meal> _mealMap;
+  MapBuilder<String, Meal> get mealMap => _$this._mealMap ??= new MapBuilder<String, Meal>();
+  set mealMap(MapBuilder<String, Meal> mealMap) => _$this._mealMap = mealMap;
+
   AppBuilder();
 
   AppBuilder get _$this {
     if (_$v != null) {
       _user = _$v.user?.toBuilder();
       _isLoading = _$v.isLoading;
+      _authState = _$v.authState;
+      _userMap = _$v.userMap?.toBuilder();
+      _activityMap = _$v.activityMap?.toBuilder();
+      _mealMap = _$v.mealMap?.toBuilder();
       _$v = null;
     }
     return this;
@@ -110,12 +184,26 @@ class AppBuilder implements Builder<App, AppBuilder> {
   _$App build() {
     _$App _$result;
     try {
-      _$result = _$v ?? new _$App._(user: _user?.build(), isLoading: isLoading);
+      _$result = _$v ??
+          new _$App._(
+              user: _user?.build(),
+              isLoading: isLoading,
+              authState: authState,
+              userMap: userMap.build(),
+              activityMap: activityMap.build(),
+              mealMap: mealMap.build());
     } catch (_) {
       String _$failedField;
       try {
         _$failedField = 'user';
         _user?.build();
+
+        _$failedField = 'userMap';
+        userMap.build();
+        _$failedField = 'activityMap';
+        activityMap.build();
+        _$failedField = 'mealMap';
+        mealMap.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError('App', _$failedField, e.toString());
       }

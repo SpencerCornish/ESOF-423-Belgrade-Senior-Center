@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:firebase/firestore.dart' as fs;
 import 'package:firebase/firebase.dart' as fb;
 
@@ -13,6 +12,7 @@ import './dbRefs.dart';
 import '../constants.dart';
 
 import '../model/user.dart';
+import '../model/emergencyContact.dart';
 
 class FirebaseClient {
   final DbRefs _refs;
@@ -31,40 +31,89 @@ class FirebaseClient {
   }
 
   Future _onAuthChanged(fb.User fbUser) async {
-    print("Auth Changed :: $fbUser");
-    User newUser;
-    if (fbUser != null) {
-      newUser = new User.fromFirebase(fbUser, null);
-    }
+    User newUser = fbUser != null ? await _userLoginEvent(fbUser) : null;
+
     _actions.setUser(newUser);
+    _actions.setAuthState(newUser == null ? AuthState.INAUTHENTIC : AuthState.SUCCESS);
+  }
+
+  Future _userLoginEvent(fb.User userPayload) async {
+    //TODO: Set up emergency contacts
+    User newUser;
+    fs.DocumentSnapshot userDbData = await _refs.user(userPayload.uid).get();
+    if (!userDbData.exists) {
+      newUser = (new UserBuilder()
+            ..uid = userPayload.uid
+            ..firstName = ''
+            ..lastName = ''
+            ..email = userPayload.email
+            ..phoneNumber = ''
+            ..mobileNumber = ''
+            ..address = ''
+            ..role = ''
+            ..dietaryRestrictions = ''
+            ..emergencyContacts = new ListBuilder<EmergencyContact>()
+            ..membershipStart = new DateTime.fromMillisecondsSinceEpoch(0)
+            ..membershipRenewal = new DateTime.fromMillisecondsSinceEpoch(0)
+            ..disabilities = ''
+            ..forms = new ListBuilder<String>()
+            ..medicalIssues = ''
+            ..position = ''
+            ..services = new ListBuilder<String>())
+          .build();
+
+      addOrUpdateUser(newUser.toFirestore(), documentID: userPayload.uid);
+    } else {
+      newUser = new User.fromFirebase(
+        userDbData.data(),
+        new BuiltList<EmergencyContact>(),
+        id: userPayload.uid,
+        email: userPayload.email,
+      );
+    }
+    return newUser;
   }
 
   Future logOut() async => _auth.signOut();
 
-  Future<bool> signInAdmin(String email, String password) async {
+  Future signInAdmin(String email, String password) async {
+    await _actions.setAuthState(AuthState.LOADING);
     try {
-      final userCred = await _auth.signInWithEmailAndPassword(email, password);
-      if (userCred != null) {
-        return true;
-      }
+      await _auth.signInWithEmailAndPassword(email, password);
     } on fb.FirebaseError catch (e) {
       if (e.code == "auth/user-not-found") {
-        print("user did not exist!");
+        _actions.setAuthState(AuthState.ERR_NOT_FOUND);
       } else if (e.code == "auth/wrong-password") {
-        print("Incorrect Password!!");
+        _actions.setAuthState(AuthState.ERR_PASSWORD);
       } else {
-        print("e.code: ${e.code}");
+        _actions.setAuthState(AuthState.ERR_OTHER);
       }
     } catch (e) {
-      print("Unexpected error with sign in: $e");
+      _actions.setAuthState(AuthState.ERR_OTHER);
     }
-    return false;
+  }
+
+  void resetPassword(String email) {
+    _auth.sendPasswordResetEmail(email,
+        new fb.ActionCodeSettings(url: "https://bsc-development.firebaseapp.com/pw_reset/${stringToBase(email)}"));
+    _actions.setAuthState(AuthState.PASS_RESET_SENT);
   }
 
   // getMembers (TODO: with role or all?)
 
   /// [getAllMembers] get all member documents
-  getAllMembers() => _refs.allUsers().get();
+  Future<BuiltMap<String, User>> getAllMembers() async {
+    Map<String, User> dataSet = <String, User>{};
+    fs.QuerySnapshot result = await _refs.allUsers().get();
+    for (fs.DocumentSnapshot doc in result.docs) {
+      dataSet[doc.id] = new User.fromFirebase(
+        doc.data(),
+        new BuiltList<EmergencyContact>(),
+        id: doc.id,
+      );
+    }
+    return new BuiltMap<String, User>.from(dataSet);
+  }
 
   /// [getMember] get just one member document by unique identifier
   getMember(String uid) => _refs.user(uid).get();
@@ -76,8 +125,6 @@ class FirebaseClient {
 
   /// [getMeal] get just one meal document by unique identifier
   getMeal(String uid) => _refs.meal(uid).get();
-
-  // getClasses (TODO: by range, by capacity?)
 
   /// [getAllClasses] this will get all class documents
   getAllClasses() => _refs.allClasses().get();
@@ -99,65 +146,37 @@ class FirebaseClient {
   /// [getClass] get a single class document by unique identifier
   getClass(String uid) => _refs.singleClass(uid).get();
 
-  /// [createUser] create new user document
-  createUser(String name, String email, String phone, String password, String role, List classes) {
-    _refs.allUsers().add({
-      "name": name,
-      "email": email,
-      "phone_number": phone,
-      "password": password,
-      "role": role,
-    });
-  }
-
-  /// [createClass] create new class document
-  createClass(String name, DateTime start, DateTime end, String instructor, String location, int capacity) {
-    _refs.allClasses().add({
-      "name": name,
-      "start_time": start.toIso8601String(),
-      "end_time": end.toIso8601String(),
-      "instructor": instructor,
-      "location": location,
-      "capacity": capacity,
-    });
-  }
-
-  /// [createMeal] create new meal document
-  createMeal(DateTime start, DateTime end, List menu) {
-    _refs.allMeals().add({
-      "start_time": start.toIso8601String(),
-      "end_time": end.toIso8601String(),
-      "menu": menu,
-    });
-  }
-
   /// [updateUser] update existing user by unique identifier. key is any user field and value is the new value
-  updateUser(String documentID, String key, Object value) {
-    _refs.user(documentID).set(key, value, merge: true);
+  String addOrUpdateUser(Map<String, dynamic> userData, {String documentID}) {
+    fs.DocumentReference ref = _refs.user(documentID);
+    print("SETTING");
+    ref.set(userData, fs.SetOptions(merge: true));
+
+    return ref.id;
   }
 
   /// [updateClass] update existing class by unique identifier. key is any class field and value is the new value
-  updateClass(String documentID, String key, Object value) {
-    _refs.singleClass(documentID).set(key, value, merge: true);
+  void updateClass(String documentID, Map<String, dynamic> value) {
+    _refs.singleClass(documentID).set(value, fs.SetOptions(merge: true));
   }
 
   /// [updateMeal] update existing meal by unique identifier. key is any meal field and value is the new value
-  updateMeal(String documentID, String key, Object value) {
-    _refs.meal(documentID).set(key: value, merge: true);
+  void updateMeal(String documentID, Map<String, dynamic> value) {
+    _refs.meal(documentID).set(value, fs.SetOptions(merge: true));
   }
 
   /// [deleteUser] delete existing user by unique identifier
-  deleteUser(String documentID) {
+  void deleteUser(String documentID) {
     _refs.user(documentID).delete();
   }
 
   /// [deleteClass] delete existing class by unique identifier
-  deleteClass(String documentID) {
+  void deleteClass(String documentID) {
     _refs.singleClass(documentID).delete();
   }
 
   /// [deleteMeal] delete existing meal by unique identifier
-  deleteMeal(String documentID) {
+  void deleteMeal(String documentID) {
     _refs.meal(documentID).delete();
   }
 }

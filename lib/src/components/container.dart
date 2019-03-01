@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:html' hide History;
 
 // External Dependencies
 import 'package:wui_builder/components.dart';
@@ -9,7 +10,10 @@ import '../constants.dart';
 
 // Containers and components
 import './containers/home.dart';
+import './containers/newMember.dart';
 import './containers/dashboard.dart';
+import './containers/viewMember.dart';
+import './core/debug.dart';
 
 // State
 import '../state/app.dart';
@@ -25,6 +29,9 @@ class Container extends PComponent<ContainerProps> {
   /// Ease of use getter for appState
   App get appState => props.storeContainer.store.state;
 
+  /// Ease of use getter for actions
+  AppActions get actions => props.storeContainer.store.actions;
+
   Container(props) : super(props);
 
   /// Browser history entrypoint, to control page navigation
@@ -33,6 +40,10 @@ class Container extends PComponent<ContainerProps> {
 
   @override
   void componentWillMount() {
+    storeContainerSub = props.storeContainer.store.stream.listen((_) => updateOnAnimationFrame());
+    // Get all the users from the database
+    actions.server.fetchAllMembers();
+
     storeContainerSub = props.storeContainer.store.stream.listen((_) => updateOnAnimationFrame());
   }
 
@@ -53,31 +64,61 @@ class Container extends PComponent<ContainerProps> {
         ..children = [
           new Router(
             routes: [
-              // Default homepage route
+              // Default homepage route. Redirect to the dashboard if the user is authenticated
               new Route(
                 path: Routes.home,
-                componentFactory: (params) => appState.user == null ? _renderHome() : _redirect(Routes.dashboard),
-                useAsDefault: true, // if no route is matched this route will be used
+                componentFactory: (_) => _renderHome(),
+                useAsDefault: true,
               ),
               new Route(
-                path: Routes.dashboard,
-                componentFactory: (params) => _renderDashboard(),
+                path: Routes.createMember,
+                componentFactory: (params) => _renderCreateMember(),
               ),
+              new Route(path: Routes.resetContinue, componentFactory: (params) => _renderResetContinue(params)),
+              new Route(path: Routes.dashboard, componentFactory: (_) => _renderIfAuthenticated(_renderDashboard())),
+              new Route(path: Routes.viewMember, componentFactory: (_) => _renderIfAuthenticated(_renderViewMember())),
             ],
           ),
         ],
       // new Footer(new FooterProps()..actions = props.storeContainer.store.actions),
-      // new DebugPanel(new DebugPanelProps()..actions = props.storeContainer.store.actions),
+      _renderDebug(),
     ];
 
+  ///Method used to render the CreateMember page
+  _renderCreateMember() => new NewMember(new NewMemberProps()
+    ..actions = props.storeContainer.store.actions
+    ..user = appState.user);
+
+  // Only renders if the user is properly authenticated. Otherwise, bail to the homepage
+  _renderIfAuthenticated(VNode page) => appState.authState == AuthState.SUCCESS ? page : _redirect(Routes.home);
+
+  // Helper for performing quick redirects, typically in the case of fresh authentication
   _redirect(String newRoute) {
-    new Future.delayed(Duration(milliseconds: 100), (() => history.push(newRoute)));
+    new Future.delayed(Duration(milliseconds: 10), (() => history.push(newRoute)));
     return new VDivElement();
   }
 
-  _renderHome() => new Home(new HomeProps()..actions = props.storeContainer.store.actions);
+  // A redirect to the homepage, used for passing custom messages into the homepage
+  _renderResetContinue(Map<String, String> params) => _renderHome(
+      redirectCode: 'Password reset successful. Please enter your new password below.',
+      emailPrefill: baseToString(params['email_hash']));
+
+  _renderHome({String redirectCode, String emailPrefill}) => new Home(new HomeProps()
+    ..actions = props.storeContainer.store.actions
+    ..authState = appState.authState
+    ..redirectCode = redirectCode ?? ''
+    ..emailPrefill = emailPrefill ?? '');
 
   _renderDashboard() => new Dashboard(new DashboardProps()
     ..actions = props.storeContainer.store.actions
     ..user = appState.user);
+
+  _renderViewMember() => new viewMember(new viewMemberProps()
+    ..actions = props.storeContainer.store.actions
+    ..user = appState.user
+    ..userMap = appState.userMap);
+
+  _renderDebug() => (document.domain.contains("localhost"))
+      ? new DebugNavigator(new DebugNavigatorProps()..actions = props.storeContainer.store.actions)
+      : new Vspan();
 }

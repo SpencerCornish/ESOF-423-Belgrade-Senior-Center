@@ -1,14 +1,11 @@
-import 'dart:html' hide History;
-
 import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
 import 'package:wui_builder/vhtml.dart';
 
 import '../../state/app.dart';
-import '../../middleware/serverMiddleware.dart';
 
-import '../../constants.dart';
 import '../../model/user.dart';
+import '../../constants.dart';
 
 class NavProps {
   AppActions actions;
@@ -26,8 +23,6 @@ class Nav extends PComponent<NavProps> {
   @override
   void componentWillUpdate(NavProps nextProps, Null nextState) {
     super.componentWillUpdate(nextProps, nextState);
-
-    if (nextProps.user == null) history.push(Routes.home);
   }
 
   @override
@@ -42,7 +37,7 @@ class Nav extends PComponent<NavProps> {
             ..children = [
               new Vh1()
                 ..className = 'subtitle'
-                ..text = 'BSC'
+                ..text = 'BSC Member Management'
             ],
           //TODO: Enable the burger menu for mobile responsiveness
           new VAnchorElement()
@@ -59,34 +54,64 @@ class Nav extends PComponent<NavProps> {
           new VDivElement()
             ..className = "navbar-start"
             ..children = [
-              new Va()
-                ..className = "navbar-item"
-                ..text = 'Home',
-              new Va()
-                ..className = "navbar-item"
-                ..text = 'Dashboard',
               new VDivElement()
                 ..className = "navbar-item has-dropdown is-hoverable"
                 ..children = [
                   new Va()
                     ..className = "navbar-link"
-                    ..text = 'Forms',
+                    ..children = [
+                      new VSpanElement()
+                        ..className = 'icon has-text-link'
+                        ..children = [
+                          new Vi()..className = 'fas fa-plus',
+                        ],
+                      new VSpanElement()..text = 'New',
+                    ],
                   new VDivElement()
                     ..className = "navbar-dropdown"
                     ..children = [
                       new Va()
                         ..className = "navbar-item"
-                        ..text = 'New Member',
+                        ..text = 'New Member'
+                        ..onClick = _onNewMemberClick,
                       new Va()
                         ..className = "navbar-item"
-                        ..text = 'Form B',
+                        ..text = 'New Meal'
+                        ..onClick = _onNewMealClick,
                       new Va()
                         ..className = "navbar-item"
-                        ..text = 'Long Form 2',
-                      new Vhr()..className = "navbar-divider",
+                        ..text = 'New Activity'
+                        ..onClick = _onNewActivityClick,
+                    ],
+                ],
+              new VDivElement()
+                ..className = "navbar-item has-dropdown is-hoverable"
+                ..children = [
+                  new Va()
+                    ..className = "navbar-link"
+                    ..children = [
+                      new VSpanElement()
+                        ..className = 'icon has-text-link'
+                        ..children = [
+                          new Vi()..className = 'fas fa-eye',
+                        ],
+                      new VSpanElement()..text = 'View',
+                    ],
+                  new VDivElement()
+                    ..className = "navbar-dropdown"
+                    ..children = [
                       new Va()
                         ..className = "navbar-item"
-                        ..text = 'More...',
+                        ..text = 'Members'
+                        ..onClick = _onViewMembersClick,
+                      new Va()
+                        ..className = "navbar-item"
+                        ..text = 'Meals'
+                        ..onClick = _onViewMealsClick,
+                      new Va()
+                        ..className = "navbar-item"
+                        ..text = 'Activities'
+                        ..onClick = _onViewActivitiesClick,
                     ],
                 ],
             ],
@@ -104,15 +129,24 @@ class Nav extends PComponent<NavProps> {
                         ..children = [
                           new VParagraphElement()
                             ..className = 'has-text-grey'
-                            ..text = props.user?.uid,
+                            ..id = 'nav-username'
+                            ..text = "Welcome, ${props.user?.firstName} ${props.user?.lastName}!",
                         ],
                       new VDivElement()
                         ..className = 'column is-narrow'
                         ..children = [
                           new VAnchorElement()
-                            ..className = 'button is-danger'
+                            ..className = 'button'
+                            ..id = 'log-out-button'
                             ..onClick = _onLogOutClick
-                            ..text = 'Log Out',
+                            ..children = [
+                              new VSpanElement()
+                                ..className = 'icon'
+                                ..children = [
+                                  new Vi()..className = 'fas fa-sign-out-alt',
+                                ],
+                              new VSpanElement()..text = 'Log Out',
+                            ],
                         ],
                     ],
                 ],
@@ -120,7 +154,19 @@ class Nav extends PComponent<NavProps> {
         ],
     ];
 
+  _onNewMemberClick(_) => history.push(Routes.createMember);
+
+  _onNewMealClick(_) => print('Navigate to new meal form');
+
+  _onNewActivityClick(_) => print('Navigate to new activity form');
+
+  _onViewMembersClick(_) => history.push(Routes.viewMember);
+
+  _onViewMealsClick(_) => print('Navigate to view meals list');
+
+  _onViewActivitiesClick(_) => print('Navigate to view activities list');
+
   _onLogOutClick(_) async {
-    props.actions.serverActions.logOut();
+    props.actions.server.logOut();
   }
 }
