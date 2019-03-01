@@ -14,7 +14,7 @@ class _$EmergencyContact extends EmergencyContact {
   @override
   final String relationship;
   @override
-  final int number;
+  final String number;
 
   factory _$EmergencyContact([void updates(EmergencyContactBuilder b)]) =>
       (new EmergencyContactBuilder()..update(updates)).build();
@@ -81,9 +81,9 @@ class EmergencyContactBuilder implements Builder<EmergencyContact, EmergencyCont
   String get relationship => _$this._relationship;
   set relationship(String relationship) => _$this._relationship = relationship;
 
-  int _number;
-  int get number => _$this._number;
-  set number(int number) => _$this._number = number;
+  String _number;
+  String get number => _$this._number;
+  set number(String number) => _$this._number = number;
 
   EmergencyContactBuilder();
 
