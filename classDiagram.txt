@@ -1,0 +1,402 @@
+@startuml
+class AppActions <<abstract>>{
+  ServerMiddlewareActions server
+  ActionDispatcher setUser()
+  ActionDispatcher setLoading()
+  ActionDispatcher setAuthState()
+  ActionDispatcher setUserMap()
+  ActionDispatcher setActivityMap()
+  ActionDispatcher setMealMap()
+}
+
+class App <<abstract>>{
+    User user
+    bool isLoading()
+    AuthState authState()
+    BuiltMap userMap()
+    BuiltMap activityMap()
+    BuiltMap mealMap()
+    factory App()
+}
+
+class ReduxActions <<abstract>>{
+    void setDispatcher(Dispatcher)
+}
+
+class ActionName{
+    String name
+    ActionName(name)
+}
+
+class ActionDispatcher{
+    -Dispatcher dispatcher
+    -final String name
+    void call(P)
+    ActionDispatcher(name)
+    void setDispatcher(Dispatcher)
+}
+
+class Action{
+    final String name
+    final Payload Payload
+    Action(name, payload)
+    String toString()
+}
+
+class Built <<abstract>>{
+    V rebuild(updates)
+    B toBuilder()
+}
+
+class Builder <<abstract>>{
+    void replace(value)
+    void update(updates)
+    V build()
+}
+
+class BuildValue{
+    final bool instantiable
+    final bool nestedBuilders
+    final bool autoCreateNestedBuilders
+    final bool comparableBuilders
+    final String wireName
+    const BuiltValue()
+}
+
+class BuiltValueField{
+    final bool compare
+    final bool serialize
+    final String wierName
+    const BuiltValueField()
+}
+
+class BuiltValueSerializer {
+    final bool custom
+    const BuiltValueSerializer()
+}
+
+class BuiltValueEnum{
+    final String wireName
+    const BuiltValueEnum()
+}
+
+class BuiltValueEnumConst{
+    final String wireName
+    const BuiltValueEnumConst()
+}
+
+class EnumClass{
+    final String name
+    const EnumClass(name)
+    String toString()
+}
+
+class BuiltValueToStringHelper<<abstract>>{
+    void add(field, value)
+    String toString()
+}
+
+class IndentingBuiltValueToStringHelper{
+    -StringBuffer result
+    IndentingBuiltValueToStringHelper(className)
+    void add(String field, Object value)
+    String toString()
+}
+
+class FlatBuiltValueToStringHelper{
+    -StringBuffer result
+    -bool previousField
+    FlatBuiltValueToStringHelper(String className)
+    void add(String field, Object value)
+    String toString()
+}
+
+class BuiltValueNullFieldError{
+    final String type
+    final String field
+    BuiltValueNullFieldError(type, field)
+    String toString()
+}
+
+class BuiltValueMissingGenericsError{
+    final String type
+    final String parameter
+    BuiltValueMissingGenericsError(type, parameter)
+    String toString()
+}
+
+class BuiltValueNestedFieldError{
+    final String type
+    final String field
+    final String error
+    BuiltValueNestedFieldError(type, field, error)
+    String toString()
+}
+
+class Routes{
+    static const home
+    static const createMember
+    static const resetContinue
+    static const dashboard
+    static const viewMember
+    static const viewActivity
+}
+
+class StoreContainer{
+    Store store
+    -AppActions actions
+    -FirebaseClient client
+    -FirebaseSubscriber subscriber
+    final App fb
+    -final Auth firebaseAuth
+    -final Firestore firebaseDatabase
+    StoreContainer()
+}
+
+class User <<abstract>>{
+    String uid()
+    String firstName()
+    String lastName()
+    String email()
+    String phoneNumber()
+    String mobileNumber()
+    String address()
+    String role()
+    String dietaryRestrictions()
+    BuiltList emergencyContacts()
+    DateTime membershipStart()
+    DateTime membershipRenewal()
+    String disabilities()
+    BuiltList forms()
+    String medicalIssues()
+    String position()
+    BuiltList services()
+    factory User()
+    factory User.fromFirebase()
+    Map toFirestore()
+}
+
+class EmergencyContact <<abstract>>{
+    String uid()
+    String name()
+    String relationship()
+    String number()
+    factory EmergencyContact()
+    Map toFirestore()
+}
+
+class Meal <<abstract>>{
+    DateTime startTime()
+    DateTime endTime()
+    String uid()
+    BuiltList menu()
+    factory Meal()
+    factory Meal.fromFirebase()
+    Map toFirestore()
+}
+
+class Activity <<abstract>>{
+    DateTime startTime()
+    DateTime endTime()
+    String uid()
+    int capacity()
+    String instructor()
+    String location()
+    String name()
+    factory Activity()
+    factory Activity.fromFirebase()
+    Map toFirestore()
+}
+
+class DbRefs{
+    -Firestore fs
+    DbRefs(fs)
+    CollectionReference allUsers()
+    DocumentReference user()
+    CollectionReference allMeals()
+    DocumentReference meal()
+    CollectionReference allActivities()
+    DocumentReference singleClas()
+}
+
+class FirebaseClient{
+    -final DbRefs refs
+    -final AppActions actions
+    -final BrowserClient httpClient
+    -final FirebaseSubscriber firebaseSubscriber
+    -final Auth auth
+    -final GoogleAuthProvider googleAuthProvider
+    FirebaseClient()
+    -Future onAuthChanged()
+    -Future userLoginEvent
+    Future logOut()
+    Future signInAdmin()
+    void resetPassword()
+    Future getAllMembers()
+    getMember()
+    getAllMeals()
+    getMeal()
+    Future getAllActivities()
+    getClassByStartDate()
+    getClassTaughtBy()
+    getClass()
+    String addOrUpdateUser()
+    void updateClass()
+    void updateMeal()
+    void deleteUser()
+    void deleteClass()
+    void deleteMeal()
+}
+
+class AdminSignInPayload{
+    String email
+    String password
+    AdminSignInPayload()
+}
+
+class ServerMiddlewareActions{
+    ActionDispatcher signInAdmin()
+    ActionDispatcher logOut()
+    ActionDispatcher resetPassword()
+    ActionDispatcher updateOrCreateUser()
+    ActionDispatcher fetchAllMembers()
+    factory ServerMiddlewareActions()
+}
+
+class ContainerProps{
+    StoreContainer storeContainer
+}
+
+class Container{
+    StreamSubscription storeContainerSub
+    App appState()
+    AppActions actions()
+    -History history
+    History history()
+    void componentWillMount()
+    void componentWillUnmount()
+    VNode render()
+    -VNode routes()
+    -renderCreateMember()
+    -renderIfAuthenticated()
+    -redirect()
+    -renderResetContinue()
+    -renderHome()
+    -renderDashboard()
+    -renderViewMember()
+    -renderViewActivity()
+    -renderDebug()
+}
+
+class DashboardProps {
+  AppActions actions
+  User user
+}
+
+class Dashboard{
+    -History history
+    History history()
+    VNode emailInputNode
+    VNode passwordInputNode
+    VNode render()
+    -VNode renderCard()
+    -renderFooterItem()
+}
+
+class HomeProps {
+  AppActions actions
+  AuthState authState
+  String redirectCode
+  String emailPrefill
+}
+
+class Home{
+    -History history
+    History history()
+    void componentWillMount()
+    void componentDidMount()
+    void componentWillUpdate()
+    VNode render()
+    -VNode renderSignIn()
+    -renderHint()
+    -renderNotification()
+    -onEmailChange()
+    -onPassChange()
+    -onSubmitClick()
+    -onCancelClick()
+    -onResetPasswordClick()
+}
+
+class NewMemberProps {
+  AppActions actions
+  User user
+}
+
+class NewMember{
+    -History history
+    History history()
+    VNode render()
+    -VNode userCreation()
+    -submitClick()
+    User newUser()
+}
+
+class viewMemberProps {
+  AppActions actions
+  User user
+  BuiltMap<String, User> userMap
+}
+
+class viewMember{
+    List title
+    -History history
+    History history()
+    VNode emailInputNode
+    VNode passwordInputNode
+    List<VNode> createRows()
+    String checkText()
+    String tdClass()
+    List<VNode> titleRow()
+    VNode render()
+}
+
+class NavProps {
+  AppActions actions
+  User user
+}
+
+class Nav{
+    -History history
+    History history()
+    void componentWillUpdate()
+    VNode render()
+    -onNewMemberClick()
+    -onNewMealClick()
+    -onNewActivityClick()
+    -onViewMembersClick()
+    -onViewMealsClick()
+    -onViewActivitiesClick()
+    -onLogOutClick()
+}
+
+Nav --|> PComponent
+viewMember --|> PComponent
+NewMember --|> PComponent
+Home --|> PComponent
+Dashboard --|> PComponent
+Container --|> PComponent
+ServerMiddlewareActions --|> ReduxActions
+Activity ..|> Built
+Meal ..|> Built
+EmergencyContact ..|> Built
+User ..|> Built
+B --|> Builder
+V --|> Built
+BuiltValueNestedFieldError --|> Error
+BuiltValueMissingGenericsError --|> Error
+BuiltValueNullFieldError --|> Error
+FlatBuiltValueToStringHelper ..|> BuiltValueToStringHelper
+IndentingBuiltValueToStringHelper ..|> BuiltValueToStringHelper
+App ..|> Built
+AppActions --|> ReduxActions
+@enduml
