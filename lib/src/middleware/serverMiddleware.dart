@@ -72,7 +72,9 @@ _addOrUpdateUser(FirebaseClient client) => (
       ActionHandler next,
       Action<User> action,
     ) async {
-      client.addOrUpdateUser(action.payload.toFirestore());
+      client.addOrUpdateUser(
+        action.payload.toFirestore(),
+      );
     };
 
 _fetchAllMembers(FirebaseClient client) => (

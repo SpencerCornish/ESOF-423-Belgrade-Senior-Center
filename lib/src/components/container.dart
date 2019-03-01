@@ -10,6 +10,7 @@ import '../constants.dart';
 
 // Containers and components
 import './containers/home.dart';
+import './containers/newMember.dart';
 import './containers/dashboard.dart';
 import './containers/viewMember.dart';
 import './containers/viewActivity.dart';
@@ -40,6 +41,7 @@ class Container extends PComponent<ContainerProps> {
 
   @override
   void componentWillMount() {
+    storeContainerSub = props.storeContainer.store.stream.listen((_) => updateOnAnimationFrame());
     // Get all the users from the database
     actions.server.fetchAllMembers();
 
@@ -69,6 +71,10 @@ class Container extends PComponent<ContainerProps> {
                 componentFactory: (_) => _renderHome(),
                 useAsDefault: true,
               ),
+              new Route(
+                path: Routes.createMember,
+                componentFactory: (params) => _renderCreateMember(),
+              ),
               new Route(path: Routes.resetContinue, componentFactory: (params) => _renderResetContinue(params)),
               new Route(path: Routes.dashboard, componentFactory: (_) => _renderIfAuthenticated(_renderDashboard())),
               new Route(path: Routes.viewMember, componentFactory: (_) => _renderIfAuthenticated(_renderViewMember())),
@@ -79,6 +85,11 @@ class Container extends PComponent<ContainerProps> {
       // new Footer(new FooterProps()..actions = props.storeContainer.store.actions),
       _renderDebug(),
     ];
+
+  ///Method used to render the CreateMember page
+  _renderCreateMember() => new NewMember(new NewMemberProps()
+    ..actions = props.storeContainer.store.actions
+    ..user = appState.user);
 
   // Only renders if the user is properly authenticated. Otherwise, bail to the homepage
   _renderIfAuthenticated(VNode page) => appState.authState == AuthState.SUCCESS ? page : _redirect(Routes.home);

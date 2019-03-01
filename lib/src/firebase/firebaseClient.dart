@@ -157,6 +157,7 @@ class FirebaseClient {
   /// [updateUser] update existing user by unique identifier. key is any user field and value is the new value
   String addOrUpdateUser(Map<String, dynamic> userData, {String documentID}) {
     fs.DocumentReference ref = _refs.user(documentID);
+    print("SETTING");
     ref.set(userData, fs.SetOptions(merge: true));
 
     return ref.id;
