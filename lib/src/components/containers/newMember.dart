@@ -99,8 +99,7 @@ class NewMember extends PComponent<NewMemberProps> {
                                         ..className = 'field is-horizontal'
                                         ..children = [
                                           new VDivElement()
-                                            ..className =
-                                                'field-label is-normal'
+                                            ..className = 'field-label is-normal'
                                             ..id = 'lName-lab'
                                             ..children = [
                                               new VLabelElement()
@@ -111,8 +110,7 @@ class NewMember extends PComponent<NewMemberProps> {
                                             ..className = 'field'
                                             ..children = [
                                               new VParagraphElement()
-                                                ..className =
-                                                    'control is-expanded'
+                                                ..className = 'control is-expanded'
                                                 ..children = [
                                                   new VInputElement()
                                                     ..className = 'input'
@@ -195,8 +193,7 @@ class NewMember extends PComponent<NewMemberProps> {
                                         ..className = 'field is-horizontal'
                                         ..children = [
                                           new VDivElement()
-                                            ..className =
-                                                'field-label is-normal'
+                                            ..className = 'field-label is-normal'
                                             ..id = 'cellNum-label'
                                             ..children = [
                                               new VLabelElement()
@@ -207,8 +204,7 @@ class NewMember extends PComponent<NewMemberProps> {
                                             ..className = 'field'
                                             ..children = [
                                               new VParagraphElement()
-                                                ..className =
-                                                    'control is-expanded'
+                                                ..className = 'control is-expanded'
                                                 ..children = [
                                                   new VInputElement()
                                                     ..className = 'input'
@@ -377,8 +373,7 @@ class NewMember extends PComponent<NewMemberProps> {
                                         ..className = 'field is-horizontal'
                                         ..children = [
                                           new VDivElement()
-                                            ..className =
-                                                'field-label is-normal'
+                                            ..className = 'field-label is-normal'
                                             ..id = 'memRenew-label'
                                             ..children = [
                                               new VLabelElement()
@@ -389,8 +384,7 @@ class NewMember extends PComponent<NewMemberProps> {
                                             ..className = 'field'
                                             ..children = [
                                               new VParagraphElement()
-                                                ..className =
-                                                    'control is-expanded'
+                                                ..className = 'control is-expanded'
                                                 ..children = [
                                                   new VInputElement()
                                                     ..className = 'input'
@@ -412,24 +406,20 @@ class NewMember extends PComponent<NewMemberProps> {
                     ..className = 'columns is-centered'
                     ..children = [
                       new VDivElement()
-                        ..className = 'dropdown is-active'
+                        ..className = 'dropdown'
                         ..children = [
                           new VDivElement()
                             ..className = 'dropdown-trigger'
                             ..children = [
                               new VAnchorElement()
-                                ..className =
-                                    'button is-dropdown-menu is-centered'
+                                ..className = 'button is-dropdown-menu is-centered'
                                 ..children = [
                                   new VSpanElement()
                                     ..text = "Role"
                                     ..children = [
                                       new VSpanElement()
                                         ..className = 'icon'
-                                        ..children = [
-                                          new Vi()
-                                            ..className = "fas fa-angle-down"
-                                        ]
+                                        ..children = [new Vi()..className = "fas fa-angle-down"]
                                     ],
                                   new VDivElement()
                                     ..className = 'dropdown-menu'
@@ -463,7 +453,7 @@ class NewMember extends PComponent<NewMemberProps> {
                           new VAnchorElement()
                             ..className = 'button is-link'
                             ..text = "Submit"
-                           ..onClick = _submitClick
+                            ..onClick = _submitClick
                         ]
                     ]
                 ]
@@ -472,8 +462,8 @@ class NewMember extends PComponent<NewMemberProps> {
     ];
 
   //method used for the submit click
-  //will need to send fName-input, lName-input, email-input, 
-  //cellNum-input, phoneNum-input, address-input, diet-input, 
+  //will need to send fName-input, lName-input, email-input,
+  //cellNum-input, phoneNum-input, address-input, diet-input,
   //disabilities-input, medicalIssue-input, memStart-input , and memRenew-input, and role type to database
   _submitClick(_) {
     InputElement first = querySelector('#fName-input');
@@ -487,29 +477,30 @@ class NewMember extends PComponent<NewMemberProps> {
     InputElement medical = querySelector('#medicalIssue-input');
     InputElement memStart = querySelector('#memStart-input');
     InputElement memRenew = querySelector('#memRenew-input');
-    
+
     //create a new user object
     User newUser = (new UserBuilder()
-    ..firstName = first.value
-    ..lastName = last.value
-    ..email = email.value
-    ..mobileNumber = cell.value
-    ..phoneNumber = phone.value
-    ..address = address.value
-    ..dietaryRestrictions = diet.value
-    ..disabilities = disability.value
-    ..medicalIssues = medical.value
-    ..membershipStart = DateTime.parse(memStart.value)
-    ..membershipRenewal = DateTime.parse(memRenew.value)
-    ..emergencyContacts = new ListBuilder<EmergencyContact>()
-    ..services = new ListBuilder<String>()
-    ..role = "NULL"
-    ..position = "NULL"
-    ..forms = new ListBuilder<String>()
-    ).build();
+          ..firstName = first.value
+          ..lastName = last.value
+          ..email = email.value
+          ..mobileNumber = cell.value
+          ..phoneNumber = phone.value
+          ..address = address.value
+          ..dietaryRestrictions = diet.value
+          ..disabilities = disability.value
+          ..medicalIssues = medical.value
+          ..membershipStart = DateTime.parse(memStart.value)
+          ..membershipRenewal = DateTime.parse(memRenew.value)
+          ..emergencyContacts = new ListBuilder<EmergencyContact>()
+          ..services = new ListBuilder<String>()
+          ..role = "NULL"
+          ..position = "NULL"
+          ..forms = new ListBuilder<String>())
+        .build();
 
     props.actions.server.updateOrCreateUser(newUser);
+    props.actions.server.fetchAllMembers();
 
-  history.push(Routes.dashboard);
+    history.push(Routes.dashboard);
   }
 }

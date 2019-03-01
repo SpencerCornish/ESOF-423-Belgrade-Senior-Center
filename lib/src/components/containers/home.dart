@@ -102,7 +102,6 @@ class Home extends PComponent<HomeProps> {
         ],
     ];
 
-
   VNode _renderSignIn() => new VDivElement()
     ..children = [
       new VDivElement()
