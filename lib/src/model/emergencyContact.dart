@@ -16,7 +16,7 @@ abstract class EmergencyContact implements Built<EmergencyContact, EmergencyCont
   String get relationship;
 
   /// [number] is the phone number of the contact
-  String get number;
+  int get number;
 
   EmergencyContact._();
   factory EmergencyContact([updates(EmergencyContactBuilder b)]) = _$EmergencyContact;

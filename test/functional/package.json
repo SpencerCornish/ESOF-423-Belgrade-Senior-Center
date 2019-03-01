@@ -1,0 +1,21 @@
+{
+  "name": "bsc-functional-tests",
+  "version": "1.0.0",
+  "description": "Dependencies for running puppeteer functional tests",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.3.3",
+    "@babel/polyfill": "^7.2.5",
+    "@babel/preset-env": "^7.3.1",
+    "@types/faker": "^4.1.5",
+    "@types/puppeteer": "^1.12.1",
+    "babel-jest": "^24.1.0",
+    "faker": "^4.1.0",
+    "jest": "^24.1.0",
+    "puppeteer": "^1.12.2"
+  }
+}

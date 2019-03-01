@@ -30,18 +30,18 @@ abstract class Activity implements Built<Activity, ActivityBuilder> {
   Activity._();
   factory Activity([updates(ActivityBuilder b)]) = _$Activity;
 
-  factory Activity.fromFirebase(Map<String, String> firestoreData) => new Activity((ActivityBuilder builder) => builder
+  factory Activity.fromFirebase(Map<String, dynamic> firestoreData) => new Activity((ActivityBuilder builder) => builder
     ..uid = firestoreData['uuid']
-    ..capacity = int.parse(firestoreData['capacity'])
+    ..capacity = firestoreData['capacity']
     ..startTime = DateTime.parse(firestoreData['start_time'])
     ..endTime = DateTime.parse(firestoreData['end_time'])
     ..instructor = firestoreData['instructor']
     ..location = firestoreData['location']
     ..name = firestoreData['name']);
 
-  Map<String, String> toFirestore() => {
-        'uuid': uid,
-        'capacity': capacity.toString(),
+  Map<String, dynamic> toFirestore() => {
+        'uid': uid,
+        'capacity': capacity,
         'start_time': startTime.toIso8601String(),
         'end_time': endTime.toIso8601String(),
         'instructor': instructor,

@@ -1,5 +1,3 @@
-import 'dart:html' hide History;
-
 import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
 import 'package:wui_builder/vhtml.dart';
@@ -23,6 +21,7 @@ class DebugNavigator extends PComponent<DebugNavigatorProps> {
   @override
   VNode render() => new VDivElement()
     ..className = 'columns is-centered'
+    ..id = 'debug-snapped'
     ..children = [
       new VDivElement()
         ..className = 'column is-half'
@@ -39,15 +38,12 @@ class DebugNavigator extends PComponent<DebugNavigatorProps> {
                 ..text = 'Dashboard'
                 ..onClick = (_) => history.push(Routes.dashboard),
               new VAnchorElement()
-                    ..className = 'button'
-                    ..text = 'Forms'
-                  // TODO:..onClick = (_) => history.push(Routes.forms???)
-                  ,
+                ..className = 'button'
+                ..text = 'Forms',
               new VAnchorElement()
-                    ..className = 'button'
-                    ..text = 'Stored Data'
-                  //TODO: ..onClick = (_) => history.push(Routes.home)
-                  ,
+                ..className = 'button'
+                ..text = 'Stored Data'
+                ..onClick = (_) => history.push(Routes.viewMember),
             ]
         ],
     ];
