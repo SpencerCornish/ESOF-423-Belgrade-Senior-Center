@@ -99,8 +99,6 @@ class Home extends PComponent<HomeProps> {
         ],
     ];
 
-  // ///create the function that will be temporarly used during creation of the form page as an on click
-  // _onFormCreationClick(_) => history.push(Routes.forms);
 
   VNode _renderSignIn() => new VDivElement()
     ..children = [

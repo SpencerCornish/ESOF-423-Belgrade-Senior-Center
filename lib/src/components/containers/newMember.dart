@@ -1,4 +1,4 @@
-import 'dart:async';
+import 'dart:html' hide History;
 
 import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
@@ -452,6 +452,7 @@ class NewMember extends PComponent<NewMemberProps> {
                             ]
                         ]
                     ],
+                  //create the submit button
                   new VDivElement()
                     ..className = 'field is-grouped is-grouped-right'
                     ..children = [
@@ -469,5 +470,22 @@ class NewMember extends PComponent<NewMemberProps> {
         ]
     ];
 
-  //VNode _submitClick() =>
+  //method used for the submit click
+  //will need to send fName-input, lName-input, email-input, 
+  //cellNum-input, phoneNum-input, address-input, diet-input, 
+  //disabilities-input, medicalIssue-input, memStart-input , and memRenew-input, and role type to database
+  _submitClick() {
+    InputElement first = querySelector('fName-input');
+    InputElement last = querySelector('fName-input');
+    InputElement email = querySelector('fName-input');
+    InputElement cell = querySelector('fName-input');
+    InputElement phone = querySelector('fName-input');
+    InputElement address = querySelector('fName-input');
+    InputElement diet = querySelector('fName-input');
+    InputElement disability = querySelector('fName-input');
+    InputElement medical = querySelector('fName-input');
+    InputElement memStart = querySelector('fName-input');
+    InputElement memRenew = querySelector('fName-input');
+
+  }
 }
