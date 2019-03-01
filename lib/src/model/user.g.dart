@@ -64,9 +64,6 @@ class _$User extends User {
       this.position,
       this.services})
       : super._() {
-    if (uid == null) {
-      throw new BuiltValueNullFieldError('User', 'uid');
-    }
     if (firstName == null) {
       throw new BuiltValueNullFieldError('User', 'firstName');
     }

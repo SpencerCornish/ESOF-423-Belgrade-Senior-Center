@@ -3,9 +3,10 @@ import 'dart:html' hide History;
 import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
 import 'package:wui_builder/vhtml.dart';
+import 'package:built_collection/built_collection.dart';
 
 import '../../constants.dart';
-
+import '../../model/emergencyContact.dart';
 import '../../state/app.dart';
 import '../../store.dart';
 import '../core/nav.dart';
@@ -486,18 +487,28 @@ class NewMember extends PComponent<NewMemberProps> {
     InputElement medical = querySelector('#medicalIssue-input');
     InputElement memStart = querySelector('#memStart-input');
     InputElement memRenew = querySelector('#memRenew-input');
+    
+    //create a new user object
+    User newUser = (new UserBuilder()
+    ..firstName = first.value
+    ..lastName = last.value
+    ..email = email.value
+    ..mobileNumber = cell.value
+    ..phoneNumber = phone.value
+    ..address = address.value
+    ..dietaryRestrictions = diet.value
+    ..disabilities = disability.value
+    ..medicalIssues = medical.value
+    ..membershipStart = DateTime.parse(memStart.value)
+    ..membershipRenewal = DateTime.parse(memRenew.value)
+    ..emergencyContacts = new ListBuilder<EmergencyContact>()
+    ..services = new ListBuilder<String>()
+    ..role = "NULL"
+    ..position = "NULL"
+    ..forms = new ListBuilder<String>()
+    ).build();
 
+    props.actions.server.updateOrCreateUser(newUser);
 
-    print(first.value);
-    print(last.value);
-    print(email.value);
-    print(cell.value);
-    print(phone.value);
-    print(address.value);
-    print(diet.value);
-    print(disability.value);
-    print(medical.value);
-    print(memStart.value);
-    print(memRenew.value);
   }
 }
