@@ -1,5 +1,10 @@
 # User Documentation
 
+## Completed
+
+- [x] Login
+- [x] View documentation
+
 ## Description  
 
 This webapp was built to allow the Belgrade Senior Center to easily manage client's information and schedules.  Client's are able to schedule
