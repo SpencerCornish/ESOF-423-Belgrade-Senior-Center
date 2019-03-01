@@ -510,5 +510,6 @@ class NewMember extends PComponent<NewMemberProps> {
 
     props.actions.server.updateOrCreateUser(newUser);
 
+  history.push(Routes.dashboard);
   }
 }
