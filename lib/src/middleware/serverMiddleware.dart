@@ -83,3 +83,12 @@ _fetchAllMembers(FirebaseClient client) => (
       final memberMap = await client.getAllMembers();
       api.actions.setUserMap(memberMap);
     };
+
+_fetchAllActivities(FirebaseClient client) => (
+  MiddlewareApi<App, AppBuilder, AppActions> api,
+  ActionHandler next,
+  Action<Null> action,
+) async {
+  final activityMap = await client.getAllActivities();
+  api.actions.setActivityMap(activityMap);
+};

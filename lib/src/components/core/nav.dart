@@ -164,7 +164,7 @@ class Nav extends PComponent<NavProps> {
 
   _onViewMealsClick(_) => print('Navigate to view meals list');
 
-  _onViewActivitiesClick(_) => print('Navigate to view activities list');
+  _onViewActivitiesClick(_) => history.push(Routes.viewActivity);
 
   _onLogOutClick(_) async {
     props.actions.server.logOut();

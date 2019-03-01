@@ -12,6 +12,7 @@ import '../constants.dart';
 import './containers/home.dart';
 import './containers/dashboard.dart';
 import './containers/viewMember.dart';
+import './containers/viewActivity.dart';
 import './core/debug.dart';
 
 // State
@@ -71,6 +72,7 @@ class Container extends PComponent<ContainerProps> {
               new Route(path: Routes.resetContinue, componentFactory: (params) => _renderResetContinue(params)),
               new Route(path: Routes.dashboard, componentFactory: (_) => _renderIfAuthenticated(_renderDashboard())),
               new Route(path: Routes.viewMember, componentFactory: (_) => _renderIfAuthenticated(_renderViewMember())),
+              new Route(path: Routes.viewActivity, componentFactory: (_) => _renderIfAuthenticated(_renderViewActivity())),
             ],
           ),
         ],
@@ -106,6 +108,11 @@ class Container extends PComponent<ContainerProps> {
     ..actions = props.storeContainer.store.actions
     ..user = appState.user
     ..userMap = appState.userMap);
+
+  _renderViewActivity() => new viewActivity(new viewActivityProps()
+    ..actions = props.storeContainer.store.actions
+    ..user = appState.user
+    ..activityMap = appState.activityMap);
 
   _renderDebug() => (document.domain.contains("localhost"))
       ? new DebugNavigator(new DebugNavigatorProps()..actions = props.storeContainer.store.actions)

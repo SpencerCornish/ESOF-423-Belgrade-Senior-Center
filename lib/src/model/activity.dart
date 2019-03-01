@@ -1,6 +1,7 @@
 library activity;
 
 import 'package:built_value/built_value.dart';
+import 'package:firebase/firebase.dart' as fb;
 
 part 'activity.g.dart';
 

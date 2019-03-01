@@ -20,7 +20,7 @@ class DbRefs {
   DocumentReference meal([String uid]) => _fs.collection('meals').doc(uid);
 
   /// [allClasses] returns all documents from the classes collection
-  CollectionReference allClasses() => _fs.collection('classes');
+  CollectionReference allActivities() => _fs.collection('activity');
 
   /// [singleClass] takes a unique identifier for a class, and returns a DocumentReference to a specific class
   /// if no uid is specified, a new one is generated
