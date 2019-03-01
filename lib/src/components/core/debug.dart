@@ -39,13 +39,16 @@ class DebugNavigator extends PComponent<DebugNavigatorProps> {
                 ..onClick = (_) => history.push(Routes.dashboard),
               new VAnchorElement()
                 ..className = 'button'
+<<<<<<< HEAD
                 ..text = 'Forms'
                 ..onClick = (_) => history.push(Routes.createMember),
+=======
+                ..text = 'Forms',
+>>>>>>> 0fb7e60334ab9bdbd5d797c4270b89470d50e634
               new VAnchorElement()
-                    ..className = 'button'
-                    ..text = 'Stored Data'
-                  //TODO: ..onClick = (_) => history.push(Routes.home)
-                  ,
+                ..className = 'button'
+                ..text = 'Stored Data'
+                ..onClick = (_) => history.push(Routes.viewMember),
             ]
         ],
     ];

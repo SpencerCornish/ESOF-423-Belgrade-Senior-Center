@@ -64,8 +64,12 @@ class FirebaseClient {
 
       addOrUpdateUser(newUser.toFirestore(), documentID: userPayload.uid);
     } else {
-      newUser =
-          new User.fromFirebase(userPayload.uid, userDbData.data(), new BuiltList<EmergencyContact>(), userPayload);
+      newUser = new User.fromFirebase(
+        userDbData.data(),
+        new BuiltList<EmergencyContact>(),
+        id: userPayload.uid,
+        email: userPayload.email,
+      );
     }
     return newUser;
   }
@@ -102,7 +106,11 @@ class FirebaseClient {
     Map<String, User> dataSet = <String, User>{};
     fs.QuerySnapshot result = await _refs.allUsers().get();
     for (fs.DocumentSnapshot doc in result.docs) {
-      dataSet[doc.id] = new User.fromFirebase(doc.id, doc.data(), new BuiltList<EmergencyContact>());
+      dataSet[doc.id] = new User.fromFirebase(
+        doc.data(),
+        new BuiltList<EmergencyContact>(),
+        id: doc.id,
+      );
     }
     return new BuiltMap<String, User>.from(dataSet);
   }

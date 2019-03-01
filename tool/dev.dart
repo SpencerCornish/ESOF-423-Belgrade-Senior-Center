@@ -6,7 +6,7 @@ main(List<String> args) async {
   // https://github.com/Workiva/dart_dev
 
   // Perform task configuration here as necessary.
-  config.format..lineLength = 120;
+  config.format..lineLength = 120..paths = ['lib', 'test/lib'];
   // Available task configurations:
   // config.analyze
   // config.copyLicense

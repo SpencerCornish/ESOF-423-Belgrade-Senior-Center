@@ -129,6 +129,7 @@ class Nav extends PComponent<NavProps> {
                         ..children = [
                           new VParagraphElement()
                             ..className = 'has-text-grey'
+                            ..id = 'nav-username'
                             ..text = "Welcome, ${props.user?.firstName} ${props.user?.lastName}!",
                         ],
                       new VDivElement()
@@ -136,6 +137,7 @@ class Nav extends PComponent<NavProps> {
                         ..children = [
                           new VAnchorElement()
                             ..className = 'button'
+                            ..id = 'log-out-button'
                             ..onClick = _onLogOutClick
                             ..children = [
                               new VSpanElement()
@@ -158,7 +160,7 @@ class Nav extends PComponent<NavProps> {
 
   _onNewActivityClick(_) => print('Navigate to new activity form');
 
-  _onViewMembersClick(_) => print('Navigate to view member list');
+  _onViewMembersClick(_) => history.push(Routes.viewMember);
 
   _onViewMealsClick(_) => print('Navigate to view meals list');
 
