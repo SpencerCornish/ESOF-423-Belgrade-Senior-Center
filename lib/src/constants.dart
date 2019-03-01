@@ -6,6 +6,9 @@ class Routes {
   /// Route to the base (or Home) of the app
   static const home = '/';
 
+  /// Route for forms page where new users, meals, and classes can be created
+  static const createMember = '/new/member';
+
   /// Route used after a password reset
   static const resetContinue = '/pw_reset/:email_hash';
 
@@ -14,6 +17,7 @@ class Routes {
   static const viewMember = '/view/members';
 
   // TODO: Fill in more routes here
+
 }
 
 enum Role {
