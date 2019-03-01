@@ -16,20 +16,19 @@ abstract class EmergencyContact implements Built<EmergencyContact, EmergencyCont
   String get relationship;
 
   /// [number] is the phone number of the contact
-  int get number;
+  String get number;
 
   EmergencyContact._();
   factory EmergencyContact([updates(EmergencyContactBuilder b)]) = _$EmergencyContact;
 
-  factory EmergencyContact.fromFirebase(Map<String, dynamic> firestoreData) =>
+  factory EmergencyContact.fromFirebase(String uid, Map<String, dynamic> firestoreData) =>
       new EmergencyContact((EmergencyContactBuilder builder) => builder
-        ..uid = firestoreData['uid']
+        ..uid = uid
         ..name = firestoreData['name']
         ..relationship = firestoreData['relationship']
         ..number = firestoreData['number']);
 
   Map<String, dynamic> toFirestore() => {
-        'uid': uid,
         'name': name,
         'relationship': relationship,
         'number': number,

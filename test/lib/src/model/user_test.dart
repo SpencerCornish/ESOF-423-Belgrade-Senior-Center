@@ -1,42 +1,49 @@
 import 'package:test/test.dart';
+import 'package:built_collection/built_collection.dart';
 import 'package:bsc/src/model/user.dart';
+import 'package:bsc/src/model/emergencyContact.dart';
 
 void main() {
-  final firestoreData = new Map<String, dynamic>.from({
+  final formList = ['forma', 'formb'];
+  final serviceList = ['servicea', 'serviceb'];
+  final emergencyContactList = [];
+  final mockFirestoreUserData = new Map<String, dynamic>.from({
     'first_name': "Dan",
     'last_name': "Bachler",
-    'email': "email",
+    'email': "test@example.com",
     'phone_number': "phoneNumber",
     'mobile_number': "phoneNumber",
-    'address': "address",
-    'role': "role",
+    'address': "443 E Main Street Bozeman, MT 59715",
+    'role': "ADMIN",
     'dietary_restrictions': "dietaryRestrictions",
-    // TODO: Built list
-    'emergency_contacts': "",
+    'emergency_contacts': emergencyContactList,
     'membership_start': "2019-02-27T12:05:46.173",
     'membership_renewal': "2019-02-27T12:05:58.478",
     'disabilities': "disabilities",
-    // TODO: Built list
-    'forms': "",
+    'forms': formList,
     'medical_issues': "medicalIssues",
     'position': "position",
-    //Todo:  Built List
-    'services': "",
+    'services': serviceList,
   });
-  User testing;
-  
-  test('Make sure data from firebase is accuratly changed into data for dart',
-      () {
-    testing = new User.fromFirebase(null,firestoreData,null);
-    //Test that values are accurately carried over
-    expect(testing.firstName, firestoreData['first_name']);
-  });
+  group('User -', () {
+    test('fromFirebase factory produces accurate model file', () {
+      User userFromTestData =
+          new User.fromFirebase(mockFirestoreUserData, new BuiltList<EmergencyContact>(), id: "testID");
 
-  test(
-      'Make sure that data from dart is accuratly changed into data for firebase',
-      () {
-    testing = new User.fromFirebase(null,firestoreData,null);
-    Map<String, String> temp = testing.toFirestore();
-    expect(firestoreData, temp);
+      // Datetimes
+      expect(userFromTestData.membershipStart.toIso8601String(), mockFirestoreUserData['membership_start']);
+      expect(userFromTestData.membershipRenewal.toIso8601String(), mockFirestoreUserData['membership_renewal']);
+
+      // maps
+      expect(userFromTestData.forms.toList(), formList);
+      expect(userFromTestData.services.toList(), serviceList);
+    });
+
+    test('toFirebase function produces a properly formatted map of data', () {
+      User userFromTestData =
+          new User.fromFirebase(mockFirestoreUserData, new BuiltList<EmergencyContact>(), id: "testID");
+      Map<String, dynamic> output = userFromTestData.toFirestore();
+      expect(mockFirestoreUserData, output);
+    });
   });
 }

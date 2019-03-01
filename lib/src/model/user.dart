@@ -2,7 +2,6 @@ library user;
 
 import 'package:built_value/built_value.dart';
 import 'package:built_collection/built_collection.dart';
-import 'package:firebase/firebase.dart' as fb;
 
 import './emergencyContact.dart';
 
@@ -69,16 +68,16 @@ abstract class User implements Built<User, UserBuilder> {
   factory User([updates(UserBuilder b)]) = _$User;
 
   factory User.fromFirebase(
-    String id,
     Map<String, dynamic> firestoreData,
-    BuiltList<EmergencyContact> emergencyContact, [
-    fb.User fbAuthData,
-  ]) =>
+    BuiltList<EmergencyContact> emergencyContact, {
+    String id,
+    String email,
+  }) =>
       new User((UserBuilder builder) => builder
-        ..uid = fbAuthData?.uid ?? id
+        ..uid = id
         ..firstName = firestoreData['first_name']
         ..lastName = firestoreData['last_name']
-        ..email = fbAuthData?.uid ?? firestoreData['email']
+        ..email = email ?? firestoreData['email']
         ..phoneNumber = firestoreData['phone_number']
         ..mobileNumber = firestoreData['mobile_number']
         ..address = firestoreData['address']
@@ -102,13 +101,13 @@ abstract class User implements Built<User, UserBuilder> {
         'address': address,
         'role': role,
         'dietary_restrictions': dietaryRestrictions,
-        'emergency_contacts': emergencyContacts,
+        'emergency_contacts': emergencyContacts.toList(),
         'membership_start': membershipStart.toIso8601String(),
         'membership_renewal': membershipRenewal.toIso8601String(),
         'disabilities': disabilities,
-        'forms': forms,
+        'forms': forms.toList(),
         'medical_issues': medicalIssues,
         'position': position,
-        'services': services,
+        'services': services.toList(),
       };
 }
