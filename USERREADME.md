@@ -1,5 +1,23 @@
 # User Documentation
 
+## Completed
+
+- [x] Login
+- [x] View documentation
+- [x] Reset password
+- [x] Clear fields on login page with cancel button
+- [x] Add new member
+- [ ] Add new meal
+- [ ] Add new activity
+- [x] View current users
+- [ ] View current meals
+- [ ] View current activities
+- [x] View alerts
+- [x] See upcoming events
+- [x] Logout
+- [ ] Dismiss upcoming renewals 
+
+
 ## Description  
 
 This webapp was built to allow the Belgrade Senior Center to easily manage client's information and schedules.  Client's are able to schedule
