@@ -23,11 +23,15 @@ abstract class Meal implements Built<Meal, MealBuilder> {
   Meal._();
   factory Meal([updates(MealBuilder b)]) = _$Meal;
 
-  factory Meal.fromFirebase(String uid, Map<String, dynamic> firestoreData) => new Meal((MealBuilder builder) => builder
-    ..uid = uid
-    ..startTime = DateTime.parse(firestoreData['start_time'])
-    ..endTime = DateTime.parse(firestoreData['end_time'])
-    ..menu = new BuiltList<String>.from(firestoreData['menu']).toBuilder());
+  factory Meal.fromFirebase(
+    Map<String, dynamic> firestoreData, {
+    String id,
+  }) =>
+      new Meal((MealBuilder builder) => builder
+        ..uid = id
+        ..startTime = DateTime.parse(firestoreData['start_time'])
+        ..endTime = DateTime.parse(firestoreData['end_time'])
+        ..menu = new BuiltList<String>.from(firestoreData['menu']).toBuilder());
 
   Map<String, dynamic> toFirestore() => {
         'start_time': startTime.toIso8601String(),

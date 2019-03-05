@@ -162,7 +162,7 @@ class Nav extends PComponent<NavProps> {
 
   _onViewMembersClick(_) => history.push(Routes.viewMember);
 
-  _onViewMealsClick(_) => print('Navigate to view meals list');
+  _onViewMealsClick(_) => history.push(Routes.viewMeal);
 
   _onViewActivitiesClick(_) => history.push(Routes.viewActivity);
 

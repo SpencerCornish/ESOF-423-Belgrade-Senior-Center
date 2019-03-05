@@ -16,6 +16,7 @@ class Routes {
 
   static const viewMember = '/view/members';
   static const viewActivity = '/view/activities';
+  static const viewMeal = '/view/meals';
 
   // TODO: Fill in more routes here
 

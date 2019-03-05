@@ -12,6 +12,7 @@ import './dbRefs.dart';
 import '../constants.dart';
 
 import '../model/user.dart';
+import '../model/meal.dart';
 import '../model/activity.dart';
 import '../model/emergencyContact.dart';
 
@@ -122,7 +123,17 @@ class FirebaseClient {
   // getMeals (TODO: by date/date range?)
 
   /// [getAllMeals] get all meal documents
-  getAllMeals() => _refs.allMeals().get();
+  Future<BuiltMap<String, Meal>> getAllMeals() async {
+    Map<String, Meal> dataSet = <String, Meal>{};
+    fs.QuerySnapshot result = await _refs.allUsers().get();
+    for (fs.DocumentSnapshot doc in result.docs) {
+      dataSet[doc.id] = new Meal.fromFirebase(
+        doc.data(),
+        id: doc.id,
+      );
+    }
+    return new BuiltMap<String, Meal>.from(dataSet);
+  }
 
   /// [getMeal] get just one meal document by unique identifier
   getMeal(String uid) => _refs.meal(uid).get();
@@ -130,9 +141,12 @@ class FirebaseClient {
   /// [getAllActivities] this will get all class documents
   Future<BuiltMap<String, Activity>> getAllActivities() async {
     Map<String, Activity> dataSet = <String, Activity>{};
-    fs.QuerySnapshot result = await _refs.allActivities().get();
+    fs.QuerySnapshot result = await _refs.allUsers().get();
     for (fs.DocumentSnapshot doc in result.docs) {
-      dataSet[doc.id] = new Activity.fromFirebase(doc.id, doc.data());
+      dataSet[doc.id] = new Activity.fromFirebase(
+        doc.data(),
+        id: doc.id,
+      );
     }
     return new BuiltMap<String, Activity>.from(dataSet);
   }
@@ -152,7 +166,7 @@ class FirebaseClient {
   getClassTaughtBy(String instructor) => _refs.allActivities().where("instructor", "==", instructor);
 
   /// [getClass] get a single class document by unique identifier
-  getClass(String uid) => _refs.singleClass(uid).get();
+  // getClass(String uid) => _refs.singleClass(uid).get();
 
   /// [updateUser] update existing user by unique identifier. key is any user field and value is the new value
   String addOrUpdateUser(Map<String, dynamic> userData, {String documentID}) {

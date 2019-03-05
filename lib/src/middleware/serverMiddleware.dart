@@ -34,6 +34,14 @@ abstract class ServerMiddlewareActions extends ReduxActions {
   /// [fetchAllMembers] fetches the list of all Members in the database.
   ActionDispatcher<Null> fetchAllMembers;
 
+  // TODO: Authenticate this call
+  /// [fetchAllActivities] fetches the list of all Activities in the database.
+  ActionDispatcher<Null> fetchAllActivities;
+
+  // TODO: Authenticate this call
+  /// [fetchAllMeals] fetches the list of all meals in the database.
+  ActionDispatcher<Null> fetchAllMeals;
+
   ServerMiddlewareActions._();
   factory ServerMiddlewareActions() => new _$ServerMiddlewareActions();
 }
@@ -43,7 +51,9 @@ createServerMiddleware(FirebaseClient client) => (new MiddlewareBuilder<App, App
       ..add<Null>(ServerMiddlewareActionsNames.logOut, _logOut(client))
       ..add<String>(ServerMiddlewareActionsNames.resetPassword, _resetPassword(client))
       ..add<User>(ServerMiddlewareActionsNames.updateOrCreateUser, _addOrUpdateUser(client))
-      ..add<Null>(ServerMiddlewareActionsNames.fetchAllMembers, _fetchAllMembers(client)))
+      ..add<Null>(ServerMiddlewareActionsNames.fetchAllMembers, _fetchAllMembers(client))
+      ..add<Null>(ServerMiddlewareActionsNames.fetchAllActivities, _fetchAllActivities(client))
+      ..add<Null>(ServerMiddlewareActionsNames.fetchAllMeals, _fetchAllMeals(client)))
     .build();
 
 _signInAdmin(FirebaseClient client) => (
@@ -87,10 +97,19 @@ _fetchAllMembers(FirebaseClient client) => (
     };
 
 _fetchAllActivities(FirebaseClient client) => (
-  MiddlewareApi<App, AppBuilder, AppActions> api,
-  ActionHandler next,
-  Action<Null> action,
-) async {
-  final activityMap = await client.getAllActivities();
-  api.actions.setActivityMap(activityMap);
-};
+      MiddlewareApi<App, AppBuilder, AppActions> api,
+      ActionHandler next,
+      Action<Null> action,
+    ) async {
+      final activityMap = await client.getAllActivities();
+      api.actions.setActivityMap(activityMap);
+    };
+
+_fetchAllMeals(FirebaseClient client) => (
+      MiddlewareApi<App, AppBuilder, AppActions> api,
+      ActionHandler next,
+      Action<Null> action,
+    ) async {
+      final memberMap = await client.getAllMembers();
+      api.actions.setUserMap(memberMap);
+    };

@@ -14,6 +14,7 @@ import './containers/newMember.dart';
 import './containers/dashboard.dart';
 import './containers/viewMember.dart';
 import './containers/viewActivity.dart';
+import './containers/viewMeal.dart';
 import './core/debug.dart';
 
 // State
@@ -44,6 +45,8 @@ class Container extends PComponent<ContainerProps> {
     storeContainerSub = props.storeContainer.store.stream.listen((_) => updateOnAnimationFrame());
     // Get all the users from the database
     actions.server.fetchAllMembers();
+    actions.server.fetchAllActivities();
+    actions.server.fetchAllMeals();
 
     storeContainerSub = props.storeContainer.store.stream.listen((_) => updateOnAnimationFrame());
   }
@@ -78,7 +81,9 @@ class Container extends PComponent<ContainerProps> {
               new Route(path: Routes.resetContinue, componentFactory: (params) => _renderResetContinue(params)),
               new Route(path: Routes.dashboard, componentFactory: (_) => _renderIfAuthenticated(_renderDashboard())),
               new Route(path: Routes.viewMember, componentFactory: (_) => _renderIfAuthenticated(_renderViewMember())),
-              new Route(path: Routes.viewActivity, componentFactory: (_) => _renderIfAuthenticated(_renderViewActivity())),
+              new Route(
+                  path: Routes.viewActivity, componentFactory: (_) => _renderIfAuthenticated(_renderViewActivity())),
+              new Route(path: Routes.viewMeal, componentFactory: (_) => _renderIfAuthenticated(_renderViewMeal())),
             ],
           ),
         ],
@@ -124,6 +129,11 @@ class Container extends PComponent<ContainerProps> {
     ..actions = props.storeContainer.store.actions
     ..user = appState.user
     ..activityMap = appState.activityMap);
+
+  _renderViewMeal() => new viewMeal(new viewMealProps()
+    ..actions = props.storeContainer.store.actions
+    ..user = appState.user
+    ..mealMap = appState.mealMap);
 
   _renderDebug() => (document.domain.contains("localhost"))
       ? new DebugNavigator(new DebugNavigatorProps()..actions = props.storeContainer.store.actions)

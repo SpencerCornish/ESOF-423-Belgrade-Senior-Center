@@ -1,7 +1,6 @@
 library activity;
 
 import 'package:built_value/built_value.dart';
-import 'package:firebase/firebase.dart' as fb;
 
 part 'activity.g.dart';
 
@@ -31,9 +30,12 @@ abstract class Activity implements Built<Activity, ActivityBuilder> {
   Activity._();
   factory Activity([updates(ActivityBuilder b)]) = _$Activity;
 
-  factory Activity.fromFirebase(String uid, Map<String, dynamic> firestoreData) =>
+  factory Activity.fromFirebase(
+    Map<String, dynamic> firestoreData, {
+    String id,
+  }) =>
       new Activity((ActivityBuilder builder) => builder
-        ..uid = uid
+        ..uid = id
         ..capacity = firestoreData['capacity']
         ..startTime = DateTime.parse(firestoreData['start_time'])
         ..endTime = DateTime.parse(firestoreData['end_time'])
