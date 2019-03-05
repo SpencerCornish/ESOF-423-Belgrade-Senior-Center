@@ -11,7 +11,7 @@ void main() {
   });
   group('Meal -', () {
     test('fromFirebase factory produces accurate model file', () {
-      Meal testMeal = new Meal.fromFirebase(mockUID, mockMealData);
+      Meal testMeal = new Meal.fromFirebase(mockMealData, id: "testID");
 
       expect(testMeal.startTime.toIso8601String(), mockMealData['start_time']);
       expect(testMeal.endTime.toIso8601String(), mockMealData['end_time']);
@@ -19,7 +19,7 @@ void main() {
     });
 
     test('toFirebase function produces a properly formatted map of data', () {
-      Meal testMeal = new Meal.fromFirebase(mockUID, mockMealData);
+      Meal testMeal = new Meal.fromFirebase(mockMealData, id: "testID");
       Map<String, dynamic> output = testMeal.toFirestore();
       expect(mockMealData, output);
     });
