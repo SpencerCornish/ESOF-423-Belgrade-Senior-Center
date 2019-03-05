@@ -2,6 +2,36 @@
     margin-top: 2rem;
 }
 
+/*So for some reason, when I attempt to make the naming scheme for the first and last names the 
+  same as they are for phone numbers and membership labels, the styling messses up, so I left
+  them as -lab (originally short for label) -Taylor */
+#lName-lab {
+  padding-left: 15px;
+}
+#fName-lab {
+  padding-top: 5px;
+  padding-right: 10px;
+  padding-left: 78px;
+}
+
+#phoneNum-label{
+  padding-left: 40px;
+  padding-right: 15px;
+}
+
+#cellNum-label{
+  padding-left: 15px;
+}
+
+#memStart-label{
+  padding-right: 10px;
+  padding-left: 21px;
+}
+
+#memRenew-label{
+  padding-left: 10px;
+}
+
 #debug-snapped {
     position: fixed;
     left: 0px;

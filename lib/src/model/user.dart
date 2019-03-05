@@ -10,6 +10,7 @@ part 'user.g.dart';
 /// [User] is a model for the user database document
 abstract class User implements Built<User, UserBuilder> {
   /// [uid] is the unique identifier for the user
+  @nullable
   String get uid;
 
   /// [firstName] required
