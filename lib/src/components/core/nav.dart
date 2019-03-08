@@ -12,8 +12,16 @@ class NavProps {
   User user;
 }
 
-class Nav extends PComponent<NavProps> {
+class NavState {
+  bool navBurgerExpanded;
+}
+
+class Nav extends Component<NavProps, NavState> {
   Nav(props) : super(props);
+
+  // getInitialState is overriden to set the initial component state
+  @override
+  NavState getInitialState() => NavState()..navBurgerExpanded = false;
 
   History _history;
 
@@ -21,7 +29,7 @@ class Nav extends PComponent<NavProps> {
   History get history => _history ?? findHistoryInContext(context);
 
   @override
-  void componentWillUpdate(NavProps nextProps, Null nextState) {
+  void componentWillUpdate(NavProps nextProps, NavState nextState) {
     super.componentWillUpdate(nextProps, nextState);
   }
 
@@ -34,14 +42,15 @@ class Nav extends PComponent<NavProps> {
         ..children = [
           new VAnchorElement()
             ..className = "navbar-item"
+            ..onClick = _onHomeClick
             ..children = [
               new Vh1()
                 ..className = 'subtitle'
                 ..text = 'BSC Member Management'
             ],
-          //TODO: Enable the burger menu for mobile responsiveness
           new VAnchorElement()
-            ..className = "navbar-burger burger"
+            ..className = "navbar-burger burger ${state.navBurgerExpanded ? 'is-active' : ''}"
+            ..onClick = _onBurgerClick
             ..children = [
               new Vspan(),
               new Vspan(),
@@ -49,7 +58,7 @@ class Nav extends PComponent<NavProps> {
             ],
         ],
       new VDivElement()
-        ..className = "navbar-menu"
+        ..className = "navbar-menu ${state.navBurgerExpanded ? 'is-active' : ''}"
         ..children = [
           new VDivElement()
             ..className = "navbar-start"
@@ -153,6 +162,11 @@ class Nav extends PComponent<NavProps> {
             ],
         ],
     ];
+  _onHomeClick(_) => history.push(Routes.dashboard);
+
+  _onBurgerClick(_) {
+    setState((props, state) => state..navBurgerExpanded = !state.navBurgerExpanded);
+  }
 
   _onNewMemberClick(_) => history.push(Routes.createMember);
 
