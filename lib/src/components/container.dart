@@ -40,7 +40,6 @@ class Container extends PComponent<ContainerProps> {
 
   @override
   void componentWillMount() {
-    storeContainerSub = props.storeContainer.store.stream.listen((_) => updateOnAnimationFrame());
     // Get all the users from the database
     actions.server.fetchAllMembers();
 
