@@ -72,9 +72,6 @@ class viewMember extends PComponent<viewMemberProps> {
       sort(left, mid);
       sort(mid + 1, right);
       merge(left, mid, right);
-      for (User user in users) {
-        print(user.lastName);
-      }
     }
   }
 
