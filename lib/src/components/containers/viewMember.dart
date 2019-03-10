@@ -22,6 +22,7 @@ class viewMemberProps {
 /// [viewMember] class / page to show a visual representation of current stored data
 class viewMember extends PComponent<viewMemberProps> {
   viewMember(props) : super(props);
+  List users;
   List<String> title = ["Last", "First", "Address", "Phone", "Start"];
   History _history;
 
@@ -33,9 +34,12 @@ class viewMember extends PComponent<viewMemberProps> {
 
   /// [createRows] Scaling function to make rows based on amount of information available
   List<VNode> createRows() {
+    users = props.userMap.values.toList();
+    //merge sort function by last name
+    sort(0, users.length - 1);
     List<VNode> nodeList = new List();
     nodeList.addAll(titleRow());
-    for (User user in props.userMap.values) {
+    for (User user in users) {
       nodeList.add(new VTableRowElement()
         ..className = 'tr'
         ..children = [
@@ -58,6 +62,47 @@ class viewMember extends PComponent<viewMemberProps> {
         ]);
     }
     return nodeList;
+  }
+
+  /// [sort] Merge sort by last name of user
+  void sort(int left, int right) {
+    if (left < right) {
+      int mid = (left + right) ~/ 2;
+
+      sort(left, mid);
+      sort(mid + 1, right);
+      merge(left, mid, right);
+      for (User user in users) {
+        print(user.lastName);
+      }
+    }
+  }
+
+  /// [merge] Helper for the sort function for merging the lists back together
+  void merge(int left, int mid, int right) {
+    List temp = new List();
+    int curLeft = left, curRight = mid + 1, tempIndex = 0;
+    while (curLeft <= mid && curRight <= right) {
+      if (users.elementAt(curLeft).lastName.compareTo(users.elementAt(curRight).lastName) <= 0) {
+        temp.insert(tempIndex, users.elementAt(curLeft));
+        curLeft++;
+      } else {
+        temp.add(users.elementAt(curRight));
+        curRight++;
+      }
+      tempIndex++;
+    }
+    while (curLeft <= mid) {
+      temp.add(users.elementAt(curLeft));
+      curLeft++;
+      tempIndex++;
+    }
+    while (curRight <= right) {
+      temp.add(users.elementAt(curRight));
+      curRight++;
+      tempIndex++;
+    }
+    users.replaceRange(left, right + 1, temp.getRange(0, tempIndex).whereType<User>());
   }
 
   String checkText(String text) => text != '' ? text : "N/A";
