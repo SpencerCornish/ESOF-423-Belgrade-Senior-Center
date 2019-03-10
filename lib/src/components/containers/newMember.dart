@@ -148,7 +148,7 @@ class NewMember extends PComponent<NewMemberProps> {
                                   new VInputElement()
                                     ..className = 'input'
                                     ..id = 'email-input'
-                                    ..placeholder = "Email@email.email"
+                                    ..placeholder = "name@example.com"
                                     ..type = 'email'
                                 ]
                             ]
@@ -478,10 +478,22 @@ class NewMember extends PComponent<NewMemberProps> {
     InputElement memStart = querySelector('#memStart-input');
     InputElement memRenew = querySelector('#memRenew-input');
 
+    //Input validation before creation
+
+    //Regex for names
+    RegExp nameTest = new RegExp(r"^[a-zA-Z]+$");
+    //Pulls only letters from first name string
+    Match nameMatch = nameTest.firstMatch(first.value);
+    String firstName = nameMatch.group(0);
+
+    //Pulls only letters from the last name string
+    nameMatch =nameTest.firstMatch(last.value);
+    String lastName = nameMatch.group(0);
+
     //create a new user object
     User newUser = (new UserBuilder()
-          ..firstName = first.value
-          ..lastName = last.value
+          ..firstName = firstName
+          ..lastName = lastName
           ..email = email.value
           ..mobileNumber = cell.value
           ..phoneNumber = phone.value
