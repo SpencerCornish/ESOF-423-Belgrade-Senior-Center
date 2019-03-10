@@ -16,7 +16,8 @@ class _$Meal extends Meal {
   @override
   final BuiltList<String> menu;
 
-  factory _$Meal([void updates(MealBuilder b)]) => (new MealBuilder()..update(updates)).build();
+  factory _$Meal([void updates(MealBuilder b)]) =>
+      (new MealBuilder()..update(updates)).build();
 
   _$Meal._({this.uid, this.startTime, this.endTime, this.menu}) : super._() {
     if (uid == null) {
@@ -34,7 +35,8 @@ class _$Meal extends Meal {
   }
 
   @override
-  Meal rebuild(void updates(MealBuilder b)) => (toBuilder()..update(updates)).build();
+  Meal rebuild(void updates(MealBuilder b)) =>
+      (toBuilder()..update(updates)).build();
 
   @override
   MealBuilder toBuilder() => new MealBuilder()..replace(this);
@@ -51,7 +53,9 @@ class _$Meal extends Meal {
 
   @override
   int get hashCode {
-    return $jf($jc($jc($jc($jc(0, uid.hashCode), startTime.hashCode), endTime.hashCode), menu.hashCode));
+    return $jf($jc(
+        $jc($jc($jc(0, uid.hashCode), startTime.hashCode), endTime.hashCode),
+        menu.hashCode));
   }
 
   @override
@@ -114,14 +118,20 @@ class MealBuilder implements Builder<Meal, MealBuilder> {
   _$Meal build() {
     _$Meal _$result;
     try {
-      _$result = _$v ?? new _$Meal._(uid: uid, startTime: startTime, endTime: endTime, menu: menu.build());
+      _$result = _$v ??
+          new _$Meal._(
+              uid: uid,
+              startTime: startTime,
+              endTime: endTime,
+              menu: menu.build());
     } catch (_) {
       String _$failedField;
       try {
         _$failedField = 'menu';
         menu.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError('Meal', _$failedField, e.toString());
+        throw new BuiltValueNestedFieldError(
+            'Meal', _$failedField, e.toString());
       }
       rethrow;
     }
@@ -130,4 +140,4 @@ class MealBuilder implements Builder<Meal, MealBuilder> {
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new

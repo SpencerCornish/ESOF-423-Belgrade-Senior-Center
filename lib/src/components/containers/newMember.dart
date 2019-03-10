@@ -8,7 +8,6 @@ import 'package:built_collection/built_collection.dart';
 import '../../constants.dart';
 import '../../model/emergencyContact.dart';
 import '../../state/app.dart';
-import '../../store.dart';
 import '../core/nav.dart';
 import '../../model/user.dart';
 
@@ -17,8 +16,19 @@ class NewMemberProps {
   User user;
 }
 
-class NewMember extends PComponent<NewMemberProps> {
+class NewMemberState {
+  bool firstNameIsValid;
+  bool lastNameIsValid;
+}
+
+class NewMember extends Component<NewMemberProps, NewMemberState> {
   NewMember(props) : super(props);
+
+  @override
+  NewMemberState getInitialState() => NewMemberState()
+    ..firstNameIsValid = true
+    ..lastNameIsValid = true
+    ;
 
   History _history;
 
@@ -88,9 +98,13 @@ class NewMember extends PComponent<NewMemberProps> {
                                     ..className = 'control'
                                     ..children = [
                                       new VInputElement()
-                                        ..className = 'input'
+                                        ..className = 'input ${state.firstNameIsValid ? '' : 'is-danger'}'
+                                        ..onInput = _firstNameValidation
                                         ..id = 'fName-input'
-                                        ..placeholder = "First Name"
+                                        ..placeholder = "First Name",
+                                      new VParagraphElement()
+                                        ..className = 'help is-danger ${state.firstNameIsValid ? 'is-invisible' : ''}'
+                                        ..text = 'First name is invalid'
                                     ],
                                   new VParagraphElement()
                                     ..className = 'field'
@@ -113,9 +127,13 @@ class NewMember extends PComponent<NewMemberProps> {
                                                 ..className = 'control is-expanded'
                                                 ..children = [
                                                   new VInputElement()
-                                                    ..className = 'input'
+                                                    ..className = 'input ${state.lastNameIsValid ? '' : 'is-danger'}'
+                                                    ..onInput = _lastNameValidation
                                                     ..id = 'lName-input'
-                                                    ..placeholder = "Last Name"
+                                                    ..placeholder = "Last Name",
+                                                  new VParagraphElement()
+                                                    ..className = 'help is-danger ${state.lastNameIsValid ? 'is-invisible' : ''}'
+                                                    ..text = 'Last name is invalid'
                                                 ]
                                             ]
                                         ]
@@ -461,6 +479,30 @@ class NewMember extends PComponent<NewMemberProps> {
         ]
     ];
 
+  //Input validation for each field 
+
+  //Validation for first name
+  void _firstNameValidation(_) {
+    InputElement first = querySelector('#fName-input');
+    bool isValid;
+    if(first.value == '') {
+      isValid = false;
+    } else isValid = true;
+    setState((NewMemberProps, NewMemberState) => 
+      NewMemberState..firstNameIsValid = isValid);
+  }
+
+  //Validation for last name
+  void _lastNameValidation(_) {
+    InputElement last = querySelector('#lName-input');
+    bool isValid;
+    if(last.value == '') {
+      isValid = false;
+    } else isValid = true;
+    setState((NewMemberProps, NewMemberState) => 
+      NewMemberState..lastNameIsValid = isValid);
+  }
+
   //method used for the submit click
   //will need to send fName-input, lName-input, email-input,
   //cellNum-input, phoneNum-input, address-input, diet-input,
@@ -478,22 +520,10 @@ class NewMember extends PComponent<NewMemberProps> {
     InputElement memStart = querySelector('#memStart-input');
     InputElement memRenew = querySelector('#memRenew-input');
 
-    //Input validation before creation
-
-    //Regex for names
-    RegExp nameTest = new RegExp(r"^[a-zA-Z]+$");
-    //Pulls only letters from first name string
-    Match nameMatch = nameTest.firstMatch(first.value);
-    String firstName = nameMatch.group(0);
-
-    //Pulls only letters from the last name string
-    nameMatch =nameTest.firstMatch(last.value);
-    String lastName = nameMatch.group(0);
-
     //create a new user object
     User newUser = (new UserBuilder()
-          ..firstName = firstName
-          ..lastName = lastName
+          ..firstName = first.value
+          ..lastName = last.value
           ..email = email.value
           ..mobileNumber = cell.value
           ..phoneNumber = phone.value
