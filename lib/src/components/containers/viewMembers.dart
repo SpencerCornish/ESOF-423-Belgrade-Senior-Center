@@ -24,7 +24,7 @@ class ViewMembersProps {
 class ViewMembers extends PComponent<ViewMembersProps> {
   ViewMembers(props) : super(props);
 
-  List<String> title = ["Last", "First", "Address", "Phone", "Start"];
+  List<String> title = ["Last", "First"];
   History _history;
 
   /// Browser history entrypoint, to control page navigation
@@ -52,16 +52,6 @@ class ViewMembers extends PComponent<ViewMembersProps> {
           new VTableCellElement()
             ..className = _tdClass(user.firstName)
             ..text = _checkText(user.firstName),
-          new VTableCellElement()
-            ..className = _tdClass(user.address)
-            ..text = _checkText(user.address),
-          new VTableCellElement()
-            ..className = _tdClass(user.phoneNumber)
-            ..text = _checkText(user.phoneNumber),
-          new VTableCellElement()
-            ..className = _tdClass(user.membershipStart.toString())
-            ..text =
-                _checkText("${user.membershipStart.month}/${user.membershipStart.day}/${user.membershipStart.year}"),
         ]);
     }
     return nodeList;
@@ -148,7 +138,7 @@ class ViewMembers extends PComponent<ViewMembersProps> {
                     ..children = [
                       _renderHeader(),
                       new VTableElement()
-                        ..className = 'table is-narrow is-striped is-fullwidth'
+                        ..className = 'table is-striped is-fullwidth'
                         ..children = _createRows(),
                     ],
                 ],

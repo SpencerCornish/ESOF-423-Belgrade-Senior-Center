@@ -22,6 +22,7 @@ class EditMemberProps {
 
 class EditMemberState {
   bool edit;
+  // int addEm;
 }
 
 /// [EditMember] class / page to allow user information to be changed for a given user by uid
@@ -30,6 +31,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
 
   @override
   EditMemberState getInitialState() => EditMemberState()..edit = false;
+  // ..addEm = 0;
 
   History _history;
 
@@ -75,6 +77,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
     nodeList.add(_renderAddress(user));
     nodeList.addAll(_renderNumberHeaders(user));
     nodeList.addAll(_renderEmergencyContact(user));
+    nodeList.addAll(_renderMembership(user));
     return nodeList;
   }
 
@@ -264,62 +267,91 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
   List<VNode> _renderEmergencyContact(User user) {
     List<VNode> nodeList = <VNode>[];
 
-    if (user.emergencyContacts.isEmpty) {
+    if (!user.emergencyContacts.isEmpty) {
       nodeList.add(
         new VDivElement()
-          ..className = 'columns is-mobile is-centered is-vcentered'
+          ..className = 'box is-4'
           ..children = [
             new VDivElement()
-              ..className = 'column is-narrow'
-              ..children = _emergencyContactLabelHelper(user),
-            new VDivElement()
-              ..className = 'column'
-              ..children = _emergencyContactHelper(user),
+              ..className = 'columns is-mobile is-centered is-vcentered'
+              ..children = [
+                new VDivElement()
+                  ..className = 'column is-narrow'
+                  ..children = [
+                    new VLabelElement()
+                      ..className = "label"
+                      ..text = "Emergency Contact(s): ",
+                  ],
+                new VDivElement()
+                  ..className = 'column'
+                  ..children = _emergencyContactHelper(user),
+                // new VDivElement()
+                //   ..className = 'column'
+                //   ..children = _addEmergencyContactHelper(user),
+                // new VDivElement()
+                //   ..className = 'column'
+                //   ..children = [_renderAddEmergencyContact()],
+              ],
           ],
       );
     } else {
-      for (EmergencyContact em in user.emergencyContacts) {
-        nodeList.add(new VDivElement()
-          ..className = 'columns is-mobile is-centered is-vcentered'
-          ..children = [
-            new VDivElement()
-              ..className = 'column is-narrow'
-              ..children = [
-                new VLabelElement()
-                  ..className = "label"
-                  ..text = "Emergency Contact: ",
-              ],
-            new VDivElement()
-              ..className = 'column'
-              ..children = [
-                new VDivElement()
-                  ..className = "control"
-                  ..children = [
-                    new VInputElement()
-                      ..className = "input ${state.edit ? '' : 'is-static'}"
-                      ..defaultValue = _checkText(em.toString()),
-                  ],
-              ],
-          ]);
-      }
+      nodeList.add(new VDivElement()
+        ..className = 'box is-4'
+        ..children = [
+          new VDivElement()
+            ..className = 'columns is-mobile is-centered is-vcentered'
+            ..children = [
+              new VDivElement()
+                ..className = 'column is-narrow'
+                ..children = [
+                  new VLabelElement()
+                    ..className = "label"
+                    ..text = "Emergency Contact(s): ",
+                ],
+              new VDivElement()
+                ..className = 'column'
+                ..children = [
+                  new VDivElement()
+                    ..className = "field"
+                    ..children = [
+                      new VDivElement()
+                        ..className = "control"
+                        ..children = [
+                          new VInputElement()
+                            ..className = "input ${state.edit ? '' : 'is-static'}"
+                            ..defaultValue = _checkText("")
+                            ..readOnly = !state.edit,
+                          // _renderAddEmergencyContact(),
+                        ],
+                    ],
+                ],
+            ],
+        ]);
     }
     return nodeList;
   }
 
-  ///[_emergencyContactLabelHelper] helper function to create the labels for emergency contact text boxes
-  List<VNode> _emergencyContactLabelHelper(User user) {
-    List<VNode> nodeList = <VNode>[];
+  // ///[_addEmergencyContactHelper] helper function to create the labels for emergency contact text boxes
+  // List<VNode> _addEmergencyContactHelper(User user) {
+  //   List<VNode> nodeList = <VNode>[];
 
-    for (EmergencyContact em in user.emergencyContacts) {
-      nodeList.add(
-        new VLabelElement()
-          ..className = "label"
-          ..text = "Emergency Contact: ",
-      );
-    }
+  //   for (int i; i < 3; i++) {
+  //     nodeList.add(new VDivElement()
+  //       ..className = "field"
+  //       ..children = [
+  //         new VDivElement()
+  //           ..className = "control"
+  //           ..children = [
+  //             new VInputElement()
+  //               ..className = "input ${state.edit ? '' : 'is-static'}"
+  //               ..defaultValue = _checkText("") //em.toString())
+  //               ..readOnly = !state.edit,
+  //           ],
+  //       ]);
+  //   }
 
-    return nodeList;
-  }
+  //   return nodeList;
+  // }
 
   ///[_emergencyContactHelper] helper function to create the input boxes for emergency contacts
   List<VNode> _emergencyContactHelper(User user) {
@@ -331,18 +363,95 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
         ..children = [
           new VInputElement()
             ..className = "input ${state.edit ? '' : 'is-static'}"
-            ..defaultValue = _checkText(""),
+            ..defaultValue = _checkText(em.toString())
+            ..readOnly = !state.edit,
         ]);
     }
 
     return nodeList;
   }
 
+  List<VNode> _renderMembership(User user) {
+    List<VNode> nodeList = <VNode>[];
+    nodeList.add(new VDivElement()
+      ..className = 'columns is-mobile is-centered is-vcentered'
+      ..children = [
+        new VDivElement()
+          ..className = 'column is-narrow'
+          ..children = [
+            new VLabelElement()
+              ..className = 'label'
+              ..text = "Membership Start",
+          ],
+        new VDivElement()
+          ..className = 'column'
+          ..children = [
+            new VDivElement()
+              ..className = "control"
+              ..children = [
+                new VInputElement()
+                  ..className = "input ${state.edit ? '' : 'is-static'}"
+                  ..defaultValue = _checkText(
+                      "${user.membershipStart.month}/${user.membershipStart.day}/${user.membershipStart.year}")
+                  ..readOnly = !state.edit,
+              ],
+          ],
+        new VDivElement()
+          ..className = 'column is-narrow'
+          ..children = [
+            new VLabelElement()
+              ..className = 'label'
+              ..text = "Membership Renewal",
+          ],
+        new VDivElement()
+          ..className = 'column'
+          ..children = [
+            new VDivElement()
+              ..className = "control"
+              ..children = [
+                new VInputElement()
+                  ..className = "input ${state.edit ? '' : 'is-static'}"
+                  ..defaultValue = _checkText(
+                      "${user.membershipRenewal.month}/${user.membershipRenewal.day}/${user.membershipRenewal.year}")
+                  ..readOnly = !state.edit,
+              ],
+          ],
+      ]);
+    return nodeList;
+  }
+
+//possible list implementation which was acomplished above and simply needs to work for type desired
+  //dietary restrictions
+  //disabilities
+  //medical issues
+
   ///[_checkText] takes in passed text and will return N/A if string is empty and the user is not being eddited
   ///or return the orrigional string for all other conditions
   String _checkText(String text) => state.edit ? text : (text != '' ? text : "N/A");
 
-  ///[_renderEdit] creates a button to toggle from a view page to and edit capable page
+  // ///[_renderAddEmergencyContact] creates a button to add an input field for aditional emergency contacts if in edit state
+  // VNode _renderAddEmergencyContact() {
+  //   if (state.edit) {
+  //     return (new VParagraphElement()
+  //       ..className = 'control'
+  //       ..children = [
+  //         new VAnchorElement()
+  //           ..className = 'button is-link'
+  //           ..text = "Add"
+  //           ..onClick = _renderAddEmergencyContactClick
+  //       ]);
+  //   } else {
+  //     return new VDivElement()..className = 'control';
+  //   }
+  // }
+
+  // ///[_renderAddEmergencyContactClick] listener for the click action of the addEmergencyContact button to put page into an edit state
+  // _renderAddEmergencyContactClick(_) {
+  //   print(state.addEm);
+  //   setState((props, state) => state..addEm = (state.addEm + 1));
+  // }
+
+  ///[_renderEdit] creates a button to toggle from a view page to increase the number of input fields
   _renderEdit() => new VDivElement()
     ..className = 'control'
     ..children = [
