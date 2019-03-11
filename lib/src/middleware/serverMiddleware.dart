@@ -110,6 +110,6 @@ _fetchAllMeals(FirebaseClient client) => (
       ActionHandler next,
       Action<Null> action,
     ) async {
-      final memberMap = await client.getAllMembers();
-      api.actions.setUserMap(memberMap);
+      final meals = await client.getAllMeals();
+      api.actions.setMealMap(meals);
     };

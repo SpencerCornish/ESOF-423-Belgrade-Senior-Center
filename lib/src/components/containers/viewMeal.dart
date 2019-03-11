@@ -14,15 +14,15 @@ import '../../model/meal.dart';
 import '../../state/app.dart';
 import '../../middleware/serverMiddleware.dart';
 
-class viewMealProps {
+class ViewMealProps {
   AppActions actions;
   User user;
   BuiltMap<String, Meal> mealMap;
 }
 
 /// [viewMeal] class / page to show a visual representation of current stored data
-class viewMeal extends PComponent<viewMealProps> {
-  viewMeal(props) : super(props);
+class ViewMeal extends PComponent<ViewMealProps> {
+  ViewMeal(props) : super(props);
   List<String> title = ["Start", "End"];
   History _history;
 

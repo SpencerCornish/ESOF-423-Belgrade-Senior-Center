@@ -14,15 +14,15 @@ import '../../model/user.dart';
 import '../../state/app.dart';
 import '../../middleware/serverMiddleware.dart';
 
-class viewActivityProps {
+class ViewActivityProps {
   AppActions actions;
   User user;
   BuiltMap<String, Activity> activityMap;
 }
 
 /// [viewActivity] class / page to show a visual representation of current stored data
-class viewActivity extends PComponent<viewActivityProps> {
-  viewActivity(props) : super(props);
+class ViewActivity extends PComponent<ViewActivityProps> {
+  ViewActivity(props) : super(props);
   List<String> title = ["Name", "Start", "End", "Location", "Capacity", "Instructor"];
   History _history;
 
@@ -44,13 +44,11 @@ class viewActivity extends PComponent<viewActivityProps> {
             ..className = tdClass(act.name)
             ..text = checkText(act.name),
           new VTableCellElement()
-          ..className = tdClass(act.startTime.toString())
-          ..text =
-              checkText("${act.startTime.month}/${act.startTime.day}/${act.startTime.year}"),
+            ..className = tdClass(act.startTime.toString())
+            ..text = checkText("${act.startTime.month}/${act.startTime.day}/${act.startTime.year}"),
           new VTableCellElement()
-          ..className = tdClass(act.endTime.toString())
-          ..text =
-              checkText("${act.endTime.month}/${act.endTime.day}/${act.endTime.year}"),
+            ..className = tdClass(act.endTime.toString())
+            ..text = checkText("${act.endTime.month}/${act.endTime.day}/${act.endTime.year}"),
           new VTableCellElement()
             ..className = tdClass(act.location)
             ..text = checkText(act.location),

@@ -125,7 +125,7 @@ class FirebaseClient {
   /// [getAllMeals] get all meal documents
   Future<BuiltMap<String, Meal>> getAllMeals() async {
     Map<String, Meal> dataSet = <String, Meal>{};
-    fs.QuerySnapshot result = await _refs.allUsers().get();
+    fs.QuerySnapshot result = await _refs.allMeals().get();
     for (fs.DocumentSnapshot doc in result.docs) {
       dataSet[doc.id] = new Meal.fromFirebase(
         doc.data(),
@@ -141,8 +141,9 @@ class FirebaseClient {
   /// [getAllActivities] this will get all class documents
   Future<BuiltMap<String, Activity>> getAllActivities() async {
     Map<String, Activity> dataSet = <String, Activity>{};
-    fs.QuerySnapshot result = await _refs.allUsers().get();
+    fs.QuerySnapshot result = await _refs.allActivities().get();
     for (fs.DocumentSnapshot doc in result.docs) {
+      print(doc.data());
       dataSet[doc.id] = new Activity.fromFirebase(
         doc.data(),
         id: doc.id,
