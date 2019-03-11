@@ -19,10 +19,6 @@ class EditMemberProps {
   BuiltMap<String, User> userMap;
   String selectedMemberUID;
 }
-////////////////////////////////////////////////////////////////////////////
-//..defaultValue
-//button with onclick to change from paragraph element to prefilled text box
-////////////////////////////////////////////////////////////////////////////
 
 class EditMemberState {
   bool edit;
@@ -72,18 +68,21 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
       ];
   }
 
+  ///[_pageElements] helper function to add all fields to the render method
   List<VNode> _pageElements(User user) {
     List<VNode> nodeList = <VNode>[];
     state.edit ? nodeList.addAll(_renderEditHeader(user)) : nodeList.add(_renderHeader(user));
     nodeList.add(_renderAddress(user));
     nodeList.addAll(_renderNumberHeaders(user));
+    nodeList.addAll(_renderEmergencyContact(user));
     return nodeList;
   }
 
+  ///[_renderEditHeader] function to change the name into an editable field group by state change
   List<VNode> _renderEditHeader(User user) {
     List<VNode> nodeList = <VNode>[];
     nodeList.add(new VDivElement()
-      ..className = 'columns is-mobile is-offset-1'
+      ..className = 'columns is-mobile is-vcentered'
       ..children = [
         new VDivElement()
           ..className = 'column is-narrow'
@@ -134,7 +133,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
 
   ///[_renderHeader] makes the title bar of the editMember page
   _renderHeader(User user) => new VDivElement()
-    ..className = 'columns is-mobile'
+    ..className = 'columns is-mobile is-vcentered'
     ..children = [
       new VDivElement()
         ..className = 'column is-narrow'
@@ -161,6 +160,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
         ],
     ];
 
+  ///[_renderAddress] row for address label and input
   _renderAddress(User user) => new VDivElement()
     ..className = 'columns is-mobile is-vcentered'
     ..children = [
@@ -185,6 +185,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
         ],
     ];
 
+  ///[_renderNumberHeaders] row for number and email labels
   List<VNode> _renderNumberHeaders(User user) {
     List<VNode> nodeList = <VNode>[];
     nodeList.add(new VDivElement()
@@ -216,6 +217,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
     return nodeList;
   }
 
+  ///[_renderNumbers] row for input boxes for home/cell numbers and email
   _renderNumbers(User user) => new VDivElement()
     ..className = 'columns is-mobile is-centered is-vcentered'
     ..children = [
@@ -257,54 +259,90 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
         ],
     ];
 
-//   List<VNode> _renderRefsHeader(User user) {
-//     List<VNode> nodeList = <VNode>[];
-//     for (EmergencyContact ref in user.emergencyContacts) {
-//       nodeList.add(new VDivElement()
-//         ..className = 'columns is-mobile is-centered is-vcentered'
-//         ..children = [
-//           new VDivElement()
-//             ..className = 'column'
-//             ..children = [
-//               new VDivElement()
-//                 ..className = "control"
-//                 ..children = [
-//                   new VInputElement()
-//                     ..className = "input" + _inputClass()
-//                     ..defaultValue = _checkText(ref.toString()),
-//                 ],
-//             ],
-//         ]);
-//     }
-//     return nodeList;
-//   }
-//   //not quite, columns wrong
-//   List<VNode> _renderRefs(User user) {
-//     List<VNode> nodeList = <VNode>[];
-//     for (EmergencyContact ref in user.emergencyContacts) {
-//       nodeList.add(new VDivElement()
-//         ..className = 'columns is-mobile is-centered is-vcentered'
-//         ..children = [
-//           new VDivElement()
-//             ..className = 'column'
-//             ..children = [
-//               new VDivElement()
-//                 ..className = "control"
-//                 ..children = [
-//                   new VInputElement()
-//                     ..className = "input" + _inputClass()
-//                     ..defaultValue = _checkText(ref.toString()),
-//                 ],
-//             ],
-//         ]);
-//     }
-//     return nodeList;
-//   }
+  ///[_renderEmergencyContact] function for the emergency contact columns
+  ///will show at least one or as many contacts as member has
+  List<VNode> _renderEmergencyContact(User user) {
+    List<VNode> nodeList = <VNode>[];
 
-  String _checkText(String text) => text != '' ? text : "N/A";
+    if (user.emergencyContacts.isEmpty) {
+      nodeList.add(
+        new VDivElement()
+          ..className = 'columns is-mobile is-centered is-vcentered'
+          ..children = [
+            new VDivElement()
+              ..className = 'column is-narrow'
+              ..children = _emergencyContactLabelHelper(user),
+            new VDivElement()
+              ..className = 'column'
+              ..children = _emergencyContactHelper(user),
+          ],
+      );
+    } else {
+      for (EmergencyContact em in user.emergencyContacts) {
+        nodeList.add(new VDivElement()
+          ..className = 'columns is-mobile is-centered is-vcentered'
+          ..children = [
+            new VDivElement()
+              ..className = 'column is-narrow'
+              ..children = [
+                new VLabelElement()
+                  ..className = "label"
+                  ..text = "Emergency Contact: ",
+              ],
+            new VDivElement()
+              ..className = 'column'
+              ..children = [
+                new VDivElement()
+                  ..className = "control"
+                  ..children = [
+                    new VInputElement()
+                      ..className = "input ${state.edit ? '' : 'is-static'}"
+                      ..defaultValue = _checkText(em.toString()),
+                  ],
+              ],
+          ]);
+      }
+    }
+    return nodeList;
+  }
 
-  // String _inputClass() => edit ? 'is_static' : "";
+  ///[_emergencyContactLabelHelper] helper function to create the labels for emergency contact text boxes
+  List<VNode> _emergencyContactLabelHelper(User user) {
+    List<VNode> nodeList = <VNode>[];
 
+    for (EmergencyContact em in user.emergencyContacts) {
+      nodeList.add(
+        new VLabelElement()
+          ..className = "label"
+          ..text = "Emergency Contact: ",
+      );
+    }
+
+    return nodeList;
+  }
+
+  ///[_emergencyContactHelper] helper function to create the input boxes for emergency contacts
+  List<VNode> _emergencyContactHelper(User user) {
+    List<VNode> nodeList = <VNode>[];
+
+    for (EmergencyContact em in user.emergencyContacts) {
+      nodeList.add(new VDivElement()
+        ..className = "control"
+        ..children = [
+          new VInputElement()
+            ..className = "input ${state.edit ? '' : 'is-static'}"
+            ..defaultValue = _checkText(""),
+        ]);
+    }
+
+    return nodeList;
+  }
+
+  ///[_checkText] takes in passed text and will return N/A if string is empty and the user is not being eddited
+  ///or return the orrigional string for all other conditions
+  String _checkText(String text) => state.edit ? text : (text != '' ? text : "N/A");
+
+  ///[_renderEdit] creates a button to toggle from a view page to and edit capable page
   _renderEdit() => new VDivElement()
     ..className = 'control'
     ..children = [
@@ -314,11 +352,12 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
         ..onClick = _editClick
     ];
 
+  ///[_editClick] listener for the click action of the edit button to put page into an edit state
   _editClick(_) {
     setState((props, state) => state..edit = !state.edit);
   }
 
-  // create the submit button
+  ///[_renderSubmit] create the submit button to collect the data
   _renderSubmit() => new VDivElement()
     ..className = 'field is-grouped is-grouped-right'
     ..children = [
@@ -331,6 +370,8 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
             ..onClick = _editClick
         ]
     ];
+
+  ///[_submitClick] listener to grab all available data on page and push to firebase
   _submitClick(_) {
     InputElement first = querySelector('#fName-input');
     InputElement last = querySelector('#lName-input');
@@ -368,5 +409,6 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
     props.actions.server.fetchAllMembers();
   }
 
+  ///[_renderUserNotFound] if the UID is bad this page will simply say the user was not found
   _renderUserNotFound() => new VDivElement()..text = 'not found!';
 }
