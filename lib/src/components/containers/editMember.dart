@@ -74,12 +74,20 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
   List<VNode> _pageElements(User user) {
     List<VNode> nodeList = <VNode>[];
     state.edit ? nodeList.addAll(_renderEditHeader(user)) : nodeList.add(_renderHeader(user));
-    nodeList.add(_renderAddress(user));
-    nodeList.addAll(_renderNumberHeaders(user));
-    nodeList.addAll(_renderEmergencyContact(user));
     nodeList.addAll(_renderMembership(user));
+    nodeList.add(_renderAddress(user));
+    nodeList.add(_renderNumber(user));
+    nodeList.addAll(_renderListRows(user.emergencyContacts, "Emergency Contact"));
+    // nodeList.addAll(_renderListRows(user.dietaryRestrictions, "Dietary Restriction"));
+    // nodeList.addAll(_renderListRows(user.disabilities, "Disability"));
+    // nodeList.addAll(_renderListRows(user.medicalIssues, "Medical Issue"));
     return nodeList;
   }
+
+  //possible list implementation which was acomplished above and simply needs to work for type desired
+  //dietary restrictions
+  //disabilities
+  //medical issues
 
   ///[_renderEditHeader] function to change the name into an editable field group by state change
   List<VNode> _renderEditHeader(User user) {
@@ -188,45 +196,16 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
         ],
     ];
 
-  ///[_renderNumberHeaders] row for number and email labels
-  List<VNode> _renderNumberHeaders(User user) {
-    List<VNode> nodeList = <VNode>[];
-    nodeList.add(new VDivElement()
-      ..className = 'columns is-mobile is-centered is-vcentered'
-      ..children = [
-        new VDivElement()
-          ..className = 'column'
-          ..children = [
-            new VLabelElement()
-              ..className = 'label'
-              ..text = "Home Phone",
-          ],
-        new VDivElement()
-          ..className = 'column'
-          ..children = [
-            new VLabelElement()
-              ..className = 'label'
-              ..text = "Cell or Messsage Phone",
-          ],
-        new VDivElement()
-          ..className = 'column'
-          ..children = [
-            new VLabelElement()
-              ..className = 'label'
-              ..text = "Email Address",
-          ],
-      ]);
-    nodeList.add(_renderNumbers(user));
-    return nodeList;
-  }
-
-  ///[_renderNumbers] row for input boxes for home/cell numbers and email
-  _renderNumbers(User user) => new VDivElement()
+  ///[_renderNumber] row for numbers and email
+  _renderNumber(User user) => new VDivElement()
     ..className = 'columns is-mobile is-centered is-vcentered'
     ..children = [
       new VDivElement()
         ..className = 'column'
         ..children = [
+          new VLabelElement()
+            ..className = 'label'
+            ..text = "Home Phone",
           new VDivElement()
             ..className = "control"
             ..children = [
@@ -239,6 +218,9 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
       new VDivElement()
         ..className = 'column'
         ..children = [
+          new VLabelElement()
+            ..className = 'label'
+            ..text = "Cell or Messsage Phone",
           new VDivElement()
             ..className = "control"
             ..children = [
@@ -251,6 +233,9 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
       new VDivElement()
         ..className = 'column'
         ..children = [
+          new VLabelElement()
+            ..className = 'label'
+            ..text = "Email Address",
           new VDivElement()
             ..className = "control"
             ..children = [
@@ -262,15 +247,15 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
         ],
     ];
 
-  ///[_renderEmergencyContact] function for the emergency contact columns
-  ///will show at least one or as many contacts as member has
-  List<VNode> _renderEmergencyContact(User user) {
+  ///[_renderListRows] function for the list type items
+  ///will show at least one or as many as member has
+  List<VNode> _renderListRows(BuiltList<dynamic> list, String type) {
     List<VNode> nodeList = <VNode>[];
 
-    if (!user.emergencyContacts.isEmpty) {
+    if (list.isNotEmpty) {
       nodeList.add(
         new VDivElement()
-          ..className = 'box is-4'
+          ..className = 'box'
           ..children = [
             new VDivElement()
               ..className = 'columns is-mobile is-centered is-vcentered'
@@ -280,11 +265,12 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
                   ..children = [
                     new VLabelElement()
                       ..className = "label"
-                      ..text = "Emergency Contact(s): ",
+                      ..text =
+                          "${list.length > 1 ? ((type.compareTo("Disability") == 0) ? 'Disabilities' : '$type' + 's') : '$type'}:",
                   ],
                 new VDivElement()
                   ..className = 'column'
-                  ..children = _emergencyContactHelper(user),
+                  ..children = _renderListRowsHelper(list),
                 // new VDivElement()
                 //   ..className = 'column'
                 //   ..children = _addEmergencyContactHelper(user),
@@ -296,7 +282,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
       );
     } else {
       nodeList.add(new VDivElement()
-        ..className = 'box is-4'
+        ..className = 'box'
         ..children = [
           new VDivElement()
             ..className = 'columns is-mobile is-centered is-vcentered'
@@ -306,7 +292,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
                 ..children = [
                   new VLabelElement()
                     ..className = "label"
-                    ..text = "Emergency Contact(s): ",
+                    ..text = type,
                 ],
               new VDivElement()
                 ..className = 'column'
@@ -331,39 +317,17 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
     return nodeList;
   }
 
-  // ///[_addEmergencyContactHelper] helper function to create the labels for emergency contact text boxes
-  // List<VNode> _addEmergencyContactHelper(User user) {
-  //   List<VNode> nodeList = <VNode>[];
-
-  //   for (int i; i < 3; i++) {
-  //     nodeList.add(new VDivElement()
-  //       ..className = "field"
-  //       ..children = [
-  //         new VDivElement()
-  //           ..className = "control"
-  //           ..children = [
-  //             new VInputElement()
-  //               ..className = "input ${state.edit ? '' : 'is-static'}"
-  //               ..defaultValue = _checkText("") //em.toString())
-  //               ..readOnly = !state.edit,
-  //           ],
-  //       ]);
-  //   }
-
-  //   return nodeList;
-  // }
-
-  ///[_emergencyContactHelper] helper function to create the input boxes for emergency contacts
-  List<VNode> _emergencyContactHelper(User user) {
+  ///[_renderListRowsHelper] helper function to create the input boxes for list type
+  List<VNode> _renderListRowsHelper(BuiltList<dynamic> list) {
     List<VNode> nodeList = <VNode>[];
 
-    for (EmergencyContact em in user.emergencyContacts) {
+    for (Object item in list) {
       nodeList.add(new VDivElement()
         ..className = "control"
         ..children = [
           new VInputElement()
             ..className = "input ${state.edit ? '' : 'is-static'}"
-            ..defaultValue = _checkText(em.toString())
+            ..defaultValue = _checkText(item.toString())
             ..readOnly = !state.edit,
         ]);
     }
@@ -401,7 +365,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
           ..children = [
             new VLabelElement()
               ..className = 'label'
-              ..text = "Membership Renewal",
+              ..text = "Renewal",
           ],
         new VDivElement()
           ..className = 'column'
@@ -416,14 +380,28 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
                   ..readOnly = !state.edit,
               ],
           ],
+        new VDivElement()
+          ..className = 'column is-narrow'
+          ..children = [
+            new VLabelElement()
+              ..className = 'label'
+              ..text = "Role",
+          ],
+        new VDivElement()
+          ..className = 'column'
+          ..children = [
+            new VDivElement()
+              ..className = "control"
+              ..children = [
+                new VInputElement()
+                  ..className = "input ${state.edit ? '' : 'is-static'}"
+                  ..defaultValue = _checkText(user.role)
+                  ..readOnly = !state.edit,
+              ],
+          ],
       ]);
     return nodeList;
   }
-
-//possible list implementation which was acomplished above and simply needs to work for type desired
-  //dietary restrictions
-  //disabilities
-  //medical issues
 
   ///[_checkText] takes in passed text and will return N/A if string is empty and the user is not being eddited
   ///or return the orrigional string for all other conditions
