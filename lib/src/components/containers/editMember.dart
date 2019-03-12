@@ -22,6 +22,8 @@ class EditMemberProps {
 
 class EditMemberState {
   bool edit;
+  bool dropDownActive;
+  int listsCreated;
   // int addEm;
 }
 
@@ -30,7 +32,10 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
   EditMember(props) : super(props);
 
   @override
-  EditMemberState getInitialState() => EditMemberState()..edit = false;
+  EditMemberState getInitialState() => EditMemberState()
+    ..edit = false
+    ..dropDownActive = false
+    ..listsCreated = 0;
   // ..addEm = 0;
 
   History _history;
@@ -123,12 +128,15 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
               ..children = [
                 new VInputElement()
                   ..className = "input"
+                  ..id = "First_Name"
                   ..defaultValue = _checkText(user.firstName),
                 new VInputElement()
                   ..className = "input"
+                  ..id = "Last_Name"
                   ..defaultValue = _checkText(user.lastName),
                 new VInputElement()
                   ..className = "input"
+                  ..id = "Preferred_Name"
                   ..defaultValue = _checkText(user.firstName),
               ],
           ],
@@ -190,6 +198,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
             ..children = [
               new VInputElement()
                 ..className = "input ${state.edit ? '' : 'is-static'}"
+                ..id = "Address"
                 ..defaultValue = _checkText(user.address)
                 ..readOnly = !state.edit,
             ],
@@ -211,6 +220,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
             ..children = [
               new VInputElement()
                 ..className = "input ${state.edit ? '' : 'is-static'}"
+                ..id = "PhoneNumber"
                 ..defaultValue = _checkText(user.phoneNumber)
                 ..readOnly = !state.edit,
             ],
@@ -226,6 +236,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
             ..children = [
               new VInputElement()
                 ..className = "input ${state.edit ? '' : 'is-static'}"
+                ..id = "Mobile"
                 ..defaultValue = _checkText(user.mobileNumber)
                 ..readOnly = !state.edit,
             ],
@@ -241,6 +252,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
             ..children = [
               new VInputElement()
                 ..className = "input ${state.edit ? '' : 'is-static'}"
+                ..id = "Email"
                 ..defaultValue = _checkText(user.email)
                 ..readOnly = !state.edit,
             ],
@@ -270,7 +282,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
                   ],
                 new VDivElement()
                   ..className = 'column'
-                  ..children = _renderListRowsHelper(list),
+                  ..children = _renderListRowsHelper(list, type),
                 // new VDivElement()
                 //   ..className = 'column'
                 //   ..children = _addEmergencyContactHelper(user),
@@ -318,7 +330,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
   }
 
   ///[_renderListRowsHelper] helper function to create the input boxes for list type
-  List<VNode> _renderListRowsHelper(BuiltList<dynamic> list) {
+  List<VNode> _renderListRowsHelper(BuiltList<dynamic> list, String type) {
     List<VNode> nodeList = <VNode>[];
 
     for (Object item in list) {
@@ -327,11 +339,11 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
         ..children = [
           new VInputElement()
             ..className = "input ${state.edit ? '' : 'is-static'}"
+            ..id = type
             ..defaultValue = _checkText(item.toString())
             ..readOnly = !state.edit,
         ]);
     }
-
     return nodeList;
   }
 
@@ -355,6 +367,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
               ..children = [
                 new VInputElement()
                   ..className = "input ${state.edit ? '' : 'is-static'}"
+                  ..id = "Start"
                   ..defaultValue = _checkText(
                       "${user.membershipStart.month}/${user.membershipStart.day}/${user.membershipStart.year}")
                   ..readOnly = !state.edit,
@@ -375,6 +388,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
               ..children = [
                 new VInputElement()
                   ..className = "input ${state.edit ? '' : 'is-static'}"
+                  ..id = "Renewal"
                   ..defaultValue = _checkText(
                       "${user.membershipRenewal.month}/${user.membershipRenewal.day}/${user.membershipRenewal.year}")
                   ..readOnly = !state.edit,
@@ -390,17 +404,78 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
         new VDivElement()
           ..className = 'column'
           ..children = [
-            new VDivElement()
-              ..className = "control"
-              ..children = [
-                new VInputElement()
-                  ..className = "input ${state.edit ? '' : 'is-static'}"
-                  ..defaultValue = _checkText(user.role)
-                  ..readOnly = !state.edit,
-              ],
+            _roleHelper(user),
           ],
       ]);
     return nodeList;
+  }
+
+  //************************************throws many errors TODO: fix this
+  /**
+   * Expected a value of type 'Element', but got one of type 'Text' dart:sdk_internal 4025:19                                           as_C
+   * ... SOME MORE STUFF IN HERE
+   * package:wui_builder/src/wui_builder/component/component.dart 71:5   update
+   * package:wui_builder/src/wui_builder/component/component.dart 151:5  setState
+   * package:bsc/src/components/containers/editMember.dart 490:5         [_dropDownClick]
+   * package:wui_builder/src/wui_builder/velement/velement.dart 3937:62  e
+   * dart:sdk_internal 27983:34                                          arg
+   */
+
+  VNode _roleHelper(User user) {
+    if (state.edit) {
+      return (new VDivElement()
+        ..className = 'dropdown ${state.dropDownActive ? 'is-active' : ''}'
+        ..children = [
+          new VDivElement()
+            ..className = 'dropdown-trigger'
+            ..onClick = _dropDownClick
+            ..children = [
+              new VAnchorElement()
+                ..className = 'button is-dropdown-menu is-centered'
+                ..children = [
+                  new VSpanElement()
+                    ..text = user.role
+                    ..children = [
+                      new VSpanElement()
+                        ..className = 'icon'
+                        ..children = [new Vi()..className = "fas fa-angle-down"]
+                    ],
+                  new VDivElement()
+                    ..className = 'dropdown-menu'
+                    ..id = 'dropdown-menu'
+                    ..children = [
+                      new VDivElement()
+                        ..className = 'dropdown-content'
+                        ..children = [
+                          new VDivElement()
+                            ..className = 'dropdown-item'
+                            ..text = "Member",
+                          new VDivElement()
+                            ..className = 'dropdown-item'
+                            ..text = "Volunteer",
+                          new VDivElement()
+                            ..className = 'dropdown-item'
+                            ..text = "Admin",
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    } else {
+      return (new VDivElement()
+        ..className = 'column'
+        ..children = [
+          new VDivElement()
+            ..className = "control"
+            ..children = [
+              new VInputElement()
+                ..className = "input ${state.edit ? '' : 'is-static'}"
+                ..id = "Role"
+                ..defaultValue = _checkText(user.role)
+                ..readOnly = !state.edit,
+            ],
+        ]);
+    }
   }
 
   ///[_checkText] takes in passed text and will return N/A if string is empty and the user is not being eddited
@@ -428,6 +503,10 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
   //   print(state.addEm);
   //   setState((props, state) => state..addEm = (state.addEm + 1));
   // }
+
+  _dropDownClick(_) {
+    setState((props, state) => state..dropDownActive = !state.dropDownActive);
+  }
 
   ///[_renderEdit] creates a button to toggle from a view page to increase the number of input fields
   _renderEdit() => new VDivElement()
@@ -460,19 +539,19 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
 
   ///[_submitClick] listener to grab all available data on page and push to firebase
   _submitClick(_) {
-    InputElement first = querySelector('#fName-input');
-    InputElement last = querySelector('#lName-input');
-    InputElement email = querySelector('#email-input');
-    InputElement cell = querySelector('#cellNum-input');
-    InputElement phone = querySelector('#phoneNum-input');
-    InputElement address = querySelector('#address-input');
-    InputElement diet = querySelector('#diet-input');
-    InputElement disability = querySelector('#disabilities-input');
-    InputElement medical = querySelector('#medicalIssue-input');
-    InputElement memStart = querySelector('#memStart-input');
-    InputElement memRenew = querySelector('#memRenew-input');
+    InputElement first = querySelector('#Fisrt_Name');
+    InputElement last = querySelector('#Last_Name');
+    InputElement email = querySelector('#Email');
+    InputElement cell = querySelector('#Mobile');
+    InputElement phone = querySelector('#PhoneNumber');
+    InputElement address = querySelector('#Address');
+    // InputElement diet = querySelector('#diet-input');
+    // InputElement disability = querySelector('#disabilities-input');
+    // InputElement medical = querySelector('#medicalIssue-input');
+    InputElement memStart = querySelector('#Start');
+    InputElement memRenew = querySelector('#Renewal');
 
-    //create a new user object
+    // TODO: edit the user object
     User newUser = (new UserBuilder()
           ..firstName = first.value
           ..lastName = last.value
@@ -480,9 +559,9 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
           ..mobileNumber = cell.value
           ..phoneNumber = phone.value
           ..address = address.value
-          ..dietaryRestrictions = diet.value
-          ..disabilities = disability.value
-          ..medicalIssues = medical.value
+          ..dietaryRestrictions = "NULL"
+          ..disabilities = "NULL"
+          ..medicalIssues = "NULL"
           ..membershipStart = DateTime.parse(memStart.value)
           ..membershipRenewal = DateTime.parse(memRenew.value)
           ..emergencyContacts = new ListBuilder<EmergencyContact>()
