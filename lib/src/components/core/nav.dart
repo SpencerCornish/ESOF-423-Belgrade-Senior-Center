@@ -156,9 +156,9 @@ class Nav extends PComponent<NavProps> {
 
   _onNewMemberClick(_) => history.push(Routes.createMember);
 
-  _onNewMealClick(_) => print('Navigate to new meal form');
+  _onNewMealClick(_) => history.push(Routes.createMeal);
 
-  _onNewActivityClick(_) => print('Navigate to new activity form');
+  _onNewActivityClick(_) => history.push(Routes.createAct);
 
   _onViewMembersClick(_) => history.push(Routes.viewMember);
 

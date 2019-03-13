@@ -13,6 +13,8 @@ import './containers/home.dart';
 import './containers/newMember.dart';
 import './containers/dashboard.dart';
 import './containers/viewMember.dart';
+import './containers/newActivity.dart';
+import './containers/newMeal.dart';
 import './core/debug.dart';
 
 // State
@@ -74,6 +76,14 @@ class Container extends PComponent<ContainerProps> {
                 path: Routes.createMember,
                 componentFactory: (params) => _renderCreateMember(),
               ),
+              new Route(
+                path : Routes.createAct,
+                componentFactory: (_) => _renderNewActivity(),
+              ),
+              new Route(
+                path : Routes.createMeal,
+                componentFactory: (_) => _renderNewMeal(),
+              ),
               new Route(path: Routes.resetContinue, componentFactory: (params) => _renderResetContinue(params)),
               new Route(path: Routes.dashboard, componentFactory: (_) => _renderIfAuthenticated(_renderDashboard())),
               new Route(path: Routes.viewMember, componentFactory: (_) => _renderIfAuthenticated(_renderViewMember())),
@@ -84,6 +94,16 @@ class Container extends PComponent<ContainerProps> {
       _renderDebug(),
     ];
 
+  //Method used to render the newMeal page
+  _renderNewMeal() => new NewMeal(new NewMealProps()
+    ..actions = props.storeContainer.store.actions
+    ..user = appState.user);
+  
+  //Method used to render the newActivity page
+  _renderNewActivity() => new NewActivity(new NewActivityProps()
+    ..actions = props.storeContainer.store.actions
+    ..user =appState.user);
+  
   ///Method used to render the CreateMember page
   _renderCreateMember() => new NewMember(new NewMemberProps()
     ..actions = props.storeContainer.store.actions

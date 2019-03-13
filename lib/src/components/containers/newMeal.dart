@@ -12,15 +12,15 @@ import '../../store.dart';
 import '../core/nav.dart';
 import '../../model/user.dart';
 
-class NewActivityProps {
+class NewMealProps {
   AppActions actions;
   User user;
 }
 
 //TODO: Make is so when the logout button is pressed, it takes you back to the main page
 
-class NewActivity extends PComponent<NewActivityProps> {
-  NewActivity(props) : super(props);
+class NewMeal extends PComponent<NewMealProps> {
+  NewMeal(props) : super(props);
 
   History _history;
 
@@ -33,15 +33,15 @@ class NewActivity extends PComponent<NewActivityProps> {
       new Nav(new NavProps()
         ..actions = props.actions
         ..user = props.user),
-      new VDivElement()
-        ..className = 'container'
-        ..children = [
-          _activityCreation(),
-        ]
+      // new VDivElement()
+      //   ..className = 'container'
+      //   ..children = [
+        _mealCreation(),
+        //]
     ];
 
   //create the text boxes that are used to create new users
-  VNode _activityCreation() => new VDivElement()
+  VNode _mealCreation() => new VDivElement()
     ..className = 'container'
     ..children = [
       new VDivElement()
@@ -62,50 +62,14 @@ class NewActivity extends PComponent<NewActivityProps> {
                         ..children = [
                           new Vh1()
                             ..className = 'title'
-                            ..text = "Activity Creation"
+                            ..text = "Meal Creation"
                         ]
                     ],
-                  //create the input fields for activity name and instructor's name
+                  //create the input fields for meal start and end times, and date
                   new VDivElement()
                     ..className = 'columns'
                     ..children = [
                       new VDivElement()
-                        ..className = 'column'
-                        ..children = [
-                          new VDivElement()
-                            ..className = 'field is-grouped'
-                            ..children = [
-                              new VDivElement()
-                                ..className = 'field is-horizontal'
-                                ..children = [
-                                  new VDivElement()
-                                    ..className = 'field-body'
-                                    ..children = [
-                                      new VDivElement()
-                                      ..className = 'field'
-                                      ..id = 'actName-lab'
-                                      ..children = [
-                                        new VLabelElement()
-                                          ..className = 'label'
-                                          ..text = "Activity Name"
-                                      ],
-                                    new VDivElement()
-                                      ..className = 'field is-horizontal'
-                                      ..children = [
-                                        new VParagraphElement()
-                                        ..className = 'control'
-                                        ..children = [
-                                          new VInputElement()
-                                            ..className = 'input'
-                                            ..id = 'act-input'
-                                            ..placeholder = "e.g. Yoga"
-                                        ]
-                                      ]
-                                    ]
-                                ]
-                            ]
-                        ],
-                        new VDivElement()
                           ..className = 'column'
                           ..children = [
                             new VDivElement()
@@ -119,11 +83,11 @@ class NewActivity extends PComponent<NewActivityProps> {
                                     ..children = [
                                       new VDivElement()
                                       ..className = 'field'
-                                      ..id = 'instructName-lab'
+                                      ..id = 'date-lab'
                                       ..children = [
                                         new VLabelElement()
                                           ..className = 'label'
-                                          ..text = "Instructor's Name"
+                                          ..text = "Serving Date"
                                       ],
                                     new VDivElement()
                                       ..className = 'field is-horizontal'
@@ -133,19 +97,14 @@ class NewActivity extends PComponent<NewActivityProps> {
                                         ..children = [
                                           new VInputElement()
                                             ..className = 'input'
-                                            ..id = 'instructorName-input'
-                                            ..placeholder = "First and Last Name"
+                                            ..id = 'serveDate-input'
+                                            ..type = 'date'
                                         ]
                                       ]
                                     ]
                                 ]
                             ]
-                          ]
-                    ],
-                  //create the Location And Capacity Input fields
-                  new VDivElement()
-                    ..className = 'columns'
-                    ..children = [
+                          ],
                       new VDivElement()
                         ..className = 'column'
                         ..children = [
@@ -160,86 +119,7 @@ class NewActivity extends PComponent<NewActivityProps> {
                                     ..children = [
                                       new VDivElement()
                                       ..className = 'field'
-                                      ..id = 'location-lab'
-                                      ..children = [
-                                        new VLabelElement()
-                                          ..className = 'label'
-                                          ..text = "Loaction"
-                                      ],
-                                    new VDivElement()
-                                      ..className = 'field is-horizontal'
-                                      ..children = [
-                                        new VParagraphElement()
-                                        ..className = 'control'
-                                        ..children = [
-                                          new VInputElement()
-                                            ..className = 'input'
-                                            ..id = 'location-input'
-                                            ..placeholder = "Where is the activity taking place?"
-                                        ]
-                                      ]
-                                    ]
-                                ]
-                            ]
-                        ],
-                        new VDivElement()
-                          ..className = 'column'
-                          ..children = [
-                            new VDivElement()
-                            ..className = 'field is-grouped'
-                            ..children = [
-                              new VDivElement()
-                                ..className = 'field is-horizontal'
-                                ..children = [
-                                  new VDivElement()
-                                    ..className = 'field-body'
-                                    ..children = [
-                                      new VDivElement()
-                                      ..className = 'field'
-                                      ..id = 'capacity-lab'
-                                      ..children = [
-                                        new VLabelElement()
-                                          ..className = 'label'
-                                          ..text = "Capacity"
-                                      ],
-                                    new VDivElement()
-                                      ..className = 'field is-horizontal'
-                                      ..children = [
-                                        new VParagraphElement()
-                                        ..className = 'control'
-                                        ..children = [
-                                          new VInputElement()
-                                            ..className = 'input'
-                                            ..id = 'capacity-input'
-                                            ..type = 'number'
-                                        ]
-                                      ]
-                                    ]
-                                ]
-                            ]
-                          ]
-                    ],
-
-                  //Create the start and end time input fields
-                  //create the Start Time Input field
-                  new VDivElement()
-                    ..className = 'columns'
-                    ..children = [
-                      new VDivElement()
-                        ..className = 'column'
-                        ..children = [
-                          new VDivElement()
-                            ..className = 'field is-grouped'
-                            ..children = [
-                              new VDivElement()
-                                ..className = 'field is-horizontal'
-                                ..children = [
-                                  new VDivElement()
-                                    ..className = 'field-body'
-                                    ..children = [
-                                      new VDivElement()
-                                      ..className = 'field'
-                                      ..id = 'timeStart-lab'
+                                      ..id = 'mealStart-lab'
                                       ..children = [
                                         new VLabelElement()
                                           ..className = 'label'
@@ -253,7 +133,7 @@ class NewActivity extends PComponent<NewActivityProps> {
                                         ..children = [
                                           new VInputElement()
                                             ..className = 'input'
-                                            ..id = 'timeStart-input'
+                                            ..id = 'mealStart-input'
                                             ..type = 'time'
                                         ]
                                       ]
@@ -275,7 +155,7 @@ class NewActivity extends PComponent<NewActivityProps> {
                                     ..children = [
                                       new VDivElement()
                                       ..className = 'field'
-                                      ..id = 'timeEnd-lab'
+                                      ..id = 'mealEnd-lab'
                                       ..children = [
                                         new VLabelElement()
                                           ..className = 'label'
@@ -289,7 +169,7 @@ class NewActivity extends PComponent<NewActivityProps> {
                                         ..children = [
                                           new VInputElement()
                                             ..className = 'input'
-                                            ..id = 'timeEnd-input'
+                                            ..id = 'mealEnd-input'
                                             ..type = 'time'
                                         ]
                                       ]
