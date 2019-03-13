@@ -33,15 +33,6 @@ class Home extends PComponent<HomeProps> {
   }
 
   @override
-  void componentDidMount() {
-    // Redirect really fast to the main homepage, thus clearing the urlparameters
-    // if (history.path != Routes.home) {
-    //   history.push(Routes.home);
-    // }
-    super.componentDidMount();
-  }
-
-  @override
   void componentWillUpdate(HomeProps nextProps, Null nextState) {
     if (nextProps.authState == AuthState.SUCCESS) {
       history.push(props.nextUrl);
