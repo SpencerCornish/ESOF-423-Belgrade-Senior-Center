@@ -595,13 +595,27 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     InputElement cell = querySelector('#cellNum-input');
     String value = cell.value;
     //Bool for setting state
+    bool isValid;
     //Exits if blank
     if(value == '') {
       return;
     }
-    //Actual validation
-
+    //Acual validation
+    //Splits string into a list
+    List<String> temp = value.split('');
+    //Counts digits in input string
+    int count = 0;
+    for (String x in temp) {
+      if(int.tryParse(x) != null) {
+        count++;
+      }
+    }
+    if(count == 10 || count == 11) {
+      isValid = true;
+    } else {isValid = false;}
     //Sets state
+    setState((NewMemberProps, NewMemberState) =>
+      NewMemberState..cellNumberIsValid = isValid);
   }
 
   //Validation for address, does nothing for now
