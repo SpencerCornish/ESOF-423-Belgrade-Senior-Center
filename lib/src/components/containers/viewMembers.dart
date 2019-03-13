@@ -164,23 +164,17 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
         ],
     ];
 
-  ///[_renderKioskModeToggle] creates a button to toggle from a kiosk mode for activity selection to an admin mode for editing
-  VNode _renderKioskModeToggle() {
-    if (props.user.role.compareTo("admin") != 0) {
-      return (new VDivElement()
-        ..className = 'control'
-        ..children = [
-          new VAnchorElement()
-            ..className = 'button is-link'
-            ..text = "${state.asAdmin ? 'Kiosk Mode' : 'Exit Kiosk Mode'}"
-            ..onClick = _kioskClick
-        ]);
-    } else {
-      return new VDivElement();
-    }
-  }
+  ///[_renderEdit] creates a button to toggle from a view page to increase the number of input fields
+  _renderKioskModeToggle() => new VDivElement()
+    ..className = 'control'
+    ..children = [
+      new VAnchorElement()
+        ..className = 'button is-link'
+        ..text = "${state.asAdmin ? 'Kiosk Mode' : 'Exit Kiosk Mode'}"
+        ..onClick = _kioskClick
+    ];
 
-  ///[_kioskClick] listener for the click action of the kiosk button to put page into/out of an admin state
+  ///[_editClick] listener for the click action of the edit button to put page into an edit state
   _kioskClick(_) {
     setState((props, state) => state..asAdmin = !state.asAdmin);
   }
