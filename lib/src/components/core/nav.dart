@@ -181,6 +181,8 @@ class Nav extends Component<NavProps, NavState> {
   _onViewActivitiesClick(_) => print('Navigate to view activities list');
 
   _onLogOutClick(_) async {
+    await props.actions.setAuthState(AuthState.LOADING);
+    await history.push(Routes.home);
     props.actions.server.logOut();
   }
 }
