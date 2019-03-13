@@ -213,7 +213,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                         ..onInput = _phoneNumberValidator
                                         ..className = 'input ${state.phoneNumberIsValid ? '' : 'is-danger'}'
                                         ..id = 'phoneNum-input'
-                                        ..placeholder = "1234567891"
+                                        ..placeholder = "888-888-88888"
                                         ..type = 'tel',
                                       new VParagraphElement()
                                         ..className = 'help is-danger ${state.phoneNumberIsValid ? 'is-invisible' : ''}'
@@ -244,7 +244,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                                     ..onInput = _cellNumberValidator
                                                     ..className = 'input ${state.cellNumberIsValid ? '' : 'is-danger'}'
                                                     ..id = 'cellNum-input'
-                                                    ..placeholder = "1234567891"
+                                                    ..placeholder = "888-888-88888"
                                                     ..type = 'tel',
                                                   new VParagraphElement()
                                                     ..className = 'help is-danger ${state.cellNumberIsValid ? 'is-invisible' : ''}'
@@ -545,10 +545,22 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
       isValid = true;
     } else isValid = false;
     setState((NewMemberProps, NewMemberState) =>
-      NewMemberState..emailIsValid =isValid);
+      NewMemberState..emailIsValid = isValid);
   }
 
-  //Validation for phone number, doesnt check if blank
+  //Validation for phone numbers
+  //Area code is required
+
+  //Possible formats
+  //4252734489
+  //14252734489
+  //(425)2734489
+  //1(425)2734489
+  //425-273-4489
+  //1-425-273-4489
+  //+1-425-273-4489
+  
+   //Validation for phone number, doesnt check if blank
   void _phoneNumberValidator(_) {
     //Gets phone field and then value from field
     InputElement phone = querySelector('#phoneNum-input');
@@ -560,8 +572,21 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
       return;
     }
     //Acual validation
-    
+    //Splits string into a list
+    List<String> temp = value.split('');
+    //Counts digits in input string
+    int count = 0;
+    for (String x in temp) {
+      if(int.tryParse(x) != null) {
+        count++;
+      }
+    }
+    if(count == 10 || count == 11) {
+      isValid = true;
+    } else {isValid = false;}
     //Sets state
+    setState((NewMemberProps, NewMemberState) =>
+      NewMemberState..phoneNumberIsValid = isValid);
   }
 
   //Validation for cell number, doesnt check if blank
