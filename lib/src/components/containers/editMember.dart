@@ -78,7 +78,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
   ///[_pageElements] helper function to add all fields to the render method
   List<VNode> _pageElements(User user) {
     List<VNode> nodeList = <VNode>[];
-    state.edit ? nodeList.addAll(_renderEditHeader(user)) : nodeList.add(_renderHeader(user));
+    state.edit ? nodeList.addAll(_renderEditHeader(user)) : nodeList.addAll(_renderHeader(user));
     nodeList.addAll(_renderMembership(user));
     nodeList.add(_renderAddress(user));
     nodeList.add(_renderNumber(user));
@@ -98,10 +98,13 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
   List<VNode> _renderEditHeader(User user) {
     List<VNode> nodeList = <VNode>[];
     nodeList.add(new VDivElement()
-      ..className = 'columns is-mobile is-vcentered'
+      ..className = 'columns'
+      ..children = [new VDivElement()..className = 'column is-narrow']);
+    nodeList.add(new VDivElement()
+      ..className = 'columns is-mobile'
       ..children = [
         new VDivElement()
-          ..className = 'column is-narrow'
+          ..className = 'column is-narrow is-offset-1'
           ..children = [
             new VSpanElement()
               ..className = 'icon is-large'
@@ -113,15 +116,18 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
             new VLabelElement()
               ..className = "label"
               ..text = "First Name: ",
+            new VDivElement()..className = 'column',
             new VLabelElement()
               ..className = "label"
               ..text = "Last Name: ",
+            new VDivElement()..className = 'column',
             new VLabelElement()
               ..className = "label"
               ..text = "Preferred Name: ",
+            new VDivElement()..className = 'column',
           ],
         new VDivElement()
-          ..className = 'column is-half'
+          ..className = 'column is-5'
           ..children = [
             new VDivElement()
               ..className = "control"
@@ -130,19 +136,21 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
                   ..className = "input"
                   ..id = "First_Name"
                   ..defaultValue = _checkText(user.firstName),
+                new VDivElement()..className = 'column',
                 new VInputElement()
                   ..className = "input"
                   ..id = "Last_Name"
                   ..defaultValue = _checkText(user.lastName),
+                new VDivElement()..className = 'column',
                 new VInputElement()
                   ..className = "input"
                   ..id = "Preferred_Name"
                   ..defaultValue = _checkText(user.firstName),
+                new VDivElement()..className = 'column',
               ],
           ],
-        new VDivElement()..className = 'column',
         new VDivElement()
-          ..className = 'column is-1'
+          ..className = 'column is-2'
           ..children = [
             state.edit ? _renderSubmit() : _renderEdit(),
           ],
@@ -151,33 +159,40 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
   }
 
   ///[_renderHeader] makes the title bar of the editMember page
-  _renderHeader(User user) => new VDivElement()
-    ..className = 'columns is-mobile is-vcentered'
-    ..children = [
-      new VDivElement()
-        ..className = 'column is-narrow'
-        ..children = [
-          new VSpanElement()
-            ..className = 'icon is-large'
-            ..children = [new Vi()..className = 'fas fa-5x fa-user'],
-        ],
-      new VDivElement()
-        ..className = 'column is-narrow'
-        ..children = [
-          new Vh4()
-            ..className = 'title is-4'
-            ..text = user.firstName + " " + user.lastName,
-          new Vh5()
-            ..className = 'subtitle is-5'
-            ..text = "Preferred Name: " + user.firstName,
-        ],
-      new VDivElement()..className = 'column',
-      new VDivElement()
-        ..className = 'column is-1'
-        ..children = [
-          state.edit ? _renderSubmit() : _renderEdit(),
-        ],
-    ];
+  List<VNode> _renderHeader(User user) {
+    List<VNode> nodeList = <VNode>[];
+    nodeList.add(new VDivElement()
+      ..className = 'columns'
+      ..children = [new VDivElement()..className = 'column is-narrow']);
+    nodeList.add(new VDivElement()
+      ..className = 'columns is-mobile'
+      ..children = [
+        new VDivElement()
+          ..className = 'column is-narrow is-offset-1'
+          ..children = [
+            new VSpanElement()
+              ..className = 'icon is-large'
+              ..children = [new Vi()..className = 'fas fa-5x fa-user'],
+          ],
+        new VDivElement()
+          ..className = 'column is-narrow'
+          ..children = [
+            new Vh4()
+              ..className = 'title is-4'
+              ..text = user.firstName + " " + user.lastName,
+            new Vh5()
+              ..className = 'subtitle is-5'
+              ..text = "Preferred Name: " + user.firstName,
+          ],
+        new VDivElement()..className = 'column',
+        new VDivElement()
+          ..className = 'column is-2'
+          ..children = [
+            state.edit ? _renderSubmit() : _renderEdit(),
+          ],
+      ]);
+    return nodeList;
+  }
 
   ///[_renderAddress] row for address label and input
   _renderAddress(User user) => new VDivElement()
