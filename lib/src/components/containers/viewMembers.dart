@@ -20,15 +20,27 @@ class ViewMembersProps {
   BuiltMap<String, User> userMap;
 }
 
+class ViewMembersState {
+  bool asAdmin;
+}
+
 /// [viewMember] class / page to show a visual representation of current stored data
-class ViewMembers extends PComponent<ViewMembersProps> {
+class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
   ViewMembers(props) : super(props);
+
+  @override
+  ViewMembersState getInitialState() => ViewMembersState()..asAdmin = false;
 
   List<String> title = ["Last", "First"];
   History _history;
 
   /// Browser history entrypoint, to control page navigation
   History get history => _history ?? findHistoryInContext(context);
+
+  @override
+  void componentWillUpdate(ViewMembersProps nextProps, ViewMembersState nextState) {
+    super.componentWillUpdate(nextProps, nextState);
+  }
 
   VNode emailInputNode;
   VNode passwordInputNode;
@@ -57,7 +69,13 @@ class ViewMembers extends PComponent<ViewMembersProps> {
     return nodeList;
   }
 
-  _onUserClick(String uid) => history.push(Routes.generateEditMemberURL(uid));
+  _onUserClick(String uid) {
+    if (state.asAdmin) {
+      history.push(Routes.generateEditMemberURL(uid));
+    } else {
+      history.push(Routes.viewActivity);
+    }
+  }
 
   /// [sort] Merge sort by last name of user
   List<User> _sort(List<User> users, int left, int right) {
@@ -146,6 +164,21 @@ class ViewMembers extends PComponent<ViewMembersProps> {
         ],
     ];
 
+  ///[_renderEdit] creates a button to toggle from a view page to increase the number of input fields
+  _renderKioskModeToggle() => new VDivElement()
+    ..className = 'control'
+    ..children = [
+      new VAnchorElement()
+        ..className = 'button is-link'
+        ..text = "${state.asAdmin ? 'Kiosk Mode' : 'Exit Kiosk Mode'}"
+        ..onClick = _kioskClick
+    ];
+
+  ///[_editClick] listener for the click action of the edit button to put page into an edit state
+  _kioskClick(_) {
+    setState((props, state) => state..asAdmin = !state.asAdmin);
+  }
+
   ///[_renderHeader] makes the title bar of the viewMembers page
   _renderHeader() => new VDivElement()
     ..className = 'columns is-mobile'
@@ -160,6 +193,10 @@ class ViewMembers extends PComponent<ViewMembersProps> {
             ..className = 'subtitle is-7'
             ..text = "as of: ${DateTime.now().month}/${DateTime.now().day}/${DateTime.now().year}",
         ],
+      new VDivElement()..className = 'column',
+      new VDivElement()
+        ..className = 'column'
+        ..children = [_renderKioskModeToggle()],
       new VDivElement()..className = 'column',
       _renderSearch(),
     ];
