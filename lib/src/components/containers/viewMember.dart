@@ -1,4 +1,6 @@
 import 'dart:html' hide History;
+import 'dart:convert';
+
 
 import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
@@ -13,15 +15,15 @@ import '../../model/user.dart';
 import '../../state/app.dart';
 import '../../middleware/serverMiddleware.dart';
 
-class viewMemberProps {
+class ViewMemberProps {
   AppActions actions;
   User user;
   BuiltMap<String, User> userMap;
 }
 
-/// [viewMember] class / page to show a visual representation of current stored data
-class viewMember extends PComponent<viewMemberProps> {
-  viewMember(props) : super(props);
+/// [ViewMember] class / page to show a visual representation of current stored data
+class ViewMember extends PComponent<ViewMemberProps> {
+  ViewMember(props) : super(props);
   List<String> title = ["Last", "First", "Address", "Phone", "Start"];
   History _history;
 
@@ -126,6 +128,15 @@ class viewMember extends PComponent<viewMemberProps> {
                                         ..className = 'icon is-left'
                                         ..children = [new Vi()..className = 'fas fa-search'],
                                     ],
+                                  new VParagraphElement()
+                                    ..className = 'button has-icons-left'
+                                    ..onClick = _onExportClick
+                                    ..children = [
+                                      new VSpanElement()
+                                        ..className = 'icon'
+                                        ..children = [new Vi()..className = 'fas fa-search'],
+                                      new VSpanElement()..text = 'export',
+                                    ],
                                 ],
                             ],
                         ],
@@ -137,4 +148,28 @@ class viewMember extends PComponent<viewMemberProps> {
             ],
         ],
     ];
+
+    _onExportClick(_) {
+      final userList = props.userMap.values;
+      List<String> lines = <String>[];
+      // Add the header row
+      lines.add(userList.first.toFirestore().keys.join(',') + '\n');
+
+      // Add a row per user
+      for (User user in userList) {
+      
+        lines.add(user.toFirestore().values.join(',') + '\n');
+      }
+
+      Blob data = new Blob(lines, "text/csv");
+
+
+      AnchorElement downloadLink = new AnchorElement(
+            href: Url.createObjectUrlFromBlob(data));
+        downloadLink.rel = 'text/csv';
+        downloadLink.download = 'member-export-${new DateTime.now().toIso8601String()}.csv';
+
+        var event = new MouseEvent("click", view: window, cancelable: false);
+        downloadLink.dispatchEvent(event);
+    }
 }
