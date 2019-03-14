@@ -8,6 +8,7 @@ void main() {
   final serviceList = ['servicea', 'serviceb'];
   final emergencyContactList = [];
   final mockFirestoreUserData = new Map<String, dynamic>.from({
+    'login_uid': "Login_UID",
     'first_name': "Dan",
     'last_name': "Bachler",
     'email': "test@example.com",
@@ -27,8 +28,8 @@ void main() {
   });
   group('User -', () {
     test('fromFirebase factory produces accurate model file', () {
-      User userFromTestData =
-          new User.fromFirebase(mockFirestoreUserData, new BuiltList<EmergencyContact>(), id: "testID");
+      User userFromTestData = new User.fromFirebase(mockFirestoreUserData, new BuiltList<EmergencyContact>(),
+          loginUID: 'Login_UID', docUID: 'data_UID');
 
       // Datetimes
       expect(userFromTestData.membershipStart.toIso8601String(), mockFirestoreUserData['membership_start']);
@@ -40,8 +41,8 @@ void main() {
     });
 
     test('toFirebase function produces a properly formatted map of data', () {
-      User userFromTestData =
-          new User.fromFirebase(mockFirestoreUserData, new BuiltList<EmergencyContact>(), id: "testID");
+      User userFromTestData = new User.fromFirebase(mockFirestoreUserData, new BuiltList<EmergencyContact>(),
+          loginUID: 'Login_UID', docUID: 'data_UID');
       Map<String, dynamic> output = userFromTestData.toFirestore();
       expect(mockFirestoreUserData, output);
     });
