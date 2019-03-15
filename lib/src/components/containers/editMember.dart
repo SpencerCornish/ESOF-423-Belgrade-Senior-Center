@@ -396,7 +396,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
               ..children = [
                 new VInputElement()
                   ..className = "input ${state.edit ? '' : 'is-static'}"
-                  ..type = 'date'
+                  ..type = '${state.edit ? 'date' : ''}'
                   ..id = "Start"
                   ..defaultValue = _checkText(
                       "${user.membershipStart.month}/${user.membershipStart.day}/${user.membershipStart.year}")
@@ -419,7 +419,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
                 new VInputElement()
                   ..className = "input ${state.edit ? '' : 'is-static'}"
                   ..id = "Renewal"
-                  ..type = 'date'
+                  ..type = '${state.edit ? 'date' : ''}'
                   ..defaultValue = _checkText(
                       "${user.membershipRenewal.month}/${user.membershipRenewal.day}/${user.membershipRenewal.year}")
                   ..readOnly = !state.edit,
