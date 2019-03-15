@@ -6,6 +6,11 @@ class Routes {
   /// Route to the base (or Home) of the app
   static const home = '/';
 
+  static const loginRedirect = '/login/next/:next_url';
+
+  // Generate the above URL
+  static String generateLoginRedirect(String nextUrl) => '/login/next/${stringToBase(nextUrl)}';
+
   /// Route for forms page where new users, meals, and classes can be created
   static const createMember = '/new/member';
 
@@ -42,7 +47,7 @@ enum AuthState { LOADING, SUCCESS, INAUTHENTIC, PASS_RESET_SENT, ERR_PASSWORD, E
 bool emailIsValid(String email) => EmailValidator.validate(email);
 
 /// Validates passwords meet minimum requirements
-bool passwordIsValid(String password) => password.length > 8 && password.contains(new RegExp(r'[0-9A-Z]*'));
+bool passwordIsValid(String password) => password.length > 6 && password.contains(new RegExp(r'[0-9A-Z]*'));
 
 String stringToBase(String email) => base64Encode(utf8.encode(email));
 

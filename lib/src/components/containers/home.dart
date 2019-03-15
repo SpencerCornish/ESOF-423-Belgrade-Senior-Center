@@ -14,6 +14,7 @@ class HomeProps {
   AuthState authState;
   String redirectCode;
   String emailPrefill;
+  String nextUrl;
 }
 
 class Home extends PComponent<HomeProps> {
@@ -26,24 +27,15 @@ class Home extends PComponent<HomeProps> {
   @override
   void componentWillMount() {
     if (props.authState == AuthState.SUCCESS) {
-      history.push(Routes.dashboard);
+      history.push(props.nextUrl);
     }
     super.componentWillMount();
   }
 
   @override
-  void componentDidMount() {
-    // Redirect really fast to the main homepage, thus clearing the urlparameters
-    if (history.path != Routes.home) {
-      history.push(Routes.home);
-    }
-    super.componentDidMount();
-  }
-
-  @override
   void componentWillUpdate(HomeProps nextProps, Null nextState) {
     if (nextProps.authState == AuthState.SUCCESS) {
-      history.push(Routes.dashboard);
+      history.push(props.nextUrl);
     }
     super.componentWillUpdate(nextProps, nextState);
   }
@@ -57,7 +49,7 @@ class Home extends PComponent<HomeProps> {
         ..className = 'columns is-centered margin-top'
         ..children = [
           new VDivElement()
-            ..className = 'column is-one-third'
+            ..className = 'column is-three-fifths-widescreen is-two-thirds-desktop is-half-tablet'
             ..children = [
               new VDivElement()
                 ..className = 'box'
@@ -79,7 +71,7 @@ class Home extends PComponent<HomeProps> {
             ],
         ],
       new VDivElement()
-        ..className = 'columns is-centered margin-top'
+        ..className = 'columns is-centered margin-top is-tablet'
         ..children = [
           new VDivElement()
             ..className = 'column is-narrow has-text-centered'
