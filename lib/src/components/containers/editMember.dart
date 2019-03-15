@@ -629,6 +629,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
     TextInputElement medical = querySelector('#medicalIssue-input');
     InputElement memStart = querySelector('#Start');
     InputElement memRenew = querySelector('#Renewal');
+    InputElement position = querySelector('#Position');
 
     // TODO: edit the user object
     User newUser = (new UserBuilder()
@@ -638,15 +639,15 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
           ..mobileNumber = cell.value
           ..phoneNumber = phone.value
           ..address = address.value
-          ..dietaryRestrictions = diet.toString()
-          ..disabilities = disability.toString()
-          ..medicalIssues = medical.toString()
+          ..dietaryRestrictions = diet.value
+          ..disabilities = disability.value
+          ..medicalIssues = medical.value
           ..membershipStart = DateTime.parse(memStart.value)
           ..membershipRenewal = DateTime.parse(memRenew.value)
           ..emergencyContacts = new ListBuilder<EmergencyContact>()
           ..services = new ListBuilder<String>()
           ..role = state.role
-          ..position = "NULL"
+          ..position = position.value
           ..forms = new ListBuilder<String>())
         .build();
 
