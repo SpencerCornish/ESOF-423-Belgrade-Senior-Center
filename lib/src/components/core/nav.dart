@@ -174,7 +174,7 @@ class Nav extends Component<NavProps, NavState> {
 
   _onNewActivityClick(_) => print('Navigate to new activity form');
 
-  _onViewMembersClick(_) => history.push(Routes.viewMember);
+  _onViewMembersClick(_) => history.push(Routes.viewMembers);
 
   _onViewMealsClick(_) => history.push(Routes.viewMeal);
 

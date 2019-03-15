@@ -139,7 +139,7 @@ class FirebaseClient {
     for (fs.DocumentSnapshot doc in result.docs) {
       dataSet[doc.id] = new Meal.fromFirebase(
         doc.data(),
-        id: doc.id,
+        uid: doc.id,
       );
     }
     return new BuiltMap<String, Meal>.from(dataSet);
@@ -156,7 +156,7 @@ class FirebaseClient {
       print(doc.data());
       dataSet[doc.id] = new Activity.fromFirebase(
         doc.data(),
-        id: doc.id,
+        uid: doc.id,
       );
     }
     return new BuiltMap<String, Activity>.from(dataSet);
