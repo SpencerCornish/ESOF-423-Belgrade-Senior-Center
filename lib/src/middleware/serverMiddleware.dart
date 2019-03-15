@@ -84,6 +84,7 @@ _addOrUpdateUser(FirebaseClient client) => (
     ) async {
       client.addOrUpdateUser(
         action.payload.toFirestore(),
+        documentID: action.payload.docUID,
       );
     };
 

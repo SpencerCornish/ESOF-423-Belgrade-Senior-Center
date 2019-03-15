@@ -392,6 +392,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
               ..children = [
                 new VInputElement()
                   ..className = "input ${state.edit ? '' : 'is-static'}"
+                  ..type = 'date'
                   ..id = "Start"
                   ..defaultValue = _checkText(
                       "${user.membershipStart.month}/${user.membershipStart.day}/${user.membershipStart.year}")
@@ -414,6 +415,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
                 new VInputElement()
                   ..className = "input ${state.edit ? '' : 'is-static'}"
                   ..id = "Renewal"
+                  ..type = 'date'
                   ..defaultValue = _checkText(
                       "${user.membershipRenewal.month}/${user.membershipRenewal.day}/${user.membershipRenewal.year}")
                   ..readOnly = !state.edit,
@@ -537,6 +539,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
         ..children = [
           new VTextAreaElement()
             ..className = 'textarea'
+            ..id = label.replaceAll(" ", "_")
             ..readOnly = !state.edit,
         ],
     ];
@@ -612,47 +615,47 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
           new VAnchorElement()
             ..className = 'button is-link'
             ..text = "Submit"
-            ..onClick = _editClick
+            ..onClick = _submitClick
         ]
     ];
 
   ///[_submitClick] listener to grab all available data on page and push to firebase
   _submitClick(_) {
-    InputElement first = querySelector('#Fisrt_Name');
+    InputElement first = querySelector('#First_Name');
     InputElement last = querySelector('#Last_Name');
     InputElement email = querySelector('#Email');
     InputElement cell = querySelector('#Mobile');
     InputElement phone = querySelector('#PhoneNumber');
     InputElement address = querySelector('#Address');
-    TextInputElement diet = querySelector('#diet-input');
-    TextInputElement disability = querySelector('#disabilities-input');
-    TextInputElement medical = querySelector('#medicalIssue-input');
+    TextAreaElement diet = querySelector('#Dietary_Restrictions');
+    TextAreaElement disability = querySelector('#Disabilities');
+    TextAreaElement medical = querySelector('#Medical_Issues');
     InputElement memStart = querySelector('#Start');
     InputElement memRenew = querySelector('#Renewal');
     InputElement position = querySelector('#Position');
 
-    // TODO: edit the user object
-    User newUser = (new UserBuilder()
-          ..firstName = first.value
-          ..lastName = last.value
-          ..email = email.value
-          ..mobileNumber = cell.value
-          ..phoneNumber = phone.value
-          ..address = address.value
-          ..dietaryRestrictions = diet.value
-          ..disabilities = disability.value
-          ..medicalIssues = medical.value
-          ..membershipStart = DateTime.parse(memStart.value)
-          ..membershipRenewal = DateTime.parse(memRenew.value)
-          ..emergencyContacts = new ListBuilder<EmergencyContact>()
-          ..services = new ListBuilder<String>()
-          ..role = state.role
-          ..position = position.value
-          ..forms = new ListBuilder<String>())
-        .build();
+    User updatedUser = props.userMap[props.selectedMemberUID].rebuild((builder) => builder
+      ..firstName = first.value
+      ..lastName = last.value
+      ..email = email.value
+      ..mobileNumber = cell.value
+      ..phoneNumber = phone.value
+      ..address = address.value
+      ..dietaryRestrictions = diet.value
+      ..disabilities = disability.value
+      ..medicalIssues = medical.value
+      ..membershipStart = DateTime.parse(memStart.value)
+      ..membershipRenewal = DateTime.parse(memRenew.value)
+      ..emergencyContacts = new ListBuilder<EmergencyContact>()
+      ..services = new ListBuilder<String>()
+      ..role = state.role
+      ..position = position.value
+      ..forms = new ListBuilder<String>());
 
-    props.actions.server.updateOrCreateUser(newUser);
+    props.actions.server.updateOrCreateUser(updatedUser);
     props.actions.server.fetchAllMembers();
+
+    setState((props, state) => state..edit = !state.edit);
   }
 
   ///[_renderUserNotFound] if the UID is bad this page will simply say the user was not found
