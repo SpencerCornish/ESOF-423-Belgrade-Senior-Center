@@ -24,6 +24,7 @@ class EditMemberState {
   bool edit;
   bool dropDownActive;
   int listsCreated;
+  String role;
   // int addEm;
 }
 
@@ -35,7 +36,8 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
   EditMemberState getInitialState() => EditMemberState()
     ..edit = false
     ..dropDownActive = false
-    ..listsCreated = 0;
+    ..listsCreated = 0
+    ..role = props.user.role;
   // ..addEm = 0;
 
   History _history;
@@ -82,17 +84,13 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
     nodeList.addAll(_renderMembership(user));
     nodeList.add(_renderAddress(user));
     nodeList.add(_renderNumber(user));
+    nodeList.add(_renderTextArea(user, "Dietary Restrictions"));
+    nodeList.add(_renderTextArea(user, "Disabilities"));
+    nodeList.add(_renderTextArea(user, "Medical Issues"));
     nodeList.addAll(_renderListRows(user.emergencyContacts, "Emergency Contact"));
-    // nodeList.addAll(_renderListRows(user.dietaryRestrictions, "Dietary Restriction"));
-    // nodeList.addAll(_renderListRows(user.disabilities, "Disability"));
-    // nodeList.addAll(_renderListRows(user.medicalIssues, "Medical Issue"));
+    nodeList.addAll(_renderListRows(user.services, "Available Service"));
     return nodeList;
   }
-
-  //possible list implementation which was acomplished above and simply needs to work for type desired
-  //dietary restrictions
-  //disabilities
-  //medical issues
 
   ///[_renderEditHeader] function to change the name into an editable field group by state change
   List<VNode> _renderEditHeader(User user) {
@@ -104,55 +102,56 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
       ..className = 'columns is-mobile'
       ..children = [
         new VDivElement()
-          ..className = 'column is-narrow is-offset-1'
+          ..className = 'column is-narrow is-offset-1 is-1'
           ..children = [
             new VSpanElement()
               ..className = 'icon is-large'
               ..children = [new Vi()..className = 'fas fa-5x fa-user'],
           ],
         new VDivElement()
-          ..className = 'column is-one-fifth'
+          ..className = 'column is-4'
           ..children = [
             new VLabelElement()
               ..className = "label"
-              ..text = "First Name: ",
-            new VDivElement()..className = 'column',
+              ..text = "First Name",
+            new VInputElement()
+              ..className = "input"
+              ..id = "First_Name"
+              ..defaultValue = _checkText(user.firstName),
             new VLabelElement()
               ..className = "label"
-              ..text = "Last Name: ",
-            new VDivElement()..className = 'column',
-            new VLabelElement()
-              ..className = "label"
-              ..text = "Preferred Name: ",
-            new VDivElement()..className = 'column',
+              ..text = "Preferred Name",
+            new VInputElement()
+              ..className = "input"
+              ..id = "Preferred_Name"
+              ..defaultValue = _checkText(user.firstName),
           ],
         new VDivElement()
-          ..className = 'column is-5'
+          ..className = 'column is-4'
           ..children = [
-            new VDivElement()
-              ..className = "control"
-              ..children = [
-                new VInputElement()
-                  ..className = "input"
-                  ..id = "First_Name"
-                  ..defaultValue = _checkText(user.firstName),
-                new VDivElement()..className = 'column',
-                new VInputElement()
-                  ..className = "input"
-                  ..id = "Last_Name"
-                  ..defaultValue = _checkText(user.lastName),
-                new VDivElement()..className = 'column',
-                new VInputElement()
-                  ..className = "input"
-                  ..id = "Preferred_Name"
-                  ..defaultValue = _checkText(user.firstName),
-                new VDivElement()..className = 'column',
-              ],
+            new VLabelElement()
+              ..className = "label"
+              ..text = "Last Name",
+            new VInputElement()
+              ..className = "input"
+              ..id = "Last_Name"
+              ..defaultValue = _checkText(user.lastName),
+            new VLabelElement()
+              ..className = 'label'
+              ..text = "Position",
+            new VInputElement()
+              ..className = "input"
+              ..id = "Position"
+              ..defaultValue = _checkText(user.position)
           ],
         new VDivElement()
           ..className = 'column is-2'
           ..children = [
-            state.edit ? _renderSubmit() : _renderEdit(),
+            _renderSubmit(),
+            new VLabelElement()
+              ..className = 'label'
+              ..text = "Role",
+            _roleHelper(user),
           ],
       ]);
     return nodeList;
@@ -168,7 +167,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
       ..className = 'columns is-mobile'
       ..children = [
         new VDivElement()
-          ..className = 'column is-narrow is-offset-1'
+          ..className = 'column is-narrow is-offset-1 is-1'
           ..children = [
             new VSpanElement()
               ..className = 'icon is-large'
@@ -183,12 +182,12 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
             new Vh5()
               ..className = 'subtitle is-5'
               ..text = "Preferred Name: " + user.firstName,
+            _renderPosition(user),
           ],
-        new VDivElement()..className = 'column',
         new VDivElement()
-          ..className = 'column is-2'
+          ..className = 'column is-one-fifth is-offset-1'
           ..children = [
-            state.edit ? _renderSubmit() : _renderEdit(),
+            _renderEdit(),
           ],
       ]);
     return nodeList;
@@ -199,7 +198,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
     ..className = 'columns is-mobile is-vcentered'
     ..children = [
       new VDivElement()
-        ..className = 'column is-narrow'
+        ..className = 'column is-narrow is-offset-1'
         ..children = [
           new VLabelElement()
             ..className = 'label'
@@ -225,7 +224,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
     ..className = 'columns is-mobile is-centered is-vcentered'
     ..children = [
       new VDivElement()
-        ..className = 'column'
+        ..className = 'column is-offset-1'
         ..children = [
           new VLabelElement()
             ..className = 'label'
@@ -292,8 +291,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
                   ..children = [
                     new VLabelElement()
                       ..className = "label"
-                      ..text =
-                          "${list.length > 1 ? ((type.compareTo("Disability") == 0) ? 'Disabilities' : '$type' + 's') : '$type'}:",
+                      ..text = type + "${list.length > 1 ? 's' : ''}",
                   ],
                 new VDivElement()
                   ..className = 'column'
@@ -362,20 +360,32 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
     return nodeList;
   }
 
+  ///[_renderMembership] creates the membership row
   List<VNode> _renderMembership(User user) {
     List<VNode> nodeList = <VNode>[];
     nodeList.add(new VDivElement()
-      ..className = 'columns is-mobile is-centered is-vcentered'
+      ..className = 'columns is-mobile is-vcentered'
       ..children = [
         new VDivElement()
-          ..className = 'column is-narrow'
+          ..className = 'column is-narrow is-offset-1'
           ..children = [
             new VLabelElement()
               ..className = 'label'
-              ..text = "Membership Start",
+              ..text = "Membership:",
+          ],
+      ]);
+    nodeList.add(new VDivElement()
+      ..className = 'columns is-mobile is-vcentered'
+      ..children = [
+        new VDivElement()
+          ..className = 'column is-narrow is-offset-2'
+          ..children = [
+            new VLabelElement()
+              ..className = 'label'
+              ..text = "Start",
           ],
         new VDivElement()
-          ..className = 'column'
+          ..className = 'column is-3'
           ..children = [
             new VDivElement()
               ..className = "control"
@@ -396,7 +406,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
               ..text = "Renewal",
           ],
         new VDivElement()
-          ..className = 'column'
+          ..className = 'column is-3'
           ..children = [
             new VDivElement()
               ..className = "control"
@@ -409,33 +419,55 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
                   ..readOnly = !state.edit,
               ],
           ],
-        new VDivElement()
-          ..className = 'column is-narrow'
-          ..children = [
-            new VLabelElement()
-              ..className = 'label'
-              ..text = "Role",
-          ],
-        new VDivElement()
-          ..className = 'column'
-          ..children = [
-            _roleHelper(user),
-          ],
       ]);
     return nodeList;
   }
 
-  //************************************throws many errors TODO: fix this
-  /**
-   * Expected a value of type 'Element', but got one of type 'Text' dart:sdk_internal 4025:19                                           as_C
-   * ... SOME MORE STUFF IN HERE
-   * package:wui_builder/src/wui_builder/component/component.dart 71:5   update
-   * package:wui_builder/src/wui_builder/component/component.dart 151:5  setState
-   * package:bsc/src/components/containers/editMember.dart 490:5         [_dropDownClick]
-   * package:wui_builder/src/wui_builder/velement/velement.dart 3937:62  e
-   * dart:sdk_internal 27983:34                                          arg
-   */
+  ///[_renderPosition] creates the position row
+  VNode _renderPosition(User user) {
+    if (!state.edit) {
+      return (new VDivElement()
+        ..className = 'columns is-mobile is-centered is-vcentered'
+        ..children = [
+          new VDivElement()
+            ..className = 'column is-narrow is-offset-3'
+            ..children = [
+              new VLabelElement()
+                ..className = 'label'
+                ..text = "Position",
+            ],
+          new VDivElement()
+            ..className = 'column'
+            ..children = [
+              new VDivElement()
+                ..className = "control"
+                ..children = [
+                  new VInputElement()
+                    ..className = "input is-static"
+                    ..id = "Position"
+                    ..defaultValue = _checkText(user.position)
+                    ..readOnly = true,
+                ],
+            ],
+          new VDivElement()
+            ..className = 'column is-narrow'
+            ..children = [
+              new VLabelElement()
+                ..className = 'label'
+                ..text = "Role",
+            ],
+          new VDivElement()
+            ..className = 'column'
+            ..children = [
+              _roleHelper(user),
+            ],
+        ]);
+    } else {
+      return (new VDivElement());
+    }
+  }
 
+  ///[_rollHelper] creates either a dropdown for edit or a box for viewing role
   VNode _roleHelper(User user) {
     if (state.edit) {
       return (new VDivElement()
@@ -445,16 +477,13 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
             ..className = 'dropdown-trigger'
             ..onClick = _dropDownClick
             ..children = [
-              new VAnchorElement()
+              new VButtonElement()
                 ..className = 'button is-dropdown-menu is-centered'
                 ..children = [
+                  new VSpanElement()..text = state.role,
                   new VSpanElement()
-                    ..text = user.role
-                    ..children = [
-                      new VSpanElement()
-                        ..className = 'icon'
-                        ..children = [new Vi()..className = "fas fa-angle-down"]
-                    ],
+                    ..className = 'icon'
+                    ..children = [new Vi()..className = "fas fa-angle-down"],
                   new VDivElement()
                     ..className = 'dropdown-menu'
                     ..id = 'dropdown-menu'
@@ -462,14 +491,17 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
                       new VDivElement()
                         ..className = 'dropdown-content'
                         ..children = [
-                          new VDivElement()
-                            ..className = 'dropdown-item'
+                          new VAnchorElement()
+                            ..className = 'dropdown-item ${state.role.compareTo("Member") == 0 ? 'is-active' : ''}'
+                            ..onClick = _changeRollMemClick
                             ..text = "Member",
-                          new VDivElement()
-                            ..className = 'dropdown-item'
+                          new VAnchorElement()
+                            ..className = 'dropdown-item ${state.role.compareTo("Volunteer") == 0 ? 'is-active' : ''}'
+                            ..onClick = _changeRollVolClick
                             ..text = "Volunteer",
-                          new VDivElement()
-                            ..className = 'dropdown-item'
+                          new VAnchorElement()
+                            ..className = 'dropdown-item ${state.role.compareTo("Admin") == 0 ? 'is-active' : ''}'
+                            ..onClick = _changeRollAdminClick
                             ..text = "Admin",
                         ],
                     ],
@@ -478,20 +510,36 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
         ]);
     } else {
       return (new VDivElement()
-        ..className = 'column'
+        ..className = "control"
         ..children = [
-          new VDivElement()
-            ..className = "control"
-            ..children = [
-              new VInputElement()
-                ..className = "input ${state.edit ? '' : 'is-static'}"
-                ..id = "Role"
-                ..defaultValue = _checkText(user.role)
-                ..readOnly = !state.edit,
-            ],
+          new VInputElement()
+            ..className = "input is-static"
+            ..id = "Role"
+            ..defaultValue = _checkText(state.role)
+            ..readOnly = true,
         ]);
     }
   }
+
+  ///[_renderTextArea] create each row ot text area items with a given label
+  _renderTextArea(User user, String label) => new VDivElement()
+    ..className = 'columns is-mobile is-centered is-vcentered'
+    ..children = [
+      new VDivElement()
+        ..className = 'column is-2'
+        ..children = [
+          new Vlabel()
+            ..className = 'label'
+            ..text = label,
+        ],
+      new VDivElement()
+        ..className = 'column is-four-fifths'
+        ..children = [
+          new VTextAreaElement()
+            ..className = 'textarea'
+            ..readOnly = !state.edit,
+        ],
+    ];
 
   ///[_checkText] takes in passed text and will return N/A if string is empty and the user is not being eddited
   ///or return the orrigional string for all other conditions
@@ -523,14 +571,30 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
     setState((props, state) => state..dropDownActive = !state.dropDownActive);
   }
 
+  _changeRollMemClick(_) {
+    setState((props, state) => state..role = "Member");
+  }
+
+  _changeRollVolClick(_) {
+    setState((props, state) => state..role = "Volunteer");
+  }
+
+  _changeRollAdminClick(_) {
+    setState((props, state) => state..role = "Admin");
+  }
+
   ///[_renderEdit] creates a button to toggle from a view page to increase the number of input fields
   _renderEdit() => new VDivElement()
-    ..className = 'control'
+    ..className = 'field is-grouped is-grouped-right'
     ..children = [
-      new VAnchorElement()
-        ..className = 'button is-link'
-        ..text = "Edit"
-        ..onClick = _editClick
+      new VDivElement()
+        ..className = 'control'
+        ..children = [
+          new VAnchorElement()
+            ..className = 'button is-link'
+            ..text = "Edit"
+            ..onClick = _editClick
+        ],
     ];
 
   ///[_editClick] listener for the click action of the edit button to put page into an edit state
@@ -560,9 +624,9 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
     InputElement cell = querySelector('#Mobile');
     InputElement phone = querySelector('#PhoneNumber');
     InputElement address = querySelector('#Address');
-    // InputElement diet = querySelector('#diet-input');
-    // InputElement disability = querySelector('#disabilities-input');
-    // InputElement medical = querySelector('#medicalIssue-input');
+    TextInputElement diet = querySelector('#diet-input');
+    TextInputElement disability = querySelector('#disabilities-input');
+    TextInputElement medical = querySelector('#medicalIssue-input');
     InputElement memStart = querySelector('#Start');
     InputElement memRenew = querySelector('#Renewal');
 
@@ -574,14 +638,14 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
           ..mobileNumber = cell.value
           ..phoneNumber = phone.value
           ..address = address.value
-          ..dietaryRestrictions = "NULL"
-          ..disabilities = "NULL"
-          ..medicalIssues = "NULL"
+          ..dietaryRestrictions = diet.toString()
+          ..disabilities = disability.toString()
+          ..medicalIssues = medical.toString()
           ..membershipStart = DateTime.parse(memStart.value)
           ..membershipRenewal = DateTime.parse(memRenew.value)
           ..emergencyContacts = new ListBuilder<EmergencyContact>()
           ..services = new ListBuilder<String>()
-          ..role = "NULL"
+          ..role = state.role
           ..position = "NULL"
           ..forms = new ListBuilder<String>())
         .build();
