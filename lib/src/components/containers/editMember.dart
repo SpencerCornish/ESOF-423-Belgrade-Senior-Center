@@ -117,6 +117,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
             new VInputElement()
               ..className = "input"
               ..id = "First_Name"
+              ..tabIndex = 1
               ..defaultValue = _checkText(user.firstName),
             new VLabelElement()
               ..className = "label"
@@ -124,6 +125,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
             new VInputElement()
               ..className = "input"
               ..id = "Preferred_Name"
+              ..tabIndex = 3
               ..defaultValue = _checkText(user.firstName),
           ],
         new VDivElement()
@@ -135,6 +137,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
             new VInputElement()
               ..className = "input"
               ..id = "Last_Name"
+              ..tabIndex = 2
               ..defaultValue = _checkText(user.lastName),
             new VLabelElement()
               ..className = 'label'
@@ -142,6 +145,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
             new VInputElement()
               ..className = "input"
               ..id = "Position"
+              ..tabIndex = 4
               ..defaultValue = _checkText(user.position)
           ],
         new VDivElement()
