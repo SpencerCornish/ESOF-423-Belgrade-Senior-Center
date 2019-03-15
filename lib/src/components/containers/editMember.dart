@@ -1,6 +1,5 @@
 import 'dart:html' hide History;
 
-import 'package:bsc/src/constants.dart';
 import 'package:bsc/src/model/emergencyContact.dart';
 import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
