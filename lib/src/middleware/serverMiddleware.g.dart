@@ -14,20 +14,15 @@ class _$ServerMiddlewareActions extends ServerMiddlewareActions {
   _$ServerMiddlewareActions._() : super._();
 
   final ActionDispatcher<AdminSignInPayload> signInAdmin =
-      new ActionDispatcher<AdminSignInPayload>(
-          'ServerMiddlewareActions-signInAdmin');
-  final ActionDispatcher<Null> logOut =
-      new ActionDispatcher<Null>('ServerMiddlewareActions-logOut');
-  final ActionDispatcher<String> resetPassword =
-      new ActionDispatcher<String>('ServerMiddlewareActions-resetPassword');
+      new ActionDispatcher<AdminSignInPayload>('ServerMiddlewareActions-signInAdmin');
+  final ActionDispatcher<Null> logOut = new ActionDispatcher<Null>('ServerMiddlewareActions-logOut');
+  final ActionDispatcher<String> resetPassword = new ActionDispatcher<String>('ServerMiddlewareActions-resetPassword');
   final ActionDispatcher<User> updateOrCreateUser =
       new ActionDispatcher<User>('ServerMiddlewareActions-updateOrCreateUser');
-  final ActionDispatcher<Null> fetchAllMembers =
-      new ActionDispatcher<Null>('ServerMiddlewareActions-fetchAllMembers');
+  final ActionDispatcher<Null> fetchAllMembers = new ActionDispatcher<Null>('ServerMiddlewareActions-fetchAllMembers');
   final ActionDispatcher<Null> fetchAllActivities =
       new ActionDispatcher<Null>('ServerMiddlewareActions-fetchAllActivities');
-  final ActionDispatcher<Null> fetchAllMeals =
-      new ActionDispatcher<Null>('ServerMiddlewareActions-fetchAllMeals');
+  final ActionDispatcher<Null> fetchAllMeals = new ActionDispatcher<Null>('ServerMiddlewareActions-fetchAllMeals');
 
   @override
   void setDispatcher(Dispatcher dispatcher) {
@@ -44,16 +39,10 @@ class _$ServerMiddlewareActions extends ServerMiddlewareActions {
 class ServerMiddlewareActionsNames {
   static final ActionName<AdminSignInPayload> signInAdmin =
       new ActionName<AdminSignInPayload>('ServerMiddlewareActions-signInAdmin');
-  static final ActionName<Null> logOut =
-      new ActionName<Null>('ServerMiddlewareActions-logOut');
-  static final ActionName<String> resetPassword =
-      new ActionName<String>('ServerMiddlewareActions-resetPassword');
-  static final ActionName<User> updateOrCreateUser =
-      new ActionName<User>('ServerMiddlewareActions-updateOrCreateUser');
-  static final ActionName<Null> fetchAllMembers =
-      new ActionName<Null>('ServerMiddlewareActions-fetchAllMembers');
-  static final ActionName<Null> fetchAllActivities =
-      new ActionName<Null>('ServerMiddlewareActions-fetchAllActivities');
-  static final ActionName<Null> fetchAllMeals =
-      new ActionName<Null>('ServerMiddlewareActions-fetchAllMeals');
+  static final ActionName<Null> logOut = new ActionName<Null>('ServerMiddlewareActions-logOut');
+  static final ActionName<String> resetPassword = new ActionName<String>('ServerMiddlewareActions-resetPassword');
+  static final ActionName<User> updateOrCreateUser = new ActionName<User>('ServerMiddlewareActions-updateOrCreateUser');
+  static final ActionName<Null> fetchAllMembers = new ActionName<Null>('ServerMiddlewareActions-fetchAllMembers');
+  static final ActionName<Null> fetchAllActivities = new ActionName<Null>('ServerMiddlewareActions-fetchAllActivities');
+  static final ActionName<Null> fetchAllMeals = new ActionName<Null>('ServerMiddlewareActions-fetchAllMeals');
 }
