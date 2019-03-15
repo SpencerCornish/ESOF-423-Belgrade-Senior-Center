@@ -44,7 +44,7 @@ class ViewMembers extends PComponent<ViewMembersProps> {
     for (User user in users) {
       nodeList.add(new VTableRowElement()
         ..className = 'tr'
-        ..onClick = ((_) => _onUserClick(user.uid))
+        ..onClick = ((_) => _onUserClick(user.docUID))
         ..children = [
           new VTableCellElement()
             ..className = _tdClass(user.lastName)

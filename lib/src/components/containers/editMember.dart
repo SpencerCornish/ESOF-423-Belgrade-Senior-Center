@@ -37,7 +37,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
     ..edit = false
     ..dropDownActive = false
     ..listsCreated = 0
-    ..role = props.user.role;
+    ..role = props.userMap[props.selectedMemberUID].role;
   // ..addEm = 0;
 
   History _history;
