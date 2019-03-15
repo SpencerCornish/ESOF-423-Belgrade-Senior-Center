@@ -32,10 +32,10 @@ abstract class Activity implements Built<Activity, ActivityBuilder> {
 
   factory Activity.fromFirebase(
     Map<String, dynamic> firestoreData, {
-    String id,
+    String uid,
   }) =>
       new Activity((ActivityBuilder builder) => builder
-        ..uid = id
+        ..uid = uid
         ..capacity = firestoreData['capacity']
         ..startTime = DateTime.parse(firestoreData['start_time'])
         ..endTime = DateTime.parse(firestoreData['end_time'])

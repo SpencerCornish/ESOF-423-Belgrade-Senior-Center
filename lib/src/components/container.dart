@@ -90,7 +90,8 @@ class Container extends PComponent<ContainerProps> {
               ),
               new Route(path: Routes.resetContinue, componentFactory: (params) => _renderResetContinue(params)),
               new Route(path: Routes.dashboard, componentFactory: (_) => _renderIfAuthenticated(_renderDashboard())),
-              new Route(path: Routes.viewMember, componentFactory: (_) => _renderIfAuthenticated(_renderViewMembers())),
+              new Route(
+                  path: Routes.viewMembers, componentFactory: (_) => _renderIfAuthenticated(_renderViewMembers())),
               new Route(
                   path: Routes.editMember,
                   componentFactory: (params) => _renderIfAuthenticated(_renderEditMember(params))),

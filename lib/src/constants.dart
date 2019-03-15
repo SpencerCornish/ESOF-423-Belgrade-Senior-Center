@@ -19,7 +19,7 @@ class Routes {
 
   static const dashboard = '/dashboard';
 
-  static const viewMember = '/view/members';
+  static const viewMembers = '/view/members';
 
   static const editMember = '/edit/member/:user_uid';
 

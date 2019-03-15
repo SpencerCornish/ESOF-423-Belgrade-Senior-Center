@@ -25,10 +25,10 @@ abstract class Meal implements Built<Meal, MealBuilder> {
 
   factory Meal.fromFirebase(
     Map<String, dynamic> firestoreData, {
-    String id,
+    String uid,
   }) =>
       new Meal((MealBuilder builder) => builder
-        ..uid = id
+        ..uid = uid
         ..startTime = DateTime.parse(firestoreData['start_time'])
         ..endTime = DateTime.parse(firestoreData['end_time'])
         ..menu = new BuiltList<String>.from(firestoreData['menu']).toBuilder());
