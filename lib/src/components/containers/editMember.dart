@@ -84,9 +84,9 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
     nodeList.addAll(_renderMembership(user));
     nodeList.add(_renderAddress(user));
     nodeList.add(_renderNumber(user));
-    nodeList.add(_renderTextArea(user, "Dietary Restrictions"));
-    nodeList.add(_renderTextArea(user, "Disabilities"));
-    nodeList.add(_renderTextArea(user, "Medical Issues"));
+    nodeList.add(_renderTextArea(user, "Dietary Restrictions", user.dietaryRestrictions));
+    nodeList.add(_renderTextArea(user, "Disabilities", user.disabilities));
+    nodeList.add(_renderTextArea(user, "Medical Issues", user.medicalIssues));
     nodeList.addAll(_renderListRows(user.emergencyContacts, "Emergency Contact"));
     nodeList.addAll(_renderListRows(user.services, "Available Service"));
     return nodeList;
@@ -528,7 +528,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
   }
 
   ///[_renderTextArea] create each row ot text area items with a given label
-  _renderTextArea(User user, String label) => new VDivElement()
+  _renderTextArea(User user, String label, String defaultValue) => new VDivElement()
     ..className = 'columns is-mobile is-centered is-vcentered'
     ..children = [
       new VDivElement()
@@ -543,6 +543,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
         ..children = [
           new VTextAreaElement()
             ..className = 'textarea'
+            ..defaultValue = defaultValue
             ..id = label.replaceAll(" ", "_")
             ..readOnly = !state.edit,
         ],
