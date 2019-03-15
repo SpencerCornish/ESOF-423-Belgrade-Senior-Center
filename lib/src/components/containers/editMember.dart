@@ -639,13 +639,14 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
     InputElement memRenew = querySelector('#Renewal');
     InputElement position = querySelector('#Position');
 
-    User updatedUser = props.userMap[props.selectedMemberUID].rebuild((builder) => builder
+    User userToUpdate = props.userMap[props.selectedMemberUID].rebuild((builder) => builder
       ..firstName = first.value
       ..lastName = last.value
       ..email = email.value
       ..mobileNumber = cell.value
       ..phoneNumber = phone.value
       ..address = address.value
+      ..role = state.role
       ..dietaryRestrictions = diet.value
       ..disabilities = disability.value
       ..medicalIssues = medical.value
@@ -653,11 +654,10 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
       ..membershipRenewal = DateTime.parse(memRenew.value)
       ..emergencyContacts = new ListBuilder<EmergencyContact>()
       ..services = new ListBuilder<String>()
-      ..role = state.role
       ..position = position.value
       ..forms = new ListBuilder<String>());
 
-    props.actions.server.updateOrCreateUser(updatedUser);
+    props.actions.server.updateOrCreateUser(userToUpdate);
     props.actions.server.fetchAllMembers();
 
     setState((props, state) => state..edit = !state.edit);
