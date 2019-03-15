@@ -8,7 +8,9 @@ part of user;
 
 class _$User extends User {
   @override
-  final String uid;
+  final String loginUID;
+  @override
+  final String docUID;
   @override
   final String firstName;
   @override
@@ -46,7 +48,8 @@ class _$User extends User {
       (new UserBuilder()..update(updates)).build();
 
   _$User._(
-      {this.uid,
+      {this.loginUID,
+      this.docUID,
       this.firstName,
       this.lastName,
       this.email,
@@ -125,7 +128,8 @@ class _$User extends User {
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is User &&
-        uid == other.uid &&
+        loginUID == other.loginUID &&
+        docUID == other.docUID &&
         firstName == other.firstName &&
         lastName == other.lastName &&
         email == other.email &&
@@ -163,8 +167,11 @@ class _$User extends User {
                                                             $jc(
                                                                 $jc(
                                                                     $jc(
-                                                                        0,
-                                                                        uid
+                                                                        $jc(
+                                                                            0,
+                                                                            loginUID
+                                                                                .hashCode),
+                                                                        docUID
                                                                             .hashCode),
                                                                     firstName
                                                                         .hashCode),
@@ -189,7 +196,8 @@ class _$User extends User {
   @override
   String toString() {
     return (newBuiltValueToStringHelper('User')
-          ..add('uid', uid)
+          ..add('loginUID', loginUID)
+          ..add('docUID', docUID)
           ..add('firstName', firstName)
           ..add('lastName', lastName)
           ..add('email', email)
@@ -213,9 +221,13 @@ class _$User extends User {
 class UserBuilder implements Builder<User, UserBuilder> {
   _$User _$v;
 
-  String _uid;
-  String get uid => _$this._uid;
-  set uid(String uid) => _$this._uid = uid;
+  String _loginUID;
+  String get loginUID => _$this._loginUID;
+  set loginUID(String loginUID) => _$this._loginUID = loginUID;
+
+  String _docUID;
+  String get docUID => _$this._docUID;
+  set docUID(String docUID) => _$this._docUID = docUID;
 
   String _firstName;
   String get firstName => _$this._firstName;
@@ -292,7 +304,8 @@ class UserBuilder implements Builder<User, UserBuilder> {
 
   UserBuilder get _$this {
     if (_$v != null) {
-      _uid = _$v.uid;
+      _loginUID = _$v.loginUID;
+      _docUID = _$v.docUID;
       _firstName = _$v.firstName;
       _lastName = _$v.lastName;
       _email = _$v.email;
@@ -333,7 +346,8 @@ class UserBuilder implements Builder<User, UserBuilder> {
     try {
       _$result = _$v ??
           new _$User._(
-              uid: uid,
+              loginUID: loginUID,
+              docUID: docUID,
               firstName: firstName,
               lastName: lastName,
               email: email,

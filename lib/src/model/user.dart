@@ -9,9 +9,16 @@ part 'user.g.dart';
 
 /// [User] is a model for the user database document
 abstract class User implements Built<User, UserBuilder> {
-  /// [uid] is the unique identifier for the user
+  /// [loginUID] is the unique identifier for the user's login
+  /// This represents the uid of the user's login credential, which
+  /// is not the same as the place we store their userdata
   @nullable
-  String get uid;
+  String get loginUID;
+
+  /// [docUID] is the unique identifier for the user's data stored
+  /// in the database
+  @nullable
+  String get docUID;
 
   /// [firstName] required
   String get firstName;
@@ -71,11 +78,13 @@ abstract class User implements Built<User, UserBuilder> {
   factory User.fromFirebase(
     Map<String, dynamic> firestoreData,
     BuiltList<EmergencyContact> emergencyContact, {
-    String id,
+    String docUID,
+    String loginUID,
     String email,
   }) =>
       new User((UserBuilder builder) => builder
-        ..uid = id
+        ..docUID = docUID
+        ..loginUID = loginUID
         ..firstName = firestoreData['first_name']
         ..lastName = firestoreData['last_name']
         ..email = email ?? firestoreData['email']
@@ -94,6 +103,7 @@ abstract class User implements Built<User, UserBuilder> {
         ..services = BuiltList<String>.from(firestoreData['services']).toBuilder());
 
   Map<String, dynamic> toFirestore() => {
+        'login_uid': loginUID ?? '',
         'first_name': firstName,
         'last_name': lastName,
         'email': email,
