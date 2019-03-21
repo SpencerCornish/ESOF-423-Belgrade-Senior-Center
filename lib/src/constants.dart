@@ -25,6 +25,29 @@ class Routes {
 
 }
 
+class ExportHeader {
+  static const user = [
+    'ID',
+    'Last',
+    'First',
+    'Email',
+    'Address',
+    'Phone',
+    'Cell',
+    'Position',
+    'Role',
+    'Dietary Restrictions',
+    'Disabilities',
+    'Medical Issues',
+    'Membership Start Date',
+    'Membership Renewal Date',
+  ];
+
+  static const activity = [];
+
+  static const meal = [];
+}
+
 enum Role {
   ADMIN,
   VOLUNTEER,

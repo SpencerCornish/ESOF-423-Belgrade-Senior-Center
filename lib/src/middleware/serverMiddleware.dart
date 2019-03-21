@@ -6,6 +6,7 @@ import '../firebase/firebaseClient.dart';
 import '../state/app.dart';
 
 import '../model/user.dart';
+import '../constants.dart';
 
 part 'serverMiddleware.g.dart';
 
