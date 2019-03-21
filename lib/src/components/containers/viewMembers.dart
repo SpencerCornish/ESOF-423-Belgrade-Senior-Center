@@ -68,7 +68,6 @@ class ViewMembers extends PComponent<ViewMembersProps> {
       users = _sort(users, mid + 1, right);
       users = _merge(users, left, mid, right);
     }
-    print("SORT $users");
     return users;
   }
 
