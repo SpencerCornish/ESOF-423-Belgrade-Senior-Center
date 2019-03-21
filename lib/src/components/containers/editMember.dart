@@ -390,15 +390,13 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
         new VDivElement()
           ..className = 'column is-3'
           ..children = [
-            new VDivElement()
+            new VParagraphElement()
               ..className = "control"
               ..children = [
-                new VInputElement()
+                new VDateInputElement()
                   ..className = "input ${state.edit ? '' : 'is-static'}"
-                  ..type = '${state.edit ? 'date' : ''}'
                   ..id = "Start"
-                  ..defaultValue = _checkText(
-                      "${user.membershipStart.month}/${user.membershipStart.day}/${user.membershipStart.year}")
+                  ..value = _showDate(user.membershipStart)
                   ..readOnly = !state.edit,
               ],
           ],
@@ -412,20 +410,37 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
         new VDivElement()
           ..className = 'column is-3'
           ..children = [
-            new VDivElement()
+            new VParagraphElement()
               ..className = "control"
               ..children = [
-                new VInputElement()
+                new VDateInputElement()
                   ..className = "input ${state.edit ? '' : 'is-static'}"
                   ..id = "Renewal"
-                  ..type = '${state.edit ? 'date' : ''}'
-                  ..defaultValue = _checkText(
-                      "${user.membershipRenewal.month}/${user.membershipRenewal.day}/${user.membershipRenewal.year}")
+                  ..value = _showDate(user.membershipRenewal)
                   ..readOnly = !state.edit,
               ],
           ],
       ]);
     return nodeList;
+  }
+
+  ///[_showDate] helper function to put a date into a proper format to view in a date type input box
+  String _showDate(DateTime date) {
+    String tempDay, tempMonth;
+
+    if (date.day.toString().length == 1) {
+      tempDay = "0${date.day}";
+    } else {
+      tempDay = date.day.toString();
+    }
+
+    if (date.month.toString().length == 1) {
+      tempMonth = "0${date.month}";
+    } else {
+      tempMonth = date.month.toString();
+    }
+
+    return "${date.year}-${tempMonth}-${tempDay}";
   }
 
   ///[_renderPosition] creates the position row
