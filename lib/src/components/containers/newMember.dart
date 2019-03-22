@@ -35,8 +35,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     ..emailIsValid = true
     ..phoneNumberIsValid = true
     ..cellNumberIsValid = true
-    ..addressIsValid = true
-    ;
+    ..addressIsValid = true;
 
   History _history;
 
@@ -247,7 +246,8 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                                     ..placeholder = "888-888-88888"
                                                     ..type = 'tel',
                                                   new VParagraphElement()
-                                                    ..className = 'help is-danger ${state.cellNumberIsValid ? 'is-invisible' : ''}'
+                                                    ..className =
+                                                        'help is-danger ${state.cellNumberIsValid ? 'is-invisible' : ''}'
                                                     ..text = 'Cell number is invalid'
                                                 ]
                                             ]
@@ -503,7 +503,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
         ]
     ];
 
-  //Input validation for each field 
+  //Input validation for each field
 
   //Validation for first name
   void _firstNameValidation(_) {
@@ -512,8 +512,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     //Checks if value is blank by calling InputValidator class
     bool isValid = InputValidator.nameValidator(first.value);
     //Sets new state
-    setState((NewMemberProps, NewMemberState) => 
-      NewMemberState..firstNameIsValid = isValid);
+    setState((NewMemberProps, NewMemberState) => NewMemberState..firstNameIsValid = isValid);
   }
 
   //Validation for last name
@@ -523,8 +522,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     //Validates with validator class
     bool isValid = InputValidator.nameValidator(last.value);
     //Sets new state
-    setState((NewMemberProps, NewMemberState) => 
-      NewMemberState..lastNameIsValid = isValid);
+    setState((NewMemberProps, NewMemberState) => NewMemberState..lastNameIsValid = isValid);
   }
 
   //Validation for email using Spencer's function from constants.dart
@@ -548,21 +546,20 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
   //425-273-4489
   //1-425-273-4489
   //+1-425-273-4489
-  
-   //Validation for phone number, doesnt check if blank
+
+  //Validation for phone number, doesnt check if blank
   void _phoneNumberValidator(_) {
     //Gets phone field and then value from field
     InputElement phone = querySelector('#phoneNum-input');
     String value = phone.value;
     //If blank exit
-    if(value == '') {
+    if (value == '') {
       return;
     }
     //Validation by validation class
-    bool isValid = InputValidator.emailValidator(value);    
+    bool isValid = InputValidator.phoneNumberValidator(value);    
     //Sets state
-    setState((NewMemberProps, NewMemberState) =>
-      NewMemberState..phoneNumberIsValid = isValid);
+    setState((NewMemberProps, NewMemberState) => NewMemberState..phoneNumberIsValid = isValid);
   }
 
   //Validation for cell number, doesnt check if blank
@@ -571,14 +568,13 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     InputElement cell = querySelector('#cellNum-input');
     String value = cell.value;
     //Exits if blank
-    if(value == '') {
+    if (value == '') {
       return;
     }
     //Validation from validator class
-    bool isValid =InputValidator.emailValidator(value);
+    bool isValid =InputValidator.phoneNumberValidator(true);
     //Sets state
-    setState((NewMemberProps, NewMemberState) =>
-      NewMemberState..cellNumberIsValid = isValid);
+    setState((NewMemberProps, NewMemberState) => NewMemberState..cellNumberIsValid = isValid);
   }
 
   void _addressValidator(_) {
@@ -587,7 +583,6 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     setState((NewMemberProps, NewMemberState) =>
       NewMemberState..addressIsValid = isValid);
   }
-
 
   //method used for the submit click
   //will need to send fName-input, lName-input, email-input,

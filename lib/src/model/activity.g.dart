@@ -22,17 +22,9 @@ class _$Activity extends Activity {
   @override
   final String name;
 
-  factory _$Activity([void updates(ActivityBuilder b)]) =>
-      (new ActivityBuilder()..update(updates)).build();
+  factory _$Activity([void updates(ActivityBuilder b)]) => (new ActivityBuilder()..update(updates)).build();
 
-  _$Activity._(
-      {this.uid,
-      this.capacity,
-      this.endTime,
-      this.startTime,
-      this.instructor,
-      this.location,
-      this.name})
+  _$Activity._({this.uid, this.capacity, this.endTime, this.startTime, this.instructor, this.location, this.name})
       : super._() {
     if (uid == null) {
       throw new BuiltValueNullFieldError('Activity', 'uid');
@@ -58,8 +50,7 @@ class _$Activity extends Activity {
   }
 
   @override
-  Activity rebuild(void updates(ActivityBuilder b)) =>
-      (toBuilder()..update(updates)).build();
+  Activity rebuild(void updates(ActivityBuilder b)) => (toBuilder()..update(updates)).build();
 
   @override
   ActivityBuilder toBuilder() => new ActivityBuilder()..replace(this);
@@ -81,11 +72,7 @@ class _$Activity extends Activity {
   int get hashCode {
     return $jf($jc(
         $jc(
-            $jc(
-                $jc(
-                    $jc($jc($jc(0, uid.hashCode), capacity.hashCode),
-                        endTime.hashCode),
-                    startTime.hashCode),
+            $jc($jc($jc($jc($jc(0, uid.hashCode), capacity.hashCode), endTime.hashCode), startTime.hashCode),
                 instructor.hashCode),
             location.hashCode),
         name.hashCode));
@@ -181,4 +168,4 @@ class ActivityBuilder implements Builder<Activity, ActivityBuilder> {
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: always_put_control_body_on_new_line,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new

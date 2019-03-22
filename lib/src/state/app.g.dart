@@ -13,17 +13,13 @@ class _$AppActions extends AppActions {
   factory _$AppActions() => new _$AppActions._();
   _$AppActions._() : super._();
 
-  final ActionDispatcher<User> setUser =
-      new ActionDispatcher<User>('AppActions-setUser');
-  final ActionDispatcher<bool> setLoading =
-      new ActionDispatcher<bool>('AppActions-setLoading');
-  final ActionDispatcher<AuthState> setAuthState =
-      new ActionDispatcher<AuthState>('AppActions-setAuthState');
+  final ActionDispatcher<User> setUser = new ActionDispatcher<User>('AppActions-setUser');
+  final ActionDispatcher<bool> setLoading = new ActionDispatcher<bool>('AppActions-setLoading');
+  final ActionDispatcher<AuthState> setAuthState = new ActionDispatcher<AuthState>('AppActions-setAuthState');
   final ActionDispatcher<BuiltMap<String, User>> setUserMap =
       new ActionDispatcher<BuiltMap<String, User>>('AppActions-setUserMap');
   final ActionDispatcher<BuiltMap<String, Activity>> setActivityMap =
-      new ActionDispatcher<BuiltMap<String, Activity>>(
-          'AppActions-setActivityMap');
+      new ActionDispatcher<BuiltMap<String, Activity>>('AppActions-setActivityMap');
   final ActionDispatcher<BuiltMap<String, Meal>> setMealMap =
       new ActionDispatcher<BuiltMap<String, Meal>>('AppActions-setMealMap');
   final ServerMiddlewareActions server = new ServerMiddlewareActions();
@@ -41,12 +37,9 @@ class _$AppActions extends AppActions {
 }
 
 class AppActionsNames {
-  static final ActionName<User> setUser =
-      new ActionName<User>('AppActions-setUser');
-  static final ActionName<bool> setLoading =
-      new ActionName<bool>('AppActions-setLoading');
-  static final ActionName<AuthState> setAuthState =
-      new ActionName<AuthState>('AppActions-setAuthState');
+  static final ActionName<User> setUser = new ActionName<User>('AppActions-setUser');
+  static final ActionName<bool> setLoading = new ActionName<bool>('AppActions-setLoading');
+  static final ActionName<AuthState> setAuthState = new ActionName<AuthState>('AppActions-setAuthState');
   static final ActionName<BuiltMap<String, User>> setUserMap =
       new ActionName<BuiltMap<String, User>>('AppActions-setUserMap');
   static final ActionName<BuiltMap<String, Activity>> setActivityMap =
@@ -73,17 +66,9 @@ class _$App extends App {
   @override
   final BuiltMap<String, Meal> mealMap;
 
-  factory _$App([void updates(AppBuilder b)]) =>
-      (new AppBuilder()..update(updates)).build();
+  factory _$App([void updates(AppBuilder b)]) => (new AppBuilder()..update(updates)).build();
 
-  _$App._(
-      {this.user,
-      this.isLoading,
-      this.authState,
-      this.userMap,
-      this.activityMap,
-      this.mealMap})
-      : super._() {
+  _$App._({this.user, this.isLoading, this.authState, this.userMap, this.activityMap, this.mealMap}) : super._() {
     if (isLoading == null) {
       throw new BuiltValueNullFieldError('App', 'isLoading');
     }
@@ -102,8 +87,7 @@ class _$App extends App {
   }
 
   @override
-  App rebuild(void updates(AppBuilder b)) =>
-      (toBuilder()..update(updates)).build();
+  App rebuild(void updates(AppBuilder b)) => (toBuilder()..update(updates)).build();
 
   @override
   AppBuilder toBuilder() => new AppBuilder()..replace(this);
@@ -123,11 +107,7 @@ class _$App extends App {
   @override
   int get hashCode {
     return $jf($jc(
-        $jc(
-            $jc(
-                $jc($jc($jc(0, user.hashCode), isLoading.hashCode),
-                    authState.hashCode),
-                userMap.hashCode),
+        $jc($jc($jc($jc($jc(0, user.hashCode), isLoading.hashCode), authState.hashCode), userMap.hashCode),
             activityMap.hashCode),
         mealMap.hashCode));
   }
@@ -161,19 +141,15 @@ class AppBuilder implements Builder<App, AppBuilder> {
   set authState(AuthState authState) => _$this._authState = authState;
 
   MapBuilder<String, User> _userMap;
-  MapBuilder<String, User> get userMap =>
-      _$this._userMap ??= new MapBuilder<String, User>();
+  MapBuilder<String, User> get userMap => _$this._userMap ??= new MapBuilder<String, User>();
   set userMap(MapBuilder<String, User> userMap) => _$this._userMap = userMap;
 
   MapBuilder<String, Activity> _activityMap;
-  MapBuilder<String, Activity> get activityMap =>
-      _$this._activityMap ??= new MapBuilder<String, Activity>();
-  set activityMap(MapBuilder<String, Activity> activityMap) =>
-      _$this._activityMap = activityMap;
+  MapBuilder<String, Activity> get activityMap => _$this._activityMap ??= new MapBuilder<String, Activity>();
+  set activityMap(MapBuilder<String, Activity> activityMap) => _$this._activityMap = activityMap;
 
   MapBuilder<String, Meal> _mealMap;
-  MapBuilder<String, Meal> get mealMap =>
-      _$this._mealMap ??= new MapBuilder<String, Meal>();
+  MapBuilder<String, Meal> get mealMap => _$this._mealMap ??= new MapBuilder<String, Meal>();
   set mealMap(MapBuilder<String, Meal> mealMap) => _$this._mealMap = mealMap;
 
   AppBuilder();
@@ -229,8 +205,7 @@ class AppBuilder implements Builder<App, AppBuilder> {
         _$failedField = 'mealMap';
         mealMap.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
-            'App', _$failedField, e.toString());
+        throw new BuiltValueNestedFieldError('App', _$failedField, e.toString());
       }
       rethrow;
     }
@@ -239,4 +214,4 @@ class AppBuilder implements Builder<App, AppBuilder> {
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: always_put_control_body_on_new_line,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
