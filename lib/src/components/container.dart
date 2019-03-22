@@ -13,7 +13,10 @@ import './containers/home.dart';
 import './containers/loading.dart';
 import './containers/newMember.dart';
 import './containers/dashboard.dart';
-import './containers/viewMember.dart';
+import './containers/viewMembers.dart';
+import './containers/editMember.dart';
+import './containers/viewActivity.dart';
+import './containers/viewMeal.dart';
 import './core/debug.dart';
 
 // State
@@ -43,6 +46,8 @@ class Container extends PComponent<ContainerProps> {
   void componentWillMount() {
     // Get all the users from the database
     actions.server.fetchAllMembers();
+    actions.server.fetchAllActivities();
+    // actions.server.fetchAllMeals();
 
     storeContainerSub = props.storeContainer.store.stream.listen((_) => updateOnAnimationFrame());
   }
@@ -83,10 +88,16 @@ class Container extends PComponent<ContainerProps> {
                 path: Routes.createMember,
                 componentFactory: (params) => _renderIfAuthenticated(_renderCreateMember()),
               ),
+              new Route(path: Routes.resetContinue, componentFactory: (params) => _renderResetContinue(params)),
+              new Route(path: Routes.dashboard, componentFactory: (_) => _renderIfAuthenticated(_renderDashboard())),
               new Route(
-                path: Routes.viewMember,
-                componentFactory: (_) => _renderIfAuthenticated(_renderViewMember()),
-              ),
+                  path: Routes.viewMembers, componentFactory: (_) => _renderIfAuthenticated(_renderViewMembers())),
+              new Route(
+                  path: Routes.editMember,
+                  componentFactory: (params) => _renderIfAuthenticated(_renderEditMember(params))),
+              new Route(
+                  path: Routes.viewActivity, componentFactory: (_) => _renderIfAuthenticated(_renderViewActivity())),
+              new Route(path: Routes.viewMeal, componentFactory: (_) => _renderIfAuthenticated(_renderViewMeal())),
             ],
           ),
         ],
@@ -132,10 +143,26 @@ class Container extends PComponent<ContainerProps> {
     ..actions = props.storeContainer.store.actions
     ..user = appState.user);
 
-  _renderViewMember() => new viewMember(new ViewMemberProps()
+  _renderViewMembers() => new ViewMembers(new ViewMembersProps()
     ..actions = props.storeContainer.store.actions
     ..user = appState.user
     ..userMap = appState.userMap);
+
+  _renderEditMember(Map<String, String> params) => new EditMember(new EditMemberProps()
+    ..actions = props.storeContainer.store.actions
+    ..user = appState.user
+    ..userMap = appState.userMap
+    ..selectedMemberUID = params['user_uid']);
+
+  _renderViewActivity() => new ViewActivity(new ViewActivityProps()
+    ..actions = props.storeContainer.store.actions
+    ..user = appState.user
+    ..activityMap = appState.activityMap);
+
+  _renderViewMeal() => new ViewMeal(new ViewMealProps()
+    ..actions = props.storeContainer.store.actions
+    ..user = appState.user
+    ..mealMap = appState.mealMap);
 
   _renderDebug() => (document.domain.contains("localhost"))
       ? new DebugNavigator(new DebugNavigatorProps()..actions = props.storeContainer.store.actions)
