@@ -121,6 +121,8 @@ class viewMember extends PComponent<viewMemberProps> {
                                       new VInputElement()
                                         ..className = 'input'
                                         ..placeholder = 'Search'
+                                        ..id = 'Search'
+                                        ..onSubmit = _searchListener
                                         ..type = 'text',
                                       new VSpanElement()
                                         ..className = 'icon is-left'
@@ -137,4 +139,41 @@ class viewMember extends PComponent<viewMemberProps> {
             ],
         ],
     ];
+
+  _searchListener(_) {
+    InputElement search = querySelector('#Search');
+    List found = new List();
+
+    for (User user in props.userMap.values) {
+      if (user.firstName.contains(search.value)) {
+        found.add(user);
+      } else if (user.lastName.contains(search.value)) {
+        found.add(user);
+      } else if (user.address.contains(search.value)) {
+        found.add(user);
+      } else if (user.dietaryRestrictions.contains(search.value)) {
+        found.add(user);
+      } else if (user.disabilities.contains(search.value)) {
+        found.add(user);
+      } else if (user.email.contains(search.value)) {
+        found.add(user);
+      } else if (user.medicalIssues.contains(search.value)) {
+        found.add(user);
+      } else if (user.mobileNumber.contains(search.value)) {
+        found.add(user);
+      } else if (user.phoneNumber.contains(search.value)) {
+        found.add(user);
+      } else if (user.position.contains(search.value)) {
+        found.add(user);
+      } else if (user.role.contains(search.value)) {
+        found.add(user);
+      } else if (user.services.contains(search.value)) {
+        found.add(user);
+      } else if (user.membershipRenewal.toString().contains(search.value)) {
+        found.add(user);
+      } else if (user.membershipStart.toString().contains(search.value)) {
+        found.add(user);
+      }
+    }
+  }
 }
