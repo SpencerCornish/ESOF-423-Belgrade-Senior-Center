@@ -23,6 +23,7 @@ class ViewMembersState {
   bool showMod;
   bool checkedIn;
   bool searching;
+  List found;
   String modMem;
 }
 
@@ -37,6 +38,7 @@ class viewMember extends Component<ViewMemberProps, ViewMembersState> {
     ..showMod = false
     ..checkedIn = false
     ..searching = false
+    ..found = <User>[]
     ..modMem = null;
 
   /// Browser history entrypoint, to control page navigation
@@ -47,31 +49,39 @@ class viewMember extends Component<ViewMemberProps, ViewMembersState> {
 
   /// [createRows] Scaling function to make rows based on amount of information available
   List<VNode> createRows() {
-    List<VNode> nodeList = new List();
-    nodeList.addAll(titleRow());
-    for (User user in props.userMap.values) {
-      nodeList.add(new VTableRowElement()
-        ..className = 'tr'
-        ..children = [
-          new VTableCellElement()
-            ..className = tdClass(user.lastName)
-            ..text = checkText(user.lastName),
-          new VTableCellElement()
-            ..className = tdClass(user.firstName)
-            ..text = checkText(user.firstName),
-          new VTableCellElement()
-            ..className = tdClass(user.address)
-            ..text = checkText(user.address),
-          new VTableCellElement()
-            ..className = tdClass(user.phoneNumber)
-            ..text = checkText(user.phoneNumber),
-          new VTableCellElement()
-            ..className = tdClass(user.membershipStart.toString())
-            ..text =
-                checkText("${user.membershipStart.month}/${user.membershipStart.day}/${user.membershipStart.year}"),
-        ]);
+    if (!state.searching) {
+      // List<User> users = props.userMap.values.toList();
+
+      //merge sort function by last name
+      // users = _sort(users, 0, users.length - 1);
+      List<VNode> nodeList = <VNode>[];
+      nodeList.addAll(titleRow());
+      for (User user in props.userMap.values) {
+        nodeList.add(new VTableRowElement()
+          ..className = 'tr'
+          ..children = [
+            new VTableCellElement()
+              ..className = tdClass(user.lastName)
+              ..text = checkText(user.lastName),
+            new VTableCellElement()
+              ..className = tdClass(user.firstName)
+              ..text = checkText(user.firstName),
+            new VTableCellElement()
+              ..className = tdClass(user.address)
+              ..text = checkText(user.address),
+            new VTableCellElement()
+              ..className = tdClass(user.phoneNumber)
+              ..text = checkText(user.phoneNumber),
+            new VTableCellElement()
+              ..className = tdClass(user.membershipStart.toString())
+              ..text =
+                  checkText("${user.membershipStart.month}/${user.membershipStart.day}/${user.membershipStart.year}"),
+          ]);
+      }
+      return nodeList;
+    } else {
+      return _renderSearch();
     }
-    return nodeList;
   }
 
   String checkText(String text) => text != '' ? text : "N/A";
@@ -163,12 +173,30 @@ class viewMember extends Component<ViewMemberProps, ViewMembersState> {
         ],
     ];
 
+  List<VNode> _renderSearch() {
+    List<VNode> nodeList = <VNode>[];
+    nodeList.addAll(titleRow());
+    for (User user in props.userMap.values) {
+      nodeList.add(new VTableRowElement()
+        ..className = 'tr'
+        ..children = [
+          new VTableCellElement()
+            ..className = tdClass(user.lastName)
+            ..text = checkText(user.lastName),
+          new VTableCellElement()
+            ..className = tdClass(user.firstName)
+            ..text = checkText(user.firstName),
+        ]);
+    }
+    return nodeList;
+  }
+
   _searchListener(KeyboardEvent e) {
     //13 is enter
     if (e.keyCode == 13) {
       print("Search initiated");
       InputElement search = querySelector('#Search');
-      List found = new List();
+      List found = <User>[];
 
       for (User user in props.userMap.values) {
         if (user.firstName.toLowerCase().contains(search.value.toLowerCase())) {
@@ -205,6 +233,8 @@ class viewMember extends Component<ViewMemberProps, ViewMembersState> {
       for (User user in found) {
         print("found match @: " + user.lastName);
       }
+
+      setState((ViewMemberProps, ViewMembersState) => ViewMembersState..found = found);
     }
   }
 }
