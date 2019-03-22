@@ -44,7 +44,7 @@ class DebugNavigator extends PComponent<DebugNavigatorProps> {
               new VAnchorElement()
                 ..className = 'button'
                 ..text = 'Stored Data'
-                ..onClick = (_) => history.push(Routes.viewMember),
+                ..onClick = (_) => history.push(Routes.viewMembers),
             ]
         ],
     ];

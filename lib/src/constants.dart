@@ -19,7 +19,14 @@ class Routes {
 
   static const dashboard = '/dashboard';
 
-  static const viewMember = '/view/members';
+  static const viewMembers = '/view/members';
+
+  static const editMember = '/edit/member/:user_uid';
+
+  static String generateEditMemberURL(String uid) => '/edit/member/$uid';
+
+  static const viewActivity = '/view/activities';
+  static const viewMeal = '/view/meals';
 
   // TODO: Fill in more routes here
 
