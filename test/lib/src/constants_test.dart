@@ -14,8 +14,8 @@ void main() {
   };
 
   group('Constants -', () {
-    test('emailIsValid correctly checks emails', () {
-      emails.forEach((email, isValid) => expect(emailIsValid(email),isValid));
+    test('emailValidator correctly checks emails', () {
+      emails.forEach((email, isValid) => expect(InputValidator.emailValidator(email),isValid));
     });
 
     test('stringToBase and baseToString properly encodes strings', () {

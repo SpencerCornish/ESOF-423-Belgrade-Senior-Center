@@ -20,6 +20,43 @@ class Routes {
 
 }
 
+//Validates various data types across project
+class InputValidator {
+  //Validates names, only issue is if blank
+  static bool nameValidator(String input) {
+    if(input == "") {
+      return false;
+    }
+    return true;
+  }
+
+  //Validates emails by using emailValidator function
+  static bool emailValidator(String input) {
+    return EmailValidator.validate(input);
+  }
+
+  //Validates phone numbers
+  static bool phoneNumberValidator(String input) {
+    //Splits string into a list
+    List<String> temp = input.split('');
+    //Counts digits in input string
+    int count = 0;
+    for (String x in temp) {
+      if(int.tryParse(x) != null) {
+        count++;
+      }
+    }
+    if(count == 10 || count == 11) {
+      return true;
+    } else {return false;}
+  }
+
+  //Validates addresses TODO finish this
+  static bool addressValidator(String input) {
+
+  }
+}
+
 enum Role {
   ADMIN,
   VOLUNTEER,
@@ -30,9 +67,6 @@ enum Role {
 /// This should not be used as a replacement for firebase
 /// auth checks.
 enum AuthState { LOADING, SUCCESS, INAUTHENTIC, PASS_RESET_SENT, ERR_PASSWORD, ERR_NOT_FOUND, ERR_EMAIL, ERR_OTHER }
-
-/// Validates email addresses
-bool emailIsValid(String email) => EmailValidator.validate(email);
 
 String stringToBase(String email) => base64Encode(utf8.encode(email));
 
