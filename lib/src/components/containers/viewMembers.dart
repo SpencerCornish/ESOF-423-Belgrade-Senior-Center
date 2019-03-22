@@ -1,3 +1,5 @@
+import 'dart:html' hide History;
+
 import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
 import 'package:wui_builder/vhtml.dart';
@@ -165,7 +167,7 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
     ..className = 'columns is-mobile'
     ..children = [
       new VDivElement()
-        ..className = 'column is-narrow'
+        ..className = 'column'
         ..children = [
           new Vh4()
             ..className = 'title is-4'
@@ -174,13 +176,13 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
             ..className = 'subtitle is-7'
             ..text = "as of: ${DateTime.now().month}/${DateTime.now().day}/${DateTime.now().year}",
         ],
-      new VDivElement()..className = 'column',
       _renderSearch(),
+      _renderExport(),
     ];
 
   ///[_renderSearch] adds the seach layout to the tile bar
   _renderSearch() => new VDivElement()
-    ..className = 'column is-4'
+    ..className = 'column is-narrow'
     ..children = [
       new VDivElement()
         ..className = 'field'
@@ -199,37 +201,59 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
         ],
     ];
 
+  _renderExport() => new VDivElement()
+    ..className = 'column is-narrow'
+    ..children = [
+      new VDivElement()
+        ..className = 'field'
+        ..children = [
+          new VDivElement()
+            ..className = 'control'
+            ..children = [
+              new VParagraphElement()
+                ..className = 'button is-rounded'
+                ..onClick = _onExportCsvClick
+                ..children = [
+                  new VSpanElement()
+                    ..className = 'icon'
+                    ..children = [new Vi()..className = 'fas fa-file-csv'],
+                  new VSpanElement()..text = 'CSV',
+                ],
+            ],
+        ],
+    ];
+
   VNode _modView() {
     if (state.showMod) {
       User selectedUser = props.userMap[state.modMem];
 
       return (new VDivElement()
         ..className = "modal ${state.showMod ? 'is-active' : ''}"
-        ..children = {
+        ..children = [
           new VDataListElement()..className = "modal-background",
           new VDivElement()
             ..className = "modal-card"
-            ..children = {
+            ..children = [
               new VHeadElement()
                 ..className = "modal-card-head"
-                ..children = {
+                ..children = [
                   new VParagraphElement()
                     ..className = "modal-card-title"
                     ..text = "Welcome ${selectedUser.firstName} ${selectedUser.lastName}",
                   new VButtonElement()
                     ..className = 'delete'
                     ..onClick = _modOff,
-                },
+                ],
               new Vsection()
                 ..className = "modal-card-body"
-                ..children = {
+                ..children = [
                   new VButtonElement()
                     ..className = "button is-success"
                     ..text = state.checkedIn ? "DONE" : "CHECK-IN"
                     ..onClick = ((_) => _checkInClick(selectedUser)),
-                },
-            },
-        });
+                ],
+            ],
+        ]);
     }
     return new VDivElement();
   }
@@ -257,5 +281,21 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
       ..showMod = false
       ..checkedIn = false
       ..modMem = null);
+  }
+
+  _onExportCsvClick(_) {
+    List<String> lines = props.userMap.values.map((user) => user.toCsv()).toList();
+
+    // Add the header row
+    lines.insert(0, ExportHeader.user.join(',') + '\n');
+
+    Blob data = new Blob(lines, "text/csv");
+
+    AnchorElement downloadLink = new AnchorElement(href: Url.createObjectUrlFromBlob(data));
+    downloadLink.rel = 'text/csv';
+    downloadLink.download = 'member-export-${new DateTime.now().toIso8601String()}.csv';
+
+    var event = new MouseEvent("click", view: window, cancelable: false);
+    downloadLink.dispatchEvent(event);
   }
 }

@@ -32,6 +32,42 @@ class Routes {
 
 }
 
+class ExportHeader {
+  static const user = [
+    'ID',
+    'Last',
+    'First',
+    'Email',
+    'Address',
+    'Phone',
+    'Cell',
+    'Position',
+    'Role',
+    'Dietary Restrictions',
+    'Disabilities',
+    'Medical Issues',
+    'Membership Start Date',
+    'Membership Renewal Date',
+  ];
+
+  static const activity = [
+    'ID',
+    'Name',
+    'Instructor',
+    'Capacity',
+    'location',
+    'Start',
+    'End',
+  ];
+
+  static const meal = [
+    'ID',
+    'Start',
+    'End',
+    'Menu',
+  ];
+}
+
 enum Role {
   ADMIN,
   VOLUNTEER,
