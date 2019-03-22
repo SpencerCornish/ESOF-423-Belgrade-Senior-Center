@@ -156,7 +156,7 @@ class ViewMeal extends PComponent<ViewMealProps> {
 
     AnchorElement downloadLink = new AnchorElement(href: Url.createObjectUrlFromBlob(data));
     downloadLink.rel = 'text/csv';
-    downloadLink.download = 'activity-export-${new DateTime.now().toIso8601String()}.csv';
+    downloadLink.download = 'meal-export-${new DateTime.now().toIso8601String()}.csv';
 
     var event = new MouseEvent("click", view: window, cancelable: false);
     downloadLink.dispatchEvent(event);
