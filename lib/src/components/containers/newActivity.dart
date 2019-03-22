@@ -330,9 +330,9 @@ class NewActivity extends PComponent<NewActivityProps> {
     InputElement end =querySelector('#timeEnd-input');
 
   try{
-    DateTime startTime = DateTime.parse('#start');
-    DateTime endTime = DateTime.parse('#end');
-    int cap = int.parse('#capacity');
+    DateTime startTime = DateTime.parse(start.value);
+    DateTime endTime = DateTime.parse(end.value);
+    int cap = int.parse(capacity.value);
     
 
    Activity NewActivity = (new ActivityBuilder()
