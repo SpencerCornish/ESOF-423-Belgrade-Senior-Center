@@ -121,13 +121,22 @@ class viewMember extends PComponent<viewMemberProps> {
                                       new VInputElement()
                                         ..className = 'input'
                                         ..placeholder = 'Search'
+                                        ..type = 'submit'
                                         ..id = 'Search'
-                                        ..onSubmit = _searchListener
+                                        ..onKeyUp = _searchListener
                                         ..type = 'text',
                                       new VSpanElement()
                                         ..className = 'icon is-left'
                                         ..children = [new Vi()..className = 'fas fa-search'],
                                     ],
+                                  // new Vbutton()
+                                  //   ..className = 'submit'
+                                  //   ..onClick = _searchListener
+                                  //   ..children = {
+                                  //     new VSpanElement()
+                                  //       ..className = 'icon'
+                                  //       ..children = {new Vi()..className = 'fas fa-search'}
+                                  // }
                                 ],
                             ],
                         ],
@@ -140,39 +149,47 @@ class viewMember extends PComponent<viewMemberProps> {
         ],
     ];
 
-  _searchListener(_) {
-    InputElement search = querySelector('#Search');
-    List found = new List();
+  _searchListener(KeyboardEvent e) {
+    //13 is enter
+    if (e.keyCode == 13) {
+      print("Search initiated");
+      InputElement search = querySelector('#Search');
+      List found = new List();
 
-    for (User user in props.userMap.values) {
-      if (user.firstName.contains(search.value)) {
-        found.add(user);
-      } else if (user.lastName.contains(search.value)) {
-        found.add(user);
-      } else if (user.address.contains(search.value)) {
-        found.add(user);
-      } else if (user.dietaryRestrictions.contains(search.value)) {
-        found.add(user);
-      } else if (user.disabilities.contains(search.value)) {
-        found.add(user);
-      } else if (user.email.contains(search.value)) {
-        found.add(user);
-      } else if (user.medicalIssues.contains(search.value)) {
-        found.add(user);
-      } else if (user.mobileNumber.contains(search.value)) {
-        found.add(user);
-      } else if (user.phoneNumber.contains(search.value)) {
-        found.add(user);
-      } else if (user.position.contains(search.value)) {
-        found.add(user);
-      } else if (user.role.contains(search.value)) {
-        found.add(user);
-      } else if (user.services.contains(search.value)) {
-        found.add(user);
-      } else if (user.membershipRenewal.toString().contains(search.value)) {
-        found.add(user);
-      } else if (user.membershipStart.toString().contains(search.value)) {
-        found.add(user);
+      for (User user in props.userMap.values) {
+        if (user.firstName.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(user);
+        } else if (user.lastName.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(user);
+        } else if (user.address.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(user);
+        } else if (user.dietaryRestrictions.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(user);
+        } else if (user.disabilities.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(user);
+        } else if (user.email.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(user);
+        } else if (user.medicalIssues.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(user);
+        } else if (user.mobileNumber.contains(search.value)) {
+          found.add(user);
+        } else if (user.phoneNumber.contains(search.value)) {
+          found.add(user);
+        } else if (user.position.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(user);
+        } else if (user.role.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(user);
+        } else if (user.services.contains(search.value)) {
+          found.add(user);
+        } else if (user.membershipRenewal.toString().contains(search.value)) {
+          found.add(user);
+        } else if (user.membershipStart.toString().contains(search.value)) {
+          found.add(user);
+        }
+      }
+
+      for (User user in found) {
+        print("found match @: " + user.lastName);
       }
     }
   }
