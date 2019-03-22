@@ -1,5 +1,3 @@
-import 'dart:html' hide History;
-
 import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
 import 'package:wui_builder/vhtml.dart';
@@ -9,10 +7,8 @@ import '../core/nav.dart';
 import '../../constants.dart';
 
 import '../../model/user.dart';
-import './editMember.dart';
 
 import '../../state/app.dart';
-import '../../middleware/serverMiddleware.dart';
 
 class ViewMembersProps {
   AppActions actions;
@@ -20,9 +16,21 @@ class ViewMembersProps {
   BuiltMap<String, User> userMap;
 }
 
+class ViewMembersState {
+  bool showMod;
+  bool checkedIn;
+  String modMem;
+}
+
 /// [viewMember] class / page to show a visual representation of current stored data
-class ViewMembers extends PComponent<ViewMembersProps> {
+class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
   ViewMembers(props) : super(props);
+
+  @override
+  ViewMembersState getInitialState() => ViewMembersState()
+    ..showMod = false
+    ..checkedIn = false
+    ..modMem = null;
 
   List<String> title = ["Last", "First"];
   History _history;
@@ -57,7 +65,13 @@ class ViewMembers extends PComponent<ViewMembersProps> {
     return nodeList;
   }
 
-  _onUserClick(String uid) => history.push(Routes.generateEditMemberURL(uid));
+  _onUserClick(String uid) {
+    if (props.user.role.compareTo("Admin") == 0) {
+      history.push(Routes.generateEditMemberURL(uid));
+    } else {
+      _modOn(uid);
+    }
+  }
 
   /// [sort] Merge sort by last name of user
   List<User> _sort(List<User> users, int left, int right) {
@@ -142,6 +156,7 @@ class ViewMembers extends PComponent<ViewMembersProps> {
                     ],
                 ],
             ],
+          _modView(),
         ],
     ];
 
@@ -183,4 +198,64 @@ class ViewMembers extends PComponent<ViewMembersProps> {
             ],
         ],
     ];
+
+  VNode _modView() {
+    if (state.showMod) {
+      User selectedUser = props.userMap[state.modMem];
+
+      return (new VDivElement()
+        ..className = "modal ${state.showMod ? 'is-active' : ''}"
+        ..children = {
+          new VDataListElement()..className = "modal-background",
+          new VDivElement()
+            ..className = "modal-card"
+            ..children = {
+              new VHeadElement()
+                ..className = "modal-card-head"
+                ..children = {
+                  new VParagraphElement()
+                    ..className = "modal-card-title"
+                    ..text = "Welcome ${selectedUser.firstName} ${selectedUser.lastName}",
+                  new VButtonElement()
+                    ..className = 'delete'
+                    ..onClick = _modOff,
+                },
+              new Vsection()
+                ..className = "modal-card-body"
+                ..children = {
+                  new VButtonElement()
+                    ..className = "button is-success"
+                    ..text = state.checkedIn ? "DONE" : "CHECK-IN"
+                    ..onClick = ((_) => _checkInClick(selectedUser)),
+                },
+            },
+        });
+    }
+    return new VDivElement();
+  }
+
+  _checkInClick(User user) {
+    if (!state.checkedIn) {
+      print("${user.firstName} ${user.lastName} has checked in!");
+      setState((props, state) => state..checkedIn = true);
+    } else {
+      setState((props, state) => state
+        ..showMod = false
+        ..checkedIn = false
+        ..modMem = null);
+    }
+  }
+
+  _modOn(String uid) {
+    setState((props, state) => state
+      ..showMod = true
+      ..modMem = uid);
+  }
+
+  _modOff(_) {
+    setState((props, state) => state
+      ..showMod = false
+      ..checkedIn = false
+      ..modMem = null);
+  }
 }
