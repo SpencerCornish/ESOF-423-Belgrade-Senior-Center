@@ -10,14 +10,16 @@ import '../../model/emergencyContact.dart';
 import '../../state/app.dart';
 import '../../store.dart';
 import '../core/nav.dart';
+import '../../model/meal.dart';
 import '../../model/user.dart';
 
 class NewMealProps {
   AppActions actions;
   User user;
+  Meal meal;
 }
 
-//TODO: Make is so when the logout button is pressed, it takes you back to the main page
+//TODO: Make is so when the logout button is pressed, it takes you back to the main page.
 
 class NewMeal extends PComponent<NewMealProps> {
   NewMeal(props) : super(props);
@@ -36,8 +38,8 @@ class NewMeal extends PComponent<NewMealProps> {
       // new VDivElement()
       //   ..className = 'container'
       //   ..children = [
-        _mealCreation(),
-        //]
+      _mealCreation(),
+      //]
     ];
 
   //create the text boxes that are used to create new users
@@ -70,9 +72,9 @@ class NewMeal extends PComponent<NewMealProps> {
                     ..className = 'columns'
                     ..children = [
                       new VDivElement()
-                          ..className = 'column'
-                          ..children = [
-                            new VDivElement()
+                        ..className = 'column'
+                        ..children = [
+                          new VDivElement()
                             ..className = 'field is-grouped'
                             ..children = [
                               new VDivElement()
@@ -82,29 +84,29 @@ class NewMeal extends PComponent<NewMealProps> {
                                     ..className = 'field-body'
                                     ..children = [
                                       new VDivElement()
-                                      ..className = 'field'
-                                      ..id = 'date-lab'
-                                      ..children = [
-                                        new VLabelElement()
-                                          ..className = 'label'
-                                          ..text = "Serving Date"
-                                      ],
-                                    new VDivElement()
-                                      ..className = 'field is-horizontal'
-                                      ..children = [
-                                        new VParagraphElement()
-                                        ..className = 'control'
+                                        ..className = 'field'
+                                        ..id = 'date-lab'
                                         ..children = [
-                                          new VInputElement()
-                                            ..className = 'input'
-                                            ..id = 'serveDate-input'
-                                            ..type = 'date'
+                                          new VLabelElement()
+                                            ..className = 'label'
+                                            ..text = "Serving Date"
+                                        ],
+                                      new VDivElement()
+                                        ..className = 'field is-horizontal'
+                                        ..children = [
+                                          new VParagraphElement()
+                                            ..className = 'control'
+                                            ..children = [
+                                              new VInputElement()
+                                                ..className = 'input'
+                                                ..id = 'serveDate-input'
+                                                ..type = 'date'
+                                            ]
                                         ]
-                                      ]
                                     ]
                                 ]
                             ]
-                          ],
+                        ],
                       new VDivElement()
                         ..className = 'column'
                         ..children = [
@@ -118,33 +120,33 @@ class NewMeal extends PComponent<NewMealProps> {
                                     ..className = 'field-body'
                                     ..children = [
                                       new VDivElement()
-                                      ..className = 'field'
-                                      ..id = 'mealStart-lab'
-                                      ..children = [
-                                        new VLabelElement()
-                                          ..className = 'label'
-                                          ..text = "Start Time"
-                                      ],
-                                    new VDivElement()
-                                      ..className = 'field is-horizontal'
-                                      ..children = [
-                                        new VParagraphElement()
-                                        ..className = 'control'
+                                        ..className = 'field'
+                                        ..id = 'mealStart-lab'
                                         ..children = [
-                                          new VInputElement()
-                                            ..className = 'input'
-                                            ..id = 'mealStart-input'
-                                            ..type = 'time'
+                                          new VLabelElement()
+                                            ..className = 'label'
+                                            ..text = "Start Time"
+                                        ],
+                                      new VDivElement()
+                                        ..className = 'field is-horizontal'
+                                        ..children = [
+                                          new VParagraphElement()
+                                            ..className = 'control'
+                                            ..children = [
+                                              new VInputElement()
+                                                ..className = 'input'
+                                                ..id = 'mealStart-input'
+                                                ..type = 'time'
+                                            ]
                                         ]
-                                      ]
                                     ]
                                 ]
                             ]
                         ],
-                        new VDivElement()
-                          ..className = 'column'
-                          ..children = [
-                            new VDivElement()
+                      new VDivElement()
+                        ..className = 'column'
+                        ..children = [
+                          new VDivElement()
                             ..className = 'field is-grouped'
                             ..children = [
                               new VDivElement()
@@ -154,31 +156,68 @@ class NewMeal extends PComponent<NewMealProps> {
                                     ..className = 'field-body'
                                     ..children = [
                                       new VDivElement()
-                                      ..className = 'field'
-                                      ..id = 'mealEnd-lab'
-                                      ..children = [
-                                        new VLabelElement()
-                                          ..className = 'label'
-                                          ..text = "End Time"
-                                      ],
-                                    new VDivElement()
-                                      ..className = 'field is-horizontal'
-                                      ..children = [
-                                        new VParagraphElement()
-                                        ..className = 'control'
+                                        ..className = 'field'
+                                        ..id = 'mealEnd-lab'
                                         ..children = [
-                                          new VInputElement()
-                                            ..className = 'input'
-                                            ..id = 'mealEnd-input'
-                                            ..type = 'time'
+                                          new VLabelElement()
+                                            ..className = 'label'
+                                            ..text = "End Time"
+                                        ],
+                                      new VDivElement()
+                                        ..className = 'field is-horizontal'
+                                        ..children = [
+                                          new VParagraphElement()
+                                            ..className = 'control'
+                                            ..children = [
+                                              new VInputElement()
+                                                ..className = 'input'
+                                                ..id = 'mealEnd-input'
+                                                ..type = 'time'
+                                            ]
                                         ]
-                                      ]
                                     ]
                                 ]
                             ]
-                          ]
+                        ]
                     ],
-                  //TODO: possibly find a way for admin to add a picture to the database and allow activities to access and utilize them
+
+                  //create the input box for what the meal is
+                  new VDivElement()
+                    ..className = 'columns'
+                    ..children = [
+                      new VDivElement()
+                        ..className = 'column is-narrow'
+                        ..children = [
+                          new VDivElement()
+                            ..className = 'field is-horizontal'
+                            ..children = [
+                              new VDivElement()
+                                ..className = 'field-label is-normal'
+                                ..children = [
+                                  new VLabelElement()
+                                    ..className = 'label'
+                                    ..text = "Meal",
+                                ]
+                            ]
+                        ],
+                      new VDivElement()
+                        ..className = 'field-body'
+                        ..children = [
+                          new VDivElement()
+                            ..className = 'field'
+                            ..children = [
+                              new VDivElement()
+                                ..className = 'control'
+                                ..children = [
+                                  new VTextAreaElement()
+                                    ..className = 'textarea'
+                                    ..id = 'meal-input'
+                                    ..placeholder = "Enter full meal"
+                                ]
+                            ]
+                        ]
+                    ],
+                  //TODO: possibly find a way for admin to add a picture to the database and allow activities to access and utilize them.
 
                   //create the submit button
                   new VDivElement()
@@ -190,7 +229,7 @@ class NewMeal extends PComponent<NewMealProps> {
                           new VAnchorElement()
                             ..className = 'button is-link'
                             ..text = "Submit"
-                          // ..onClick = _submitClick
+                           ..onClick = _submitClick
                         ]
                     ]
                 ]
@@ -199,45 +238,19 @@ class NewMeal extends PComponent<NewMealProps> {
     ];
 
   //method used for the submit click
-  //will need to send fName-input, lName-input, email-input,
-  //cellNum-input, phoneNum-input, address-input, diet-input,
-  //disabilities-input, medicalIssue-input, memStart-input , and memRenew-input, and role type to database
-  // _submitClick(_) {
-  //   InputElement first = querySelector('#fName-input');
-  //   InputElement last = querySelector('#lName-input');
-  //   InputElement email = querySelector('#email-input');
-  //   InputElement cell = querySelector('#cellNum-input');
-  //   InputElement phone = querySelector('#phoneNum-input');
-  //   InputElement address = querySelector('#address-input');
-  //   InputElement diet = querySelector('#diet-input');
-  //   InputElement disability = querySelector('#disabilities-input');
-  //   InputElement medical = querySelector('#medicalIssue-input');
-  //   InputElement memStart = querySelector('#memStart-input');
-  //   InputElement memRenew = querySelector('#memRenew-input');
+  //variable names serveDate-input, mealStart-input, mealEnd-input, meal-input
+  _submitClick(_){
+    InputElement date =querySelector('#serveDate-input');
+    InputElement start =querySelector('#mealStart-input');
+    InputElement end =querySelector('#mealEnd-input');
+    TextAreaElement meal =querySelector('#meal-input');
 
-  //   //create a new user object
-  //   User newUser = (new UserBuilder()
-  //         ..firstName = first.value
-  //         ..lastName = last.value
-  //         ..email = email.value
-  //         ..mobileNumber = cell.value
-  //         ..phoneNumber = phone.value
-  //         ..address = address.value
-  //         ..dietaryRestrictions = diet.value
-  //         ..disabilities = disability.value
-  //         ..medicalIssues = medical.value
-  //         ..membershipStart = DateTime.parse(memStart.value)
-  //         ..membershipRenewal = DateTime.parse(memRenew.value)
-  //         ..emergencyContacts = new ListBuilder<EmergencyContact>()
-  //         ..services = new ListBuilder<String>()
-  //         ..role = "NULL"
-  //         ..position = "NULL"
-  //         ..forms = new ListBuilder<String>())
-  //       .build();
 
-  //   props.actions.server.updateOrCreateUser(newUser);
-  //   props.actions.server.fetchAllMembers();
+    print(date);
+    print(start);
+    print(end);
+    print(meal);
 
-  //   history.push(Routes.dashboard);
-  // }
+    //history.push(Routes.dashboard);
+  }
 }

@@ -319,45 +319,14 @@ class NewActivity extends PComponent<NewActivityProps> {
     ];
 
   //method used for the submit click
-  //will need to send fName-input, lName-input, email-input,
-  //cellNum-input, phoneNum-input, address-input, diet-input,
-  //disabilities-input, medicalIssue-input, memStart-input , and memRenew-input, and role type to database
-  // _submitClick(_) {
-  //   InputElement first = querySelector('#fName-input');
-  //   InputElement last = querySelector('#lName-input');
-  //   InputElement email = querySelector('#email-input');
-  //   InputElement cell = querySelector('#cellNum-input');
-  //   InputElement phone = querySelector('#phoneNum-input');
-  //   InputElement address = querySelector('#address-input');
-  //   InputElement diet = querySelector('#diet-input');
-  //   InputElement disability = querySelector('#disabilities-input');
-  //   InputElement medical = querySelector('#medicalIssue-input');
-  //   InputElement memStart = querySelector('#memStart-input');
-  //   InputElement memRenew = querySelector('#memRenew-input');
+  //timeEnd-input, timeStart-input, capacity-input, location-input, instructorName-input, act-input
+  _submitClick(_) {
+    InputElement activity =querySelector('#act-input');
+    InputElement instructor =querySelector('#instructorName-input');
+    InputElement location =querySelector('#location-input');
+    InputElement capacity =querySelector('#capacity-input');
+    InputElement start =querySelector('#timeStart-input');
+    InputElement end =querySelector('#timeEnd-input');
 
-  //   //create a new user object
-  //   User newUser = (new UserBuilder()
-  //         ..firstName = first.value
-  //         ..lastName = last.value
-  //         ..email = email.value
-  //         ..mobileNumber = cell.value
-  //         ..phoneNumber = phone.value
-  //         ..address = address.value
-  //         ..dietaryRestrictions = diet.value
-  //         ..disabilities = disability.value
-  //         ..medicalIssues = medical.value
-  //         ..membershipStart = DateTime.parse(memStart.value)
-  //         ..membershipRenewal = DateTime.parse(memRenew.value)
-  //         ..emergencyContacts = new ListBuilder<EmergencyContact>()
-  //         ..services = new ListBuilder<String>()
-  //         ..role = "NULL"
-  //         ..position = "NULL"
-  //         ..forms = new ListBuilder<String>())
-  //       .build();
-
-  //   props.actions.server.updateOrCreateUser(newUser);
-  //   props.actions.server.fetchAllMembers();
-
-  //   history.push(Routes.dashboard);
-  // }
+   }
 }
