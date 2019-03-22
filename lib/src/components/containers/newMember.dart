@@ -280,11 +280,11 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                 ..children = [
                                   new VInputElement()
                                     ..onInput = _addressValidator
-                                    ..className = 'input ${state.cellNumberIsValid ? '' : 'is-danger'}'
+                                    ..className = 'input ${state.addressIsValid ? '' : 'is-danger'}'
                                     ..id = 'address-input'
                                     ..placeholder = "US Only",
                                   new VParagraphElement()
-                                    ..className = 'help is-danger ${state.cellNumberIsValid ? 'is-invisible' : ''}'
+                                    ..className = 'help is-danger ${state.addressIsValid ? 'is-invisible' : ''}'
                                     ..text = 'Address is invalid'
                                 ]
                             ]
@@ -532,7 +532,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     //Gets email field
     InputElement email = querySelector('#email-input');
     //Input validation from input validator
-    bool isValid = InputValidator.emailValidator(email.value)
+    bool isValid = InputValidator.emailValidator(email.value);
     setState((NewMemberProps, NewMemberState) =>
       NewMemberState..emailIsValid = isValid);
   }

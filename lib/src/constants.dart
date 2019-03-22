@@ -53,7 +53,7 @@ class InputValidator {
 
   //Validates addresses TODO finish this
   static bool addressValidator(String input) {
-
+    return true;
   }
 }
 
