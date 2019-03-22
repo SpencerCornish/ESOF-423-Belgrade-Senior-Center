@@ -8,7 +8,9 @@ part of user;
 
 class _$User extends User {
   @override
-  final String uid;
+  final String loginUID;
+  @override
+  final String docUID;
   @override
   final String firstName;
   @override
@@ -42,10 +44,12 @@ class _$User extends User {
   @override
   final BuiltList<String> services;
 
-  factory _$User([void updates(UserBuilder b)]) => (new UserBuilder()..update(updates)).build();
+  factory _$User([void updates(UserBuilder b)]) =>
+      (new UserBuilder()..update(updates)).build();
 
   _$User._(
-      {this.uid,
+      {this.loginUID,
+      this.docUID,
       this.firstName,
       this.lastName,
       this.email,
@@ -114,7 +118,8 @@ class _$User extends User {
   }
 
   @override
-  User rebuild(void updates(UserBuilder b)) => (toBuilder()..update(updates)).build();
+  User rebuild(void updates(UserBuilder b)) =>
+      (toBuilder()..update(updates)).build();
 
   @override
   UserBuilder toBuilder() => new UserBuilder()..replace(this);
@@ -123,7 +128,8 @@ class _$User extends User {
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is User &&
-        uid == other.uid &&
+        loginUID == other.loginUID &&
+        docUID == other.docUID &&
         firstName == other.firstName &&
         lastName == other.lastName &&
         email == other.email &&
@@ -158,8 +164,19 @@ class _$User extends User {
                                                 $jc(
                                                     $jc(
                                                         $jc(
-                                                            $jc($jc($jc(0, uid.hashCode), firstName.hashCode),
-                                                                lastName.hashCode),
+                                                            $jc(
+                                                                $jc(
+                                                                    $jc(
+                                                                        $jc(
+                                                                            0,
+                                                                            loginUID
+                                                                                .hashCode),
+                                                                        docUID
+                                                                            .hashCode),
+                                                                    firstName
+                                                                        .hashCode),
+                                                                lastName
+                                                                    .hashCode),
                                                             email.hashCode),
                                                         phoneNumber.hashCode),
                                                     mobileNumber.hashCode),
@@ -179,7 +196,8 @@ class _$User extends User {
   @override
   String toString() {
     return (newBuiltValueToStringHelper('User')
-          ..add('uid', uid)
+          ..add('loginUID', loginUID)
+          ..add('docUID', docUID)
           ..add('firstName', firstName)
           ..add('lastName', lastName)
           ..add('email', email)
@@ -203,9 +221,13 @@ class _$User extends User {
 class UserBuilder implements Builder<User, UserBuilder> {
   _$User _$v;
 
-  String _uid;
-  String get uid => _$this._uid;
-  set uid(String uid) => _$this._uid = uid;
+  String _loginUID;
+  String get loginUID => _$this._loginUID;
+  set loginUID(String loginUID) => _$this._loginUID = loginUID;
+
+  String _docUID;
+  String get docUID => _$this._docUID;
+  set docUID(String docUID) => _$this._docUID = docUID;
 
   String _firstName;
   String get firstName => _$this._firstName;
@@ -237,7 +259,8 @@ class UserBuilder implements Builder<User, UserBuilder> {
 
   String _dietaryRestrictions;
   String get dietaryRestrictions => _$this._dietaryRestrictions;
-  set dietaryRestrictions(String dietaryRestrictions) => _$this._dietaryRestrictions = dietaryRestrictions;
+  set dietaryRestrictions(String dietaryRestrictions) =>
+      _$this._dietaryRestrictions = dietaryRestrictions;
 
   ListBuilder<EmergencyContact> _emergencyContacts;
   ListBuilder<EmergencyContact> get emergencyContacts =>
@@ -247,11 +270,13 @@ class UserBuilder implements Builder<User, UserBuilder> {
 
   DateTime _membershipStart;
   DateTime get membershipStart => _$this._membershipStart;
-  set membershipStart(DateTime membershipStart) => _$this._membershipStart = membershipStart;
+  set membershipStart(DateTime membershipStart) =>
+      _$this._membershipStart = membershipStart;
 
   DateTime _membershipRenewal;
   DateTime get membershipRenewal => _$this._membershipRenewal;
-  set membershipRenewal(DateTime membershipRenewal) => _$this._membershipRenewal = membershipRenewal;
+  set membershipRenewal(DateTime membershipRenewal) =>
+      _$this._membershipRenewal = membershipRenewal;
 
   String _disabilities;
   String get disabilities => _$this._disabilities;
@@ -263,21 +288,24 @@ class UserBuilder implements Builder<User, UserBuilder> {
 
   String _medicalIssues;
   String get medicalIssues => _$this._medicalIssues;
-  set medicalIssues(String medicalIssues) => _$this._medicalIssues = medicalIssues;
+  set medicalIssues(String medicalIssues) =>
+      _$this._medicalIssues = medicalIssues;
 
   String _position;
   String get position => _$this._position;
   set position(String position) => _$this._position = position;
 
   ListBuilder<String> _services;
-  ListBuilder<String> get services => _$this._services ??= new ListBuilder<String>();
+  ListBuilder<String> get services =>
+      _$this._services ??= new ListBuilder<String>();
   set services(ListBuilder<String> services) => _$this._services = services;
 
   UserBuilder();
 
   UserBuilder get _$this {
     if (_$v != null) {
-      _uid = _$v.uid;
+      _loginUID = _$v.loginUID;
+      _docUID = _$v.docUID;
       _firstName = _$v.firstName;
       _lastName = _$v.lastName;
       _email = _$v.email;
@@ -318,7 +346,8 @@ class UserBuilder implements Builder<User, UserBuilder> {
     try {
       _$result = _$v ??
           new _$User._(
-              uid: uid,
+              loginUID: loginUID,
+              docUID: docUID,
               firstName: firstName,
               lastName: lastName,
               email: email,
@@ -347,7 +376,8 @@ class UserBuilder implements Builder<User, UserBuilder> {
         _$failedField = 'services';
         services.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError('User', _$failedField, e.toString());
+        throw new BuiltValueNestedFieldError(
+            'User', _$failedField, e.toString());
       }
       rethrow;
     }
