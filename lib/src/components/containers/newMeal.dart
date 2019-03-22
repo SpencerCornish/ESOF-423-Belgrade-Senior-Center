@@ -251,6 +251,15 @@ class NewMeal extends PComponent<NewMealProps> {
     print(end);
     print(meal);
 
+    DateTime day = DateTime.parse(date.value);
+    Duration startTime = new Duration();
+
+  Meal NewMeal = (new MealBuilder()
+          // ..startTime = start.value
+          // ..endTime = end.value
+          // ..menu = meal
+          )
+        .build();
     //history.push(Routes.dashboard);
   }
 }

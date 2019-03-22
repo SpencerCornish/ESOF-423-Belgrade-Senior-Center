@@ -5,6 +5,7 @@ import 'package:wui_builder/wui_builder.dart';
 import 'package:wui_builder/vhtml.dart';
 import 'package:built_collection/built_collection.dart';
 
+import '../../model/activity.dart';
 import '../../constants.dart';
 import '../../model/emergencyContact.dart';
 import '../../state/app.dart';
@@ -328,5 +329,24 @@ class NewActivity extends PComponent<NewActivityProps> {
     InputElement start =querySelector('#timeStart-input');
     InputElement end =querySelector('#timeEnd-input');
 
-   }
+  try{
+    DateTime startTime = DateTime.parse('#start');
+    DateTime endTime = DateTime.parse('#end');
+    int cap = int.parse('#capacity');
+    
+
+   Activity NewActivity = (new ActivityBuilder()
+          ..capacity =cap
+          ..endTime = endTime
+          ..startTime = startTime
+          ..instructor =instructor.value
+          ..location = location.value
+          ..name =activity.value)
+        .build();
+  }catch(e){
+      print("Big ol Error on Data Entry" + e);
+  }
+
+
+}
 }
