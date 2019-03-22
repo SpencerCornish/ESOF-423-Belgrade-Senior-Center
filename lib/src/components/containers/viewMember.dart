@@ -34,6 +34,11 @@ class viewMember extends Component<ViewMemberProps, ViewMembersState> {
   History _history;
 
   @override
+  void componentWillUpdate(ViewMemberProps nextProps, ViewMembersState nextState) {
+    super.componentWillUpdate(nextProps, nextState);
+  }
+
+  @override
   ViewMembersState getInitialState() => ViewMembersState()
     ..showMod = false
     ..checkedIn = false
@@ -153,14 +158,6 @@ class viewMember extends Component<ViewMemberProps, ViewMembersState> {
                                         ..className = 'icon is-left'
                                         ..children = [new Vi()..className = 'fas fa-search'],
                                     ],
-                                  // new Vbutton()
-                                  //   ..className = 'submit'
-                                  //   ..onClick = _searchListener
-                                  //   ..children = {
-                                  //     new VSpanElement()
-                                  //       ..className = 'icon'
-                                  //       ..children = {new Vi()..className = 'fas fa-search'}
-                                  // }
                                 ],
                             ],
                         ],
@@ -176,7 +173,7 @@ class viewMember extends Component<ViewMemberProps, ViewMembersState> {
   List<VNode> _renderSearch() {
     List<VNode> nodeList = <VNode>[];
     nodeList.addAll(titleRow());
-    for (User user in props.userMap.values) {
+    for (User user in state.found) {
       nodeList.add(new VTableRowElement()
         ..className = 'tr'
         ..children = [
@@ -191,11 +188,13 @@ class viewMember extends Component<ViewMemberProps, ViewMembersState> {
     return nodeList;
   }
 
-  _searchListener(KeyboardEvent e) {
-    //13 is enter
-    if (e.keyCode == 13) {
-      print("Search initiated");
-      InputElement search = querySelector('#Search');
+  _searchListener(_) {
+    InputElement search = querySelector('#Search');
+    if (search.value.isEmpty) {
+      setState((ViewMemberProps, ViewMembersState) => ViewMembersState
+        ..found = <User>[]
+        ..searching = false);
+    } else {
       List found = <User>[];
 
       for (User user in props.userMap.values) {
@@ -230,11 +229,9 @@ class viewMember extends Component<ViewMemberProps, ViewMembersState> {
         }
       }
 
-      for (User user in found) {
-        print("found match @: " + user.lastName);
-      }
-
-      setState((ViewMemberProps, ViewMembersState) => ViewMembersState..found = found);
+      setState((ViewMemberProps, ViewMembersState) => ViewMembersState
+        ..found = found
+        ..searching = true);
     }
   }
 }
