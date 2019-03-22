@@ -20,6 +20,9 @@ class _$ServerMiddlewareActions extends ServerMiddlewareActions {
   final ActionDispatcher<User> updateOrCreateUser =
       new ActionDispatcher<User>('ServerMiddlewareActions-updateOrCreateUser');
   final ActionDispatcher<Null> fetchAllMembers = new ActionDispatcher<Null>('ServerMiddlewareActions-fetchAllMembers');
+  final ActionDispatcher<Null> fetchAllActivities =
+      new ActionDispatcher<Null>('ServerMiddlewareActions-fetchAllActivities');
+  final ActionDispatcher<Null> fetchAllMeals = new ActionDispatcher<Null>('ServerMiddlewareActions-fetchAllMeals');
 
   @override
   void setDispatcher(Dispatcher dispatcher) {
@@ -28,6 +31,8 @@ class _$ServerMiddlewareActions extends ServerMiddlewareActions {
     resetPassword.setDispatcher(dispatcher);
     updateOrCreateUser.setDispatcher(dispatcher);
     fetchAllMembers.setDispatcher(dispatcher);
+    fetchAllActivities.setDispatcher(dispatcher);
+    fetchAllMeals.setDispatcher(dispatcher);
   }
 }
 
@@ -38,4 +43,6 @@ class ServerMiddlewareActionsNames {
   static final ActionName<String> resetPassword = new ActionName<String>('ServerMiddlewareActions-resetPassword');
   static final ActionName<User> updateOrCreateUser = new ActionName<User>('ServerMiddlewareActions-updateOrCreateUser');
   static final ActionName<Null> fetchAllMembers = new ActionName<Null>('ServerMiddlewareActions-fetchAllMembers');
+  static final ActionName<Null> fetchAllActivities = new ActionName<Null>('ServerMiddlewareActions-fetchAllActivities');
+  static final ActionName<Null> fetchAllMeals = new ActionName<Null>('ServerMiddlewareActions-fetchAllMeals');
 }

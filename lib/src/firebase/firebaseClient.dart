@@ -12,6 +12,8 @@ import './dbRefs.dart';
 import '../constants.dart';
 
 import '../model/user.dart';
+import '../model/meal.dart';
+import '../model/activity.dart';
 import '../model/emergencyContact.dart';
 
 class FirebaseClient {
@@ -131,13 +133,34 @@ class FirebaseClient {
   // getMeals (TODO: by date/date range?)
 
   /// [getAllMeals] get all meal documents
-  getAllMeals() => _refs.allMeals().get();
+  Future<BuiltMap<String, Meal>> getAllMeals() async {
+    Map<String, Meal> dataSet = <String, Meal>{};
+    fs.QuerySnapshot result = await _refs.allMeals().get();
+    for (fs.DocumentSnapshot doc in result.docs) {
+      dataSet[doc.id] = new Meal.fromFirebase(
+        doc.data(),
+        uid: doc.id,
+      );
+    }
+    return new BuiltMap<String, Meal>.from(dataSet);
+  }
 
   /// [getMeal] get just one meal document by unique identifier
   getMeal(String uid) => _refs.meal(uid).get();
 
-  /// [getAllClasses] this will get all class documents
-  getAllClasses() => _refs.allClasses().get();
+  /// [getAllActivities] this will get all class documents
+  Future<BuiltMap<String, Activity>> getAllActivities() async {
+    Map<String, Activity> dataSet = <String, Activity>{};
+    fs.QuerySnapshot result = await _refs.allActivities().get();
+    for (fs.DocumentSnapshot doc in result.docs) {
+      print(doc.data());
+      dataSet[doc.id] = new Activity.fromFirebase(
+        doc.data(),
+        uid: doc.id,
+      );
+    }
+    return new BuiltMap<String, Activity>.from(dataSet);
+  }
 
   /// [getClassByStartDate] return a group of documents by start date
   getClassByStartDate(DateTime date) {
@@ -145,16 +168,16 @@ class FirebaseClient {
     final end = new DateTime(date.year, date.month, date.day, 23, 59, 59);
 
     return _refs
-        .allClasses()
+        .allActivities()
         .where("start_time", "=>", start.toIso8601String())
         .where("start_time", "<=", end.toIso8601String());
   }
 
   /// [getClassTaughtBy] return a group of documents by instructor
-  getClassTaughtBy(String instructor) => _refs.allClasses().where("instructor", "==", instructor);
+  getClassTaughtBy(String instructor) => _refs.allActivities().where("instructor", "==", instructor);
 
   /// [getClass] get a single class document by unique identifier
-  getClass(String uid) => _refs.singleClass(uid).get();
+  // getClass(String uid) => _refs.singleClass(uid).get();
 
   /// [updateUser] update existing user by unique identifier. key is any user field and value is the new value
   String addOrUpdateUser(Map<String, dynamic> userData, {String documentID}) {

@@ -19,7 +19,14 @@ class Routes {
 
   static const dashboard = '/dashboard';
 
-  static const viewMember = '/view/members';
+  static const viewMembers = '/view/members';
+
+  static const editMember = '/edit/member/:user_uid';
+
+  static String generateEditMemberURL(String uid) => '/edit/member/$uid';
+
+  static const viewActivity = '/view/activities';
+  static const viewMeal = '/view/meals';
 
   // TODO: Fill in more routes here
 
@@ -43,9 +50,22 @@ class ExportHeader {
     'Membership Renewal Date',
   ];
 
-  static const activity = [];
+  static const activity = [
+    'ID',
+    'Name',
+    'Instructor',
+    'Capacity',
+    'location',
+    'Start',
+    'End',
+  ];
 
-  static const meal = [];
+  static const meal = [
+    'ID',
+    'Start',
+    'End',
+    'Menu',
+  ];
 }
 
 enum Role {

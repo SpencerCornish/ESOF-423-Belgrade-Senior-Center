@@ -84,7 +84,7 @@ abstract class User implements Built<User, UserBuilder> {
   }) =>
       new User((UserBuilder builder) => builder
         ..docUID = docUID
-        ..loginUID = loginUID
+        ..loginUID = loginUID ?? firestoreData['login_uid']
         ..firstName = firestoreData['first_name']
         ..lastName = firestoreData['last_name']
         ..email = email ?? firestoreData['email']

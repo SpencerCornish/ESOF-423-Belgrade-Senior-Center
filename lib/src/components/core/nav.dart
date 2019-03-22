@@ -174,11 +174,11 @@ class Nav extends Component<NavProps, NavState> {
 
   _onNewActivityClick(_) => print('Navigate to new activity form');
 
-  _onViewMembersClick(_) => history.push(Routes.viewMember);
+  _onViewMembersClick(_) => history.push(Routes.viewMembers);
 
-  _onViewMealsClick(_) => print('Navigate to view meals list');
+  _onViewMealsClick(_) => history.push(Routes.viewMeal);
 
-  _onViewActivitiesClick(_) => print('Navigate to view activities list');
+  _onViewActivitiesClick(_) => history.push(Routes.viewActivity);
 
   _onLogOutClick(_) async {
     await props.actions.setAuthState(AuthState.LOADING);

@@ -1,63 +1,48 @@
 import 'dart:html' hide History;
-import 'dart:convert';
 
-import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart';
+import 'package:wui_builder/components.dart';
 import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
 import 'package:wui_builder/vhtml.dart';
 import 'package:built_collection/built_collection.dart';
 
 import '../core/nav.dart';
-import '../../constants.dart';
 
 import '../../model/user.dart';
+import '../../model/meal.dart';
 
 import '../../state/app.dart';
-import '../../middleware/serverMiddleware.dart';
+import '../../constants.dart';
 
-class ViewMemberProps {
+class ViewMealProps {
   AppActions actions;
   User user;
-  BuiltMap<String, User> userMap;
+  BuiltMap<String, Meal> mealMap;
 }
 
-/// [ViewMember] class / page to show a visual representation of current stored data
-class ViewMember extends PComponent<ViewMemberProps> {
-  ViewMember(props) : super(props);
-  List<String> title = ["Last", "First", "Address", "Phone", "Start"];
+/// [viewMeal] class / page to show a visual representation of current stored data
+class ViewMeal extends PComponent<ViewMealProps> {
+  ViewMeal(props) : super(props);
+  List<String> title = ["Start", "End"];
   History _history;
 
   /// Browser history entrypoint, to control page navigation
   History get history => _history ?? findHistoryInContext(context);
 
-  VNode emailInputNode;
-  VNode passwordInputNode;
-
   /// [createRows] Scaling function to make rows based on amount of information available
   List<VNode> createRows() {
     List<VNode> nodeList = new List();
     nodeList.addAll(titleRow());
-    for (User user in props.userMap.values) {
+    for (Meal meal in props.mealMap.values) {
       nodeList.add(new VTableRowElement()
         ..className = 'tr'
         ..children = [
           new VTableCellElement()
-            ..className = tdClass(user.lastName)
-            ..text = checkText(user.lastName),
+            ..className = tdClass(meal.startTime.toString())
+            ..text = checkText("${meal.startTime.month}/${meal.startTime.day}/${meal.startTime.year}"),
           new VTableCellElement()
-            ..className = tdClass(user.firstName)
-            ..text = checkText(user.firstName),
-          new VTableCellElement()
-            ..className = tdClass(user.address)
-            ..text = checkText(user.address),
-          new VTableCellElement()
-            ..className = tdClass(user.phoneNumber)
-            ..text = checkText(user.phoneNumber),
-          new VTableCellElement()
-            ..className = tdClass(user.membershipStart.toString())
-            ..text =
-                checkText("${user.membershipStart.month}/${user.membershipStart.day}/${user.membershipStart.year}"),
+            ..className = tdClass(meal.endTime.toString())
+            ..text = checkText("${meal.endTime.month}/${meal.endTime.day}/${meal.endTime.year}"),
         ]);
     }
     return nodeList;
@@ -106,7 +91,7 @@ class ViewMember extends PComponent<ViewMemberProps> {
                             ..children = [
                               new Vh4()
                                 ..className = 'title is-4'
-                                ..text = 'Member Data',
+                                ..text = 'Meal Data',
                               new Vh1()
                                 ..className = 'subtitle is-7'
                                 ..text = " as of: ${DateTime.now().month}/${DateTime.now().day}/${DateTime.now().year}",
@@ -125,7 +110,7 @@ class ViewMember extends PComponent<ViewMemberProps> {
                                         ..placeholder = 'Search'
                                         ..type = 'text',
                                       new VSpanElement()
-                                        ..className = 'icon is-left has-text-info'
+                                        ..className = 'icon is-left'
                                         ..children = [new Vi()..className = 'fas fa-search'],
                                     ],
                                 ],
@@ -162,16 +147,16 @@ class ViewMember extends PComponent<ViewMemberProps> {
     ];
 
   _onExportCsvClick(_) {
-    List<String> lines = props.userMap.values.map((user) => user.toCsv()).toList();
+    List<String> lines = props.mealMap.values.map((meal) => meal.toCsv()).toList();
 
     // Add the header row
-    lines.insert(0, ExportHeader.user.join(',') + '\n');
+    lines.insert(0, ExportHeader.meal.join(',') + '\n');
 
     Blob data = new Blob(lines, "text/csv");
 
     AnchorElement downloadLink = new AnchorElement(href: Url.createObjectUrlFromBlob(data));
     downloadLink.rel = 'text/csv';
-    downloadLink.download = 'member-export-${new DateTime.now().toIso8601String()}.csv';
+    downloadLink.download = 'activity-export-${new DateTime.now().toIso8601String()}.csv';
 
     var event = new MouseEvent("click", view: window, cancelable: false);
     downloadLink.dispatchEvent(event);
