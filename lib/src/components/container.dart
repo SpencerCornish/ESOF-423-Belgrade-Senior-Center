@@ -132,7 +132,7 @@ class Container extends PComponent<ContainerProps> {
     ..actions = props.storeContainer.store.actions
     ..user = appState.user);
 
-  _renderViewMember() => new viewMember(new viewMemberProps()
+  _renderViewMember() => new viewMember(new ViewMemberProps()
     ..actions = props.storeContainer.store.actions
     ..user = appState.user
     ..userMap = appState.userMap);

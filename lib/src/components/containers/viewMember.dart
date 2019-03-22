@@ -13,17 +13,31 @@ import '../../model/user.dart';
 import '../../state/app.dart';
 import '../../middleware/serverMiddleware.dart';
 
-class viewMemberProps {
+class ViewMemberProps {
   AppActions actions;
   User user;
   BuiltMap<String, User> userMap;
 }
 
+class ViewMembersState {
+  bool showMod;
+  bool checkedIn;
+  bool searching;
+  String modMem;
+}
+
 /// [viewMember] class / page to show a visual representation of current stored data
-class viewMember extends PComponent<viewMemberProps> {
+class viewMember extends Component<ViewMemberProps, ViewMembersState> {
   viewMember(props) : super(props);
   List<String> title = ["Last", "First", "Address", "Phone", "Start"];
   History _history;
+
+  @override
+  ViewMembersState getInitialState() => ViewMembersState()
+    ..showMod = false
+    ..checkedIn = false
+    ..searching = false
+    ..modMem = null;
 
   /// Browser history entrypoint, to control page navigation
   History get history => _history ?? findHistoryInContext(context);
