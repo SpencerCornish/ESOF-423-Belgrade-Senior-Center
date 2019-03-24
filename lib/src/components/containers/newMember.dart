@@ -111,7 +111,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                         ..placeholder = "First Name",
                                       new VParagraphElement()
                                         ..className = 'help is-danger ${state.firstNameIsValid ? 'is-invisible' : ''}'
-                                        ..text = 'First name is invalid'
+                                        ..text = 'First name is required'
                                     ],
                                   new VParagraphElement()
                                     ..className = 'field'
@@ -139,9 +139,14 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                                     ..id = 'lName-input'
                                                     ..placeholder = "Last Name",
                                                   new VParagraphElement()
+<<<<<<< HEAD
                                                     ..className =
                                                         'help is-danger ${state.lastNameIsValid ? 'is-invisible' : ''}'
                                                     ..text = 'Last name is invalid'
+=======
+                                                    ..className = 'help is-danger ${state.lastNameIsValid ? 'is-invisible' : ''}'
+                                                    ..text = 'Last name is required'
+>>>>>>> 183521a19b019d2c71dc69bd449f964d22f3ac79
                                                 ]
                                             ]
                                         ]
@@ -281,11 +286,11 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                 ..children = [
                                   new VInputElement()
                                     ..onInput = _addressValidator
-                                    ..className = 'input ${state.cellNumberIsValid ? '' : 'is-danger'}'
+                                    ..className = 'input ${state.addressIsValid ? '' : 'is-danger'}'
                                     ..id = 'address-input'
                                     ..placeholder = "US Only",
                                   new VParagraphElement()
-                                    ..className = 'help is-danger ${state.cellNumberIsValid ? 'is-invisible' : ''}'
+                                    ..className = 'help is-danger ${state.addressIsValid ? 'is-invisible' : ''}'
                                     ..text = 'Address is invalid'
                                 ]
                             ]
@@ -510,13 +515,8 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
   void _firstNameValidation(_) {
     //Gets first field
     InputElement first = querySelector('#fName-input');
-    //Bool for setting state
-    bool isValid;
-    //Checks if value is blank
-    if (first.value == '') {
-      isValid = false;
-    } else
-      isValid = true;
+    //Checks if value is blank by calling InputValidator class
+    bool isValid = InputValidator.nameValidator(first.value);
     //Sets new state
     setState((NewMemberProps, NewMemberState) => NewMemberState..firstNameIsValid = isValid);
   }
@@ -525,13 +525,8 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
   void _lastNameValidation(_) {
     //Gets last field
     InputElement last = querySelector('#lName-input');
-    //Bool for setting state
-    bool isValid;
-    //Checks if value is blank
-    if (last.value == '') {
-      isValid = false;
-    } else
-      isValid = true;
+    //Validates with validator class
+    bool isValid = InputValidator.nameValidator(last.value);
     //Sets new state
     setState((NewMemberProps, NewMemberState) => NewMemberState..lastNameIsValid = isValid);
   }
@@ -540,13 +535,10 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
   void _emailValidator(_) {
     //Gets email field
     InputElement email = querySelector('#email-input');
-    //Bool for setting state
-    bool isValid;
-    if (emailIsValid(email.value)) {
-      isValid = true;
-    } else
-      isValid = false;
-    setState((NewMemberProps, NewMemberState) => NewMemberState..emailIsValid = isValid);
+    //Input validation from input validator
+    bool isValid = InputValidator.emailValidator(email.value);
+    setState((NewMemberProps, NewMemberState) =>
+      NewMemberState..emailIsValid = isValid);
   }
 
   //Validation for phone numbers
@@ -566,27 +558,12 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     //Gets phone field and then value from field
     InputElement phone = querySelector('#phoneNum-input');
     String value = phone.value;
-    //Bool for setting state
-    bool isValid;
     //If blank exit
     if (value == '') {
       return;
     }
-    //Acual validation
-    //Splits string into a list
-    List<String> temp = value.split('');
-    //Counts digits in input string
-    int count = 0;
-    for (String x in temp) {
-      if (int.tryParse(x) != null) {
-        count++;
-      }
-    }
-    if (count == 10 || count == 11) {
-      isValid = true;
-    } else {
-      isValid = false;
-    }
+    //Validation by validation class
+    bool isValid = InputValidator.phoneNumberValidator(value);    
     //Sets state
     setState((NewMemberProps, NewMemberState) => NewMemberState..phoneNumberIsValid = isValid);
   }
@@ -596,34 +573,21 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     //Gets cell field and then value from field
     InputElement cell = querySelector('#cellNum-input');
     String value = cell.value;
-    //Bool for setting state
-    bool isValid;
     //Exits if blank
     if (value == '') {
       return;
     }
-    //Acual validation
-    //Splits string into a list
-    List<String> temp = value.split('');
-    //Counts digits in input string
-    int count = 0;
-    for (String x in temp) {
-      if (int.tryParse(x) != null) {
-        count++;
-      }
-    }
-    if (count == 10 || count == 11) {
-      isValid = true;
-    } else {
-      isValid = false;
-    }
+    //Validation from validator class
+    bool isValid =InputValidator.phoneNumberValidator(true);
     //Sets state
     setState((NewMemberProps, NewMemberState) => NewMemberState..cellNumberIsValid = isValid);
   }
 
-  //Validation for address, does nothing for now
   void _addressValidator(_) {
-    InputElement address = querySelector('#address-input');
+    InputElement address =querySelector("#address-input");
+    bool isValid = InputValidator.addressValidator(address.value);
+    setState((NewMemberProps, NewMemberState) =>
+      NewMemberState..addressIsValid = isValid);
   }
 
   //method used for the submit click

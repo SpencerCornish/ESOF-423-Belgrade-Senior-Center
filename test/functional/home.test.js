@@ -15,7 +15,7 @@ const APP = "http://localhost:5000/";
 async function setupBrowser() {
   browser = await puppeteer.launch({
     // headless: false,
-    // slowMo: 40,
+    // // slowMo: 40,
     // args: [`--window-size=${width},${height}`]
   });
   page = await browser.newPage();
@@ -24,6 +24,10 @@ async function setupBrowser() {
 
 async function getInputValue(selector) {
   return await page.evaluate(selector => document.querySelector(selector).value, selector);
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 beforeAll(async () => {
@@ -49,7 +53,6 @@ describe("Home Page", () => {
     // TODO: Check displayed userdata here
 
     await page.click("#log-out-button");
-    await page.waitForNavigation();
     await page.waitForSelector("#home-container");
   }, 16000);
 
@@ -76,6 +79,8 @@ describe("Home Page", () => {
     expect(await getInputValue("#pass-input")).not.toBe("");
 
     await page.click("#cancel-button");
+
+    await sleep(100);
 
     expect(await getInputValue("#email-input")).toBe("");
     expect(await getInputValue("#pass-input")).toBe("");

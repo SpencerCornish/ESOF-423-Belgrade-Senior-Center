@@ -13,7 +13,7 @@ void main() {
   };
   group('Activity - ', () {
     test('fromFirebase factory produces accurate model file', () {
-      Activity activity = new Activity.fromFirebase(mockUID, mockActivityData);
+      Activity activity = new Activity.fromFirebase(mockActivityData, uid: "testID");
       //Test that values are accurately carried over
       expect(activity.capacity, mockActivityData['capacity']);
       expect(activity.startTime.toIso8601String(), mockActivityData['start_time']);
@@ -24,7 +24,7 @@ void main() {
     });
 
     test('toFirebase function produces a properly formatted map of data', () {
-      Activity activity = new Activity.fromFirebase(mockUID, mockActivityData);
+      Activity activity = new Activity.fromFirebase(mockActivityData, uid: "testID");
       Map<String, dynamic> temp = activity.toFirestore();
       expect(mockActivityData, temp);
     });

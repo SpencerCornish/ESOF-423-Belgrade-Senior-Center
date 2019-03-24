@@ -30,7 +30,10 @@ abstract class Activity implements Built<Activity, ActivityBuilder> {
   Activity._();
   factory Activity([updates(ActivityBuilder b)]) = _$Activity;
 
-  factory Activity.fromFirebase(String uid, Map<String, dynamic> firestoreData) =>
+  factory Activity.fromFirebase(
+    Map<String, dynamic> firestoreData, {
+    String uid,
+  }) =>
       new Activity((ActivityBuilder builder) => builder
         ..uid = uid
         ..capacity = firestoreData['capacity']
@@ -48,4 +51,16 @@ abstract class Activity implements Built<Activity, ActivityBuilder> {
         'location': location,
         'name': name,
       };
+
+  String toCsv() =>
+      [
+        '\"${uid}\"',
+        '\"${name}\"',
+        '\"${instructor}\"',
+        '\"${capacity}\"',
+        '\"${location}\"',
+        '\"${startTime}\"',
+        '\"${endTime}\"',
+      ].join(',') +
+      '\n';
 }
