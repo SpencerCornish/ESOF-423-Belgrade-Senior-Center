@@ -25,6 +25,7 @@ This is a non-exhaustive list of the tools and technologies we are using.
   - [Storage](https://firebase.google.com/docs/storage/)
 - [Travis CI](https://travis-ci.org/), for Continuous integration
 - [LGTM (Looks good to me)](https://lgtm.com/), for Javascript dependency security vulnerability detection.
+- [Plant UML](http://plantuml.com/), for UML diagram.
 
 ## Directory Layout
 
@@ -44,6 +45,10 @@ This is a non-exhaustive list of the tools and technologies we are using.
 - The `test` directory contains the files used for testing the Dart source code.
 
 - THe `sass` directory will eventually contain any custom styling for the project.
+
+[UML Diagram:](./classDiagram.PNG)
+
+![alt text](./classDiagram.PNG)
 
 ## Directions for Building from Source Code
 

@@ -13,11 +13,11 @@ dependencies:
   built_value: ^6.3.0
   email_validator: "^1.0.0"
   firebase: ^5.0.2
+  googleapis_auth: ^0.2.6
   intl: ^0.15.7
   sentry_client: ^4.2.1
   stack_trace: ^1.9.3
   service_worker: ^0.2.3
-  googleapis_auth: ^0.2.6
   wui_builder: ^0.7.1
 
 dev_dependencies:
