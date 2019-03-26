@@ -139,14 +139,9 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                                     ..id = 'lName-input'
                                                     ..placeholder = "Last Name",
                                                   new VParagraphElement()
-<<<<<<< HEAD
                                                     ..className =
                                                         'help is-danger ${state.lastNameIsValid ? 'is-invisible' : ''}'
-                                                    ..text = 'Last name is invalid'
-=======
-                                                    ..className = 'help is-danger ${state.lastNameIsValid ? 'is-invisible' : ''}'
                                                     ..text = 'Last name is required'
->>>>>>> 183521a19b019d2c71dc69bd449f964d22f3ac79
                                                 ]
                                             ]
                                         ]
@@ -537,8 +532,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     InputElement email = querySelector('#email-input');
     //Input validation from input validator
     bool isValid = InputValidator.emailValidator(email.value);
-    setState((NewMemberProps, NewMemberState) =>
-      NewMemberState..emailIsValid = isValid);
+    setState((NewMemberProps, NewMemberState) => NewMemberState..emailIsValid = isValid);
   }
 
   //Validation for phone numbers
@@ -563,7 +557,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
       return;
     }
     //Validation by validation class
-    bool isValid = InputValidator.phoneNumberValidator(value);    
+    bool isValid = InputValidator.phoneNumberValidator(value);
     //Sets state
     setState((NewMemberProps, NewMemberState) => NewMemberState..phoneNumberIsValid = isValid);
   }
@@ -578,16 +572,15 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
       return;
     }
     //Validation from validator class
-    bool isValid =InputValidator.phoneNumberValidator(true);
+    bool isValid = InputValidator.phoneNumberValidator(value);
     //Sets state
     setState((NewMemberProps, NewMemberState) => NewMemberState..cellNumberIsValid = isValid);
   }
 
   void _addressValidator(_) {
-    InputElement address =querySelector("#address-input");
+    InputElement address = querySelector("#address-input");
     bool isValid = InputValidator.addressValidator(address.value);
-    setState((NewMemberProps, NewMemberState) =>
-      NewMemberState..addressIsValid = isValid);
+    setState((NewMemberProps, NewMemberState) => NewMemberState..addressIsValid = isValid);
   }
 
   //method used for the submit click

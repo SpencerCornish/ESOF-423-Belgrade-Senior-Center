@@ -36,7 +36,7 @@ class Routes {
 class InputValidator {
   //Validates names, only issue is if blank
   static bool nameValidator(String input) {
-    if(input == "") {
+    if (input == "") {
       return false;
     }
     return true;
@@ -54,13 +54,15 @@ class InputValidator {
     //Counts digits in input string
     int count = 0;
     for (String x in temp) {
-      if(int.tryParse(x) != null) {
+      if (int.tryParse(x) != null) {
         count++;
       }
     }
-    if(count == 10 || count == 11) {
+    if (count == 10 || count == 11) {
       return true;
-    } else {return false;}
+    } else {
+      return false;
+    }
   }
 
   //Validates addresses TODO finish this
@@ -68,6 +70,7 @@ class InputValidator {
     return true;
   }
 }
+
 class ExportHeader {
   static const user = [
     'ID',

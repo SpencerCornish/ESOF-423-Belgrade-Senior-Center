@@ -15,18 +15,12 @@ void main() {
 
   group('Constants -', () {
     //Testing for InputValidator Class
-    test('nameValidator only denies blank strings', () {
-      
-    });
+    test('nameValidator only denies blank strings', () {});
     test('emailValidator correctly checks emails', () {
-      emails.forEach((email, isValid) => expect(InputValidator.emailValidator(email),isValid));
+      emails.forEach((email, isValid) => expect(InputValidator.emailValidator(email), isValid));
     });
-    test('phoneNumberValidator works correctly', () {
-      
-    });
-    test('addressValidator', () {
-      
-    });
+    test('phoneNumberValidator works correctly', () {});
+    test('addressValidator', () {});
     //Testing for other methods
     test('stringToBase and baseToString properly encodes strings', () {
       expect(baseToString(stringToBase("test")), "test");
