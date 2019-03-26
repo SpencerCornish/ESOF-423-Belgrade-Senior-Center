@@ -7,6 +7,7 @@ part 'activity.g.dart';
 /// [Activity] is a model for the user database document
 abstract class Activity implements Built<Activity, ActivityBuilder> {
   /// [uid] is the unique identifier for the activity
+  @nullable
   String get uid;
 
   /// [capacity] May be -1 for unlimited

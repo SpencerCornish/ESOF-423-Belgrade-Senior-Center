@@ -22,6 +22,11 @@ class _$ServerMiddlewareActions extends ServerMiddlewareActions {
       new ActionDispatcher<String>('ServerMiddlewareActions-resetPassword');
   final ActionDispatcher<User> updateOrCreateUser =
       new ActionDispatcher<User>('ServerMiddlewareActions-updateOrCreateUser');
+  final ActionDispatcher<Activity> updateOrCreateActivity =
+      new ActionDispatcher<Activity>(
+          'ServerMiddlewareActions-updateOrCreateActivity');
+  final ActionDispatcher<Meal> updateOrCreateMeal =
+      new ActionDispatcher<Meal>('ServerMiddlewareActions-updateOrCreateMeal');
   final ActionDispatcher<Null> fetchAllMembers =
       new ActionDispatcher<Null>('ServerMiddlewareActions-fetchAllMembers');
   final ActionDispatcher<Null> fetchAllActivities =
@@ -35,6 +40,8 @@ class _$ServerMiddlewareActions extends ServerMiddlewareActions {
     logOut.setDispatcher(dispatcher);
     resetPassword.setDispatcher(dispatcher);
     updateOrCreateUser.setDispatcher(dispatcher);
+    updateOrCreateActivity.setDispatcher(dispatcher);
+    updateOrCreateMeal.setDispatcher(dispatcher);
     fetchAllMembers.setDispatcher(dispatcher);
     fetchAllActivities.setDispatcher(dispatcher);
     fetchAllMeals.setDispatcher(dispatcher);
@@ -50,6 +57,11 @@ class ServerMiddlewareActionsNames {
       new ActionName<String>('ServerMiddlewareActions-resetPassword');
   static final ActionName<User> updateOrCreateUser =
       new ActionName<User>('ServerMiddlewareActions-updateOrCreateUser');
+  static final ActionName<Activity> updateOrCreateActivity =
+      new ActionName<Activity>(
+          'ServerMiddlewareActions-updateOrCreateActivity');
+  static final ActionName<Meal> updateOrCreateMeal =
+      new ActionName<Meal>('ServerMiddlewareActions-updateOrCreateMeal');
   static final ActionName<Null> fetchAllMembers =
       new ActionName<Null>('ServerMiddlewareActions-fetchAllMembers');
   static final ActionName<Null> fetchAllActivities =

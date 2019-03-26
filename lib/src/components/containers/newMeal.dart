@@ -244,22 +244,47 @@ class NewMeal extends PComponent<NewMealProps> {
     InputElement start =querySelector('#mealStart-input');
     InputElement end =querySelector('#mealEnd-input');
     TextAreaElement meal =querySelector('#meal-input');
+    DateTime serveDay = DateTime.parse(date.value);
+    String tempStart = start.value.toString(); //make the start time a string for use in _parseDate
+    String tempEnd = end.value.toString(); //make the end time a string for use in _parseDate
 
-
-    print(date);
-    print(start);
-    print(end);
-    print(meal);
-
-    DateTime day = DateTime.parse(date.value);
-    Duration startTime = new Duration();
+    String startTime, endTime;
+    startTime = _parseDate(serveDay, tempStart);
+    endTime = _parseDate(serveDay, tempEnd);
+ 
 
   Meal NewMeal = (new MealBuilder()
-          // ..startTime = start.value
-          // ..endTime = end.value
-          // ..menu = meal
+          ..startTime = DateTime.parse(startTime)
+          ..endTime = DateTime.parse(endTime)
+          //..menu = 
           )
         .build();
-    //history.push(Routes.dashboard);
+    
+    props.actions.server.updateOrCreateMeal(NewMeal);
+    props.actions.server.fetchAllMeals();
+    
+    history.push(Routes.dashboard);
+  }
+
+  ///[_parseDate] is a function adopted from the _showDate function that Josh wrote to make a string from a date and time input compatible with DateTime data types
+  String _parseDate(DateTime date, String time){
+    String tempDay, tempMonth, tempTime;
+
+    if(date.day.toString().length == 1){
+      tempDay = "0${date.day}";
+    }else{
+      tempDay = date.day.toString();
+    }
+
+    if(date.month.toString().length == 1){
+      tempMonth = "0${date.month}";
+    }else{
+      tempMonth = date.month.toString();
+    }
+
+    print(time);
+    tempTime = "${time}:00.000";
+
+    return "${date.year}-${tempMonth}-${tempDay} ${tempTime}";
   }
 }

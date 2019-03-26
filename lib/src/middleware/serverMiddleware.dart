@@ -6,6 +6,8 @@ import '../firebase/firebaseClient.dart';
 import '../state/app.dart';
 
 import '../model/user.dart';
+import '../model/activity.dart';
+import '../model/meal.dart';
 
 part 'serverMiddleware.g.dart';
 
@@ -30,6 +32,12 @@ abstract class ServerMiddlewareActions extends ReduxActions {
   /// [updateOrCreateUser] attempts to update a user record. If it is unsuccessful, it creates a new one.
   ActionDispatcher<User> updateOrCreateUser;
 
+  /// [updateOrCreateActivity] attempts to update an activity. If it is unsuccessful, it creates a new one.
+  ActionDispatcher<Activity> updateOrCreateActivity;
+
+  /// [updateOrCreateMeal] attempts to update a meal. If it is unsuccessful, it creates a new one.
+  ActionDispatcher<Meal> updateOrCreateMeal;
+
   // TODO: Authenticate this call
   /// [fetchAllMembers] fetches the list of all Members in the database.
   ActionDispatcher<Null> fetchAllMembers;
@@ -51,6 +59,7 @@ createServerMiddleware(FirebaseClient client) => (new MiddlewareBuilder<App, App
       ..add<Null>(ServerMiddlewareActionsNames.logOut, _logOut(client))
       ..add<String>(ServerMiddlewareActionsNames.resetPassword, _resetPassword(client))
       ..add<User>(ServerMiddlewareActionsNames.updateOrCreateUser, _addOrUpdateUser(client))
+      //..add<Activity>(ServerMiddlewareActionsNames.updateOrCreateActivity, _addorUpdateActivity(client))
       ..add<Null>(ServerMiddlewareActionsNames.fetchAllMembers, _fetchAllMembers(client))
       ..add<Null>(ServerMiddlewareActionsNames.fetchAllActivities, _fetchAllActivities(client))
       ..add<Null>(ServerMiddlewareActionsNames.fetchAllMeals, _fetchAllMeals(client)))
@@ -87,6 +96,8 @@ _addOrUpdateUser(FirebaseClient client) => (
         documentID: action.payload.docUID,
       );
     };
+
+//TODO: add _updateOrCreateActivity
 
 _fetchAllMembers(FirebaseClient client) => (
       MiddlewareApi<App, AppBuilder, AppActions> api,

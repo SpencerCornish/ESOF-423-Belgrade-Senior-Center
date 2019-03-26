@@ -34,9 +34,6 @@ class _$Activity extends Activity {
       this.location,
       this.name})
       : super._() {
-    if (uid == null) {
-      throw new BuiltValueNullFieldError('Activity', 'uid');
-    }
     if (capacity == null) {
       throw new BuiltValueNullFieldError('Activity', 'capacity');
     }

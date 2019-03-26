@@ -83,33 +83,33 @@ class NewActivity extends PComponent<NewActivityProps> {
                                     ..className = 'field-body'
                                     ..children = [
                                       new VDivElement()
-                                      ..className = 'field'
-                                      ..id = 'actName-lab'
-                                      ..children = [
-                                        new VLabelElement()
-                                          ..className = 'label'
-                                          ..text = "Activity Name"
-                                      ],
-                                    new VDivElement()
-                                      ..className = 'field is-horizontal'
-                                      ..children = [
-                                        new VParagraphElement()
-                                        ..className = 'control'
+                                        ..className = 'field'
+                                        ..id = 'actName-lab'
                                         ..children = [
-                                          new VInputElement()
-                                            ..className = 'input'
-                                            ..id = 'act-input'
-                                            ..placeholder = "e.g. Yoga"
+                                          new VLabelElement()
+                                            ..className = 'label'
+                                            ..text = "Activity Name"
+                                        ],
+                                      new VDivElement()
+                                        ..className = 'field is-horizontal'
+                                        ..children = [
+                                          new VParagraphElement()
+                                            ..className = 'control'
+                                            ..children = [
+                                              new VInputElement()
+                                                ..className = 'input'
+                                                ..id = 'act-input'
+                                                ..placeholder = "e.g. Yoga"
+                                            ]
                                         ]
-                                      ]
                                     ]
                                 ]
                             ]
                         ],
-                        new VDivElement()
-                          ..className = 'column'
-                          ..children = [
-                            new VDivElement()
+                      new VDivElement()
+                        ..className = 'column'
+                        ..children = [
+                          new VDivElement()
                             ..className = 'field is-grouped'
                             ..children = [
                               new VDivElement()
@@ -119,29 +119,30 @@ class NewActivity extends PComponent<NewActivityProps> {
                                     ..className = 'field-body'
                                     ..children = [
                                       new VDivElement()
-                                      ..className = 'field'
-                                      ..id = 'instructName-lab'
-                                      ..children = [
-                                        new VLabelElement()
-                                          ..className = 'label'
-                                          ..text = "Instructor's Name"
-                                      ],
-                                    new VDivElement()
-                                      ..className = 'field is-horizontal'
-                                      ..children = [
-                                        new VParagraphElement()
-                                        ..className = 'control'
+                                        ..className = 'field'
+                                        ..id = 'instructName-lab'
                                         ..children = [
-                                          new VInputElement()
-                                            ..className = 'input'
-                                            ..id = 'instructorName-input'
-                                            ..placeholder = "First and Last Name"
+                                          new VLabelElement()
+                                            ..className = 'label'
+                                            ..text = "Instructor's Name"
+                                        ],
+                                      new VDivElement()
+                                        ..className = 'field is-horizontal'
+                                        ..children = [
+                                          new VParagraphElement()
+                                            ..className = 'control'
+                                            ..children = [
+                                              new VInputElement()
+                                                ..className = 'input'
+                                                ..id = 'instructorName-input'
+                                                ..placeholder =
+                                                    "First and Last Name"
+                                            ]
                                         ]
-                                      ]
                                     ]
                                 ]
                             ]
-                          ]
+                        ]
                     ],
                   //create the Location And Capacity Input fields
                   new VDivElement()
@@ -160,33 +161,34 @@ class NewActivity extends PComponent<NewActivityProps> {
                                     ..className = 'field-body'
                                     ..children = [
                                       new VDivElement()
-                                      ..className = 'field'
-                                      ..id = 'location-lab'
-                                      ..children = [
-                                        new VLabelElement()
-                                          ..className = 'label'
-                                          ..text = "Loaction"
-                                      ],
-                                    new VDivElement()
-                                      ..className = 'field is-horizontal'
-                                      ..children = [
-                                        new VParagraphElement()
-                                        ..className = 'control'
+                                        ..className = 'field'
+                                        ..id = 'location-lab'
                                         ..children = [
-                                          new VInputElement()
-                                            ..className = 'input'
-                                            ..id = 'location-input'
-                                            ..placeholder = "Where is the activity taking place?"
+                                          new VLabelElement()
+                                            ..className = 'label'
+                                            ..text = "Loaction"
+                                        ],
+                                      new VDivElement()
+                                        ..className = 'field is-horizontal'
+                                        ..children = [
+                                          new VParagraphElement()
+                                            ..className = 'control'
+                                            ..children = [
+                                              new VInputElement()
+                                                ..className = 'input'
+                                                ..id = 'location-input'
+                                                ..placeholder =
+                                                    "Where is the activity taking place?"
+                                            ]
                                         ]
-                                      ]
                                     ]
                                 ]
                             ]
                         ],
-                        new VDivElement()
-                          ..className = 'column'
-                          ..children = [
-                            new VDivElement()
+                      new VDivElement()
+                        ..className = 'column'
+                        ..children = [
+                          new VDivElement()
                             ..className = 'field is-grouped'
                             ..children = [
                               new VDivElement()
@@ -196,29 +198,69 @@ class NewActivity extends PComponent<NewActivityProps> {
                                     ..className = 'field-body'
                                     ..children = [
                                       new VDivElement()
-                                      ..className = 'field'
-                                      ..id = 'capacity-lab'
-                                      ..children = [
-                                        new VLabelElement()
-                                          ..className = 'label'
-                                          ..text = "Capacity"
-                                      ],
-                                    new VDivElement()
-                                      ..className = 'field is-horizontal'
-                                      ..children = [
-                                        new VParagraphElement()
-                                        ..className = 'control'
+                                        ..className = 'field'
+                                        ..id = 'capacity-lab'
                                         ..children = [
-                                          new VInputElement()
-                                            ..className = 'input'
-                                            ..id = 'capacity-input'
-                                            ..type = 'number'
+                                          new VLabelElement()
+                                            ..className = 'label'
+                                            ..text = "Capacity"
+                                        ],
+                                      new VDivElement()
+                                        ..className = 'field is-horizontal'
+                                        ..children = [
+                                          new VParagraphElement()
+                                            ..className = 'control'
+                                            ..children = [
+                                              new VInputElement()
+                                                ..className = 'input'
+                                                ..id = 'capacity-input'
+                                                ..type = 'number'
+                                            ]
                                         ]
-                                      ]
                                     ]
                                 ]
                             ]
-                          ]
+                        ]
+                    ],
+                  new VDivElement()
+                    ..className = 'columns'
+                    ..children = [
+                      new VDivElement()
+                        ..className = 'column'
+                        ..children = [
+                          new VDivElement()
+                            ..className = 'field is-grouped'
+                            ..children = [
+                              new VDivElement()
+                                ..className = 'field is-horizontal'
+                                ..children = [
+                                  new VDivElement()
+                                    ..className = 'field-body'
+                                    ..children = [
+                                      new VDivElement()
+                                        ..className = 'field'
+                                        ..id = 'day-lab'
+                                        ..children = [
+                                          new VLabelElement()
+                                            ..className = 'label'
+                                            ..text = "Date"
+                                        ],
+                                      new VDivElement()
+                                        ..className = 'field is-horizontal'
+                                        ..children = [
+                                          new VParagraphElement()
+                                            ..className = 'control'
+                                            ..children = [
+                                              new VInputElement()
+                                                ..className = 'input'
+                                                ..id = 'day-input'
+                                                ..type = 'date'
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
                     ],
 
                   //Create the start and end time input fields
@@ -239,33 +281,33 @@ class NewActivity extends PComponent<NewActivityProps> {
                                     ..className = 'field-body'
                                     ..children = [
                                       new VDivElement()
-                                      ..className = 'field'
-                                      ..id = 'timeStart-lab'
-                                      ..children = [
-                                        new VLabelElement()
-                                          ..className = 'label'
-                                          ..text = "Start Time"
-                                      ],
-                                    new VDivElement()
-                                      ..className = 'field is-horizontal'
-                                      ..children = [
-                                        new VParagraphElement()
-                                        ..className = 'control'
+                                        ..className = 'field'
+                                        ..id = 'timeStart-lab'
                                         ..children = [
-                                          new VInputElement()
-                                            ..className = 'input'
-                                            ..id = 'timeStart-input'
-                                            ..type = 'time'
+                                          new VLabelElement()
+                                            ..className = 'label'
+                                            ..text = "Start Time"
+                                        ],
+                                      new VDivElement()
+                                        ..className = 'field is-horizontal'
+                                        ..children = [
+                                          new VParagraphElement()
+                                            ..className = 'control'
+                                            ..children = [
+                                              new VInputElement()
+                                                ..className = 'input'
+                                                ..id = 'timeStart-input'
+                                                ..type = 'time'
+                                            ]
                                         ]
-                                      ]
                                     ]
                                 ]
                             ]
                         ],
-                        new VDivElement()
-                          ..className = 'column'
-                          ..children = [
-                            new VDivElement()
+                      new VDivElement()
+                        ..className = 'column'
+                        ..children = [
+                          new VDivElement()
                             ..className = 'field is-grouped'
                             ..children = [
                               new VDivElement()
@@ -275,29 +317,29 @@ class NewActivity extends PComponent<NewActivityProps> {
                                     ..className = 'field-body'
                                     ..children = [
                                       new VDivElement()
-                                      ..className = 'field'
-                                      ..id = 'timeEnd-lab'
-                                      ..children = [
-                                        new VLabelElement()
-                                          ..className = 'label'
-                                          ..text = "End Time"
-                                      ],
-                                    new VDivElement()
-                                      ..className = 'field is-horizontal'
-                                      ..children = [
-                                        new VParagraphElement()
-                                        ..className = 'control'
+                                        ..className = 'field'
+                                        ..id = 'timeEnd-lab'
                                         ..children = [
-                                          new VInputElement()
-                                            ..className = 'input'
-                                            ..id = 'timeEnd-input'
-                                            ..type = 'time'
+                                          new VLabelElement()
+                                            ..className = 'label'
+                                            ..text = "End Time"
+                                        ],
+                                      new VDivElement()
+                                        ..className = 'field is-horizontal'
+                                        ..children = [
+                                          new VParagraphElement()
+                                            ..className = 'control'
+                                            ..children = [
+                                              new VInputElement()
+                                                ..className = 'input'
+                                                ..id = 'timeEnd-input'
+                                                ..type = 'time'
+                                            ]
                                         ]
-                                      ]
                                     ]
                                 ]
                             ]
-                          ]
+                        ]
                     ],
                   //TODO: possibly find a way for admin to add a picture to the database and allow activities to access and utilize them
 
@@ -311,7 +353,7 @@ class NewActivity extends PComponent<NewActivityProps> {
                           new VAnchorElement()
                             ..className = 'button is-link'
                             ..text = "Submit"
-                          // ..onClick = _submitClick
+                            ..onClick = _submitClick
                         ]
                     ]
                 ]
@@ -322,31 +364,60 @@ class NewActivity extends PComponent<NewActivityProps> {
   //method used for the submit click
   //timeEnd-input, timeStart-input, capacity-input, location-input, instructorName-input, act-input
   _submitClick(_) {
-    InputElement activity =querySelector('#act-input');
-    InputElement instructor =querySelector('#instructorName-input');
-    InputElement location =querySelector('#location-input');
-    InputElement capacity =querySelector('#capacity-input');
-    InputElement start =querySelector('#timeStart-input');
-    InputElement end =querySelector('#timeEnd-input');
+    InputElement activity = querySelector('#act-input');
+    InputElement instructor = querySelector('#instructorName-input');
+    InputElement location = querySelector('#location-input');
+    InputElement capacity = querySelector('#capacity-input');
+    InputElement start = querySelector('#timeStart-input');
+    InputElement end = querySelector('#timeEnd-input');
+    InputElement day =querySelector('#day-input');
+    DateTime date = DateTime.parse(day.value);
+    String tempStart = start.value.toString(); //make the start time a string for use in _parseDate
+    String tempEnd = end.value.toString(); //make the end time a string for use in _parseDate
 
-  try{
-    DateTime startTime = DateTime.parse(start.value);
-    DateTime endTime = DateTime.parse(end.value);
-    int cap = int.parse(capacity.value);
-    
+    String startTime, endTime;
+    int cap; //capacity of activity
+    startTime = _parseDate(date, tempStart);
+    endTime =_parseDate(date, tempEnd);
+    cap = int.parse(capacity.value);
 
-   Activity NewActivity = (new ActivityBuilder()
-          ..capacity =cap
-          ..endTime = endTime
-          ..startTime = startTime
-          ..instructor =instructor.value
+    print(startTime);
+
+
+    Activity NewActivity = (new ActivityBuilder()
+          ..capacity = cap
+          ..endTime = DateTime.parse(endTime)
+          ..startTime = DateTime.parse(startTime)
+          ..instructor = instructor.value
           ..location = location.value
-          ..name =activity.value)
+          ..name = activity.value)
         .build();
-  }catch(e){
-      print("Big ol Error on Data Entry" + e);
+
+    props.actions.server.updateOrCreateActivity(NewActivity);
+    props.actions.server.fetchAllActivities();
+
+    history.push(Routes.dashboard);
   }
 
+  ///[_parseDate] is a function adopted from the _showDate function that Josh wrote to make a string from a date and time input compatible with DateTime data types
+  String _parseDate(DateTime date, String time){
+    String tempDay, tempMonth, tempTime;
 
-}
+    if(date.day.toString().length == 1){
+      tempDay = "0${date.day}";
+    }else{
+      tempDay = date.day.toString();
+    }
+
+    if(date.month.toString().length == 1){
+      tempMonth = "0${date.month}";
+    }else{
+      tempMonth = date.month.toString();
+    }
+
+    print(time);
+    tempTime = "${time}:00.000";
+
+    return "${date.year}-${tempMonth}-${tempDay} ${tempTime}";
+  }
 }
