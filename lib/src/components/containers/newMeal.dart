@@ -229,7 +229,7 @@ class NewMeal extends PComponent<NewMealProps> {
                           new VAnchorElement()
                             ..className = 'button is-link'
                             ..text = "Submit"
-                           ..onClick = _submitClick
+                            ..onClick = _submitClick
                         ]
                     ]
                 ]
@@ -239,11 +239,11 @@ class NewMeal extends PComponent<NewMealProps> {
 
   //method used for the submit click
   //variable names serveDate-input, mealStart-input, mealEnd-input, meal-input
-  _submitClick(_){
-    InputElement date =querySelector('#serveDate-input');
-    InputElement start =querySelector('#mealStart-input');
-    InputElement end =querySelector('#mealEnd-input');
-    TextAreaElement meal =querySelector('#meal-input');
+  _submitClick(_) {
+    InputElement date = querySelector('#serveDate-input');
+    InputElement start = querySelector('#mealStart-input');
+    InputElement end = querySelector('#mealEnd-input');
+    TextAreaElement meal = querySelector('#meal-input');
     DateTime serveDay = DateTime.parse(date.value);
     String tempStart = start.value.toString(); //make the start time a string for use in _parseDate
     String tempEnd = end.value.toString(); //make the end time a string for use in _parseDate
@@ -251,36 +251,35 @@ class NewMeal extends PComponent<NewMealProps> {
     String startTime, endTime;
     startTime = _parseDate(serveDay, tempStart);
     endTime = _parseDate(serveDay, tempEnd);
-    
+
     ListBuilder<String> temp = new ListBuilder();
     temp.add(menu);
 
-    Meal NewMeal = (new MealBuilder()
+    Meal newMeal = (new MealBuilder()
           ..startTime = DateTime.parse(startTime)
           ..endTime = DateTime.parse(endTime)
-          ..menu = temp
-          )
+          ..menu = temp)
         .build();
-    
-    props.actions.server.updateOrCreateMeal(NewMeal);
+
+    props.actions.server.updateOrCreateMeal(newMeal);
     props.actions.server.fetchAllMeals();
-    
+
     history.push(Routes.dashboard);
   }
 
   ///[_parseDate] is a function adopted from the _showDate function that Josh wrote to make a string from a date and time input compatible with DateTime data types
-  String _parseDate(DateTime date, String time){
+  String _parseDate(DateTime date, String time) {
     String tempDay, tempMonth, tempTime;
 
-    if(date.day.toString().length == 1){
+    if (date.day.toString().length == 1) {
       tempDay = "0${date.day}";
-    }else{
+    } else {
       tempDay = date.day.toString();
     }
 
-    if(date.month.toString().length == 1){
+    if (date.month.toString().length == 1) {
       tempMonth = "0${date.month}";
-    }else{
+    } else {
       tempMonth = date.month.toString();
     }
 

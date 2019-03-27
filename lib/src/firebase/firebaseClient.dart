@@ -194,8 +194,8 @@ class FirebaseClient {
   }
 
   ///[updateMeal]
-  String addOrUpdateMeal(Map<String, dynamic> mealData, {String documentID}){
-    fs.DocumentReference ref =_refs.meal(documentID);
+  String addOrUpdateMeal(Map<String, dynamic> mealData, {String documentID}) {
+    fs.DocumentReference ref = _refs.meal(documentID);
     ref.set(mealData, fs.SetOptions(merge: true));
     return ref.id;
   }

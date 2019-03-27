@@ -135,8 +135,7 @@ class NewActivity extends PComponent<NewActivityProps> {
                                               new VInputElement()
                                                 ..className = 'input'
                                                 ..id = 'instructorName-input'
-                                                ..placeholder =
-                                                    "First and Last Name"
+                                                ..placeholder = "First and Last Name"
                                             ]
                                         ]
                                     ]
@@ -177,8 +176,7 @@ class NewActivity extends PComponent<NewActivityProps> {
                                               new VInputElement()
                                                 ..className = 'input'
                                                 ..id = 'location-input'
-                                                ..placeholder =
-                                                    "Where is the activity taking place?"
+                                                ..placeholder = "Where is the activity taking place?"
                                             ]
                                         ]
                                     ]
@@ -370,7 +368,7 @@ class NewActivity extends PComponent<NewActivityProps> {
     InputElement capacity = querySelector('#capacity-input');
     InputElement start = querySelector('#timeStart-input');
     InputElement end = querySelector('#timeEnd-input');
-    InputElement day =querySelector('#day-input');
+    InputElement day = querySelector('#day-input');
     DateTime date = DateTime.parse(day.value);
     String tempStart = start.value.toString(); //make the start time a string for use in _parseDate
     String tempEnd = end.value.toString(); //make the end time a string for use in _parseDate
@@ -378,11 +376,10 @@ class NewActivity extends PComponent<NewActivityProps> {
     String startTime, endTime;
     int cap; //capacity of activity
     startTime = _parseDate(date, tempStart);
-    endTime =_parseDate(date, tempEnd);
+    endTime = _parseDate(date, tempEnd);
     cap = int.parse(capacity.value);
 
     print(startTime);
-
 
     Activity NewActivity = (new ActivityBuilder()
           ..capacity = cap
@@ -400,18 +397,18 @@ class NewActivity extends PComponent<NewActivityProps> {
   }
 
   ///[_parseDate] is a function adopted from the _showDate function that Josh wrote to make a string from a date and time input compatible with DateTime data types
-  String _parseDate(DateTime date, String time){
+  String _parseDate(DateTime date, String time) {
     String tempDay, tempMonth, tempTime;
 
-    if(date.day.toString().length == 1){
+    if (date.day.toString().length == 1) {
       tempDay = "0${date.day}";
-    }else{
+    } else {
       tempDay = date.day.toString();
     }
 
-    if(date.month.toString().length == 1){
+    if (date.month.toString().length == 1) {
       tempMonth = "0${date.month}";
-    }else{
+    } else {
       tempMonth = date.month.toString();
     }
 

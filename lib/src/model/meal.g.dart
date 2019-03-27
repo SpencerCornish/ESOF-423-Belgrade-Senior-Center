@@ -16,8 +16,7 @@ class _$Meal extends Meal {
   @override
   final BuiltList<String> menu;
 
-  factory _$Meal([void updates(MealBuilder b)]) =>
-      (new MealBuilder()..update(updates)).build();
+  factory _$Meal([void updates(MealBuilder b)]) => (new MealBuilder()..update(updates)).build();
 
   _$Meal._({this.uid, this.startTime, this.endTime, this.menu}) : super._() {
     if (startTime == null) {
@@ -32,8 +31,7 @@ class _$Meal extends Meal {
   }
 
   @override
-  Meal rebuild(void updates(MealBuilder b)) =>
-      (toBuilder()..update(updates)).build();
+  Meal rebuild(void updates(MealBuilder b)) => (toBuilder()..update(updates)).build();
 
   @override
   MealBuilder toBuilder() => new MealBuilder()..replace(this);
@@ -50,9 +48,7 @@ class _$Meal extends Meal {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc($jc($jc(0, uid.hashCode), startTime.hashCode), endTime.hashCode),
-        menu.hashCode));
+    return $jf($jc($jc($jc($jc(0, uid.hashCode), startTime.hashCode), endTime.hashCode), menu.hashCode));
   }
 
   @override
@@ -115,20 +111,14 @@ class MealBuilder implements Builder<Meal, MealBuilder> {
   _$Meal build() {
     _$Meal _$result;
     try {
-      _$result = _$v ??
-          new _$Meal._(
-              uid: uid,
-              startTime: startTime,
-              endTime: endTime,
-              menu: menu.build());
+      _$result = _$v ?? new _$Meal._(uid: uid, startTime: startTime, endTime: endTime, menu: menu.build());
     } catch (_) {
       String _$failedField;
       try {
         _$failedField = 'menu';
         menu.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError(
-            'Meal', _$failedField, e.toString());
+        throw new BuiltValueNestedFieldError('Meal', _$failedField, e.toString());
       }
       rethrow;
     }
