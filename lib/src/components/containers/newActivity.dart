@@ -381,7 +381,6 @@ class NewActivity extends PComponent<NewActivityProps> {
 
     print(startTime);
 
-
     Activity newActivity = (new ActivityBuilder()
           ..capacity = cap
           ..endTime = DateTime.parse(endTime)

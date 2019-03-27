@@ -245,9 +245,9 @@ class NewMeal extends PComponent<NewMealProps> {
     InputElement end = querySelector('#mealEnd-input');
     TextAreaElement meal = querySelector('#meal-input');
     DateTime serveDay = DateTime.parse(date.value);
-    String tempStart = start.value.toString(); //make the start time a string for use in _parseDate
-    String tempEnd = end.value.toString(); //make the end time a string for use in _parseDate
-    String menu = meal.toString();
+    String tempStart = start.value; //make the start time a string for use in _parseDate
+    String tempEnd = end.value; //make the end time a string for use in _parseDate
+    String menu = meal.value;
     String startTime, endTime;
     startTime = _parseDate(serveDay, tempStart);
     endTime = _parseDate(serveDay, tempEnd);
@@ -260,7 +260,7 @@ class NewMeal extends PComponent<NewMealProps> {
           ..endTime = DateTime.parse(endTime)
           ..menu = temp)
         .build();
-    
+
     props.actions.server.updateOrCreateMeal(newMeal);
     props.actions.server.fetchAllMeals();
 
