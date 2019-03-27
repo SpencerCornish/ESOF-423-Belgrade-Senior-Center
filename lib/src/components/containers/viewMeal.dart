@@ -38,6 +38,11 @@ class ViewMeal extends Component<ViewMealProps, ViewMealState> {
   /// Browser history entrypoint, to control page navigation
   History get history => _history ?? findHistoryInContext(context);
 
+  @override
+  void componentWillMount() {
+    props.actions.server.fetchAllMeals();
+  }
+
   /// [createRows] Scaling function to make rows based on amount of information available
   List<VNode> createRows() {
     List<VNode> nodeList = new List();

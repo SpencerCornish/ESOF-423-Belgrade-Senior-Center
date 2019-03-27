@@ -46,11 +46,6 @@ class Container extends PComponent<ContainerProps> {
 
   @override
   void componentWillMount() {
-    // Get all the users from the database
-    actions.server.fetchAllMembers();
-    actions.server.fetchAllActivities();
-    // actions.server.fetchAllMeals();
-
     storeContainerSub = props.storeContainer.store.stream.listen((_) => updateOnAnimationFrame());
   }
 
@@ -162,11 +157,6 @@ class Container extends PComponent<ContainerProps> {
     ..nextUrl = nextUrl ?? Routes.dashboard);
 
   _renderDashboard() => new Dashboard(new DashboardProps()
-    ..actions = props.storeContainer.store.actions
-    ..user = appState.user);
-
-  /// Method used to render the CreateMember page
-  _renderCreateMembers() => new NewMember(new NewMemberProps()
     ..actions = props.storeContainer.store.actions
     ..user = appState.user);
 

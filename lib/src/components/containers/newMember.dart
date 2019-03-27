@@ -630,7 +630,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
 
   //Validation for address, does nothing for now
   void _addressValidator(_) {
-    InputElement address = querySelector('#address-input');
+    // InputElement address = querySelector('#address-input');
   }
 
   //method used for the submit click
