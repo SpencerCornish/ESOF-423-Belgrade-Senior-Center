@@ -29,6 +29,11 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
   ViewMembers(props) : super(props);
 
   @override
+  void componentWillMount() {
+    props.actions.server.fetchAllMembers();
+  }
+
+  @override
   ViewMembersState getInitialState() => ViewMembersState()
     ..showMod = false
     ..checkedIn = false

@@ -6,9 +6,7 @@ import 'package:wui_builder/vhtml.dart';
 import 'package:built_collection/built_collection.dart';
 
 import '../../constants.dart';
-import '../../model/emergencyContact.dart';
 import '../../state/app.dart';
-import '../../store.dart';
 import '../core/nav.dart';
 import '../../model/meal.dart';
 import '../../model/user.dart';
@@ -18,8 +16,6 @@ class NewMealProps {
   User user;
   Meal meal;
 }
-
-//TODO: Make is so when the logout button is pressed, it takes you back to the main page.
 
 class NewMeal extends PComponent<NewMealProps> {
   NewMeal(props) : super(props);

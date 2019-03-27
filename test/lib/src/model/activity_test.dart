@@ -2,7 +2,6 @@ import 'package:test/test.dart';
 import 'package:bsc/src/model/activity.dart';
 
 void main() {
-  final mockUID = "e48bd850a0134e96b25de6432114a134";
   final mockActivityData = <String, dynamic>{
     'capacity': -1,
     'start_time': "2019-02-27T12:05:46.173",

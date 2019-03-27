@@ -28,6 +28,11 @@ class ViewActivity extends PComponent<ViewActivityProps> {
   /// Browser history entrypoint, to control page navigation
   History get history => _history ?? findHistoryInContext(context);
 
+  @override
+  void componentWillMount() {
+    props.actions.server.fetchAllActivities();
+  }
+
   VNode emailInputNode;
   VNode passwordInputNode;
 
