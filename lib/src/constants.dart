@@ -14,7 +14,7 @@ class Routes {
 
   /// Route for forms page where new users, meals, and classes can be created
   static const createMember = '/new/member';
-  
+
   //route for new activity page
   static const createAct = '/new/activity';
 

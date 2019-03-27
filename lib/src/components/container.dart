@@ -97,11 +97,11 @@ class Container extends PComponent<ContainerProps> {
                 componentFactory: (_) => _renderIfAuthenticated(_renderViewMembers()),
               ),
               new Route(
-                path : Routes.createAct,
+                path: Routes.createAct,
                 componentFactory: (_) => _renderNewActivity(),
               ),
               new Route(
-                path : Routes.createMeal,
+                path: Routes.createMeal,
                 componentFactory: (_) => _renderNewMeal(),
               ),
               new Route(
@@ -121,12 +121,12 @@ class Container extends PComponent<ContainerProps> {
   _renderNewMeal() => new NewMeal(new NewMealProps()
     ..actions = props.storeContainer.store.actions
     ..user = appState.user);
-  
+
   //Method used to render the newActivity page
   _renderNewActivity() => new NewActivity(new NewActivityProps()
     ..actions = props.storeContainer.store.actions
-    ..user =appState.user);
-  
+    ..user = appState.user);
+
   ///Method used to render the CreateMember page
   _renderCreateMember() => new NewMember(new NewMemberProps()
     ..actions = props.storeContainer.store.actions
