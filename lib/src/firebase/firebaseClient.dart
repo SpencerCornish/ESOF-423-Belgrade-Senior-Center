@@ -186,6 +186,20 @@ class FirebaseClient {
     return ref.id;
   }
 
+  /// [updateActivity]
+  String addOrUpdateActivity(Map<String, dynamic> activityData, {String documentID}) {
+    fs.DocumentReference ref = _refs.singleClass(documentID);
+    ref.set(activityData, fs.SetOptions(merge: true));
+    return ref.id;
+  }
+
+  ///[updateMeal]
+  String addOrUpdateMeal(Map<String, dynamic> mealData, {String documentID}) {
+    fs.DocumentReference ref = _refs.meal(documentID);
+    ref.set(mealData, fs.SetOptions(merge: true));
+    return ref.id;
+  }
+
   /// [updateClass] update existing class by unique identifier. key is any class field and value is the new value
   void updateClass(String documentID, Map<String, dynamic> value) {
     _refs.singleClass(documentID).set(value, fs.SetOptions(merge: true));
