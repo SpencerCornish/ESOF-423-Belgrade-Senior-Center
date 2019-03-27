@@ -384,7 +384,7 @@ class NewActivity extends PComponent<NewActivityProps> {
     print(startTime);
 
 
-    Activity NewActivity = (new ActivityBuilder()
+    Activity newActivity = (new ActivityBuilder()
           ..capacity = cap
           ..endTime = DateTime.parse(endTime)
           ..startTime = DateTime.parse(startTime)
@@ -393,7 +393,7 @@ class NewActivity extends PComponent<NewActivityProps> {
           ..name = activity.value)
         .build();
 
-    props.actions.server.updateOrCreateActivity(NewActivity);
+    props.actions.server.updateOrCreateActivity(newActivity);
     props.actions.server.fetchAllActivities();
 
     history.push(Routes.dashboard);

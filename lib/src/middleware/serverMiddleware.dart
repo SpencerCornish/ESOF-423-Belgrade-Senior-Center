@@ -114,12 +114,12 @@ _addOrUpdateMeal(FirebaseClient client) => (
       Middleware<App, AppBuilder, AppActions> api,
       ActionHandler next,
       Action<Meal> action,
-) async {
-  client.addOrUpdateMeal(
-    action.payload.toFirestore(),
-    documentID:action.payload.uid,
-  );
-};
+    ) async {
+      client.addOrUpdateMeal(
+        action.payload.toFirestore(),
+        documentID:action.payload.uid,
+      );
+    };
 
 _fetchAllMembers(FirebaseClient client) => (
       MiddlewareApi<App, AppBuilder, AppActions> api,

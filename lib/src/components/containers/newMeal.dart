@@ -255,14 +255,14 @@ class NewMeal extends PComponent<NewMealProps> {
     ListBuilder<String> temp = new ListBuilder();
     temp.add(menu);
 
-    Meal NewMeal = (new MealBuilder()
+    Meal newMeal = (new MealBuilder()
           ..startTime = DateTime.parse(startTime)
           ..endTime = DateTime.parse(endTime)
           ..menu = temp
           )
         .build();
     
-    props.actions.server.updateOrCreateMeal(NewMeal);
+    props.actions.server.updateOrCreateMeal(newMeal);
     props.actions.server.fetchAllMeals();
     
     history.push(Routes.dashboard);
