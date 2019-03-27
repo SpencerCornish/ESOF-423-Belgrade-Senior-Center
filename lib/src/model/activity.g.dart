@@ -26,9 +26,6 @@ class _$Activity extends Activity {
 
   _$Activity._({this.uid, this.capacity, this.endTime, this.startTime, this.instructor, this.location, this.name})
       : super._() {
-    if (uid == null) {
-      throw new BuiltValueNullFieldError('Activity', 'uid');
-    }
     if (capacity == null) {
       throw new BuiltValueNullFieldError('Activity', 'capacity');
     }
