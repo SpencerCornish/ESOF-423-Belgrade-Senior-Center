@@ -1,7 +1,59 @@
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write;
+  
+    // A user must be an admin or volunteer for this check to pass
+  	function userCanEdit() {
+      return (userIsAdmin() || userIsVolunteer());
+    }
+    
+    // If the user is a volunteer
+    function userIsVolunteer() {
+      return exists(/databases/$(database)/documents/roles/${request.auth.uid}).data.
+    }
+
+    // If the user is an admin
+    function userIsAdmin() {
+      return exists(/databases/$(database)/documents/roles/${request.auth.uid})
+    }
+    
+    // Check to see if the logged in user is manipulating their own data     
+    function userAccessOwnData() {
+    	return request.auth.uid == resource.data.login_uid;
+    }
+
+    // Check to see if the user is authenticated     
+    function userIsAuthenticated() {
+     	return request.auth.uid != null;
+    }
+  
+    // Users can be read and written by volunteers and admins, and users can edit their own data, no matter what.
+    match /users/{user} {
+      allow read: if (userAccessOwnData() || userCanEdit());
+      allow write: if (userAccessOwnData() || userCanEdit());
+    }
+
+    // All users can see activities, but only Admins and volunteers can edit.
+    match /activities/{activity} {
+      allow read: if (userIsAuthenticated());
+      allow write: if (userCanEdit());
+    }
+
+    // All users can see meals, but only Admins and volunteers can edit.
+    match /meals/{meal} {
+      allow read: if (userIsAuthenticated());
+      allow write: if (userCanEdit());
+    }
+
+    // All users can see the roles of other users, but only admins can change user roles.
+    match /roles_admin/{meal} {
+      allow read: if (userIsAuthenticated());
+      allow write: if (userIsAdmin());
+    }
+
+    // All users can see the roles of other users, but only admins can change user roles.
+    match /roles_volunteer/{meal} {
+      allow read: if (userIsAuthenticated());
+      allow write: if (userIsAdmin());
     }
   }
 }
