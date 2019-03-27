@@ -6,6 +6,7 @@ class Routes {
   /// Route to the base (or Home) of the app
   static const home = '/';
 
+  /// Route for forms page where new users can be created
   static const loginRedirect = '/login/next/:next_url';
 
   // Generate the above URL
@@ -13,6 +14,11 @@ class Routes {
 
   /// Route for forms page where new users, meals, and classes can be created
   static const createMember = '/new/member';
+
+  //route for new activity page
+  static const createAct = '/new/activity';
+
+  static const createMeal = '/new/meal';
 
   /// Route used after a password reset
   static const resetContinue = '/pw_reset/:email_hash';
@@ -30,6 +36,42 @@ class Routes {
 
   // TODO: Fill in more routes here
 
+}
+
+class ExportHeader {
+  static const user = [
+    'ID',
+    'Last',
+    'First',
+    'Email',
+    'Address',
+    'Phone',
+    'Cell',
+    'Position',
+    'Role',
+    'Dietary Restrictions',
+    'Disabilities',
+    'Medical Issues',
+    'Membership Start Date',
+    'Membership Renewal Date',
+  ];
+
+  static const activity = [
+    'ID',
+    'Name',
+    'Instructor',
+    'Capacity',
+    'location',
+    'Start',
+    'End',
+  ];
+
+  static const meal = [
+    'ID',
+    'Start',
+    'End',
+    'Menu',
+  ];
 }
 
 enum Role {

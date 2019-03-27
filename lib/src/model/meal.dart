@@ -8,6 +8,7 @@ part 'meal.g.dart';
 /// [Meal] is a model for the user database document
 abstract class Meal implements Built<Meal, MealBuilder> {
   /// [uid] is the unique identifier for the meal
+  @nullable
   String get uid;
 
   /// [startTime] required
@@ -38,4 +39,13 @@ abstract class Meal implements Built<Meal, MealBuilder> {
         'end_time': endTime.toIso8601String(),
         'menu': menu.toList(),
       };
+
+  String toCsv() =>
+      [
+        '\"${uid}\"',
+        '\"${startTime}\"',
+        '\"${endTime}\"',
+        '\"${menu}\"',
+      ].join(',') +
+      '\n';
 }

@@ -13,6 +13,8 @@ import './containers/home.dart';
 import './containers/loading.dart';
 import './containers/newMember.dart';
 import './containers/dashboard.dart';
+import './containers/newActivity.dart';
+import './containers/newMeal.dart';
 import './containers/viewMembers.dart';
 import './containers/editMember.dart';
 import './containers/viewActivity.dart';
@@ -91,7 +93,17 @@ class Container extends PComponent<ContainerProps> {
               new Route(path: Routes.resetContinue, componentFactory: (params) => _renderResetContinue(params)),
               new Route(path: Routes.dashboard, componentFactory: (_) => _renderIfAuthenticated(_renderDashboard())),
               new Route(
-                  path: Routes.viewMembers, componentFactory: (_) => _renderIfAuthenticated(_renderViewMembers())),
+                path: Routes.viewMembers,
+                componentFactory: (_) => _renderIfAuthenticated(_renderViewMembers()),
+              ),
+              new Route(
+                path: Routes.createAct,
+                componentFactory: (_) => _renderNewActivity(),
+              ),
+              new Route(
+                path: Routes.createMeal,
+                componentFactory: (_) => _renderNewMeal(),
+              ),
               new Route(
                   path: Routes.editMember,
                   componentFactory: (params) => _renderIfAuthenticated(_renderEditMember(params))),
@@ -104,6 +116,21 @@ class Container extends PComponent<ContainerProps> {
       // new Footer(new FooterProps()..actions = props.storeContainer.store.actions),
       _renderDebug(),
     ];
+
+  //Method used to render the newMeal page
+  _renderNewMeal() => new NewMeal(new NewMealProps()
+    ..actions = props.storeContainer.store.actions
+    ..user = appState.user);
+
+  //Method used to render the newActivity page
+  _renderNewActivity() => new NewActivity(new NewActivityProps()
+    ..actions = props.storeContainer.store.actions
+    ..user = appState.user);
+
+  ///Method used to render the CreateMember page
+  _renderCreateMember() => new NewMember(new NewMemberProps()
+    ..actions = props.storeContainer.store.actions
+    ..user = appState.user);
 
   // Only renders if the user is properly authenticated. Otherwise, bail to the homepage
   _renderIfAuthenticated(VNode page) {
@@ -139,7 +166,7 @@ class Container extends PComponent<ContainerProps> {
     ..user = appState.user);
 
   /// Method used to render the CreateMember page
-  _renderCreateMember() => new NewMember(new NewMemberProps()
+  _renderCreateMembers() => new NewMember(new NewMemberProps()
     ..actions = props.storeContainer.store.actions
     ..user = appState.user);
 

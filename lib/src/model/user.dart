@@ -108,7 +108,7 @@ abstract class User implements Built<User, UserBuilder> {
         'last_name': lastName,
         'email': email,
         'phone_number': phoneNumber,
-        'mobile_number': phoneNumber,
+        'mobile_number': mobileNumber,
         'address': address,
         'role': role,
         'dietary_restrictions': dietaryRestrictions,
@@ -121,4 +121,23 @@ abstract class User implements Built<User, UserBuilder> {
         'position': position,
         'services': services.toList(),
       };
+
+  String toCsv() =>
+      [
+        '\"${docUID}\"',
+        '\"${lastName}\"',
+        '\"${firstName}\"',
+        '\"${email}\"',
+        '\"${address}\"',
+        '\"${phoneNumber}\"',
+        '\"${mobileNumber}\"',
+        '\"${position}\"',
+        '\"${role}\"',
+        '\"${dietaryRestrictions}\"',
+        '\"${disabilities}\"',
+        '\"${medicalIssues}\"',
+        '\"${membershipStart.month}/${membershipStart.day}/${membershipStart.year}\"',
+        '\"${membershipRenewal.month}/${membershipRenewal.day}/${membershipRenewal.year}\"',
+      ].join(',') +
+      '\n';
 }
