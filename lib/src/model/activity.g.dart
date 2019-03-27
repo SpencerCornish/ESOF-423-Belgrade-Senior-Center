@@ -22,9 +22,17 @@ class _$Activity extends Activity {
   @override
   final String name;
 
-  factory _$Activity([void updates(ActivityBuilder b)]) => (new ActivityBuilder()..update(updates)).build();
+  factory _$Activity([void updates(ActivityBuilder b)]) =>
+      (new ActivityBuilder()..update(updates)).build();
 
-  _$Activity._({this.uid, this.capacity, this.endTime, this.startTime, this.instructor, this.location, this.name})
+  _$Activity._(
+      {this.uid,
+      this.capacity,
+      this.endTime,
+      this.startTime,
+      this.instructor,
+      this.location,
+      this.name})
       : super._() {
     if (capacity == null) {
       throw new BuiltValueNullFieldError('Activity', 'capacity');
@@ -47,7 +55,8 @@ class _$Activity extends Activity {
   }
 
   @override
-  Activity rebuild(void updates(ActivityBuilder b)) => (toBuilder()..update(updates)).build();
+  Activity rebuild(void updates(ActivityBuilder b)) =>
+      (toBuilder()..update(updates)).build();
 
   @override
   ActivityBuilder toBuilder() => new ActivityBuilder()..replace(this);
@@ -69,7 +78,11 @@ class _$Activity extends Activity {
   int get hashCode {
     return $jf($jc(
         $jc(
-            $jc($jc($jc($jc($jc(0, uid.hashCode), capacity.hashCode), endTime.hashCode), startTime.hashCode),
+            $jc(
+                $jc(
+                    $jc($jc($jc(0, uid.hashCode), capacity.hashCode),
+                        endTime.hashCode),
+                    startTime.hashCode),
                 instructor.hashCode),
             location.hashCode),
         name.hashCode));

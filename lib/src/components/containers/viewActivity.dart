@@ -19,11 +19,21 @@ class ViewActivityProps {
   BuiltMap<String, Activity> activityMap;
 }
 
+class ViewActivityState {
+  bool searching;
+  List found;
+}
+
 /// [viewActivity] class / page to show a visual representation of current stored data
-class ViewActivity extends PComponent<ViewActivityProps> {
+class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
   ViewActivity(props) : super(props);
   List<String> title = ["Name", "Start", "End", "Location", "Capacity", "Instructor"];
   History _history;
+
+  @override
+  ViewActivityState getInitialState() => ViewActivityState()
+    ..found = <Activity>[]
+    ..searching = false;
 
   /// Browser history entrypoint, to control page navigation
   History get history => _history ?? findHistoryInContext(context);
@@ -59,6 +69,7 @@ class ViewActivity extends PComponent<ViewActivityProps> {
             ..text = checkText(act.instructor),
         ]);
     }
+    return (nodeList);
   }
 
   String checkText(String text) => text != '' ? text : "N/A";
@@ -123,7 +134,7 @@ class ViewActivity extends PComponent<ViewActivityProps> {
                                         ..placeholder = 'Search'
                                         ..type = 'submit'
                                         ..id = 'Search'
-                                        // ..onKeyUp = _searchListener
+                                        ..onKeyUp = _searchListener
                                         ..type = 'text',
                                       new VSpanElement()
                                         ..className = 'icon is-left has-text-info'
@@ -161,6 +172,54 @@ class ViewActivity extends PComponent<ViewActivityProps> {
             ],
         ],
     ];
+
+  _searchListener(_) {
+    InputElement search = querySelector('#Search');
+    if (search.value.isEmpty) {
+      setState((ViewMemberProps, ViewMembersState) => ViewMembersState
+        ..found = <User>[]
+        ..searching = false);
+    } else {
+      List found = <User>[];
+
+      for (Activity act in props.activityMap.values) {
+        if (act.name.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(act);
+        } else if (act.instructor.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(act);
+        } else if (act.location.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(act);
+          //   } else if (act.capacity.contains(search.value.toLowerCase())) {
+          //     found.add(user);
+          //   } else if (user.disabilities.toLowerCase().contains(search.value.toLowerCase())) {
+          //     found.add(user);
+          //   } else if (user.email.toLowerCase().contains(search.value.toLowerCase())) {
+          //     found.add(user);
+          //   } else if (user.medicalIssues.toLowerCase().contains(search.value.toLowerCase())) {
+          //     found.add(user);
+          //   } else if (user.mobileNumber.contains(search.value)) {
+          //     found.add(user);
+          //   } else if (user.phoneNumber.contains(search.value)) {
+          //     found.add(user);
+          //   } else if (user.position.toLowerCase().contains(search.value.toLowerCase())) {
+          //     found.add(user);
+          //   } else if (user.role.toLowerCase().contains(search.value.toLowerCase())) {
+          //     found.add(user);
+          //   } else if (user.services.contains(search.value)) {
+          //     found.add(user);
+          //   } else if (user.membershipRenewal.toString().contains(search.value)) {
+          //     found.add(user);
+          //   } else if (user.membershipStart.toString().contains(search.value)) {
+          //     found.add(user);
+          //   }
+        }
+
+        setState((ViewMemberProps, ViewMembersState) => ViewMembersState
+          ..found = found
+          ..searching = true);
+      }
+    }
+  }
 
   _onExportCsvClick(_) {
     List<String> lines = props.activityMap.values.map((activity) => activity.toCsv()).toList();
