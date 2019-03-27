@@ -3,13 +3,10 @@ import 'dart:html' hide History;
 import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
 import 'package:wui_builder/vhtml.dart';
-import 'package:built_collection/built_collection.dart';
 
 import '../../model/activity.dart';
 import '../../constants.dart';
-import '../../model/emergencyContact.dart';
 import '../../state/app.dart';
-import '../../store.dart';
 import '../core/nav.dart';
 import '../../model/user.dart';
 
@@ -17,8 +14,6 @@ class NewActivityProps {
   AppActions actions;
   User user;
 }
-
-//TODO: Make is so when the logout button is pressed, it takes you back to the main page
 
 class NewActivity extends PComponent<NewActivityProps> {
   NewActivity(props) : super(props);

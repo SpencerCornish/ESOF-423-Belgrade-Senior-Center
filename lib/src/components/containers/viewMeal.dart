@@ -1,7 +1,6 @@
 import 'dart:html' hide History;
 
 import 'package:wui_builder/components.dart';
-import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
 import 'package:wui_builder/vhtml.dart';
 import 'package:built_collection/built_collection.dart';
@@ -28,6 +27,11 @@ class ViewMeal extends PComponent<ViewMealProps> {
 
   /// Browser history entrypoint, to control page navigation
   History get history => _history ?? findHistoryInContext(context);
+
+  @override
+  void componentWillMount() {
+    props.actions.server.fetchAllMeals();
+  }
 
   /// [createRows] Scaling function to make rows based on amount of information available
   List<VNode> createRows() {
