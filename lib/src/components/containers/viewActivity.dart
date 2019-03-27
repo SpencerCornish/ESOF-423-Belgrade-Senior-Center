@@ -1,3 +1,5 @@
+import 'dart:html' hide History;
+
 import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
 import 'package:wui_builder/vhtml.dart';
@@ -9,6 +11,7 @@ import '../../model/activity.dart';
 import '../../model/user.dart';
 
 import '../../state/app.dart';
+import '../../constants.dart';
 
 class ViewActivityProps {
   AppActions actions;
@@ -98,7 +101,7 @@ class ViewActivity extends PComponent<ViewActivityProps> {
                         ..className = 'columns is-mobile'
                         ..children = [
                           new VDivElement()
-                            ..className = 'column is-narrow'
+                            ..className = 'column'
                             ..children = [
                               new Vh4()
                                 ..className = 'title is-4'
@@ -107,9 +110,8 @@ class ViewActivity extends PComponent<ViewActivityProps> {
                                 ..className = 'subtitle is-7'
                                 ..text = " as of: ${DateTime.now().month}/${DateTime.now().day}/${DateTime.now().year}",
                             ],
-                          new VDivElement()..className = 'column',
                           new VDivElement()
-                            ..className = 'column is-4'
+                            ..className = 'column is-narrow'
                             ..children = [
                               new VDivElement()
                                 ..className = 'field'
@@ -122,8 +124,29 @@ class ViewActivity extends PComponent<ViewActivityProps> {
                                         ..placeholder = 'Search'
                                         ..type = 'text',
                                       new VSpanElement()
-                                        ..className = 'icon is-left'
+                                        ..className = 'icon is-left has-text-info'
                                         ..children = [new Vi()..className = 'fas fa-search'],
+                                    ],
+                                ],
+                            ],
+                          new VDivElement()
+                            ..className = 'column is-narrow'
+                            ..children = [
+                              new VDivElement()
+                                ..className = 'field'
+                                ..children = [
+                                  new VDivElement()
+                                    ..className = 'control'
+                                    ..children = [
+                                      new VParagraphElement()
+                                        ..className = 'button is-rounded'
+                                        ..onClick = _onExportCsvClick
+                                        ..children = [
+                                          new VSpanElement()
+                                            ..className = 'icon'
+                                            ..children = [new Vi()..className = 'fas fa-file-csv'],
+                                          new VSpanElement()..text = 'CSV',
+                                        ],
                                     ],
                                 ],
                             ],
@@ -136,4 +159,20 @@ class ViewActivity extends PComponent<ViewActivityProps> {
             ],
         ],
     ];
+
+  _onExportCsvClick(_) {
+    List<String> lines = props.activityMap.values.map((activity) => activity.toCsv()).toList();
+
+    // Add the header row
+    lines.insert(0, ExportHeader.activity.join(',') + '\n');
+
+    Blob data = new Blob(lines, "text/csv");
+
+    AnchorElement downloadLink = new AnchorElement(href: Url.createObjectUrlFromBlob(data));
+    downloadLink.rel = 'text/csv';
+    downloadLink.download = 'activity-export-${new DateTime.now().toIso8601String()}.csv';
+
+    var event = new MouseEvent("click", view: window, cancelable: false);
+    downloadLink.dispatchEvent(event);
+  }
 }

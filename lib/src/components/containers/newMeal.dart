@@ -247,16 +247,18 @@ class NewMeal extends PComponent<NewMealProps> {
     DateTime serveDay = DateTime.parse(date.value);
     String tempStart = start.value.toString(); //make the start time a string for use in _parseDate
     String tempEnd = end.value.toString(); //make the end time a string for use in _parseDate
-
+    String menu = meal.toString();
     String startTime, endTime;
     startTime = _parseDate(serveDay, tempStart);
     endTime = _parseDate(serveDay, tempEnd);
- 
+    
+    ListBuilder<String> temp = new ListBuilder();
+    temp.add(menu);
 
-  Meal NewMeal = (new MealBuilder()
+    Meal NewMeal = (new MealBuilder()
           ..startTime = DateTime.parse(startTime)
           ..endTime = DateTime.parse(endTime)
-          //..menu = 
+          ..menu = temp
           )
         .build();
     

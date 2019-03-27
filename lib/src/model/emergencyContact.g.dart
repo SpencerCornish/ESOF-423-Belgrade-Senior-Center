@@ -19,7 +19,8 @@ class _$EmergencyContact extends EmergencyContact {
   factory _$EmergencyContact([void updates(EmergencyContactBuilder b)]) =>
       (new EmergencyContactBuilder()..update(updates)).build();
 
-  _$EmergencyContact._({this.uid, this.name, this.relationship, this.number}) : super._() {
+  _$EmergencyContact._({this.uid, this.name, this.relationship, this.number})
+      : super._() {
     if (uid == null) {
       throw new BuiltValueNullFieldError('EmergencyContact', 'uid');
     }
@@ -35,10 +36,12 @@ class _$EmergencyContact extends EmergencyContact {
   }
 
   @override
-  EmergencyContact rebuild(void updates(EmergencyContactBuilder b)) => (toBuilder()..update(updates)).build();
+  EmergencyContact rebuild(void updates(EmergencyContactBuilder b)) =>
+      (toBuilder()..update(updates)).build();
 
   @override
-  EmergencyContactBuilder toBuilder() => new EmergencyContactBuilder()..replace(this);
+  EmergencyContactBuilder toBuilder() =>
+      new EmergencyContactBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
@@ -52,7 +55,9 @@ class _$EmergencyContact extends EmergencyContact {
 
   @override
   int get hashCode {
-    return $jf($jc($jc($jc($jc(0, uid.hashCode), name.hashCode), relationship.hashCode), number.hashCode));
+    return $jf($jc(
+        $jc($jc($jc(0, uid.hashCode), name.hashCode), relationship.hashCode),
+        number.hashCode));
   }
 
   @override
@@ -66,7 +71,8 @@ class _$EmergencyContact extends EmergencyContact {
   }
 }
 
-class EmergencyContactBuilder implements Builder<EmergencyContact, EmergencyContactBuilder> {
+class EmergencyContactBuilder
+    implements Builder<EmergencyContact, EmergencyContactBuilder> {
   _$EmergencyContact _$v;
 
   String _uid;
@@ -113,7 +119,9 @@ class EmergencyContactBuilder implements Builder<EmergencyContact, EmergencyCont
 
   @override
   _$EmergencyContact build() {
-    final _$result = _$v ?? new _$EmergencyContact._(uid: uid, name: name, relationship: relationship, number: number);
+    final _$result = _$v ??
+        new _$EmergencyContact._(
+            uid: uid, name: name, relationship: relationship, number: number);
     replace(_$result);
     return _$result;
   }

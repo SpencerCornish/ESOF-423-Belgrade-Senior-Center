@@ -52,4 +52,16 @@ abstract class Activity implements Built<Activity, ActivityBuilder> {
         'location': location,
         'name': name,
       };
+
+  String toCsv() =>
+      [
+        '\"${uid}\"',
+        '\"${name}\"',
+        '\"${instructor}\"',
+        '\"${capacity}\"',
+        '\"${location}\"',
+        '\"${startTime}\"',
+        '\"${endTime}\"',
+      ].join(',') +
+      '\n';
 }

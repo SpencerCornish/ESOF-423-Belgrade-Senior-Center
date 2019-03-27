@@ -39,4 +39,13 @@ abstract class Meal implements Built<Meal, MealBuilder> {
         'end_time': endTime.toIso8601String(),
         'menu': menu.toList(),
       };
+
+  String toCsv() =>
+      [
+        '\"${uid}\"',
+        '\"${startTime}\"',
+        '\"${endTime}\"',
+        '\"${menu}\"',
+      ].join(',') +
+      '\n';
 }
