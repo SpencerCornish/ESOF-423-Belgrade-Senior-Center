@@ -308,11 +308,13 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
           found.add(user);
         } else if (user.services.contains(search.value)) {
           found.add(user);
-        } else if (user.membershipRenewal.day.toString().contains(search.value)) {
+        } else if (user.membershipRenewal.toString().contains(search.value)) {
           found.add(user);
-        } else if (user.membershipRenewal.month.toString().contains(search.value)) {
+        } else if ("${user.membershipRenewal.month}/${user.membershipRenewal.day}/${user.membershipRenewal.year}"
+            .contains(search.value)) {
           found.add(user);
-        } else if (user.membershipRenewal.year.toString().contains(search.value)) {
+        } else if ("${user.membershipStart.month}/${user.membershipStart.day}/${user.membershipStart.year}"
+            .contains(search.value)) {
           found.add(user);
         } else if (user.membershipStart.toString().contains(search.value)) {
           found.add(user);

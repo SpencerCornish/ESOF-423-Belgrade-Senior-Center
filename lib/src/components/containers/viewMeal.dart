@@ -186,11 +186,11 @@ class ViewMeal extends Component<ViewMealProps, ViewMealState> {
         }
         if (meal.endTime.toString().contains(search.value)) {
           found.add(meal);
-        } else if (meal.startTime.day.toString().contains(search.value)) {
+        } else if ("${meal.endTime.month}/${meal.endTime.day}/${meal.endTime.year}".contains(search.value)) {
           found.add(meal);
-        } else if (meal.startTime.month.toString().contains(search.value)) {
+        } else if (meal.startTime.toString().contains(search.value)) {
           found.add(meal);
-        } else if (meal.startTime.year.toString().contains(search.value)) {
+        } else if ("${meal.startTime.month}/${meal.startTime.day}/${meal.startTime.year}".contains(search.value)) {
           found.add(meal);
         }
 
