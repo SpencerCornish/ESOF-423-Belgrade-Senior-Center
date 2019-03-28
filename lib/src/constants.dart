@@ -33,7 +33,7 @@ class Routes {
 
   static String generateEditMemberURL(String uid) => '/edit/member/$uid';
   static String generateEditMealURL(String uid) => '/edit/meal/$uid';
-  static String generateActivityMemberURL(String uid) => '/edit/activity/$uid';
+  static String generateEditActivityURL(String uid) => '/edit/activity/$uid';
 
   static const viewActivity = '/view/activities';
   static const viewMeal = '/view/meals';

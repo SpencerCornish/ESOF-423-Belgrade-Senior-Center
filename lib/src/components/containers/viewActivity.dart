@@ -43,6 +43,7 @@ class ViewActivity extends PComponent<ViewActivityProps> {
     for (Activity act in props.activityMap.values) {
       nodeList.add(new VTableRowElement()
         ..className = 'tr'
+        ..onClick = ((_) => _onActClick(act.uid))
         ..children = [
           new VTableCellElement()
             ..className = tdClass(act.name)
@@ -65,6 +66,10 @@ class ViewActivity extends PComponent<ViewActivityProps> {
         ]);
     }
     return nodeList;
+  }
+
+  _onActClick(String uid) {
+    history.push(Routes.generateEditActivityURL(uid));
   }
 
   String checkText(String text) => text != '' ? text : "N/A";
