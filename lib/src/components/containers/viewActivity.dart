@@ -148,7 +148,7 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
                                         ..onKeyUp = _searchListener
                                         ..type = 'text',
                                       new VSpanElement()
-                                        ..className = 'icon is-left has-text-info'
+                                        ..className = 'icon is-left'
                                         ..children = [new Vi()..className = 'fas fa-search'],
                                     ],
                                 ],
