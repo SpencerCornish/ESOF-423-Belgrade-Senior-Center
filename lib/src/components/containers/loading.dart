@@ -1,17 +1,8 @@
-import 'dart:html' hide History;
-
-import 'dart:async';
 import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
 import 'package:wui_builder/vhtml.dart';
-import 'package:built_collection/built_collection.dart';
 
-import '../../constants.dart';
-import '../../model/emergencyContact.dart';
 import '../../state/app.dart';
-import '../../store.dart';
-import '../core/nav.dart';
-import '../../model/user.dart';
 
 class LoadingProps {
   AppActions actions;
