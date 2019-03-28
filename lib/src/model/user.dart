@@ -32,7 +32,7 @@ abstract class User implements Built<User, UserBuilder> {
   /// [phoneNumber] may be an empty string
   String get phoneNumber;
 
-  /// [mobleNumber] may be an empty string
+  /// [mobileNumber] may be an empty string
   String get mobileNumber;
 
   /// [address] US only
