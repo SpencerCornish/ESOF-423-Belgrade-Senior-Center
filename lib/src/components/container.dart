@@ -114,7 +114,6 @@ class Container extends PComponent<ContainerProps> {
           ),
         ],
       // new Footer(new FooterProps()..actions = props.storeContainer.store.actions),
-      _renderDebug(),
     ];
 
   //Method used to render the newMeal page
