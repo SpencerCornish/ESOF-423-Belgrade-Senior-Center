@@ -71,7 +71,7 @@ abstract class User implements Built<User, UserBuilder> {
   /// [homeDelivery] is a boolean that tells admins whether or not the user gets their meals home delivered
   @nullable
   bool get homeDeliver;
-  
+
   /// [services] required
   /// A list of services that are used by the user
   BuiltList<String> get services;
@@ -85,7 +85,6 @@ abstract class User implements Built<User, UserBuilder> {
     String docUID,
     String loginUID,
     String email,
-
   }) =>
       new User((UserBuilder builder) => builder
         ..docUID = docUID

@@ -41,7 +41,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     ..addressIsValid = true
     ..mealBool = false
     ..dropDownActive = false
-    ..role="Member";
+    ..role = "Member";
 
   History _history;
 
@@ -111,14 +111,12 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                     ..className = 'control'
                                     ..children = [
                                       new VInputElement()
-                                        ..className =
-                                            'input ${state.firstNameIsValid ? '' : 'is-danger'}'
+                                        ..className = 'input ${state.firstNameIsValid ? '' : 'is-danger'}'
                                         ..onInput = _firstNameValidation
                                         ..id = 'fName-input'
                                         ..placeholder = "First Name",
                                       new VParagraphElement()
-                                        ..className =
-                                            'help is-danger ${state.firstNameIsValid ? 'is-invisible' : ''}'
+                                        ..className = 'help is-danger ${state.firstNameIsValid ? 'is-invisible' : ''}'
                                         ..text = 'First name is required'
                                     ],
                                   new VParagraphElement()
@@ -128,8 +126,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                         ..className = 'field is-horizontal'
                                         ..children = [
                                           new VDivElement()
-                                            ..className =
-                                                'field-label is-normal'
+                                            ..className = 'field-label is-normal'
                                             ..id = 'lName-lab'
                                             ..children = [
                                               new VLabelElement()
@@ -140,21 +137,17 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                             ..className = 'field'
                                             ..children = [
                                               new VParagraphElement()
-                                                ..className =
-                                                    'control is-expanded'
+                                                ..className = 'control is-expanded'
                                                 ..children = [
                                                   new VInputElement()
-                                                    ..className =
-                                                        'input ${state.lastNameIsValid ? '' : 'is-danger'}'
-                                                    ..onInput =
-                                                        _lastNameValidation
+                                                    ..className = 'input ${state.lastNameIsValid ? '' : 'is-danger'}'
+                                                    ..onInput = _lastNameValidation
                                                     ..id = 'lName-input'
                                                     ..placeholder = "Last Name",
                                                   new VParagraphElement()
                                                     ..className =
                                                         'help is-danger ${state.lastNameIsValid ? 'is-invisible' : ''}'
-                                                    ..text =
-                                                        'Last name is required'
+                                                    ..text = 'Last name is required'
                                                 ]
                                             ]
                                         ]
@@ -186,14 +179,12 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                 ..children = [
                                   new VInputElement()
                                     ..onInput = _emailValidator
-                                    ..className =
-                                        'input ${state.emailIsValid ? '' : 'is-danger'}'
+                                    ..className = 'input ${state.emailIsValid ? '' : 'is-danger'}'
                                     ..id = 'email-input'
                                     ..placeholder = "name@example.com"
                                     ..type = 'email',
                                   new VParagraphElement()
-                                    ..className =
-                                        'help is-danger ${state.emailIsValid ? 'is-invisible' : ''}'
+                                    ..className = 'help is-danger ${state.emailIsValid ? 'is-invisible' : ''}'
                                     ..text = 'Email is invalid'
                                 ]
                             ]
@@ -226,14 +217,12 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                     ..children = [
                                       new VInputElement()
                                         ..onInput = _phoneNumberValidator
-                                        ..className =
-                                            'input ${state.phoneNumberIsValid ? '' : 'is-danger'}'
+                                        ..className = 'input ${state.phoneNumberIsValid ? '' : 'is-danger'}'
                                         ..id = 'phoneNum-input'
                                         ..placeholder = "888-888-88888"
                                         ..type = 'tel',
                                       new VParagraphElement()
-                                        ..className =
-                                            'help is-danger ${state.phoneNumberIsValid ? 'is-invisible' : ''}'
+                                        ..className = 'help is-danger ${state.phoneNumberIsValid ? 'is-invisible' : ''}'
                                         ..text = 'Phone number is invalid'
                                     ],
                                   //create the Cell Phone Number Input field
@@ -244,8 +233,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                         ..className = 'field is-horizontal'
                                         ..children = [
                                           new VDivElement()
-                                            ..className =
-                                                'field-label is-normal'
+                                            ..className = 'field-label is-normal'
                                             ..id = 'cellNum-label'
                                             ..children = [
                                               new VLabelElement()
@@ -256,23 +244,18 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                             ..className = 'field'
                                             ..children = [
                                               new VParagraphElement()
-                                                ..className =
-                                                    'control is-expanded'
+                                                ..className = 'control is-expanded'
                                                 ..children = [
                                                   new VInputElement()
-                                                    ..onInput =
-                                                        _cellNumberValidator
-                                                    ..className =
-                                                        'input ${state.cellNumberIsValid ? '' : 'is-danger'}'
+                                                    ..onInput = _cellNumberValidator
+                                                    ..className = 'input ${state.cellNumberIsValid ? '' : 'is-danger'}'
                                                     ..id = 'cellNum-input'
-                                                    ..placeholder =
-                                                        "888-888-88888"
+                                                    ..placeholder = "888-888-88888"
                                                     ..type = 'tel',
                                                   new VParagraphElement()
                                                     ..className =
                                                         'help is-danger ${state.cellNumberIsValid ? 'is-invisible' : ''}'
-                                                    ..text =
-                                                        'Cell number is invalid'
+                                                    ..text = 'Cell number is invalid'
                                                 ]
                                             ]
                                         ]
@@ -304,13 +287,11 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                 ..children = [
                                   new VInputElement()
                                     ..onInput = _addressValidator
-                                    ..className =
-                                        'input ${state.cellNumberIsValid ? '' : 'is-danger'}'
+                                    ..className = 'input ${state.cellNumberIsValid ? '' : 'is-danger'}'
                                     ..id = 'address-input'
                                     ..placeholder = "US Only",
                                   new VParagraphElement()
-                                    ..className =
-                                        'help is-danger ${state.cellNumberIsValid ? 'is-invisible' : ''}'
+                                    ..className = 'help is-danger ${state.cellNumberIsValid ? 'is-invisible' : ''}'
                                     ..text = 'Address is invalid'
                                 ]
                             ]
@@ -441,8 +422,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                         ..className = 'field is-horizontal'
                                         ..children = [
                                           new VDivElement()
-                                            ..className =
-                                                'field-label is-normal'
+                                            ..className = 'field-label is-normal'
                                             ..id = 'memRenew-label'
                                             ..children = [
                                               new VLabelElement()
@@ -453,8 +433,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                             ..className = 'field'
                                             ..children = [
                                               new VParagraphElement()
-                                                ..className =
-                                                    'control is-expanded'
+                                                ..className = 'control is-expanded'
                                                 ..children = [
                                                   new VInputElement()
                                                     ..className = 'input'
@@ -492,7 +471,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                 ..onClick = _checkBoxCheck
                             ]
                         ],
-                        new VDivElement()
+                      new VDivElement()
                         ..className = 'column is-narrow'
                         ..children = [
                           new VLabelElement()
@@ -532,8 +511,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     } else
       isValid = true;
     //Sets new state
-    setState((NewMemberProps, NewMemberState) =>
-        NewMemberState..firstNameIsValid = isValid);
+    setState((NewMemberProps, NewMemberState) => NewMemberState..firstNameIsValid = isValid);
   }
 
   //Validation for last name
@@ -548,8 +526,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     } else
       isValid = true;
     //Sets new state
-    setState((NewMemberProps, NewMemberState) =>
-        NewMemberState..lastNameIsValid = isValid);
+    setState((NewMemberProps, NewMemberState) => NewMemberState..lastNameIsValid = isValid);
   }
 
   //Validation for email using Spencer's function from constants.dart
@@ -565,8 +542,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     if (email.value == "") {
       isValid = true;
     }
-    setState((NewMemberProps, NewMemberState) =>
-        NewMemberState..emailIsValid = isValid);
+    setState((NewMemberProps, NewMemberState) => NewMemberState..emailIsValid = isValid);
   }
 
   //Validation for phone numbers
@@ -591,8 +567,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     //If blank exit
     if (value == '') {
       isValid = true;
-      setState((NewMemberProps, NewMemberState) =>
-          NewMemberState..phoneNumberIsValid = isValid);
+      setState((NewMemberProps, NewMemberState) => NewMemberState..phoneNumberIsValid = isValid);
       return;
     }
     //Acual validation
@@ -611,8 +586,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
       isValid = false;
     }
     //Sets state
-    setState((NewMemberProps, NewMemberState) =>
-        NewMemberState..phoneNumberIsValid = isValid);
+    setState((NewMemberProps, NewMemberState) => NewMemberState..phoneNumberIsValid = isValid);
   }
 
   //Validation for cell number, doesnt check if blank
@@ -625,8 +599,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     //Exits if blank
     if (value == '') {
       isValid = true;
-      setState((NewMemberProps, NewMemberState) =>
-          NewMemberState..cellNumberIsValid = isValid);
+      setState((NewMemberProps, NewMemberState) => NewMemberState..cellNumberIsValid = isValid);
       return;
     }
     //Acual validation
@@ -645,8 +618,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
       isValid = false;
     }
     //Sets state
-    setState((NewMemberProps, NewMemberState) =>
-        NewMemberState..cellNumberIsValid = isValid);
+    setState((NewMemberProps, NewMemberState) => NewMemberState..cellNumberIsValid = isValid);
   }
 
   //Validation for address, does nothing for now
@@ -703,47 +675,47 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
   }
 
   ///[roleHelper] creates dropdown for role selection
-  VNode _roleHelper(){
+  VNode _roleHelper() {
     return (new VDivElement()
-        ..className = 'dropdown ${state.dropDownActive ? 'is-active' : ''}'
-        ..children = [
-          new VDivElement()
-            ..className = 'dropdown-trigger'
-            ..onClick = _dropDownClick
-            ..children = [
-              new VButtonElement()
-                ..className = 'button is-dropdown-menu is-centered'
-                ..children = [
-                  new VSpanElement()..text = state.role,
-                  new VSpanElement()
-                    ..className = 'icon'
-                    ..children = [new Vi()..className = "fas fa-angle-down"],
-                  new VDivElement()
-                    ..className = 'dropdown-menu'
-                    ..id = 'dropdown-menu'
-                    ..children = [
-                      new VDivElement()
-                        ..className = 'dropdown-content'
-                        ..children = [
-                          new VAnchorElement()
-                            ..className = 'dropdown-item ${state.role.compareTo("Member") == 0 ? 'is-active' : ''}'
-                            ..onClick = _changeRoleMemClick
-                            ..text = "Member",
-                          new VAnchorElement()
-                            ..className = 'dropdown-item ${state.role.compareTo("Volunteer") == 0 ? 'is-active' : ''}'
-                            ..onClick = _changeRoleVolClick
-                            ..text = "Volunteer",
-                          new VAnchorElement()
-                            ..className = 'dropdown-item ${state.role.compareTo("Admin") == 0 ? 'is-active' : ''}'
-                            ..onClick = _changeRoleAdminClick
-                            ..text = "Admin",
-                        ],
-                    ],
-                ],
-            ],
-        ]);
+      ..className = 'dropdown ${state.dropDownActive ? 'is-active' : ''}'
+      ..children = [
+        new VDivElement()
+          ..className = 'dropdown-trigger'
+          ..onClick = _dropDownClick
+          ..children = [
+            new VButtonElement()
+              ..className = 'button is-dropdown-menu is-centered'
+              ..children = [
+                new VSpanElement()..text = state.role,
+                new VSpanElement()
+                  ..className = 'icon'
+                  ..children = [new Vi()..className = "fas fa-angle-down"],
+                new VDivElement()
+                  ..className = 'dropdown-menu'
+                  ..id = 'dropdown-menu'
+                  ..children = [
+                    new VDivElement()
+                      ..className = 'dropdown-content'
+                      ..children = [
+                        new VAnchorElement()
+                          ..className = 'dropdown-item ${state.role.compareTo("Member") == 0 ? 'is-active' : ''}'
+                          ..onClick = _changeRoleMemClick
+                          ..text = "Member",
+                        new VAnchorElement()
+                          ..className = 'dropdown-item ${state.role.compareTo("Volunteer") == 0 ? 'is-active' : ''}'
+                          ..onClick = _changeRoleVolClick
+                          ..text = "Volunteer",
+                        new VAnchorElement()
+                          ..className = 'dropdown-item ${state.role.compareTo("Admin") == 0 ? 'is-active' : ''}'
+                          ..onClick = _changeRoleAdminClick
+                          ..text = "Admin",
+                      ],
+                  ],
+              ],
+          ],
+      ]);
   }
-  
+
   _dropDownClick(_) {
     setState((props, state) => state..dropDownActive = !state.dropDownActive);
   }
@@ -761,7 +733,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
   }
 
   //Every time this function is called (when the check box is ticked), it flips the state of mealBool (true when ticked, false when unticked)
-  _checkBoxCheck(_){
+  _checkBoxCheck(_) {
     setState((props, state) => state..mealBool = !state.mealBool);
   }
 }
