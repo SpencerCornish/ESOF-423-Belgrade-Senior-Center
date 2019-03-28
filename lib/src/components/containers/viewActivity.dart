@@ -19,11 +19,21 @@ class ViewActivityProps {
   BuiltMap<String, Activity> activityMap;
 }
 
+class ViewActivityState {
+  bool searching;
+  List found;
+}
+
 /// [viewActivity] class / page to show a visual representation of current stored data
-class ViewActivity extends PComponent<ViewActivityProps> {
+class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
   ViewActivity(props) : super(props);
   List<String> title = ["Name", "Start", "End", "Location", "Capacity", "Instructor"];
   History _history;
+
+  @override
+  ViewActivityState getInitialState() => ViewActivityState()
+    ..found = <Activity>[]
+    ..searching = false;
 
   /// Browser history entrypoint, to control page navigation
   History get history => _history ?? findHistoryInContext(context);
@@ -38,9 +48,15 @@ class ViewActivity extends PComponent<ViewActivityProps> {
 
   /// [createRows] Scaling function to make rows based on amount of information available
   List<VNode> createRows() {
+    List<Activity> activities;
     List<VNode> nodeList = new List();
+    if (!state.searching) {
+      activities = props.activityMap.values.toList();
+    } else {
+      activities = state.found;
+    }
     nodeList.addAll(titleRow());
-    for (Activity act in props.activityMap.values) {
+    for (Activity act in activities) {
       nodeList.add(new VTableRowElement()
         ..className = 'tr'
         ..children = [
@@ -64,7 +80,7 @@ class ViewActivity extends PComponent<ViewActivityProps> {
             ..text = checkText(act.instructor),
         ]);
     }
-    return nodeList;
+    return (nodeList);
   }
 
   String checkText(String text) => text != '' ? text : "N/A";
@@ -127,9 +143,12 @@ class ViewActivity extends PComponent<ViewActivityProps> {
                                       new VInputElement()
                                         ..className = 'input'
                                         ..placeholder = 'Search'
+                                        ..type = 'submit'
+                                        ..id = 'Search'
+                                        ..onKeyUp = _searchListener
                                         ..type = 'text',
                                       new VSpanElement()
-                                        ..className = 'icon is-left has-text-info'
+                                        ..className = 'icon is-left'
                                         ..children = [new Vi()..className = 'fas fa-search'],
                                     ],
                                 ],
@@ -164,6 +183,41 @@ class ViewActivity extends PComponent<ViewActivityProps> {
             ],
         ],
     ];
+
+  _searchListener(_) {
+    InputElement search = querySelector('#Search');
+    if (search.value.isEmpty) {
+      setState((ViewActivityProps, ViewActivityState) => ViewActivityState
+        ..found = <Activity>[]
+        ..searching = false);
+    } else {
+      List found = <Activity>[];
+
+      for (Activity act in props.activityMap.values) {
+        if (act.name.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(act);
+        } else if (act.instructor.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(act);
+        } else if (act.location.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(act);
+        } else if (act.capacity.toString().contains(search.value.toLowerCase())) {
+          found.add(act);
+        } else if (act.startTime.toString().contains(search.value)) {
+          found.add(act);
+        } else if ("${act.startTime.month}/${act.startTime.day}/${act.startTime.year}".contains(search.value)) {
+          found.add(act);
+        } else if (act.endTime.toString().contains(search.value)) {
+          found.add(act);
+        } else if ("${act.endTime.month}/${act.endTime.day}/${act.endTime.year}".contains(search.value)) {
+          found.add(act);
+        }
+
+        setState((ViewActivityProps, ViewActivityState) => ViewActivityState
+          ..found = found
+          ..searching = true);
+      }
+    }
+  }
 
   _onExportCsvClick(_) {
     List<String> lines = props.activityMap.values.map((activity) => activity.toCsv()).toList();
