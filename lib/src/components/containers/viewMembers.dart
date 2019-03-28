@@ -188,7 +188,7 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
             ..text = 'Member Data',
           new Vh1()
             ..className = 'subtitle is-7'
-            ..text = "as of: ${DateTime.now().month}-${DateTime.now().day}-${DateTime.now().year}",
+            ..text = "as of: ${DateTime.now().month}/${DateTime.now().day}/${DateTime.now().year}",
         ],
       _renderSearch(),
       _renderExport(),
@@ -308,7 +308,11 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
           found.add(user);
         } else if (user.services.contains(search.value)) {
           found.add(user);
-        } else if (user.membershipRenewal.toString().contains(search.value)) {
+        } else if (user.membershipRenewal.day.toString().contains(search.value)) {
+          found.add(user);
+        } else if (user.membershipRenewal.month.toString().contains(search.value)) {
+          found.add(user);
+        } else if (user.membershipRenewal.year.toString().contains(search.value)) {
           found.add(user);
         } else if (user.membershipStart.toString().contains(search.value)) {
           found.add(user);

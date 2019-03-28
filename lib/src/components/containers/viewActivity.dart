@@ -65,10 +65,10 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
             ..text = checkText(act.name),
           new VTableCellElement()
             ..className = tdClass(act.startTime.toString())
-            ..text = checkText("${act.startTime.month}-${act.startTime.day}-${act.startTime.year}"),
+            ..text = checkText("${act.startTime.month}/${act.startTime.day}/${act.startTime.year}"),
           new VTableCellElement()
             ..className = tdClass(act.endTime.toString())
-            ..text = checkText("${act.endTime.month}-${act.endTime.day}-${act.endTime.year}"),
+            ..text = checkText("${act.endTime.month}/${act.endTime.day}/${act.endTime.year}"),
           new VTableCellElement()
             ..className = tdClass(act.location)
             ..text = checkText(act.location),
@@ -129,7 +129,7 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
                                 ..text = 'Activity Data',
                               new Vh1()
                                 ..className = 'subtitle is-7'
-                                ..text = " as of: ${DateTime.now().month}-${DateTime.now().day}-${DateTime.now().year}",
+                                ..text = " as of: ${DateTime.now().month}/${DateTime.now().day}/${DateTime.now().year}",
                             ],
                           new VDivElement()
                             ..className = 'column is-narrow'
@@ -202,9 +202,17 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
           found.add(act);
         } else if (act.capacity.toString().contains(search.value.toLowerCase())) {
           found.add(act);
-        } else if (act.startTime.toString().contains(search.value)) {
+        } else if (act.startTime.day.toString().contains(search.value)) {
           found.add(act);
-        } else if (act.endTime.toString().contains(search.value)) {
+        } else if (act.startTime.month.toString().contains(search.value)) {
+          found.add(act);
+        } else if (act.startTime.year.toString().contains(search.value)) {
+          found.add(act);
+        } else if (act.endTime.day.toString().contains(search.value)) {
+          found.add(act);
+        } else if (act.endTime.month.toString().contains(search.value)) {
+          found.add(act);
+        } else if (act.endTime.year.toString().contains(search.value)) {
           found.add(act);
         }
 
