@@ -48,9 +48,15 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
 
   /// [createRows] Scaling function to make rows based on amount of information available
   List<VNode> createRows() {
+    List<Activity> activities;
     List<VNode> nodeList = new List();
+    if (!state.searching) {
+      activities = props.activityMap.values.toList();
+    } else {
+      activities = state.found;
+    }
     nodeList.addAll(titleRow());
-    for (Activity act in props.activityMap.values) {
+    for (Activity act in activities) {
       nodeList.add(new VTableRowElement()
         ..className = 'tr'
         ..children = [
@@ -59,10 +65,10 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
             ..text = checkText(act.name),
           new VTableCellElement()
             ..className = tdClass(act.startTime.toString())
-            ..text = checkText("${act.startTime.month}/${act.startTime.day}/${act.startTime.year}"),
+            ..text = checkText("${act.startTime.month}-${act.startTime.day}-${act.startTime.year}"),
           new VTableCellElement()
             ..className = tdClass(act.endTime.toString())
-            ..text = checkText("${act.endTime.month}/${act.endTime.day}/${act.endTime.year}"),
+            ..text = checkText("${act.endTime.month}-${act.endTime.day}-${act.endTime.year}"),
           new VTableCellElement()
             ..className = tdClass(act.location)
             ..text = checkText(act.location),
@@ -123,7 +129,7 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
                                 ..text = 'Activity Data',
                               new Vh1()
                                 ..className = 'subtitle is-7'
-                                ..text = " as of: ${DateTime.now().month}/${DateTime.now().day}/${DateTime.now().year}",
+                                ..text = " as of: ${DateTime.now().month}-${DateTime.now().day}-${DateTime.now().year}",
                             ],
                           new VDivElement()
                             ..className = 'column is-narrow'
@@ -181,11 +187,11 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
   _searchListener(_) {
     InputElement search = querySelector('#Search');
     if (search.value.isEmpty) {
-      setState((ViewMemberProps, ViewMembersState) => ViewMembersState
-        ..found = <User>[]
+      setState((ViewActivityProps, ViewActivityState) => ViewActivityState
+        ..found = <Activity>[]
         ..searching = false);
     } else {
-      List found = <User>[];
+      List found = <Activity>[];
 
       for (Activity act in props.activityMap.values) {
         if (act.name.toLowerCase().contains(search.value.toLowerCase())) {
@@ -194,32 +200,15 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
           found.add(act);
         } else if (act.location.toLowerCase().contains(search.value.toLowerCase())) {
           found.add(act);
-          //   } else if (act.capacity.contains(search.value.toLowerCase())) {
-          //     found.add(user);
-          //   } else if (user.disabilities.toLowerCase().contains(search.value.toLowerCase())) {
-          //     found.add(user);
-          //   } else if (user.email.toLowerCase().contains(search.value.toLowerCase())) {
-          //     found.add(user);
-          //   } else if (user.medicalIssues.toLowerCase().contains(search.value.toLowerCase())) {
-          //     found.add(user);
-          //   } else if (user.mobileNumber.contains(search.value)) {
-          //     found.add(user);
-          //   } else if (user.phoneNumber.contains(search.value)) {
-          //     found.add(user);
-          //   } else if (user.position.toLowerCase().contains(search.value.toLowerCase())) {
-          //     found.add(user);
-          //   } else if (user.role.toLowerCase().contains(search.value.toLowerCase())) {
-          //     found.add(user);
-          //   } else if (user.services.contains(search.value)) {
-          //     found.add(user);
-          //   } else if (user.membershipRenewal.toString().contains(search.value)) {
-          //     found.add(user);
-          //   } else if (user.membershipStart.toString().contains(search.value)) {
-          //     found.add(user);
-          //   }
+        } else if (act.capacity.toString().contains(search.value.toLowerCase())) {
+          found.add(act);
+        } else if (act.startTime.toString().contains(search.value)) {
+          found.add(act);
+        } else if (act.endTime.toString().contains(search.value)) {
+          found.add(act);
         }
 
-        setState((ViewMemberProps, ViewMembersState) => ViewMembersState
+        setState((ViewActivityProps, ViewActivityState) => ViewActivityState
           ..found = found
           ..searching = true);
       }

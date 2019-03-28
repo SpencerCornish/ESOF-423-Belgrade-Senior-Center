@@ -188,7 +188,7 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
             ..text = 'Member Data',
           new Vh1()
             ..className = 'subtitle is-7'
-            ..text = "as of: ${DateTime.now().month}/${DateTime.now().day}/${DateTime.now().year}",
+            ..text = "as of: ${DateTime.now().month}-${DateTime.now().day}-${DateTime.now().year}",
         ],
       _renderSearch(),
       _renderExport(),

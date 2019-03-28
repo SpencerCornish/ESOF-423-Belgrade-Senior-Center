@@ -45,18 +45,24 @@ class ViewMeal extends Component<ViewMealProps, ViewMealState> {
 
   /// [createRows] Scaling function to make rows based on amount of information available
   List<VNode> createRows() {
+    List<Meal> meals;
     List<VNode> nodeList = new List();
+    if (!state.searching) {
+      meals = props.mealMap.values.toList();
+    } else {
+      meals = state.found;
+    }
     nodeList.addAll(titleRow());
-    for (Meal meal in props.mealMap.values) {
+    for (Meal meal in meals) {
       nodeList.add(new VTableRowElement()
         ..className = 'tr'
         ..children = [
           new VTableCellElement()
             ..className = tdClass(meal.startTime.toString())
-            ..text = checkText("${meal.startTime.month}/${meal.startTime.day}/${meal.startTime.year}"),
+            ..text = checkText("${meal.startTime.month}-${meal.startTime.day}-${meal.startTime.year}"),
           new VTableCellElement()
             ..className = tdClass(meal.endTime.toString())
-            ..text = checkText("${meal.endTime.month}/${meal.endTime.day}/${meal.endTime.year}"),
+            ..text = checkText("${meal.endTime.month}-${meal.endTime.day}-${meal.endTime.year}"),
         ]);
     }
     return nodeList;
