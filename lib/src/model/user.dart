@@ -62,6 +62,7 @@ abstract class User implements Built<User, UserBuilder> {
   BuiltList<String> get forms;
 
   /// [medicalIssues] required
+  @nullable
   String get medicalIssues;
 
   /// [position] may be blank for normal users
