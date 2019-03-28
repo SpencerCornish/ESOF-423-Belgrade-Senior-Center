@@ -42,6 +42,8 @@ class _$User extends User {
   @override
   final String position;
   @override
+  final bool homeDeliver;
+  @override
   final BuiltList<String> services;
 
   factory _$User([void updates(UserBuilder b)]) => (new UserBuilder()..update(updates)).build();
@@ -64,6 +66,7 @@ class _$User extends User {
       this.forms,
       this.medicalIssues,
       this.position,
+      this.homeDeliver,
       this.services})
       : super._() {
     if (firstName == null) {
@@ -143,6 +146,7 @@ class _$User extends User {
         forms == other.forms &&
         medicalIssues == other.medicalIssues &&
         position == other.position &&
+        homeDeliver == other.homeDeliver &&
         services == other.services;
   }
 
@@ -163,22 +167,24 @@ class _$User extends User {
                                                     $jc(
                                                         $jc(
                                                             $jc(
-                                                                $jc($jc($jc(0, loginUID.hashCode), docUID.hashCode),
-                                                                    firstName.hashCode),
-                                                                lastName.hashCode),
-                                                            email.hashCode),
-                                                        phoneNumber.hashCode),
-                                                    mobileNumber.hashCode),
-                                                address.hashCode),
-                                            role.hashCode),
-                                        dietaryRestrictions.hashCode),
-                                    emergencyContacts.hashCode),
-                                membershipStart.hashCode),
-                            membershipRenewal.hashCode),
-                        disabilities.hashCode),
-                    forms.hashCode),
-                medicalIssues.hashCode),
-            position.hashCode),
+                                                                $jc(
+                                                                    $jc($jc($jc(0, loginUID.hashCode), docUID.hashCode),
+                                                                        firstName.hashCode),
+                                                                    lastName.hashCode),
+                                                                email.hashCode),
+                                                            phoneNumber.hashCode),
+                                                        mobileNumber.hashCode),
+                                                    address.hashCode),
+                                                role.hashCode),
+                                            dietaryRestrictions.hashCode),
+                                        emergencyContacts.hashCode),
+                                    membershipStart.hashCode),
+                                membershipRenewal.hashCode),
+                            disabilities.hashCode),
+                        forms.hashCode),
+                    medicalIssues.hashCode),
+                position.hashCode),
+            homeDeliver.hashCode),
         services.hashCode));
   }
 
@@ -202,6 +208,7 @@ class _$User extends User {
           ..add('forms', forms)
           ..add('medicalIssues', medicalIssues)
           ..add('position', position)
+          ..add('homeDeliver', homeDeliver)
           ..add('services', services))
         .toString();
   }
@@ -280,6 +287,10 @@ class UserBuilder implements Builder<User, UserBuilder> {
   String get position => _$this._position;
   set position(String position) => _$this._position = position;
 
+  bool _homeDeliver;
+  bool get homeDeliver => _$this._homeDeliver;
+  set homeDeliver(bool homeDeliver) => _$this._homeDeliver = homeDeliver;
+
   ListBuilder<String> _services;
   ListBuilder<String> get services => _$this._services ??= new ListBuilder<String>();
   set services(ListBuilder<String> services) => _$this._services = services;
@@ -305,6 +316,7 @@ class UserBuilder implements Builder<User, UserBuilder> {
       _forms = _$v.forms?.toBuilder();
       _medicalIssues = _$v.medicalIssues;
       _position = _$v.position;
+      _homeDeliver = _$v.homeDeliver;
       _services = _$v.services?.toBuilder();
       _$v = null;
     }
@@ -347,6 +359,7 @@ class UserBuilder implements Builder<User, UserBuilder> {
               forms: forms.build(),
               medicalIssues: medicalIssues,
               position: position,
+              homeDeliver: homeDeliver,
               services: services.build());
     } catch (_) {
       String _$failedField;

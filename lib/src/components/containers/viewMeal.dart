@@ -19,11 +19,21 @@ class ViewMealProps {
   BuiltMap<String, Meal> mealMap;
 }
 
+class ViewMealState {
+  bool searching;
+  List found;
+}
+
 /// [viewMeal] class / page to show a visual representation of current stored data
-class ViewMeal extends PComponent<ViewMealProps> {
+class ViewMeal extends Component<ViewMealProps, ViewMealState> {
   ViewMeal(props) : super(props);
   List<String> title = ["Start", "End"];
   History _history;
+
+  @override
+  ViewMealState getInitialState() => ViewMealState()
+    ..found = <Meal>[]
+    ..searching = false;
 
   /// Browser history entrypoint, to control page navigation
   History get history => _history ?? findHistoryInContext(context);
@@ -35,9 +45,15 @@ class ViewMeal extends PComponent<ViewMealProps> {
 
   /// [createRows] Scaling function to make rows based on amount of information available
   List<VNode> createRows() {
+    List<Meal> meals;
     List<VNode> nodeList = new List();
+    if (!state.searching) {
+      meals = props.mealMap.values.toList();
+    } else {
+      meals = state.found;
+    }
     nodeList.addAll(titleRow());
-    for (Meal meal in props.mealMap.values) {
+    for (Meal meal in meals) {
       nodeList.add(new VTableRowElement()
         ..className = 'tr'
         ..onClick = ((_) => _onMealClick(meal.uid))
@@ -117,6 +133,8 @@ class ViewMeal extends PComponent<ViewMealProps> {
                                       new VInputElement()
                                         ..className = 'input'
                                         ..placeholder = 'Search'
+                                        ..id = 'Search'
+                                        ..onKeyUp = _searchListener
                                         ..type = 'text',
                                       new VSpanElement()
                                         ..className = 'icon is-left'
@@ -154,6 +172,39 @@ class ViewMeal extends PComponent<ViewMealProps> {
             ],
         ],
     ];
+
+  _searchListener(_) {
+    InputElement search = querySelector('#Search');
+    if (search.value.isEmpty) {
+      setState((ViewMealProps, ViewMealState) => ViewMealState
+        ..found = <Meal>[]
+        ..searching = false);
+    } else {
+      List found = <Meal>[];
+
+      for (Meal meal in props.mealMap.values) {
+        for (String menuItem in meal.menu) {
+          if (menuItem.toLowerCase().contains(search.value.toLowerCase())) {
+            found.add(meal);
+            break;
+          }
+        }
+        if (meal.endTime.toString().contains(search.value)) {
+          found.add(meal);
+        } else if ("${meal.endTime.month}/${meal.endTime.day}/${meal.endTime.year}".contains(search.value)) {
+          found.add(meal);
+        } else if (meal.startTime.toString().contains(search.value)) {
+          found.add(meal);
+        } else if ("${meal.startTime.month}/${meal.startTime.day}/${meal.startTime.year}".contains(search.value)) {
+          found.add(meal);
+        }
+
+        setState((ViewMealProps, ViewMealState) => ViewMealState
+          ..found = found
+          ..searching = true);
+      }
+    }
+  }
 
   _onExportCsvClick(_) {
     List<String> lines = props.mealMap.values.map((meal) => meal.toCsv()).toList();
