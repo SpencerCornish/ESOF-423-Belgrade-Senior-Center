@@ -23,6 +23,9 @@ class NewMemberState {
   bool phoneNumberIsValid;
   bool cellNumberIsValid;
   bool addressIsValid;
+  bool mealBool;
+  bool dropDownActive;
+  String role;
 }
 
 class NewMember extends Component<NewMemberProps, NewMemberState> {
@@ -35,7 +38,10 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     ..emailIsValid = true
     ..phoneNumberIsValid = true
     ..cellNumberIsValid = true
-    ..addressIsValid = true;
+    ..addressIsValid = true
+    ..mealBool = false
+    ..dropDownActive = false
+    ..role = "Member";
 
   History _history;
 
@@ -446,45 +452,32 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
 
                   //create the drop down menu for establishing the type of user
                   new VDivElement()
-                    ..className = 'columns is-centered'
+                    ..className = 'columns'
                     ..children = [
                       new VDivElement()
-                        ..className = 'dropdown'
+                        ..className = 'column'
+                        ..children = [
+                          _roleHelper(),
+                        ],
+                      new VDivElement()
+                        ..className = 'column is-narrow'
                         ..children = [
                           new VDivElement()
-                            ..className = 'dropdown-trigger'
+                            ..className = 'control'
                             ..children = [
-                              new VAnchorElement()
-                                ..className = 'button is-dropdown-menu is-centered'
-                                ..children = [
-                                  new VSpanElement()
-                                    ..text = "Role"
-                                    ..children = [
-                                      new VSpanElement()
-                                        ..className = 'icon'
-                                        ..children = [new Vi()..className = "fas fa-angle-down"]
-                                    ],
-                                  new VDivElement()
-                                    ..className = 'dropdown-menu'
-                                    ..id = 'dropdown-menu'
-                                    ..children = [
-                                      new VDivElement()
-                                        ..className = 'dropdown-content'
-                                        ..children = [
-                                          new VDivElement()
-                                            ..className = 'dropdown-item'
-                                            ..text = "Member",
-                                          new VDivElement()
-                                            ..className = 'dropdown-item'
-                                            ..text = "Volunteer",
-                                          new VDivElement()
-                                            ..className = 'dropdown-item'
-                                            ..text = "Admin",
-                                        ],
-                                    ]
-                                ]
+                              new VCheckboxInputElement()
+                                ..className = 'checkbox'
+                                ..id = 'mealOption-input'
+                                ..onClick = _checkBoxCheck
                             ]
-                        ]
+                        ],
+                      new VDivElement()
+                        ..className = 'column is-narrow'
+                        ..children = [
+                          new VLabelElement()
+                            ..className = 'label'
+                            ..text = "Requires Home Delivery for Meals"
+                        ],
                     ],
                   //create the submit button
                   new VDivElement()
@@ -649,6 +642,10 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     InputElement medical = querySelector('#medicalIssue-input');
     InputElement memStart = querySelector('#memStart-input');
     InputElement memRenew = querySelector('#memRenew-input');
+    CheckboxInputElement mealOp = querySelector('#mealOption-input');
+
+    print("This is what is in mealOp: ");
+    print(state.mealBool);
 
     //create a new user object
     User newUser = (new UserBuilder()
@@ -665,14 +662,78 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
           ..membershipRenewal = DateTime.parse(memRenew.value)
           ..emergencyContacts = new ListBuilder<EmergencyContact>()
           ..services = new ListBuilder<String>()
-          ..role = "NULL"
+          ..role = state.role
           ..position = "NULL"
-          ..forms = new ListBuilder<String>())
+          ..forms = new ListBuilder<String>()
+          ..homeDeliver = state.mealBool)
         .build();
 
     props.actions.server.updateOrCreateUser(newUser);
     props.actions.server.fetchAllMembers();
 
     history.push(Routes.dashboard);
+  }
+
+  ///[roleHelper] creates dropdown for role selection
+  VNode _roleHelper() {
+    return (new VDivElement()
+      ..className = 'dropdown ${state.dropDownActive ? 'is-active' : ''}'
+      ..children = [
+        new VDivElement()
+          ..className = 'dropdown-trigger'
+          ..onClick = _dropDownClick
+          ..children = [
+            new VButtonElement()
+              ..className = 'button is-dropdown-menu is-centered'
+              ..children = [
+                new VSpanElement()..text = state.role,
+                new VSpanElement()
+                  ..className = 'icon'
+                  ..children = [new Vi()..className = "fas fa-angle-down"],
+                new VDivElement()
+                  ..className = 'dropdown-menu'
+                  ..id = 'dropdown-menu'
+                  ..children = [
+                    new VDivElement()
+                      ..className = 'dropdown-content'
+                      ..children = [
+                        new VAnchorElement()
+                          ..className = 'dropdown-item ${state.role.compareTo("Member") == 0 ? 'is-active' : ''}'
+                          ..onClick = _changeRoleMemClick
+                          ..text = "Member",
+                        new VAnchorElement()
+                          ..className = 'dropdown-item ${state.role.compareTo("Volunteer") == 0 ? 'is-active' : ''}'
+                          ..onClick = _changeRoleVolClick
+                          ..text = "Volunteer",
+                        new VAnchorElement()
+                          ..className = 'dropdown-item ${state.role.compareTo("Admin") == 0 ? 'is-active' : ''}'
+                          ..onClick = _changeRoleAdminClick
+                          ..text = "Admin",
+                      ],
+                  ],
+              ],
+          ],
+      ]);
+  }
+
+  _dropDownClick(_) {
+    setState((props, state) => state..dropDownActive = !state.dropDownActive);
+  }
+
+  _changeRoleMemClick(_) {
+    setState((props, state) => state..role = "Member");
+  }
+
+  _changeRoleVolClick(_) {
+    setState((props, state) => state..role = "Volunteer");
+  }
+
+  _changeRoleAdminClick(_) {
+    setState((props, state) => state..role = "Admin");
+  }
+
+  //Every time this function is called (when the check box is ticked), it flips the state of mealBool (true when ticked, false when unticked)
+  _checkBoxCheck(_) {
+    setState((props, state) => state..mealBool = !state.mealBool);
   }
 }

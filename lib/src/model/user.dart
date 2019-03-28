@@ -68,6 +68,10 @@ abstract class User implements Built<User, UserBuilder> {
   /// The current position of the user, only used in case of admins and volunteers
   String get position;
 
+  /// [homeDelivery] is a boolean that tells admins whether or not the user gets their meals home delivered
+  @nullable
+  bool get homeDeliver;
+
   /// [services] required
   /// A list of services that are used by the user
   BuiltList<String> get services;
@@ -93,6 +97,7 @@ abstract class User implements Built<User, UserBuilder> {
         ..address = firestoreData['address']
         ..role = firestoreData['role']
         ..dietaryRestrictions = firestoreData['dietary_restrictions']
+        ..homeDeliver = firestoreData['homeDelivery'] ?? false
         ..emergencyContacts = emergencyContact.toBuilder()
         ..membershipStart = DateTime.parse(firestoreData['membership_start'])
         ..membershipRenewal = DateTime.parse(firestoreData['membership_renewal'])
@@ -112,6 +117,7 @@ abstract class User implements Built<User, UserBuilder> {
         'address': address,
         'role': role,
         'dietary_restrictions': dietaryRestrictions,
+        'homeDelivery': homeDeliver,
         'emergency_contacts': emergencyContacts.toList(),
         'membership_start': membershipStart.toIso8601String(),
         'membership_renewal': membershipRenewal.toIso8601String(),
