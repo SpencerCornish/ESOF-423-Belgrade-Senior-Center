@@ -40,6 +40,24 @@ void main() {
     test('addressValidator', () {
       expect(InputValidator.addressValidator("input"), true);
     });
+
+    //InputValidator.timeValidator rejects times where the event ends before it starts
+    test('timeValidator rejects time sets where end is before start', () {
+      String moonLanding = "1969-07-20 20:18:04Z";
+
+      DateTime moonLandingDT = DateTime.parse(moonLanding);
+      DateTime now = DateTime.now();
+
+      expect(InputValidator.timeValidator(now, moonLandingDT), false);
+    });
+
+    //InputValidator.capacityValidator rejects capacities below -2
+    test('capacityValidator rejects capacities below -2', () {
+      expect(InputValidator.capactiyValidator(-4), false);
+      expect(InputValidator.capactiyValidator(-1), true);
+      expect(InputValidator.capactiyValidator(0), true);
+      expect(InputValidator.capactiyValidator(20), true);
+    });
     //Testing for other methods
     test('stringToBase and baseToString properly encodes strings', () {
       expect(baseToString(stringToBase("test")), "test");

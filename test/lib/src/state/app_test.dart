@@ -8,7 +8,6 @@ import 'package:bsc/src/state/app.dart';
 import 'package:bsc/src/model/user.dart';
 import 'package:built_collection/built_collection.dart';
 
-
 void main() {
   //Vars for testing
   group('App -', () {
@@ -22,7 +21,7 @@ void main() {
       var actions = new AppActions();
       var defaultValue = new App();
       store = new Store<App, AppBuilder, AppActions>(reducerBuilder.build(), defaultValue, actions);
-      
+
       newUser = (new UserBuilder()
             ..firstName = ''
             ..lastName = ''
@@ -39,25 +38,23 @@ void main() {
             ..forms = new ListBuilder<String>()
             ..medicalIssues = ''
             ..position = ''
-            ..services = new ListBuilder<String>()
-          ).build();
-      
+            ..services = new ListBuilder<String>())
+          .build();
+
       newActivity = (new ActivityBuilder()
-        ..capacity = 0 
-        ..endTime = new DateTime.fromMicrosecondsSinceEpoch(0)
-        ..startTime = new DateTime.fromMicrosecondsSinceEpoch(0)
-        ..instructor = ""
-        ..location = ""
-        ..name = ""
-      ).build();
+            ..capacity = 0
+            ..endTime = new DateTime.fromMicrosecondsSinceEpoch(0)
+            ..startTime = new DateTime.fromMicrosecondsSinceEpoch(0)
+            ..instructor = ""
+            ..location = ""
+            ..name = "")
+          .build();
 
       newMeal = (new MealBuilder()
-        ..startTime = new DateTime.fromMicrosecondsSinceEpoch(0)
-        ..endTime = new DateTime.fromMicrosecondsSinceEpoch(0)
-        ..menu = new BuiltList<String>({
-          ""
-        }).toBuilder()
-      ).build();
+            ..startTime = new DateTime.fromMicrosecondsSinceEpoch(0)
+            ..endTime = new DateTime.fromMicrosecondsSinceEpoch(0)
+            ..menu = new BuiltList<String>(["", ""]).toBuilder())
+          .build();
     });
 
     //Clean store object from memory after testing
@@ -84,21 +81,16 @@ void main() {
     });
     test('Test setUserMap reducer', () async {
       //Tests setUserMap
-      BuiltMap testUserMap = new BuiltMap<String, User>({
-        "bla":newUser
-      });
+      BuiltMap testUserMap = new BuiltMap<String, User>({"bla": newUser});
       BuiltMap temp = new BuiltMap<String, User>();
       expect(store.state.userMap, temp);
       store.actions.setUserMap(testUserMap);
       expect(store.state.userMap, testUserMap);
-
     });
     test('Test setActivityMap reducer', () async {
       //Tests setActivityMap
       BuiltMap temp = new BuiltMap<String, Activity>();
-      BuiltMap testActMap = new BuiltMap<String, Activity>({
-          "bla":newActivity
-      });
+      BuiltMap testActMap = new BuiltMap<String, Activity>({"bla": newActivity});
       expect(store.state.activityMap, temp);
       store.actions.setActivityMap(testActMap);
       expect(store.state.activityMap, testActMap);
@@ -106,9 +98,7 @@ void main() {
     test('Test setMealMap reducer', () async {
       //Tests setMealMap
       BuiltMap temp = new BuiltMap<String, Meal>();
-      BuiltMap testMealMap = new BuiltMap<String, Meal>({
-        "bla":newMeal
-      });
+      BuiltMap testMealMap = new BuiltMap<String, Meal>({"bla": newMeal});
       expect(store.state.mealMap, temp);
       store.actions.setMealMap(testMealMap);
       expect(store.state.mealMap, testMealMap);

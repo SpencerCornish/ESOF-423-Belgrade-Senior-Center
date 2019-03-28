@@ -75,6 +75,16 @@ class InputValidator {
   static bool addressValidator(String input) {
     return true;
   }
+
+  //Validates DateTimes, not very complicated but moved here for code clarity
+  static bool timeValidator(DateTime start, DateTime end) {
+    return !start.isAfter(end);
+  }
+
+  //Validates capacity fields, only fails if less than -1
+  static bool capactiyValidator(int i) {
+    return i > -2;
+  }
 }
 
 class ExportHeader {

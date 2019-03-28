@@ -17,8 +17,15 @@ class NewMealProps {
   Meal meal;
 }
 
-class NewMeal extends PComponent<NewMealProps> {
+class NewMealState {
+  bool timeIsValid;
+}
+
+class NewMeal extends Component<NewMealProps, NewMealState> {
   NewMeal(props) : super(props);
+
+  @override
+  NewMealState getInitialState() => NewMealState()..timeIsValid = true;
 
   History _history;
 
@@ -130,9 +137,14 @@ class NewMeal extends PComponent<NewMealProps> {
                                             ..className = 'control'
                                             ..children = [
                                               new VInputElement()
-                                                ..className = 'input'
+                                                ..onInput = _timeValidator
+                                                ..className = 'input ${state.timeIsValid ? '' : 'is-danger'}'
                                                 ..id = 'mealStart-input'
-                                                ..type = 'time'
+                                                ..type = 'time',
+                                              new VParagraphElement()
+                                                ..className =
+                                                    'help is-danger ${state.timeIsValid ? 'is-invisible' : ''}'
+                                                ..text = 'Meal ends before it begins, please correct.'
                                             ]
                                         ]
                                     ]
@@ -166,9 +178,14 @@ class NewMeal extends PComponent<NewMealProps> {
                                             ..className = 'control'
                                             ..children = [
                                               new VInputElement()
-                                                ..className = 'input'
+                                                ..onInput = _timeValidator
+                                                ..className = 'input ${state.timeIsValid ? '' : 'is-danger'}'
                                                 ..id = 'mealEnd-input'
-                                                ..type = 'time'
+                                                ..type = 'time',
+                                              new VParagraphElement()
+                                                ..className =
+                                                    'help is-danger ${state.timeIsValid ? 'is-invisible' : ''}'
+                                                ..text = 'Meal ends before it begins, please correct.'
                                             ]
                                         ]
                                     ]
@@ -232,6 +249,27 @@ class NewMeal extends PComponent<NewMealProps> {
             ]
         ]
     ];
+
+  //Checks that the meal does not start before it ends
+  _timeValidator(_) {
+    //Gets the 3 date time inputs
+    InputElement date = querySelector('#serveDate-input');
+    InputElement time_start = querySelector('#mealStart-input');
+    InputElement time_end = querySelector('#mealEnd-input');
+
+    DateTime serveDay = DateTime.parse(date.value);
+
+    String startTime = _parseDate(serveDay, time_start.value);
+    String endTime = _parseDate(serveDay, time_end.value);
+
+    DateTime start = DateTime.parse(startTime);
+    DateTime end = DateTime.parse(endTime);
+
+    //Is valid bool
+    bool isValid = InputValidator.timeValidator(start, end);
+
+    setState((NewMealProps, NewMealState) => NewMealState..timeIsValid = isValid);
+  }
 
   //method used for the submit click
   //variable names serveDate-input, mealStart-input, mealEnd-input, meal-input
