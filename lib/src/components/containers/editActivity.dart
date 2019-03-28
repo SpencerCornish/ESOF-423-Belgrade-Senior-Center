@@ -403,10 +403,6 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
     return "${date.year}-${tempMonth}-${tempDay}";
   }
 
-  ///[_checkText] takes in passed text and will return N/A if string is empty and the user is not being eddited
-  ///or return the orrigional string for all other conditions
-  String _checkText(String text) => state.edit ? text : (text != '' ? text : "N/A");
-
   VNode _renderButton() {
     if (state.edit) {
       return _renderSubmit();
