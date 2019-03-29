@@ -201,7 +201,7 @@ class Home extends PComponent<HomeProps> {
     if (props.authState == AuthState.LOADING) return;
     InputElement email = querySelector('#email-input');
     InputElement pass = querySelector('#pass-input');
-    if (!emailIsValid(email.value)) {
+    if (!InputValidator.emailValidator(email.value)) {
       props.actions.setAuthState(AuthState.ERR_EMAIL);
       return;
     }
@@ -219,7 +219,7 @@ class Home extends PComponent<HomeProps> {
   _onResetPasswordClick(_) {
     if (props.authState == AuthState.LOADING) return;
     InputElement email = querySelector('#email-input');
-    if (!emailIsValid(email.value)) {
+    if (!InputValidator.emailValidator(email.value)) {
       props.actions.setAuthState(AuthState.ERR_EMAIL);
       return;
     }
