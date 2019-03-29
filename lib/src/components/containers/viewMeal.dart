@@ -27,7 +27,7 @@ class ViewMealState {
 /// [viewMeal] class / page to show a visual representation of current stored data
 class ViewMeal extends Component<ViewMealProps, ViewMealState> {
   ViewMeal(props) : super(props);
-  List<String> title = ["Start", "End"];
+  List<String> title = ["Date", "Start Time", "End Time"];
   History _history;
 
   @override
@@ -62,11 +62,27 @@ class ViewMeal extends Component<ViewMealProps, ViewMealState> {
             ..className = tdClass(meal.startTime.toString())
             ..text = checkText("${meal.startTime.month}/${meal.startTime.day}/${meal.startTime.year}"),
           new VTableCellElement()
+            ..className = "time"
+            ..text = _showTime(meal.startTime.hour.toString(), meal.startTime.minute.toString()),
+          //checkText("${meal.startTime.hour}:${meal.startTime.minute}"),
+          new VTableCellElement()
             ..className = tdClass(meal.endTime.toString())
-            ..text = checkText("${meal.endTime.month}/${meal.endTime.day}/${meal.endTime.year}"),
+            ..text = _showTime(meal.endTime.hour.toString(), meal.endTime.minute.toString()),
         ]);
     }
     return nodeList;
+  }
+
+  ///[_showTime] helper function to put a time into a proper format to view in a time type input box
+  String _showTime(String hour, String min) {
+    if (hour.length == 1) {
+      hour = "0${hour}";
+    }
+
+    if (min.length == 1) {
+      min = "0${min}";
+    }
+    return hour + ":" + min;
   }
 
   _onMealClick(String uid) {
