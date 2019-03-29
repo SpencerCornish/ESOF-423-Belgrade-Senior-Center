@@ -77,10 +77,7 @@ class Container extends PComponent<ContainerProps> {
 
               // loginRedirect is for redirects to log in the user
               new Route(path: Routes.loginRedirect, componentFactory: (params) => _renderLoginRedirect(params)),
-              new Route(
-                path: Routes.dashboard,
-                componentFactory: (_) => _renderIfAuthenticated(_renderDashboard()),
-              ),
+
               new Route(
                 path: Routes.createMember,
                 componentFactory: (params) => _renderIfAuthenticated(_renderCreateMember()),
@@ -162,6 +159,7 @@ class Container extends PComponent<ContainerProps> {
   _renderViewMembers() => new ViewMembers(new ViewMembersProps()
     ..actions = props.storeContainer.store.actions
     ..user = appState.user
+    ..activityMap = appState.activityMap
     ..userMap = appState.userMap);
 
   _renderEditMember(Map<String, String> params) => new EditMember(new EditMemberProps()
