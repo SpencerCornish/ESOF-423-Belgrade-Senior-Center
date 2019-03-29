@@ -21,7 +21,7 @@ class ViewActivityProps {
 
 class ViewActivityState {
   bool searching;
-  List found;
+  List<Activity> found;
 }
 
 /// [viewActivity] class / page to show a visual representation of current stored data
@@ -59,6 +59,7 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
     for (Activity act in activities) {
       nodeList.add(new VTableRowElement()
         ..className = 'tr'
+        ..onClick = ((_) => _onActClick(act.uid))
         ..children = [
           new VTableCellElement()
             ..className = tdClass(act.name)
@@ -81,6 +82,10 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
         ]);
     }
     return (nodeList);
+  }
+
+  _onActClick(String uid) {
+    history.push(Routes.generateEditActivityURL(uid));
   }
 
   String checkText(String text) => text != '' ? text : "N/A";
@@ -220,7 +225,12 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
   }
 
   _onExportCsvClick(_) {
-    List<String> lines = props.activityMap.values.map((activity) => activity.toCsv()).toList();
+    List<String> lines;
+    if (!state.searching) {
+      lines = props.activityMap.values.map((activity) => activity.toCsv()).toList();
+    } else {
+      lines = state.found.map((activity) => activity.toCsv()).toList();
+    }
 
     // Add the header row
     lines.insert(0, ExportHeader.activity.join(',') + '\n');
