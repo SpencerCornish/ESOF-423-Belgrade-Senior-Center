@@ -650,15 +650,15 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                         new VAnchorElement()
                           ..className = 'dropdown-item ${state.role.compareTo("member") == 0 ? 'is-active' : ''}'
                           ..onClick = _changeRoleMemClick
-                          ..text = "Member",
+                          ..text = "member",
                         new VAnchorElement()
                           ..className = 'dropdown-item ${state.role.compareTo("volunteer") == 0 ? 'is-active' : ''}'
                           ..onClick = _changeRoleVolClick
-                          ..text = "Volunteer",
+                          ..text = "volunteer",
                         new VAnchorElement()
                           ..className = 'dropdown-item ${state.role.compareTo("admin") == 0 ? 'is-active' : ''}'
                           ..onClick = _changeRoleAdminClick
-                          ..text = "Admin",
+                          ..text = "admin",
                       ],
                   ],
               ],

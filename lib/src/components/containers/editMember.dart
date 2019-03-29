@@ -537,15 +537,15 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
                           new VAnchorElement()
                             ..className = 'dropdown-item ${state.role.compareTo("member") == 0 ? 'is-active' : ''}'
                             ..onClick = _changeRollMemClick
-                            ..text = "Member",
+                            ..text = "member",
                           new VAnchorElement()
                             ..className = 'dropdown-item ${state.role.compareTo("volunteer") == 0 ? 'is-active' : ''}'
                             ..onClick = _changeRollVolClick
-                            ..text = "Volunteer",
+                            ..text = "volunteer",
                           new VAnchorElement()
                             ..className = 'dropdown-item ${state.role.compareTo("admin") == 0 ? 'is-active' : ''}'
                             ..onClick = _changeRollAdminClick
-                            ..text = "Admin",
+                            ..text = "admin",
                         ],
                     ],
                 ],
