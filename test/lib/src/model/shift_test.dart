@@ -3,7 +3,7 @@ import 'package:built_collection/built_collection.dart';
 import 'package:bsc/src/model/shift.dart';
 
 void main() {
-  final testUserUID = "e93da155-10b8-434d-8202-d31c41003645";
+  final testUserUID = "e93da15510b8434d8202";
   final testInTime = new DateTime.now();
   final testOutTime = new DateTime.now().add(Duration(days: 2));
 
@@ -21,7 +21,7 @@ void main() {
       expect(shiftFromTestData.userID, testUserUID);
 
       // Check memoized field (workDuration)
-      expect(shiftFromTestData.durationWorked, Duration(days: 2));
+      expect(shiftFromTestData.durationWorked.inHours.abs(), 48);
     });
 
     test('toFirebase function produces a properly formatted map of data', () {
