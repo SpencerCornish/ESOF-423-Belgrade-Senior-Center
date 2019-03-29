@@ -535,15 +535,15 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
                         ..className = 'dropdown-content'
                         ..children = [
                           new VAnchorElement()
-                            ..className = 'dropdown-item ${state.role.compareTo("Member") == 0 ? 'is-active' : ''}'
+                            ..className = 'dropdown-item ${state.role.compareTo("member") == 0 ? 'is-active' : ''}'
                             ..onClick = _changeRollMemClick
                             ..text = "Member",
                           new VAnchorElement()
-                            ..className = 'dropdown-item ${state.role.compareTo("Volunteer") == 0 ? 'is-active' : ''}'
+                            ..className = 'dropdown-item ${state.role.compareTo("volunteer") == 0 ? 'is-active' : ''}'
                             ..onClick = _changeRollVolClick
                             ..text = "Volunteer",
                           new VAnchorElement()
-                            ..className = 'dropdown-item ${state.role.compareTo("Admin") == 0 ? 'is-active' : ''}'
+                            ..className = 'dropdown-item ${state.role.compareTo("admin") == 0 ? 'is-active' : ''}'
                             ..onClick = _changeRollAdminClick
                             ..text = "Admin",
                         ],
@@ -621,15 +621,15 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
   }
 
   _changeRollMemClick(_) {
-    setState((props, state) => state..role = "Member");
+    setState((props, state) => state..role = "member");
   }
 
   _changeRollVolClick(_) {
-    setState((props, state) => state..role = "Volunteer");
+    setState((props, state) => state..role = "volunteer");
   }
 
   _changeRollAdminClick(_) {
-    setState((props, state) => state..role = "Admin");
+    setState((props, state) => state..role = "admin");
   }
 
   ///[_renderEdit] creates a button to toggle from a view page to increase the number of input fields
