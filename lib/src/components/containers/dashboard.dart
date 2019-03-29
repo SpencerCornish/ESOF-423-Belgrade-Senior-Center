@@ -72,7 +72,7 @@ class Dashboard extends PComponent<DashboardProps> {
                 title: 'Time Entry',
                 content: _renderTimeEntry(),
                 footerContent: [
-                  _renderFooterItem('View Timecard', (_) => print("foo")),
+                  _renderFooterItem('View Timecard', (_) => history.push(Routes.viewShifts)),
                 ],
               ),
             ],
@@ -152,6 +152,8 @@ class Dashboard extends PComponent<DashboardProps> {
                       ..children = [
                         new VAnchorElement()
                           ..className = 'button'
+                          ..key = (_isUserClockedIn() ? 1 : 0)
+                          ..attributes = _isUserClockedIn() ? {'disabled': 'true'} : {}
                           ..children = [
                             new VSpanElement()
                               ..className = 'icon'
@@ -163,6 +165,8 @@ class Dashboard extends PComponent<DashboardProps> {
                           ..onClick = _onClockInClick,
                         new VAnchorElement()
                           ..className = 'button'
+                          ..key = (_isUserClockedIn() ? 1 : 0)
+                          ..attributes = _isUserClockedIn() ? {} : {'disabled': 'true'}
                           ..children = [
                             new VSpanElement()
                               ..className = 'icon'
@@ -186,10 +190,16 @@ class Dashboard extends PComponent<DashboardProps> {
   }
 
   _onClockInClick(_) {
+    if (_isUserClockedIn()) {
+      return;
+    }
     props.actions.server.registerClockEvent(true);
   }
 
   _onClockOutClick(_) {
+    if (!_isUserClockedIn()) {
+      return;
+    }
     props.actions.server.registerClockEvent(false);
   }
 

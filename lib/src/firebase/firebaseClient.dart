@@ -131,7 +131,7 @@ class FirebaseClient {
   /// [getAllMembers] get all member documents
   Future<BuiltList<Shift>> getAllShifts() async {
     ListBuilder<Shift> dataSet = new ListBuilder<Shift>();
-    final result = await _refs.allShifts().get();
+    final result = await _refs.allShifts().orderBy('in_time', 'desc').get();
 
     for (fs.DocumentSnapshot doc in result.docs) {
       dataSet.add(new Shift.fromFirebase(doc.data()));

@@ -31,10 +31,10 @@ class ViewShift extends PComponent<ViewShiftProps> {
 
   @override
   void componentWillMount() {
-    if (props.user.role != "admin" || props.user.role != "volunteer") {
+    if (props.user.role.toLowerCase() != "admin" && props.user.role.toLowerCase() != "volunteer") {
       history.push(Routes.dashboard);
     }
-    if (props.allShifts && props.user.role != "admin") {
+    if (props.allShifts && props.user.role == "admin") {
       props.actions.server.fetchAllShifts();
     } else {
       props.actions.server.fetchShiftsForUser(0);
@@ -54,10 +54,10 @@ class ViewShift extends PComponent<ViewShiftProps> {
             ..text = checkText("${shift.userID}"),
           new VTableCellElement()
             ..className = tdClass(shift.inTime.toString())
-            ..text = checkText("${shift.inTime}"),
+            ..text = checkText("${formatTime(shift.inTime)}"),
           new VTableCellElement()
             ..className = tdClass(shift.outTime.toString())
-            ..text = checkText("${shift.outTime}"),
+            ..text = checkText("${formatTime(shift.outTime)}"),
         ]);
     }
     return nodeList;
@@ -106,7 +106,7 @@ class ViewShift extends PComponent<ViewShiftProps> {
                             ..children = [
                               new Vh4()
                                 ..className = 'title is-4'
-                                ..text = 'Volunteer Shift Data',
+                                ..text = props.allShifts ? 'Volunteer Shift Data' : 'My Shifts',
                               new Vh1()
                                 ..className = 'subtitle is-7'
                                 ..text = " as of: ${DateTime.now().month}/${DateTime.now().day}/${DateTime.now().year}",
@@ -162,6 +162,7 @@ class ViewShift extends PComponent<ViewShiftProps> {
     ];
 
   _onExportCsvClick(_) {
+    // TODO: Add first and last name, fuh real
     List<String> lines = props.shiftList.map((meal) => meal.toCsv("FIRST", "LAST")).toList();
 
     // Add the header row
