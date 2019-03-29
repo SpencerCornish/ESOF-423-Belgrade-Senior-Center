@@ -22,7 +22,7 @@ class ViewMembersState {
   bool showMod;
   bool checkedIn;
   bool searching;
-  List found;
+  List<User> found;
   String modMem;
 }
 
@@ -353,7 +353,12 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
   }
 
   _onExportCsvClick(_) {
-    List<String> lines = props.userMap.values.map((user) => user.toCsv()).toList();
+    List<String> lines;
+    if (!state.searching) {
+      lines = props.userMap.values.map((user) => user.toCsv()).toList();
+    } else {
+      lines = state.found.map((user) => user.toCsv()).toList();
+    }
 
     // Add the header row
     lines.insert(0, ExportHeader.user.join(',') + '\n');
