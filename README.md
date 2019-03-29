@@ -46,9 +46,9 @@ This is a non-exhaustive list of the tools and technologies we are using.
 
 - THe `sass` directory will eventually contain any custom styling for the project.
 
-[UML Diagram:](./classDiagram.PNG)
+[UML Diagram:](./classDiagram2.PNG)
 
-![alt text](./classDiagram.PNG)
+![alt text](./classDiagram2.PNG)
 
 ## Directions for Building from Source Code
 
