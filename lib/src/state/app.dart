@@ -1,14 +1,15 @@
 library app;
 
+import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_redux/built_redux.dart';
-import 'package:built_collection/built_collection.dart';
 
 import '../middleware/serverMiddleware.dart';
 
 import '../model/activity.dart';
 import '../model/meal.dart';
 import '../model/user.dart';
+import '../model/shift.dart';
 
 import '../constants.dart';
 
@@ -32,6 +33,12 @@ abstract class AppActions extends ReduxActions {
 
   /// [setMealMap] sets the Map of filtered Meals on the client
   ActionDispatcher<BuiltMap<String, Meal>> get setMealMap;
+
+  /// [setShiftList] sets the list of all shifts. Empty unless an admin.
+  ActionDispatcher<BuiltList<Shift>> get setShiftList;
+
+  /// [setShiftList] sets the list of all shifts of the user. Empty unless an admin or volunteer.
+  ActionDispatcher<BuiltList<Shift>> get setUserShiftList;
 
   /// [server] is a reference to the actions specifically created
   /// for the server middleware
@@ -69,6 +76,12 @@ abstract class App implements Built<App, AppBuilder> {
   /// [mealMap] is an arbitrary Map of unique ID to meals, based on applied filters
   BuiltMap<String, Meal> get mealMap;
 
+  /// [shiftList] is an arbitrary list of all shifts.
+  BuiltList<Shift> get shiftList;
+
+  /// [userShiftList] is a list of the user's shifts
+  BuiltList<Shift> get userShiftList;
+
   // Built value constructor. The factory is returning the default state
   App._();
   factory App() => new _$App._(
@@ -78,6 +91,8 @@ abstract class App implements Built<App, AppBuilder> {
         userMap: new BuiltMap<String, User>(),
         activityMap: new BuiltMap<String, Activity>(),
         mealMap: new BuiltMap<String, Meal>(),
+        shiftList: new BuiltList<Shift>(),
+        userShiftList: new BuiltList<Shift>(),
       );
 }
 
@@ -88,7 +103,9 @@ final reducerBuilder = new ReducerBuilder<App, AppBuilder>()
   ..add<AuthState>(AppActionsNames.setAuthState, _setAuthState)
   ..add<BuiltMap<String, User>>(AppActionsNames.setUserMap, _setUserMap)
   ..add<BuiltMap<String, Activity>>(AppActionsNames.setActivityMap, _setActivityMap)
-  ..add<BuiltMap<String, Meal>>(AppActionsNames.setMealMap, _setMealMap);
+  ..add<BuiltMap<String, Meal>>(AppActionsNames.setMealMap, _setMealMap)
+  ..add<BuiltList<Shift>>(AppActionsNames.setShiftList, _setShiftList)
+  ..add<BuiltList<Shift>>(AppActionsNames.setUserShiftList, _setUserShiftList);
 
 _setUser(App state, Action<User> action, AppBuilder builder) => builder..user = action.payload?.toBuilder();
 
@@ -104,3 +121,9 @@ _setActivityMap(App state, Action<BuiltMap<String, Activity>> action, AppBuilder
 
 _setMealMap(App state, Action<BuiltMap<String, Meal>> action, AppBuilder builder) =>
     builder.mealMap = action.payload.toBuilder();
+
+_setShiftList(App state, Action<BuiltList<Shift>> action, AppBuilder builder) => 
+    builder.shiftList = action.payload.toBuilder();
+
+_setUserShiftList(App state, Action<BuiltList<Shift>> action, AppBuilder builder) => 
+    builder.userShiftList = action.payload.toBuilder();

@@ -158,7 +158,8 @@ class Container extends PComponent<ContainerProps> {
 
   _renderDashboard() => new Dashboard(new DashboardProps()
     ..actions = props.storeContainer.store.actions
-    ..user = appState.user);
+    ..user = appState.user
+    ..userShiftList = appState.userShiftList);
 
   _renderViewMembers() => new ViewMembers(new ViewMembersProps()
     ..actions = props.storeContainer.store.actions

@@ -1,5 +1,8 @@
-import 'package:email_validator/email_validator.dart';
 import 'dart:convert';
+
+import 'package:email_validator/email_validator.dart';
+import 'package:date_format/date_format.dart';
+
 
 /// [Routes] defines URIs for the application
 class Routes {
@@ -33,6 +36,10 @@ class Routes {
 
   static const viewActivity = '/view/activities';
   static const viewMeal = '/view/meals';
+
+  static const viewShifts = '/view/shifts';
+
+  static const viewAllShifts = '/admin/shifts';
 
   // TODO: Fill in more routes here
 
@@ -72,6 +79,15 @@ class ExportHeader {
     'End',
     'Menu',
   ];
+
+  static const shift = [
+    'Punch ID',
+    'First',
+    'Last',
+    'In Time',
+    'Out Time',
+    'Duration',
+  ];
 }
 
 enum Role {
@@ -83,7 +99,19 @@ enum Role {
 /// The different authentication states the UI can be in.
 /// This should not be used as a replacement for firebase
 /// auth checks.
-enum AuthState { LOADING, SUCCESS, INAUTHENTIC, PASS_RESET_SENT, ERR_PASSWORD, ERR_NOT_FOUND, ERR_EMAIL, ERR_OTHER }
+enum AuthState {
+  LOADING,
+  SUCCESS,
+  INAUTHENTIC,
+  PASS_RESET_SENT,
+  ERR_PASSWORD,
+  ERR_NOT_FOUND,
+  ERR_EMAIL,
+  ERR_OTHER,
+}
+
+/// [formatTime] turns a time into a human readable string
+String formatTime(DateTime time) => time == null ? "" : formatDate(time, [DD, ", ", M, " ", dd, " ", yyyy, " at ", hh, ":", nn, " ", am]);
 
 /// Validates email addresses
 bool emailIsValid(String email) => EmailValidator.validate(email);

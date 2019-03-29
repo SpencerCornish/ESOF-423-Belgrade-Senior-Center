@@ -10,6 +10,7 @@ import './dbRefs.dart';
 import '../constants.dart';
 
 import '../model/user.dart';
+import '../model/shift.dart';
 import '../model/meal.dart';
 import '../model/activity.dart';
 import '../model/emergencyContact.dart';
@@ -108,7 +109,68 @@ class FirebaseClient {
     _actions.setAuthState(AuthState.PASS_RESET_SENT);
   }
 
-  // getMembers (TODO: with role or all?)
+  /// [getAllMembers] get all member documents
+  Future<BuiltList<Shift>> getShiftsForUser(int limit, String uid) async {
+    ListBuilder<Shift> dataSet = new ListBuilder<Shift>();
+    fs.Query baseQuery = _refs.allShifts().where('user_id', '==', uid).orderBy('in_time', 'desc');
+
+    // Add a limit to the query
+    if (limit > 0) {
+      baseQuery = baseQuery.limit(limit);
+    }
+
+    final result = await baseQuery.get();
+
+    for (fs.DocumentSnapshot doc in result.docs) {
+      dataSet.add(new Shift.fromFirebase(doc.data()));
+    }
+
+    return dataSet.build();
+  }
+
+  /// [getAllMembers] get all member documents
+  Future<BuiltList<Shift>> getAllShifts() async {
+    ListBuilder<Shift> dataSet = new ListBuilder<Shift>();
+    final result = await _refs.allShifts().get();
+
+    for (fs.DocumentSnapshot doc in result.docs) {
+      dataSet.add(new Shift.fromFirebase(doc.data()));
+    }
+
+    return dataSet.build();
+  }
+
+  Future<Null> registerClockEvent(String userID, {DateTime inTime, DateTime outTime}) async {
+    // If both punches are null, bail.
+    if (inTime == null && outTime == null) {
+      throw("Either inTime or outTime are required for registerClockEvent");
+      }
+    // New punch
+    if (outTime == null && inTime != null) {
+      Shift newShift = new Shift((builder) => builder
+        ..userID = userID
+        ..inTime = inTime
+        ..outTime = outTime);
+
+      await _refs.allShifts().add(newShift.toFirebase());
+      return;
+    }
+    // Close out existing punch
+    if (outTime != null && inTime == null) {
+      // Find a punch for this user, with no out_time, and only an in_time
+      var result = await _refs
+          .allShifts()
+          .where('user_id', '==', userID)
+          .where('out_time', '==', '')
+          .orderBy('in_time', 'desc')
+          .limit(1)
+          .get();
+      if (result.size == 0) {
+        throw("Could not find a punch to add an out time onto");
+      }
+      await result.docs.first.ref.update(data: {"out_time": outTime.toIso8601String()});
+    }
+  }
 
   /// [getAllMembers] get all member documents
   Future<BuiltMap<String, User>> getAllMembers() async {

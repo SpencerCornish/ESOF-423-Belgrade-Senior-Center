@@ -1,16 +1,20 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
 import 'package:wui_builder/vhtml.dart';
 
 import '../core/nav.dart';
 
+import '../../constants.dart';
 import '../../model/user.dart';
+import '../../model/shift.dart';
 
 import '../../state/app.dart';
 
 class DashboardProps {
   AppActions actions;
   User user;
+  BuiltList<Shift> userShiftList;
 }
 
 class Dashboard extends PComponent<DashboardProps> {
@@ -25,6 +29,13 @@ class Dashboard extends PComponent<DashboardProps> {
   VNode passwordInputNode;
 
   @override
+  void componentWillMount() {
+    super.componentWillMount();
+    final len = props.userShiftList.length;
+    props.actions.server.fetchShiftsForUser(len == 0 ? 3 : len);
+  }
+
+  @override
   VNode render() => new VDivElement()
     ..children = [
       new Nav(new NavProps()
@@ -37,34 +48,31 @@ class Dashboard extends PComponent<DashboardProps> {
             ..className = 'columns is-centered margin-top'
             ..children = [
               _renderCard(
-                size: 4,
+                size: 3,
                 title: 'Alerts',
                 content: [
-                  new VParagraphElement()..text = 'This is a card content!',
+                  new VParagraphElement()..text = 'Coming Soon!',
                 ],
                 footerContent: [
                   // _renderFooterItem('More', (_) => print("foo")),
                 ],
               ),
               _renderCard(
-                size: 4,
-                title: 'Upcoming',
+                size: 3,
+                title: 'Upcoming Events',
                 content: [
-                  new VParagraphElement()..text = 'This is a card content!',
+                  new VParagraphElement()..text = 'Coming Soon!',
                 ],
                 footerContent: [
                   _renderFooterItem('More', (_) => print("foo")),
                 ],
               ),
               _renderCard(
-                size: 4,
-                title: 'Upcoming Membership Renewals',
-                content: [
-                  new VParagraphElement()..text = 'This is a card content!',
-                ],
+                size: 6,
+                title: 'Time Entry',
+                content: _renderTimeEntry(),
                 footerContent: [
-                  _renderFooterItem('Dismiss', (_) => print("foo")),
-                  _renderFooterItem('More', (_) => print("foo")),
+                  _renderFooterItem('View Timecard', (_) => print("foo")),
                 ],
               ),
             ],
@@ -107,4 +115,84 @@ class Dashboard extends PComponent<DashboardProps> {
         ..className = 'icon'
         ..children = [new Vi()..className = 'fas fa-chevron-circle-right']
     ];
+
+  _renderTimeEntry() => [
+        new VDivElement()
+          ..children = [
+            new VDivElement()
+              ..className = 'columns'
+              ..children = [
+                new VDivElement()
+                  ..className = 'column'
+                  ..children = [
+                    new VParagraphElement()
+                      ..className = 'subtitle has-text-weight-semibold'
+                      ..text = 'Recent shifts',
+                    new VDivElement()..children = _renderRecentShifts()
+                  ],
+              ],
+            new VParagraphElement()
+              ..className = 'has-text-centered'
+              ..children = [
+                new VSpanElement()
+                  ..className = 'has-text-weight-bold'
+                  ..text = "Status:",
+                new VSpanElement()
+                  ..className = ''
+                  ..text = " Clocked ${_isUserClockedIn() ? 'in' : 'out'}",
+              ],
+            new VDivElement()
+              ..className = 'columns is-mobile'
+              ..children = [
+                new VDivElement()
+                  ..className = 'column'
+                  ..children = [
+                    new VDivElement()
+                      ..className = 'buttons has-addons is-centered'
+                      ..children = [
+                        new VAnchorElement()
+                          ..className = 'button'
+                          ..children = [
+                            new VSpanElement()
+                              ..className = 'icon'
+                              ..children = [
+                                new Vi()..className = 'fas fa-hourglass-start',
+                              ],
+                            new VSpanElement()..text = 'Clock In',
+                          ]
+                          ..onClick = _onClockInClick,
+                        new VAnchorElement()
+                          ..className = 'button'
+                          ..children = [
+                            new VSpanElement()
+                              ..className = 'icon'
+                              ..children = [
+                                new Vi()..className = 'fas fa-hourglass-end',
+                              ],
+                            new VSpanElement()..text = 'Clock Out',
+                          ]
+                          ..onClick = _onClockOutClick,
+                      ],
+                  ],
+              ],
+          ],
+      ];
+
+  _isUserClockedIn() {
+    if (props.userShiftList.length == 0) {
+      return false;
+    }
+    return props.userShiftList.first.outTime == null;
+  }
+
+  _onClockInClick(_) {
+    props.actions.server.registerClockEvent(true);
+  }
+
+  _onClockOutClick(_) {
+    props.actions.server.registerClockEvent(false);
+  }
+
+  _renderRecentShifts() => props.userShiftList
+      .map((shift) => new VParagraphElement()..text = '${formatTime(shift.inTime)} - ${formatTime(shift.outTime)}').take(3);
 }
