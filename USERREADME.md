@@ -40,8 +40,6 @@ Under the `New` tab there are links to different forms that will create a user, 
 
 Under the `View` tab there are links to different tables that will show the information currently stored in the main database. You can also search through the users for certain names or traits.
 
-#
-
 ## Add Pages
 
 When you would like to add a new user, meal or activity you can hover over the `New` tab in the top left of the screen to select a form.  
@@ -53,6 +51,8 @@ Select which item you would like to add, and fill out the form.  Don't worry if 
 To view the current users, meals, or activies you can hover over the `View` tab in the top left of the screen.  Select which category you would like to view.
 
 You are able to search through the list by keywords, and can export the list you have searched by clicking the `CSV` button in the right top corner of the screen.
+
+On any one of the pages, simply click on an item in the able and it will open a detailed page where the information can be edited with the click of a button.
 
 ## Formatting for `New` Forms
 
