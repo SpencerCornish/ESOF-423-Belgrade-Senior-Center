@@ -59,6 +59,7 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
     for (Activity act in activities) {
       nodeList.add(new VTableRowElement()
         ..className = 'tr'
+        ..onClick = ((_) => _onActClick(act.uid))
         ..children = [
           new VTableCellElement()
             ..className = tdClass(act.name)
@@ -81,6 +82,10 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
         ]);
     }
     return (nodeList);
+  }
+
+  _onActClick(String uid) {
+    history.push(Routes.generateEditActivityURL(uid));
   }
 
   String checkText(String text) => text != '' ? text : "N/A";

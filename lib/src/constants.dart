@@ -28,8 +28,12 @@ class Routes {
   static const viewMembers = '/view/members';
 
   static const editMember = '/edit/member/:user_uid';
+  static const editMeal = '/edit/meal/:meal_uid';
+  static const editActivity = '/edit/activity/:activity_uid';
 
   static String generateEditMemberURL(String uid) => '/edit/member/$uid';
+  static String generateEditMealURL(String uid) => '/edit/meal/$uid';
+  static String generateEditActivityURL(String uid) => '/edit/activity/$uid';
 
   static const viewActivity = '/view/activities';
   static const viewMeal = '/view/meals';

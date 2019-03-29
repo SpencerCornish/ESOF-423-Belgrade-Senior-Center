@@ -15,6 +15,8 @@ import './containers/newMember.dart';
 import './containers/dashboard.dart';
 import './containers/newActivity.dart';
 import './containers/newMeal.dart';
+import './containers/editMeal.dart';
+import './containers/editActivity.dart';
 import './containers/viewMembers.dart';
 import './containers/editMember.dart';
 import './containers/viewActivity.dart';
@@ -103,6 +105,11 @@ class Container extends PComponent<ContainerProps> {
                   path: Routes.editMember,
                   componentFactory: (params) => _renderIfAuthenticated(_renderEditMember(params))),
               new Route(
+                  path: Routes.editMeal, componentFactory: (params) => _renderIfAuthenticated(_renderEditMeal(params))),
+              new Route(
+                  path: Routes.editActivity,
+                  componentFactory: (params) => _renderIfAuthenticated(_renderEditActivity(params))),
+              new Route(
                   path: Routes.viewActivity, componentFactory: (_) => _renderIfAuthenticated(_renderViewActivity())),
               new Route(path: Routes.viewMeal, componentFactory: (_) => _renderIfAuthenticated(_renderViewMeal())),
             ],
@@ -169,6 +176,18 @@ class Container extends PComponent<ContainerProps> {
     ..user = appState.user
     ..userMap = appState.userMap
     ..selectedMemberUID = params['user_uid']);
+
+  _renderEditMeal(Map<String, String> params) => new EditMeal(new EditMealProps()
+    ..actions = props.storeContainer.store.actions
+    ..user = appState.user
+    ..mealMap = appState.mealMap
+    ..selectedMealUID = params['meal_uid']);
+
+  _renderEditActivity(Map<String, String> params) => new EditActivity(new EditActivityProps()
+    ..actions = props.storeContainer.store.actions
+    ..user = appState.user
+    ..activityMap = appState.activityMap
+    ..selectedActivityUID = params['activity_uid']);
 
   _renderViewActivity() => new ViewActivity(new ViewActivityProps()
     ..actions = props.storeContainer.store.actions

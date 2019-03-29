@@ -108,9 +108,6 @@ class _$User extends User {
     if (forms == null) {
       throw new BuiltValueNullFieldError('User', 'forms');
     }
-    if (medicalIssues == null) {
-      throw new BuiltValueNullFieldError('User', 'medicalIssues');
-    }
     if (position == null) {
       throw new BuiltValueNullFieldError('User', 'position');
     }

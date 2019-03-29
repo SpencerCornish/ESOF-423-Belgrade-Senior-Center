@@ -56,6 +56,7 @@ class ViewMeal extends Component<ViewMealProps, ViewMealState> {
     for (Meal meal in meals) {
       nodeList.add(new VTableRowElement()
         ..className = 'tr'
+        ..onClick = ((_) => _onMealClick(meal.uid))
         ..children = [
           new VTableCellElement()
             ..className = tdClass(meal.startTime.toString())
@@ -66,6 +67,10 @@ class ViewMeal extends Component<ViewMealProps, ViewMealState> {
         ]);
     }
     return nodeList;
+  }
+
+  _onMealClick(String uid) {
+    history.push(Routes.generateEditMealURL(uid));
   }
 
   String checkText(String text) => text != '' ? text : "N/A";
