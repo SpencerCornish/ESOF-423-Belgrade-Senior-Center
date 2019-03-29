@@ -24,7 +24,7 @@ class ViewMembersProps {
 
 class ViewMembersState {
   bool showMod;
-  Map<User, int> checkedIn;
+  Map<User, Activity> checkedIn;
   bool searching;
   List<User> found;
   String modMem;
@@ -87,9 +87,7 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
             ..children = [
               new VButtonElement()
                 ..className = "button is-success"
-                ..text = state.checkedIn.containsKey(user)
-                    ? "Try ${props.activityMap.values.toList()[state.checkedIn[user]].name}"
-                    : "CHECK-IN"
+                ..text = state.checkedIn.containsKey(user) ? "Try ${state.checkedIn[user].name}" : "CHECK-IN"
                 ..onClick = ((_) => _checkInClick(user)),
             ]
         ]);
@@ -97,10 +95,10 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
     return nodeList;
   }
 
-  int _recommend() {
+  Activity _recommend() {
     int index = new Random().nextInt(props.activityMap.length);
 
-    return index;
+    return props.activityMap.values.toList()[index];
   }
 
   _onUserClick(String uid) {
@@ -350,9 +348,27 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
       print("${user.firstName} ${user.lastName} has checked in!");
       setState((props, state) => state..checkedIn.putIfAbsent(user, () => _recommend()));
     } else {
-      setState((props, state) => state
-        ..showMod = false
-        ..modMem = null);
+      Activity act = state.checkedIn[user];
+
+      ListBuilder<User> attList = new ListBuilder();
+
+      for (User u in act.attendance) {
+        attList.add(u);
+      }
+
+      attList.add(user);
+
+      // Activity update = act.rebuild((builder) => builder
+      //   ..capacity = act.capacity
+      //   ..endTime = act.endTime
+      //   ..startTime = act.startTime
+      //   ..instructor = act.instructor
+      //   ..location = act.location
+      //   ..name = act.name
+      //   ..attendance = attList);
+
+      // props.actions.server.updateOrCreateActivity(update);
+      // props.actions.server.fetchAllActivities();
     }
   }
 

@@ -14,11 +14,14 @@ class EditActivityProps {
   AppActions actions;
   User user;
   BuiltMap<String, Activity> activityMap;
+  BuiltMap<String, User> userMap;
   String selectedActivityUID;
 }
 
 class EditActivityState {
   bool edit;
+  int attNum;
+  ListBuilder<User> att;
 }
 
 class EditActivity extends Component<EditActivityProps, EditActivityState> {
@@ -27,7 +30,10 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
   History _history;
 
   @override
-  EditActivityState getInitialState() => EditActivityState()..edit = false;
+  EditActivityState getInitialState() => EditActivityState()
+    ..edit = false
+    ..attNum = 0
+    ..att = new ListBuilder();
 
   /// Browser history entrypoint, to control page navigation
   History get history => _history ?? findHistoryInContext(context);
@@ -35,6 +41,11 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
   @override
   void componentWillUpdate(EditActivityProps nextProps, EditActivityState nextState) {
     super.componentWillUpdate(nextProps, nextState);
+  }
+
+  @override
+  void componentWillMount() {
+    props.actions.server.fetchAllMembers();
   }
 
   @override
@@ -365,12 +376,53 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
                             ]
                         ]
                     ],
+                  _renderAttendance(act),
                   //create the submit button
                   _renderButton(),
                 ]
             ]
         ]
     ];
+
+  VNode _renderAttendance(Activity act) {
+    List<VNode> nodeList = new List();
+
+    for (User user in act.attendance) {
+      nodeList.add(new VTableRowElement()
+        ..className = 'tr'
+        ..children = [
+          new VTableCellElement()
+            ..className = 'td'
+            ..id = 'uid_cell ${state.attNum}'
+            ..text = user.docUID,
+          new VTableCellElement()
+            ..className = 'td'
+            ..id = 'name_cell ${state.attNum}'
+            ..text = user.lastName,
+          new VTableCellElement()
+            ..children = [
+              new VButtonElement()
+                ..className = "button is-success"
+                ..text = "Remove"
+                ..onClick = ((_) => _removeClick(user)),
+            ]
+        ]);
+      setState((props, state) => state
+        ..attNum = state.attNum++
+        ..att.add(user));
+    }
+
+    return new VTableElement()
+      ..className = 'table is-narrow is-striped is-fullwidth'
+      ..id = "attendance"
+      ..children = nodeList;
+  }
+
+  _removeClick(User user) {
+    setState((props, state) => state
+      ..attNum = state.attNum--
+      ..att.remove(user));
+  }
 
   ///[_showTime] helper function to put a time into a proper format to view in a time type input box
   String _showTime(String hour, String min) {
@@ -463,13 +515,22 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
     endTime = _parseDate(date, tempEnd);
     cap = int.parse(capacity.value);
 
+    ListBuilder<User> atList = new ListBuilder();
+
+    for (int i = 0; i < state.attNum; i++) {
+      TableCellElement attUid = querySelector('#uid_cell ${state.attNum}');
+
+      atList.add(props.userMap[attUid.text]);
+    }
+
     Activity update = props.activityMap[props.selectedActivityUID].rebuild((builder) => builder
       ..capacity = cap
       ..endTime = DateTime.parse(endTime)
       ..startTime = DateTime.parse(startTime)
       ..instructor = instructor.value
       ..location = location.value
-      ..name = activity.value);
+      ..name = activity.value
+      ..attendance = atList);
 
     props.actions.server.updateOrCreateActivity(update);
     props.actions.server.fetchAllActivities();

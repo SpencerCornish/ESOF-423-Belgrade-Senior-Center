@@ -1,5 +1,7 @@
 library activity;
 
+import 'package:bsc/src/model/user.dart';
+import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 
 part 'activity.g.dart';
@@ -28,11 +30,15 @@ abstract class Activity implements Built<Activity, ActivityBuilder> {
   /// [name] required
   String get name;
 
+  /// [attendance] is a built list of [Users] objects
+  BuiltList<User> get attendance;
+
   Activity._();
   factory Activity([updates(ActivityBuilder b)]) = _$Activity;
 
   factory Activity.fromFirebase(
-    Map<String, dynamic> firestoreData, {
+    Map<String, dynamic> firestoreData,
+    BuiltList<User> user, {
     String uid,
   }) =>
       new Activity((ActivityBuilder builder) => builder
@@ -42,7 +48,8 @@ abstract class Activity implements Built<Activity, ActivityBuilder> {
         ..endTime = DateTime.parse(firestoreData['end_time'])
         ..instructor = firestoreData['instructor']
         ..location = firestoreData['location']
-        ..name = firestoreData['name']);
+        ..name = firestoreData['name']
+        ..attendance = user.toBuilder());
 
   Map<String, dynamic> toFirestore() => {
         'capacity': capacity,
@@ -51,6 +58,7 @@ abstract class Activity implements Built<Activity, ActivityBuilder> {
         'instructor': instructor,
         'location': location,
         'name': name,
+        'attendance': attendance.toList(),
       };
 
   String toCsv() =>
@@ -62,6 +70,7 @@ abstract class Activity implements Built<Activity, ActivityBuilder> {
         '\"${location}\"',
         '\"${startTime}\"',
         '\"${endTime}\"',
+        '\"${attendance}\"'
       ].join(',') +
       '\n';
 }

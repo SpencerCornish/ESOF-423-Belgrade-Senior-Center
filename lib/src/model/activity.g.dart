@@ -21,10 +21,21 @@ class _$Activity extends Activity {
   final String location;
   @override
   final String name;
+  @override
+  final BuiltList<User> attendance;
 
-  factory _$Activity([void updates(ActivityBuilder b)]) => (new ActivityBuilder()..update(updates)).build();
+  factory _$Activity([void updates(ActivityBuilder b)]) =>
+      (new ActivityBuilder()..update(updates)).build();
 
-  _$Activity._({this.uid, this.capacity, this.endTime, this.startTime, this.instructor, this.location, this.name})
+  _$Activity._(
+      {this.uid,
+      this.capacity,
+      this.endTime,
+      this.startTime,
+      this.instructor,
+      this.location,
+      this.name,
+      this.attendance})
       : super._() {
     if (capacity == null) {
       throw new BuiltValueNullFieldError('Activity', 'capacity');
@@ -44,10 +55,14 @@ class _$Activity extends Activity {
     if (name == null) {
       throw new BuiltValueNullFieldError('Activity', 'name');
     }
+    if (attendance == null) {
+      throw new BuiltValueNullFieldError('Activity', 'attendance');
+    }
   }
 
   @override
-  Activity rebuild(void updates(ActivityBuilder b)) => (toBuilder()..update(updates)).build();
+  Activity rebuild(void updates(ActivityBuilder b)) =>
+      (toBuilder()..update(updates)).build();
 
   @override
   ActivityBuilder toBuilder() => new ActivityBuilder()..replace(this);
@@ -62,17 +77,24 @@ class _$Activity extends Activity {
         startTime == other.startTime &&
         instructor == other.instructor &&
         location == other.location &&
-        name == other.name;
+        name == other.name &&
+        attendance == other.attendance;
   }
 
   @override
   int get hashCode {
     return $jf($jc(
         $jc(
-            $jc($jc($jc($jc($jc(0, uid.hashCode), capacity.hashCode), endTime.hashCode), startTime.hashCode),
-                instructor.hashCode),
-            location.hashCode),
-        name.hashCode));
+            $jc(
+                $jc(
+                    $jc(
+                        $jc($jc($jc(0, uid.hashCode), capacity.hashCode),
+                            endTime.hashCode),
+                        startTime.hashCode),
+                    instructor.hashCode),
+                location.hashCode),
+            name.hashCode),
+        attendance.hashCode));
   }
 
   @override
@@ -84,7 +106,8 @@ class _$Activity extends Activity {
           ..add('startTime', startTime)
           ..add('instructor', instructor)
           ..add('location', location)
-          ..add('name', name))
+          ..add('name', name)
+          ..add('attendance', attendance))
         .toString();
   }
 }
@@ -120,6 +143,12 @@ class ActivityBuilder implements Builder<Activity, ActivityBuilder> {
   String get name => _$this._name;
   set name(String name) => _$this._name = name;
 
+  ListBuilder<User> _attendance;
+  ListBuilder<User> get attendance =>
+      _$this._attendance ??= new ListBuilder<User>();
+  set attendance(ListBuilder<User> attendance) =>
+      _$this._attendance = attendance;
+
   ActivityBuilder();
 
   ActivityBuilder get _$this {
@@ -131,6 +160,7 @@ class ActivityBuilder implements Builder<Activity, ActivityBuilder> {
       _instructor = _$v.instructor;
       _location = _$v.location;
       _name = _$v.name;
+      _attendance = _$v.attendance?.toBuilder();
       _$v = null;
     }
     return this;
@@ -151,15 +181,29 @@ class ActivityBuilder implements Builder<Activity, ActivityBuilder> {
 
   @override
   _$Activity build() {
-    final _$result = _$v ??
-        new _$Activity._(
-            uid: uid,
-            capacity: capacity,
-            endTime: endTime,
-            startTime: startTime,
-            instructor: instructor,
-            location: location,
-            name: name);
+    _$Activity _$result;
+    try {
+      _$result = _$v ??
+          new _$Activity._(
+              uid: uid,
+              capacity: capacity,
+              endTime: endTime,
+              startTime: startTime,
+              instructor: instructor,
+              location: location,
+              name: name,
+              attendance: attendance.build());
+    } catch (_) {
+      String _$failedField;
+      try {
+        _$failedField = 'attendance';
+        attendance.build();
+      } catch (e) {
+        throw new BuiltValueNestedFieldError(
+            'Activity', _$failedField, e.toString());
+      }
+      rethrow;
+    }
     replace(_$result);
     return _$result;
   }
