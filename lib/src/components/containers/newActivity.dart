@@ -15,8 +15,24 @@ class NewActivityProps {
   User user;
 }
 
-class NewActivity extends PComponent<NewActivityProps> {
+class NewActivityState {
+  bool activityNameIsValid;
+  bool instructorNameIsValid;
+  bool locationIsValid;
+  bool capacityIsValid;
+  bool timeIsValid;
+}
+
+class NewActivity extends Component<NewActivityProps, NewActivityState> {
   NewActivity(props) : super(props);
+
+  @override
+  NewActivityState getInitialState() => NewActivityState()
+    ..activityNameIsValid = true
+    ..instructorNameIsValid = true
+    ..locationIsValid = true
+    ..capacityIsValid = true
+    ..timeIsValid = true;
 
   History _history;
 
@@ -92,9 +108,14 @@ class NewActivity extends PComponent<NewActivityProps> {
                                             ..className = 'control'
                                             ..children = [
                                               new VInputElement()
-                                                ..className = 'input'
+                                                ..onInput = _activityNameValidator
+                                                ..className = 'input ${state.activityNameIsValid ? '' : 'is-danger'}'
                                                 ..id = 'act-input'
-                                                ..placeholder = "e.g. Yoga"
+                                                ..placeholder = "e.g. Yoga",
+                                              new VParagraphElement()
+                                                ..className =
+                                                    'help is-danger ${state.activityNameIsValid ? 'is-invisible' : ''}'
+                                                ..text = 'Activity name may not be empty'
                                             ]
                                         ]
                                     ]
@@ -128,9 +149,14 @@ class NewActivity extends PComponent<NewActivityProps> {
                                             ..className = 'control'
                                             ..children = [
                                               new VInputElement()
-                                                ..className = 'input'
+                                                ..onInput = _instructorNameValidator
+                                                ..className = 'input ${state.instructorNameIsValid ? '' : 'is-danger'}'
                                                 ..id = 'instructorName-input'
-                                                ..placeholder = "First and Last Name"
+                                                ..placeholder = "First and Last Name",
+                                              new VParagraphElement()
+                                                ..className =
+                                                    'help is-danger ${state.instructorNameIsValid ? 'is-invisible' : ''}'
+                                                ..text = 'Instructor name may not be blank'
                                             ]
                                         ]
                                     ]
@@ -160,7 +186,7 @@ class NewActivity extends PComponent<NewActivityProps> {
                                         ..children = [
                                           new VLabelElement()
                                             ..className = 'label'
-                                            ..text = "Loaction"
+                                            ..text = "Location"
                                         ],
                                       new VDivElement()
                                         ..className = 'field is-horizontal'
@@ -169,9 +195,14 @@ class NewActivity extends PComponent<NewActivityProps> {
                                             ..className = 'control'
                                             ..children = [
                                               new VInputElement()
-                                                ..className = 'input'
+                                                ..onInput = _locationValidator
+                                                ..className = 'input ${state.locationIsValid ? '' : 'is-danger'}'
                                                 ..id = 'location-input'
-                                                ..placeholder = "Where is the activity taking place?"
+                                                ..placeholder = "Where is the activity taking place?",
+                                              new VParagraphElement()
+                                                ..className =
+                                                    'help is-danger ${state.locationIsValid ? 'is-invisible' : ''}'
+                                                ..text = 'Location may not be blank'
                                             ]
                                         ]
                                     ]
@@ -205,9 +236,14 @@ class NewActivity extends PComponent<NewActivityProps> {
                                             ..className = 'control'
                                             ..children = [
                                               new VInputElement()
-                                                ..className = 'input'
+                                                ..onInput = _capacityValidator
+                                                ..className = 'input ${state.capacityIsValid ? '' : 'is-danger'}'
                                                 ..id = 'capacity-input'
-                                                ..type = 'number'
+                                                ..type = 'number',
+                                              new VParagraphElement()
+                                                ..className =
+                                                    'help is-danger ${state.capacityIsValid ? 'is-invisible' : ''}'
+                                                ..text = 'Capacity must be -1, or more than 0'
                                             ]
                                         ]
                                     ]
@@ -288,9 +324,14 @@ class NewActivity extends PComponent<NewActivityProps> {
                                             ..className = 'control'
                                             ..children = [
                                               new VInputElement()
-                                                ..className = 'input'
+                                                ..onInput = _timeValidator
+                                                ..className = 'input ${state.timeIsValid ? '' : 'is-danger'}'
                                                 ..id = 'timeStart-input'
-                                                ..type = 'time'
+                                                ..type = 'time',
+                                              new VParagraphElement()
+                                                ..className =
+                                                    'help is-danger ${state.timeIsValid ? 'is-invisible' : ''}'
+                                                ..text = 'Activity must start before it ends'
                                             ]
                                         ]
                                     ]
@@ -324,9 +365,14 @@ class NewActivity extends PComponent<NewActivityProps> {
                                             ..className = 'control'
                                             ..children = [
                                               new VInputElement()
-                                                ..className = 'input'
+                                                ..onInput = _timeValidator
+                                                ..className = 'input ${state.timeIsValid ? '' : 'is-danger'}'
                                                 ..id = 'timeEnd-input'
-                                                ..type = 'time'
+                                                ..type = 'time',
+                                              new VParagraphElement()
+                                                ..className =
+                                                    'help is-danger ${state.timeIsValid ? 'is-invisible' : ''}'
+                                                ..text = 'Activity must start before it ends'
                                             ]
                                         ]
                                     ]
@@ -353,6 +399,49 @@ class NewActivity extends PComponent<NewActivityProps> {
             ]
         ]
     ];
+
+  void _activityNameValidator(_) {
+    InputElement actName = querySelector('#act-input');
+    bool isValid = InputValidator.nameValidator(actName.value);
+    setState((NewActivityProps, NewActivityState) => NewActivityState..activityNameIsValid = isValid);
+  }
+
+  void _instructorNameValidator(_) {
+    InputElement instructorName = querySelector('#instructorName-input');
+    bool isValid = InputValidator.nameValidator(instructorName.value);
+    setState((NewActivityProps, NewActivityState) => NewActivityState..instructorNameIsValid = isValid);
+  }
+
+  void _locationValidator(_) {
+    InputElement location = querySelector('#location-input');
+    bool isValid = InputValidator.nameValidator(location.value);
+    setState((NewActivityProps, NewActivityState) => NewActivityState..locationIsValid = isValid);
+  }
+
+  void _capacityValidator(_) {
+    InputElement capacity = querySelector('#capacity-input');
+    bool isValid = InputValidator.capactiyValidator(int.parse(capacity.value));
+    setState((NewActivityProps, NewActivityState) => NewActivityState..capacityIsValid = isValid);
+  }
+
+  void _timeValidator(_) {
+    InputElement start = querySelector('#timeStart-input');
+    InputElement end = querySelector('#timeEnd-input');
+    InputElement day = querySelector('#day-input');
+
+    DateTime serveDay = DateTime.parse(day.value);
+
+    String startTime = _parseDate(serveDay, start.value);
+    String endTime = _parseDate(serveDay, end.value);
+
+    DateTime startDT = DateTime.parse(startTime);
+    DateTime endDT = DateTime.parse(endTime);
+
+    //Is valid bool
+    bool isValid = InputValidator.timeValidator(startDT, endDT);
+
+    setState((NewActivityProps, NewActivityState) => NewActivityState..timeIsValid = isValid);
+  }
 
   //method used for the submit click
   //timeEnd-input, timeStart-input, capacity-input, location-input, instructorName-input, act-input
