@@ -17,6 +17,7 @@ void main() {
     'address': "443 E Main Street Bozeman, MT 59715",
     'role': "ADMIN",
     'dietary_restrictions': "dietaryRestrictions",
+    'homeDelivery': false,
     'emergency_contacts': emergencyContactList,
     'membership_start': "2019-02-27T12:05:46.173",
     'membership_renewal': "2019-02-27T12:05:58.478",
