@@ -18,7 +18,6 @@ class ViewShiftProps {
   User user;
   BuiltList<Shift> shiftList;
   bool allShifts;
-
 }
 
 /// [viewShift] class / page to show a visual representation of current stored data
@@ -36,9 +35,9 @@ class ViewShift extends PComponent<ViewShiftProps> {
       history.push(Routes.dashboard);
     }
     if (props.allShifts && props.user.role != "admin") {
-        props.actions.server.fetchAllShifts();
+      props.actions.server.fetchAllShifts();
     } else {
-        props.actions.server.fetchShiftsForUser(0);
+      props.actions.server.fetchShiftsForUser(0);
     }
   }
 

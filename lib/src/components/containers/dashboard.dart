@@ -194,5 +194,6 @@ class Dashboard extends PComponent<DashboardProps> {
   }
 
   _renderRecentShifts() => props.userShiftList
-      .map((shift) => new VParagraphElement()..text = '${formatTime(shift.inTime)} - ${formatTime(shift.outTime)}').take(3);
+      .map((shift) => new VParagraphElement()..text = '${formatTime(shift.inTime)} - ${formatTime(shift.outTime)}')
+      .take(3);
 }

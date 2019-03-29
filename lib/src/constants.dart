@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:email_validator/email_validator.dart';
 import 'package:date_format/date_format.dart';
 
-
 /// [Routes] defines URIs for the application
 class Routes {
   /// Route to the base (or Home) of the app
@@ -111,7 +110,8 @@ enum AuthState {
 }
 
 /// [formatTime] turns a time into a human readable string
-String formatTime(DateTime time) => time == null ? "" : formatDate(time, [DD, ", ", M, " ", dd, " ", yyyy, " at ", hh, ":", nn, " ", am]);
+String formatTime(DateTime time) =>
+    time == null ? "" : formatDate(time, [DD, ", ", M, " ", dd, " ", yyyy, " at ", hh, ":", nn, " ", am]);
 
 /// Validates email addresses
 bool emailIsValid(String email) => EmailValidator.validate(email);

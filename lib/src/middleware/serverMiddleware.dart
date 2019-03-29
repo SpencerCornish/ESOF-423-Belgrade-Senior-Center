@@ -76,8 +76,7 @@ createServerMiddleware(FirebaseClient client) => (new MiddlewareBuilder<App, App
       ..add<Null>(ServerMiddlewareActionsNames.fetchAllMeals, _fetchAllMeals(client))
       ..add<Null>(ServerMiddlewareActionsNames.fetchAllShifts, _fetchAllShifts(client))
       ..add<int>(ServerMiddlewareActionsNames.fetchShiftsForUser, _fetchShiftsForUser(client))
-      ..add<bool>(ServerMiddlewareActionsNames.registerClockEvent, _registerClockEvent(client))
-      )
+      ..add<bool>(ServerMiddlewareActionsNames.registerClockEvent, _registerClockEvent(client)))
     .build();
 
 _signInAdmin(FirebaseClient client) => (
@@ -178,7 +177,6 @@ _fetchShiftsForUser(FirebaseClient client) => (
       final shifts = await client.getShiftsForUser(action.payload, api.state.user.docUID);
       api.actions.setUserShiftList(shifts);
     };
-
 
 _registerClockEvent(FirebaseClient client) => (
       MiddlewareApi<App, AppBuilder, AppActions> api,

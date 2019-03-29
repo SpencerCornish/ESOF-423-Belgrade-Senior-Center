@@ -34,5 +34,4 @@ class DbRefs {
 
   /// [allShifts] references all shifts for all users
   CollectionReference allShifts() => _fs.collection('shifts');
-
 }

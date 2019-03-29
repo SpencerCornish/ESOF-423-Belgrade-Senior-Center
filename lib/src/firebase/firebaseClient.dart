@@ -143,8 +143,8 @@ class FirebaseClient {
   Future<Null> registerClockEvent(String userID, {DateTime inTime, DateTime outTime}) async {
     // If both punches are null, bail.
     if (inTime == null && outTime == null) {
-      throw("Either inTime or outTime are required for registerClockEvent");
-      }
+      throw ("Either inTime or outTime are required for registerClockEvent");
+    }
     // New punch
     if (outTime == null && inTime != null) {
       Shift newShift = new Shift((builder) => builder
@@ -166,7 +166,7 @@ class FirebaseClient {
           .limit(1)
           .get();
       if (result.size == 0) {
-        throw("Could not find a punch to add an out time onto");
+        throw ("Could not find a punch to add an out time onto");
       }
       await result.docs.first.ref.update(data: {"out_time": outTime.toIso8601String()});
     }

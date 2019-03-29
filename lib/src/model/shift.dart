@@ -5,7 +5,6 @@ import 'package:built_value/built_value.dart';
 part 'shift.g.dart';
 
 abstract class Shift implements Built<Shift, ShiftBuilder> {
-
   @nullable
   String get punchID;
 
@@ -37,14 +36,14 @@ abstract class Shift implements Built<Shift, ShiftBuilder> {
         "out_time": outTime?.toIso8601String() ?? '',
       };
 
-  String toCsv(String fName, String lName) => 
-  [
-      '\"${punchID}\"',
-      '\"${fName}\"',
-      '\"${lName}\"',
-      '\"${inTime}\"',
-      '\"${outTime}\"',
-      '\"${durationWorked}\"',
-  ].join(',') +
+  String toCsv(String fName, String lName) =>
+      [
+        '\"${punchID}\"',
+        '\"${fName}\"',
+        '\"${lName}\"',
+        '\"${inTime}\"',
+        '\"${outTime}\"',
+        '\"${durationWorked}\"',
+      ].join(',') +
       '\n';
 }

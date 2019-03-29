@@ -122,8 +122,8 @@ _setActivityMap(App state, Action<BuiltMap<String, Activity>> action, AppBuilder
 _setMealMap(App state, Action<BuiltMap<String, Meal>> action, AppBuilder builder) =>
     builder.mealMap = action.payload.toBuilder();
 
-_setShiftList(App state, Action<BuiltList<Shift>> action, AppBuilder builder) => 
+_setShiftList(App state, Action<BuiltList<Shift>> action, AppBuilder builder) =>
     builder.shiftList = action.payload.toBuilder();
 
-_setUserShiftList(App state, Action<BuiltList<Shift>> action, AppBuilder builder) => 
+_setUserShiftList(App state, Action<BuiltList<Shift>> action, AppBuilder builder) =>
     builder.userShiftList = action.payload.toBuilder();
