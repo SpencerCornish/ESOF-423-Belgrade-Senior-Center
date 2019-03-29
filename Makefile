@@ -23,3 +23,6 @@ dart-serve:
 
 build-js:
 	@webdev build --release
+
+unit-test: ## Run Unit tests
+	@pub run test -p chrome

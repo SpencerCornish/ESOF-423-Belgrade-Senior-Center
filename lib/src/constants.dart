@@ -44,6 +44,55 @@ class Routes {
 
 }
 
+//Validates various data types across project
+class InputValidator {
+  //Validates names, only issue is if blank
+  static bool nameValidator(String input) {
+    if (input == "") {
+      return false;
+    }
+    return true;
+  }
+
+  //Validates emails by using emailValidator function
+  static bool emailValidator(String input) {
+    return EmailValidator.validate(input);
+  }
+
+  //Validates phone numbers
+  static bool phoneNumberValidator(String input) {
+    //Splits string into a list
+    List<String> temp = input.split('');
+    //Counts digits in input string
+    int count = 0;
+    for (String x in temp) {
+      if (int.tryParse(x) != null) {
+        count++;
+      }
+    }
+    if (count == 10 || count == 11) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  //Validates addresses TODO finish this
+  static bool addressValidator(String input) {
+    return true;
+  }
+
+  //Validates DateTimes, not very complicated but moved here for code clarity
+  static bool timeValidator(DateTime start, DateTime end) {
+    return !start.isAfter(end);
+  }
+
+  //Validates capacity fields, only fails if less than -1
+  static bool capactiyValidator(int i) {
+    return i > -2;
+  }
+}
+
 class ExportHeader {
   static const user = [
     'ID',
@@ -112,12 +161,6 @@ enum AuthState {
 /// [formatTime] turns a time into a human readable string
 String formatTime(DateTime time) =>
     time == null ? "" : formatDate(time, [DD, ", ", M, " ", dd, " ", yyyy, " at ", hh, ":", nn, " ", am]);
-
-/// Validates email addresses
-bool emailIsValid(String email) => EmailValidator.validate(email);
-
-/// Validates passwords meet minimum requirements
-bool passwordIsValid(String password) => password.length > 6 && password.contains(new RegExp(r'[0-9A-Z]*'));
 
 String stringToBase(String email) => base64Encode(utf8.encode(email));
 

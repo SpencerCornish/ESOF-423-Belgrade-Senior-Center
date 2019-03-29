@@ -21,6 +21,8 @@ class ViewMembersProps {
 class ViewMembersState {
   bool showMod;
   bool checkedIn;
+  bool searching;
+  List found;
   String modMem;
 }
 
@@ -37,6 +39,8 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
   ViewMembersState getInitialState() => ViewMembersState()
     ..showMod = false
     ..checkedIn = false
+    ..found = <User>[]
+    ..searching = false
     ..modMem = null;
 
   List<String> title = ["Last", "First"];
@@ -50,13 +54,18 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
 
   /// [_createRows] Scaling function to make rows based on amount of information available
   List<VNode> _createRows() {
-    List<User> users = props.userMap.values.toList();
-
-    //merge sort function by last name
-    users = _sort(users, 0, users.length - 1);
+    List<User> users;
     List<VNode> nodeList = <VNode>[];
-    nodeList.addAll(_titleRow());
-    for (User user in users) {
+
+    if (!state.searching) {
+      users = props.userMap.values.toList();
+
+      //merge sort function by last name
+      users = _sort(users, 0, users.length - 1);
+      state.found = users;
+      nodeList.addAll(_titleRow());
+    }
+    for (User user in state.found) {
       nodeList.add(new VTableRowElement()
         ..className = 'tr'
         ..onClick = ((_) => _onUserClick(user.docUID))
@@ -198,6 +207,8 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
               new VInputElement()
                 ..className = 'input'
                 ..placeholder = 'Search'
+                ..id = 'Search'
+                ..onKeyUp = _searchListener
                 ..type = 'text',
               new VSpanElement()
                 ..className = 'icon is-left'
@@ -261,6 +272,59 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
         ]);
     }
     return new VDivElement();
+  }
+
+  _searchListener(_) {
+    InputElement search = querySelector('#Search');
+    if (search.value.isEmpty) {
+      setState((ViewMemberProps, ViewMembersState) => ViewMembersState
+        ..found = <User>[]
+        ..searching = false);
+    } else {
+      List found = <User>[];
+
+      for (User user in props.userMap.values) {
+        if (user.firstName.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(user);
+        } else if (user.lastName.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(user);
+        } else if (user.address.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(user);
+        } else if (user.dietaryRestrictions.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(user);
+        } else if (user.disabilities.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(user);
+        } else if (user.email.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(user);
+        } else if (user.medicalIssues.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(user);
+        } else if (user.mobileNumber.contains(search.value)) {
+          found.add(user);
+        } else if (user.phoneNumber.contains(search.value)) {
+          found.add(user);
+        } else if (user.position.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(user);
+        } else if (user.role.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(user);
+        } else if (user.services.contains(search.value)) {
+          found.add(user);
+        } else if (user.membershipRenewal.toString().contains(search.value)) {
+          found.add(user);
+        } else if ("${user.membershipRenewal.month}/${user.membershipRenewal.day}/${user.membershipRenewal.year}"
+            .contains(search.value)) {
+          found.add(user);
+        } else if ("${user.membershipStart.month}/${user.membershipStart.day}/${user.membershipStart.year}"
+            .contains(search.value)) {
+          found.add(user);
+        } else if (user.membershipStart.toString().contains(search.value)) {
+          found.add(user);
+        }
+      }
+
+      setState((ViewMemberProps, ViewMembersState) => ViewMembersState
+        ..found = found
+        ..searching = true);
+    }
   }
 
   _checkInClick(User user) {
