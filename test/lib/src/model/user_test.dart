@@ -15,7 +15,7 @@ void main() {
     'phone_number': "phoneNumber",
     'mobile_number': "phoneNumber",
     'address': "443 E Main Street Bozeman, MT 59715",
-    'role': "ADMIN",
+    'role': "admin",
     'dietary_restrictions': "dietaryRestrictions",
     'homeDelivery': false,
     'emergency_contacts': emergencyContactList,

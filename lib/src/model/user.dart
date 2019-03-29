@@ -96,7 +96,7 @@ abstract class User implements Built<User, UserBuilder> {
         ..phoneNumber = firestoreData['phone_number']
         ..mobileNumber = firestoreData['mobile_number']
         ..address = firestoreData['address']
-        ..role = firestoreData['role']
+        ..role = firestoreData['role'].toLowerCase()
         ..dietaryRestrictions = firestoreData['dietary_restrictions']
         ..homeDeliver = firestoreData['homeDelivery'] ?? false
         ..emergencyContacts = emergencyContact.toBuilder()
@@ -116,7 +116,7 @@ abstract class User implements Built<User, UserBuilder> {
         'phone_number': phoneNumber,
         'mobile_number': mobileNumber,
         'address': address,
-        'role': role,
+        'role': role.toLowerCase(),
         'dietary_restrictions': dietaryRestrictions,
         'homeDelivery': homeDeliver,
         'emergency_contacts': emergencyContacts.toList(),
