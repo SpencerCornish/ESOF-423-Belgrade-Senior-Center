@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:html' hide History;
+// import 'dart:html' hide History;
 
 // External Dependencies
 import 'package:wui_builder/components.dart';
@@ -15,11 +15,14 @@ import './containers/newMember.dart';
 import './containers/dashboard.dart';
 import './containers/newActivity.dart';
 import './containers/newMeal.dart';
+import './containers/editMeal.dart';
+import './containers/editActivity.dart';
 import './containers/viewMembers.dart';
 import './containers/editMember.dart';
 import './containers/viewActivity.dart';
 import './containers/viewMeal.dart';
-import './core/debug.dart';
+import './containers/viewShifts.dart';
+// import './core/debug.dart';
 
 // State
 import '../state/app.dart';
@@ -77,10 +80,7 @@ class Container extends PComponent<ContainerProps> {
 
               // loginRedirect is for redirects to log in the user
               new Route(path: Routes.loginRedirect, componentFactory: (params) => _renderLoginRedirect(params)),
-              new Route(
-                path: Routes.dashboard,
-                componentFactory: (_) => _renderIfAuthenticated(_renderDashboard()),
-              ),
+
               new Route(
                 path: Routes.createMember,
                 componentFactory: (params) => _renderIfAuthenticated(_renderCreateMember()),
@@ -103,8 +103,16 @@ class Container extends PComponent<ContainerProps> {
                   path: Routes.editMember,
                   componentFactory: (params) => _renderIfAuthenticated(_renderEditMember(params))),
               new Route(
+                  path: Routes.editMeal, componentFactory: (params) => _renderIfAuthenticated(_renderEditMeal(params))),
+              new Route(
+                  path: Routes.editActivity,
+                  componentFactory: (params) => _renderIfAuthenticated(_renderEditActivity(params))),
+              new Route(
                   path: Routes.viewActivity, componentFactory: (_) => _renderIfAuthenticated(_renderViewActivity())),
               new Route(path: Routes.viewMeal, componentFactory: (_) => _renderIfAuthenticated(_renderViewMeal())),
+              new Route(path: Routes.viewShifts, componentFactory: (_) => _renderIfAuthenticated(_renderViewShifts())),
+              new Route(
+                  path: Routes.viewAllShifts, componentFactory: (_) => _renderIfAuthenticated(_renderViewAllShifts())),
             ],
           ),
         ],
@@ -157,11 +165,13 @@ class Container extends PComponent<ContainerProps> {
 
   _renderDashboard() => new Dashboard(new DashboardProps()
     ..actions = props.storeContainer.store.actions
-    ..user = appState.user);
+    ..user = appState.user
+    ..userShiftList = appState.userShiftList);
 
   _renderViewMembers() => new ViewMembers(new ViewMembersProps()
     ..actions = props.storeContainer.store.actions
     ..user = appState.user
+    ..activityMap = appState.activityMap
     ..userMap = appState.userMap);
 
   _renderEditMember(Map<String, String> params) => new EditMember(new EditMemberProps()
@@ -169,6 +179,18 @@ class Container extends PComponent<ContainerProps> {
     ..user = appState.user
     ..userMap = appState.userMap
     ..selectedMemberUID = params['user_uid']);
+
+  _renderEditMeal(Map<String, String> params) => new EditMeal(new EditMealProps()
+    ..actions = props.storeContainer.store.actions
+    ..user = appState.user
+    ..mealMap = appState.mealMap
+    ..selectedMealUID = params['meal_uid']);
+
+  _renderEditActivity(Map<String, String> params) => new EditActivity(new EditActivityProps()
+    ..actions = props.storeContainer.store.actions
+    ..user = appState.user
+    ..activityMap = appState.activityMap
+    ..selectedActivityUID = params['activity_uid']);
 
   _renderViewActivity() => new ViewActivity(new ViewActivityProps()
     ..actions = props.storeContainer.store.actions
@@ -180,7 +202,19 @@ class Container extends PComponent<ContainerProps> {
     ..user = appState.user
     ..mealMap = appState.mealMap);
 
-  _renderDebug() => (document.domain.contains("localhost"))
-      ? new DebugNavigator(new DebugNavigatorProps()..actions = props.storeContainer.store.actions)
-      : new Vspan();
+  _renderViewShifts() => new ViewShift(new ViewShiftProps()
+    ..actions = props.storeContainer.store.actions
+    ..user = appState.user
+    ..shiftList = appState.userShiftList
+    ..allShifts = false);
+
+  _renderViewAllShifts() => new ViewShift(new ViewShiftProps()
+    ..actions = props.storeContainer.store.actions
+    ..user = appState.user
+    ..shiftList = appState.shiftList
+    ..allShifts = true);
+
+  // _renderDebug() => (document.domain.contains("localhost"))
+  //     ? new DebugNavigator(new DebugNavigatorProps()..actions = props.storeContainer.store.actions)
+  //     : new Vspan();
 }

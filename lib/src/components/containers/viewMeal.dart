@@ -21,7 +21,7 @@ class ViewMealProps {
 
 class ViewMealState {
   bool searching;
-  List found;
+  List<Meal> found;
 }
 
 /// [viewMeal] class / page to show a visual representation of current stored data
@@ -56,6 +56,7 @@ class ViewMeal extends Component<ViewMealProps, ViewMealState> {
     for (Meal meal in meals) {
       nodeList.add(new VTableRowElement()
         ..className = 'tr'
+        ..onClick = ((_) => _onMealClick(meal.uid))
         ..children = [
           new VTableCellElement()
             ..className = tdClass(meal.startTime.toString())
@@ -66,6 +67,10 @@ class ViewMeal extends Component<ViewMealProps, ViewMealState> {
         ]);
     }
     return nodeList;
+  }
+
+  _onMealClick(String uid) {
+    history.push(Routes.generateEditMealURL(uid));
   }
 
   String checkText(String text) => text != '' ? text : "N/A";
@@ -202,7 +207,12 @@ class ViewMeal extends Component<ViewMealProps, ViewMealState> {
   }
 
   _onExportCsvClick(_) {
-    List<String> lines = props.mealMap.values.map((meal) => meal.toCsv()).toList();
+    List<String> lines;
+    if (!state.searching) {
+      lines = props.mealMap.values.map((meal) => meal.toCsv()).toList();
+    } else {
+      lines = state.found.map((meal) => meal.toCsv()).toList();
+    }
 
     // Add the header row
     lines.insert(0, ExportHeader.meal.join(',') + '\n');

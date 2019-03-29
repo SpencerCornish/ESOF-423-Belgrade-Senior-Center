@@ -24,7 +24,7 @@ class EditMemberState {
   bool dropDownActive;
   int listsCreated;
   String role;
-  // int addEm;
+  bool mealBool;
 }
 
 /// [EditMember] class / page to allow user information to be changed for a given user by uid
@@ -36,7 +36,8 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
     ..edit = false
     ..dropDownActive = false
     ..listsCreated = 0
-    ..role = props.userMap[props.selectedMemberUID].role;
+    ..role = props.userMap[props.selectedMemberUID].role
+    ..mealBool = props.userMap[props.selectedMemberUID].homeDeliver;
   // ..addEm = 0;
 
   History _history;
@@ -376,6 +377,28 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
               ..className = 'label'
               ..text = "Membership:",
           ],
+        new VDivElement()..className = 'column',
+        new VDivElement()
+          ..className = 'column is-narrow'
+          ..children = [
+            new VDivElement()
+              ..className = 'control'
+              ..children = [
+                new VCheckboxInputElement()
+                  ..className = 'checkbox'
+                  ..checked = state.mealBool
+                  ..disabled = !state.edit
+                  ..id = 'mealOption-input'
+                  ..onClick = _checkBoxCheck
+              ]
+          ],
+        new VDivElement()
+          ..className = 'column'
+          ..children = [
+            new VLabelElement()
+              ..className = 'label'
+              ..text = "Requires Home Delivery for Meals"
+          ],
       ]);
     nodeList.add(new VDivElement()
       ..className = 'columns is-mobile is-vcentered'
@@ -512,17 +535,17 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
                         ..className = 'dropdown-content'
                         ..children = [
                           new VAnchorElement()
-                            ..className = 'dropdown-item ${state.role.compareTo("Member") == 0 ? 'is-active' : ''}'
+                            ..className = 'dropdown-item ${state.role.compareTo("member") == 0 ? 'is-active' : ''}'
                             ..onClick = _changeRollMemClick
-                            ..text = "Member",
+                            ..text = "member",
                           new VAnchorElement()
-                            ..className = 'dropdown-item ${state.role.compareTo("Volunteer") == 0 ? 'is-active' : ''}'
+                            ..className = 'dropdown-item ${state.role.compareTo("volunteer") == 0 ? 'is-active' : ''}'
                             ..onClick = _changeRollVolClick
-                            ..text = "Volunteer",
+                            ..text = "volunteer",
                           new VAnchorElement()
-                            ..className = 'dropdown-item ${state.role.compareTo("Admin") == 0 ? 'is-active' : ''}'
+                            ..className = 'dropdown-item ${state.role.compareTo("admin") == 0 ? 'is-active' : ''}'
                             ..onClick = _changeRollAdminClick
-                            ..text = "Admin",
+                            ..text = "admin",
                         ],
                     ],
                 ],
@@ -539,6 +562,10 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
             ..readOnly = true,
         ]);
     }
+  }
+
+  _checkBoxCheck(_) {
+    setState((props, state) => state..mealBool = !state.mealBool);
   }
 
   ///[_renderTextArea] create each row ot text area items with a given label
@@ -594,15 +621,15 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
   }
 
   _changeRollMemClick(_) {
-    setState((props, state) => state..role = "Member");
+    setState((props, state) => state..role = "member");
   }
 
   _changeRollVolClick(_) {
-    setState((props, state) => state..role = "Volunteer");
+    setState((props, state) => state..role = "volunteer");
   }
 
   _changeRollAdminClick(_) {
-    setState((props, state) => state..role = "Admin");
+    setState((props, state) => state..role = "admin");
   }
 
   ///[_renderEdit] creates a button to toggle from a view page to increase the number of input fields
@@ -669,7 +696,8 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
       ..emergencyContacts = new ListBuilder<EmergencyContact>()
       ..services = new ListBuilder<String>()
       ..position = position.value
-      ..forms = new ListBuilder<String>());
+      ..forms = new ListBuilder<String>()
+      ..homeDeliver = state.mealBool);
 
     props.actions.server.updateOrCreateUser(userToUpdate);
     props.actions.server.fetchAllMembers();

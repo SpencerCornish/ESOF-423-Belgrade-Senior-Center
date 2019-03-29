@@ -1,5 +1,7 @@
 import 'dart:html' hide History;
 
+import 'dart:math';
+
 import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
 import 'package:wui_builder/vhtml.dart';
@@ -9,20 +11,22 @@ import '../core/nav.dart';
 import '../../constants.dart';
 
 import '../../model/user.dart';
+import '../../model/activity.dart';
 
 import '../../state/app.dart';
 
 class ViewMembersProps {
   AppActions actions;
   User user;
+  BuiltMap<String, Activity> activityMap;
   BuiltMap<String, User> userMap;
 }
 
 class ViewMembersState {
   bool showMod;
-  bool checkedIn;
+  Map<User, int> checkedIn;
   bool searching;
-  List found;
+  List<User> found;
   String modMem;
 }
 
@@ -33,12 +37,13 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
   @override
   void componentWillMount() {
     props.actions.server.fetchAllMembers();
+    props.actions.server.fetchAllActivities();
   }
 
   @override
   ViewMembersState getInitialState() => ViewMembersState()
     ..showMod = false
-    ..checkedIn = false
+    ..checkedIn = new Map()
     ..found = <User>[]
     ..searching = false
     ..modMem = null;
@@ -68,25 +73,38 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
     for (User user in state.found) {
       nodeList.add(new VTableRowElement()
         ..className = 'tr'
-        ..onClick = ((_) => _onUserClick(user.docUID))
         ..children = [
           new VTableCellElement()
             ..className = _tdClass(user.lastName)
+            ..onClick = ((_) => _onUserClick(user.docUID))
             ..text = _checkText(user.lastName),
           new VTableCellElement()
             ..className = _tdClass(user.firstName)
+            ..onClick = ((_) => _onUserClick(user.docUID))
             ..text = _checkText(user.firstName),
+          new VTableCellElement(),
+          new VTableCellElement()
+            ..children = [
+              new VButtonElement()
+                ..className = "button is-success"
+                ..text = state.checkedIn.containsKey(user)
+                    ? "Try ${props.activityMap.values.toList()[state.checkedIn[user]].name}"
+                    : "CHECK-IN"
+                ..onClick = ((_) => _checkInClick(user)),
+            ]
         ]);
     }
     return nodeList;
   }
 
+  int _recommend() {
+    int index = new Random().nextInt(props.activityMap.length);
+
+    return index;
+  }
+
   _onUserClick(String uid) {
-    if (props.user.role.compareTo("Admin") == 0) {
-      history.push(Routes.generateEditMemberURL(uid));
-    } else {
-      _modOn(uid);
-    }
+    history.push(Routes.generateEditMemberURL(uid));
   }
 
   /// [sort] Merge sort by last name of user
@@ -172,7 +190,7 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
                     ],
                 ],
             ],
-          _modView(),
+          //_modView(),
         ],
     ];
 
@@ -239,40 +257,40 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
         ],
     ];
 
-  VNode _modView() {
-    if (state.showMod) {
-      User selectedUser = props.userMap[state.modMem];
+  // VNode _modView() {
+  //   if (state.showMod) {
+  //     User selectedUser = props.userMap[state.modMem];
 
-      return (new VDivElement()
-        ..className = "modal ${state.showMod ? 'is-active' : ''}"
-        ..children = [
-          new VDataListElement()..className = "modal-background",
-          new VDivElement()
-            ..className = "modal-card"
-            ..children = [
-              new VHeadElement()
-                ..className = "modal-card-head"
-                ..children = [
-                  new VParagraphElement()
-                    ..className = "modal-card-title"
-                    ..text = "Welcome ${selectedUser.firstName} ${selectedUser.lastName}",
-                  new VButtonElement()
-                    ..className = 'delete'
-                    ..onClick = _modOff,
-                ],
-              new Vsection()
-                ..className = "modal-card-body"
-                ..children = [
-                  new VButtonElement()
-                    ..className = "button is-success"
-                    ..text = state.checkedIn ? "DONE" : "CHECK-IN"
-                    ..onClick = ((_) => _checkInClick(selectedUser)),
-                ],
-            ],
-        ]);
-    }
-    return new VDivElement();
-  }
+  //     return (new VDivElement()
+  //       ..className = "modal ${state.showMod ? 'is-active' : ''}"
+  //       ..children = [
+  //         new VDataListElement()..className = "modal-background",
+  //         new VDivElement()
+  //           ..className = "modal-card"
+  //           ..children = [
+  //             new VHeadElement()
+  //               ..className = "modal-card-head"
+  //               ..children = [
+  //                 new VParagraphElement()
+  //                   ..className = "modal-card-title"
+  //                   ..text = "Welcome ${selectedUser.firstName} ${selectedUser.lastName}",
+  //                 new VButtonElement()
+  //                   ..className = 'delete'
+  //                   ..onClick = _modOff,
+  //               ],
+  //             new Vsection()
+  //               ..className = "modal-card-body"
+  //               ..children = [
+  //                 new VButtonElement()
+  //                   ..className = "button is-success"
+  //                   ..text = state.checkedIn ? "DONE" : "CHECK-IN"
+  //                   ..onClick = ((_) => _checkInClick(selectedUser)),
+  //               ],
+  //           ],
+  //       ]);
+  //   }
+  //   return new VDivElement();
+  // }
 
   _searchListener(_) {
     InputElement search = querySelector('#Search');
@@ -328,13 +346,12 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
   }
 
   _checkInClick(User user) {
-    if (!state.checkedIn) {
+    if (!state.checkedIn.containsKey(user)) {
       print("${user.firstName} ${user.lastName} has checked in!");
-      setState((props, state) => state..checkedIn = true);
+      setState((props, state) => state..checkedIn.putIfAbsent(user, () => _recommend()));
     } else {
       setState((props, state) => state
         ..showMod = false
-        ..checkedIn = false
         ..modMem = null);
     }
   }
@@ -348,12 +365,16 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
   _modOff(_) {
     setState((props, state) => state
       ..showMod = false
-      ..checkedIn = false
       ..modMem = null);
   }
 
   _onExportCsvClick(_) {
-    List<String> lines = props.userMap.values.map((user) => user.toCsv()).toList();
+    List<String> lines;
+    if (!state.searching) {
+      lines = props.userMap.values.map((user) => user.toCsv()).toList();
+    } else {
+      lines = state.found.map((user) => user.toCsv()).toList();
+    }
 
     // Add the header row
     lines.insert(0, ExportHeader.user.join(',') + '\n');

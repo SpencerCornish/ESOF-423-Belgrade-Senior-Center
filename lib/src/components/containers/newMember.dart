@@ -47,7 +47,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     ..medBool = false
     ..waiverBool = false
     ..intakeBool = false
-    ..role = "Member";
+    ..role = "member";
 
   History _history;
 
@@ -743,20 +743,17 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                       ..className = 'dropdown-content'
                       ..children = [
                         new VAnchorElement()
-                          ..className =
-                              'dropdown-item ${state.role.compareTo("Member") == 0 ? 'is-active' : ''}'
+                          ..className = 'dropdown-item ${state.role.compareTo("member") == 0 ? 'is-active' : ''}'
                           ..onClick = _changeRoleMemClick
-                          ..text = "Member",
+                          ..text = "member",
                         new VAnchorElement()
-                          ..className =
-                              'dropdown-item ${state.role.compareTo("Volunteer") == 0 ? 'is-active' : ''}'
+                          ..className = 'dropdown-item ${state.role.compareTo("volunteer") == 0 ? 'is-active' : ''}'
                           ..onClick = _changeRoleVolClick
-                          ..text = "Volunteer",
+                          ..text = "volunteer",
                         new VAnchorElement()
-                          ..className =
-                              'dropdown-item ${state.role.compareTo("Admin") == 0 ? 'is-active' : ''}'
+                          ..className = 'dropdown-item ${state.role.compareTo("admin") == 0 ? 'is-active' : ''}'
                           ..onClick = _changeRoleAdminClick
-                          ..text = "Admin",
+                          ..text = "admin",
                       ],
                   ],
               ],
@@ -769,15 +766,15 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
   }
 
   _changeRoleMemClick(_) {
-    setState((props, state) => state..role = "Member");
+    setState((props, state) => state..role = "member");
   }
 
   _changeRoleVolClick(_) {
-    setState((props, state) => state..role = "Volunteer");
+    setState((props, state) => state..role = "volunteer");
   }
 
   _changeRoleAdminClick(_) {
-    setState((props, state) => state..role = "Admin");
+    setState((props, state) => state..role = "admin");
   }
 
   //Every time this function is called (when the check box is ticked), it flips the state of mealBool (true when ticked, false when unticked)

@@ -31,4 +31,7 @@ class DbRefs {
   /// [singleClass] takes a unique identifier for a class, and returns a DocumentReference to a specific class
   /// if no uid is specified, a new one is generated
   DocumentReference singleClass([String uid]) => _fs.collection('activities').doc(uid);
+
+  /// [allShifts] references all shifts for all users
+  CollectionReference allShifts() => _fs.collection('shifts');
 }
