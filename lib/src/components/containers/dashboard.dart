@@ -152,7 +152,7 @@ class Dashboard extends PComponent<DashboardProps> {
                       ..children = [
                         new VAnchorElement()
                           ..className = 'button'
-                          ..key = (_isUserClockedIn() ? 1 : 0)
+                          ..key = (_isUserClockedIn() ? 'is-disabled-clock-in' : 'clock-in')
                           ..attributes = _isUserClockedIn() ? {'disabled': 'true'} : {}
                           ..children = [
                             new VSpanElement()
@@ -165,7 +165,7 @@ class Dashboard extends PComponent<DashboardProps> {
                           ..onClick = _onClockInClick,
                         new VAnchorElement()
                           ..className = 'button'
-                          ..key = (_isUserClockedIn() ? 1 : 0)
+                          ..key = (_isUserClockedIn() ? 'clock-out' : 'is-disabled-clock-out')
                           ..attributes = _isUserClockedIn() ? {} : {'disabled': 'true'}
                           ..children = [
                             new VSpanElement()
