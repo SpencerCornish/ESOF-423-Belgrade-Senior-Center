@@ -63,6 +63,10 @@ class FirebaseClient {
             ..emergencyContacts = new ListBuilder<EmergencyContact>()
             ..membershipStart = new DateTime.fromMillisecondsSinceEpoch(0)
             ..membershipRenewal = new DateTime.fromMillisecondsSinceEpoch(0)
+            ..homeDeliver = false
+            ..medRelease = false
+            ..waiverRelease = false
+            ..intakeForm = false
             ..disabilities = ''
             ..forms = new ListBuilder<String>()
             ..medicalIssues = ''

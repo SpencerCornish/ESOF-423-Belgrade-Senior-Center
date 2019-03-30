@@ -25,6 +25,9 @@ class EditMemberState {
   int listsCreated;
   String role;
   bool mealBool;
+  bool medBool;
+  bool waiverBool;
+  bool intakeBool;
 }
 
 /// [EditMember] class / page to allow user information to be changed for a given user by uid
@@ -37,7 +40,10 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
     ..dropDownActive = false
     ..listsCreated = 0
     ..role = props.userMap[props.selectedMemberUID].role
-    ..mealBool = props.userMap[props.selectedMemberUID].homeDeliver;
+    ..mealBool = props.userMap[props.selectedMemberUID].homeDeliver
+    ..medBool = props.userMap[props.selectedMemberUID].medRelease
+    ..waiverBool = props.userMap[props.selectedMemberUID].waiverRelease
+    ..intakeBool = props.userMap[props.selectedMemberUID].intakeForm;
   // ..addEm = 0;
 
   History _history;
@@ -89,6 +95,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
     nodeList.add(_renderTextArea(user, "Medical Issues", user.medicalIssues));
     nodeList.addAll(_renderListRows(user.emergencyContacts, "Emergency Contact"));
     nodeList.addAll(_renderListRows(user.services, "Available Service"));
+    nodeList.addAll(_renderCheckBoxes());
     return nodeList;
   }
 
@@ -665,6 +672,85 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
         ]
     ];
 
+  ///[_renderCheckBoxes] create the checkboxes for form submit checks
+  List<VNode> _renderCheckBoxes() {
+    List<VNode> nodeList = <VNode>[];
+    nodeList.add(new VDivElement()
+      ..className = 'columns'
+      ..children = [
+        new VDivElement()
+          ..className = 'column is-narrow'
+          ..children = [
+            new VDivElement()
+              ..className = 'control'
+              ..children = [
+                new VCheckboxInputElement()
+                  ..className = 'checkbox'
+                  ..id = 'medRelease-input'
+                  ..onClick = _medCheckBoxCheck
+              ]
+          ],
+        new VDivElement()
+          ..className = 'column is-narrow'
+          ..children = [
+            new VLabelElement()
+              ..className = 'label'
+              ..text = "Has completed Medical Form"
+          ],
+        new VDivElement()
+          ..className = 'column is-narrow'
+          ..children = [
+            new VDivElement()
+              ..className = 'control'
+              ..children = [
+                new VCheckboxInputElement()
+                  ..className = 'checkbox'
+                  ..id = 'waiverRelease-input'
+                  ..onClick = _waiverCheckBoxCheck
+              ]
+          ],
+        new VDivElement()
+          ..className = 'column is-narrow'
+          ..children = [
+            new VLabelElement()
+              ..className = 'label'
+              ..text = "Has completed the Waiver & Release Form"
+          ],
+        new VDivElement()
+          ..className = 'column is-narrow'
+          ..children = [
+            new VDivElement()
+              ..className = 'control'
+              ..children = [
+                new VCheckboxInputElement()
+                  ..className = 'checkbox'
+                  ..id = 'intakeForm-input'
+                  ..onClick = _intakeBoxCheck
+              ]
+          ],
+        new VDivElement()
+          ..className = 'column is-narrow'
+          ..children = [
+            new VLabelElement()
+              ..className = 'label'
+              ..text = "Has completed the Intake Form"
+          ],
+      ]);
+    return nodeList;
+  }
+
+  _medCheckBoxCheck(_) {
+    setState((props, state) => state..medBool = !state.medBool);
+  }
+
+  _waiverCheckBoxCheck(_) {
+    setState((props, state) => state..waiverBool = !state.waiverBool);
+  }
+
+  _intakeBoxCheck(_) {
+    setState((props, state) => state..intakeBool = !state.intakeBool);
+  }
+
   ///[_submitClick] listener to grab all available data on page and push to firebase
   _submitClick(_) {
     InputElement first = querySelector('#First_Name');
@@ -697,7 +783,10 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
       ..services = new ListBuilder<String>()
       ..position = position.value
       ..forms = new ListBuilder<String>()
-      ..homeDeliver = state.mealBool);
+      ..homeDeliver = state.mealBool
+      ..medRelease = state.medBool
+      ..waiverRelease = state.waiverBool
+      ..intakeForm = state.intakeBool);
 
     props.actions.server.updateOrCreateUser(userToUpdate);
     props.actions.server.fetchAllMembers();

@@ -25,6 +25,9 @@ class NewMemberState {
   bool addressIsValid;
   bool mealBool;
   bool dropDownActive;
+  bool medBool;
+  bool waiverBool;
+  bool intakeBool;
   String role;
 }
 
@@ -41,6 +44,9 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     ..addressIsValid = true
     ..mealBool = false
     ..dropDownActive = false
+    ..medBool = false
+    ..waiverBool = false
+    ..intakeBool = false
     ..role = "member";
 
   History _history;
@@ -450,6 +456,68 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
 
                   //TODO: Add a field for profile picture
 
+                  new VDivElement()
+                    ..className = 'columns'
+                    ..children = [
+                      new VDivElement()
+                        ..className = 'column is-narrow'
+                        ..children = [
+                          new VDivElement()
+                            ..className = 'control'
+                            ..children = [
+                              new VCheckboxInputElement()
+                                ..className = 'checkbox'
+                                ..id = 'medRelease-input'
+                                ..onClick = _medCheckBoxCheck
+                            ]
+                        ],
+                      new VDivElement()
+                        ..className = 'column is-narrow'
+                        ..children = [
+                          new VLabelElement()
+                            ..className = 'label'
+                            ..text = "Has completed Medical Form"
+                        ],
+                      new VDivElement()
+                        ..className = 'column is-narrow'
+                        ..children = [
+                          new VDivElement()
+                            ..className = 'control'
+                            ..children = [
+                              new VCheckboxInputElement()
+                                ..className = 'checkbox'
+                                ..id = 'waiverRelease-input'
+                                ..onClick = _waiverCheckBoxCheck
+                            ]
+                        ],
+                      new VDivElement()
+                        ..className = 'column is-narrow'
+                        ..children = [
+                          new VLabelElement()
+                            ..className = 'label'
+                            ..text = "Has completed the Waiver & Release Form"
+                        ],
+                      new VDivElement()
+                        ..className = 'column is-narrow'
+                        ..children = [
+                          new VDivElement()
+                            ..className = 'control'
+                            ..children = [
+                              new VCheckboxInputElement()
+                                ..className = 'checkbox'
+                                ..id = 'intakeForm-input'
+                                ..onClick = _intakeBoxCheck
+                            ]
+                        ],
+                      new VDivElement()
+                        ..className = 'column is-narrow'
+                        ..children = [
+                          new VLabelElement()
+                            ..className = 'label'
+                            ..text = "Has completed the Intake Form"
+                        ],
+                    ],
+
                   //create the drop down menu for establishing the type of user
                   new VDivElement()
                     ..className = 'columns'
@@ -592,7 +660,6 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     InputElement medical = querySelector('#medicalIssue-input');
     InputElement memStart = querySelector('#memStart-input');
     InputElement memRenew = querySelector('#memRenew-input');
-    CheckboxInputElement mealOp = querySelector('#mealOption-input');
 
     print("This is what is in mealOp: ");
     print(state.mealBool);
@@ -615,7 +682,10 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
           ..role = state.role
           ..position = "NULL"
           ..forms = new ListBuilder<String>()
-          ..homeDeliver = state.mealBool)
+          ..homeDeliver = state.mealBool
+          ..medRelease = state.medBool
+          ..waiverRelease = state.waiverBool
+          ..intakeForm = state.intakeBool)
         .build();
 
     props.actions.server.updateOrCreateUser(newUser);
@@ -685,5 +755,17 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
   //Every time this function is called (when the check box is ticked), it flips the state of mealBool (true when ticked, false when unticked)
   _checkBoxCheck(_) {
     setState((props, state) => state..mealBool = !state.mealBool);
+  }
+
+  _medCheckBoxCheck(_) {
+    setState((props, state) => state..medBool = !state.medBool);
+  }
+
+  _waiverCheckBoxCheck(_) {
+    setState((props, state) => state..waiverBool = !state.waiverBool);
+  }
+
+  _intakeBoxCheck(_) {
+    setState((props, state) => state..intakeBool = !state.intakeBool);
   }
 }
