@@ -1,7 +1,6 @@
 import 'dart:html' hide History;
 
 import 'package:wui_builder/components.dart';
-import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
 import 'package:wui_builder/vhtml.dart';
 import 'package:built_collection/built_collection.dart';
@@ -20,32 +19,76 @@ class ViewMealProps {
   BuiltMap<String, Meal> mealMap;
 }
 
+class ViewMealState {
+  bool searching;
+  List<Meal> found;
+}
+
 /// [viewMeal] class / page to show a visual representation of current stored data
-class ViewMeal extends PComponent<ViewMealProps> {
+class ViewMeal extends Component<ViewMealProps, ViewMealState> {
   ViewMeal(props) : super(props);
-  List<String> title = ["Start", "End"];
+  List<String> title = ["Date", "Start Time", "End Time"];
   History _history;
+
+  @override
+  ViewMealState getInitialState() => ViewMealState()
+    ..found = <Meal>[]
+    ..searching = false;
 
   /// Browser history entrypoint, to control page navigation
   History get history => _history ?? findHistoryInContext(context);
 
+  @override
+  void componentWillMount() {
+    props.actions.server.fetchAllMeals();
+  }
+
   /// [createRows] Scaling function to make rows based on amount of information available
   List<VNode> createRows() {
+    List<Meal> meals;
     List<VNode> nodeList = new List();
+    if (!state.searching) {
+      meals = props.mealMap.values.toList();
+    } else {
+      meals = state.found;
+    }
     nodeList.addAll(titleRow());
-    for (Meal meal in props.mealMap.values) {
+    for (Meal meal in meals) {
       nodeList.add(new VTableRowElement()
         ..className = 'tr'
+        ..onClick = ((_) => _onMealClick(meal.uid))
         ..children = [
           new VTableCellElement()
             ..className = tdClass(meal.startTime.toString())
             ..text = checkText("${meal.startTime.month}/${meal.startTime.day}/${meal.startTime.year}"),
           new VTableCellElement()
-            ..className = tdClass(meal.endTime.toString())
-            ..text = checkText("${meal.endTime.month}/${meal.endTime.day}/${meal.endTime.year}"),
+            ..className = "time"
+            ..text = _showTime(meal.startTime.hour, meal.startTime.minute.toString()),
+          //checkText("${meal.startTime.hour}:${meal.startTime.minute}"),
+          new VTableCellElement()
+            ..className = "time"
+            ..text = _showTime(meal.endTime.hour, meal.endTime.minute.toString()),
         ]);
     }
     return nodeList;
+  }
+
+  ///[_showTime] helper function to put a time into a proper format to view in a time type input box
+  String _showTime(int hour, String min) {
+    String ampm = "A.M.";
+    if (hour > 12) {
+      hour = hour - 12;
+      ampm = "P.M.";
+    }
+
+    if (min.length == 1) {
+      min = "0${min}";
+    }
+    return hour.toString() + ":" + min + " " + ampm;
+  }
+
+  _onMealClick(String uid) {
+    history.push(Routes.generateEditMealURL(uid));
   }
 
   String checkText(String text) => text != '' ? text : "N/A";
@@ -108,6 +151,8 @@ class ViewMeal extends PComponent<ViewMealProps> {
                                       new VInputElement()
                                         ..className = 'input'
                                         ..placeholder = 'Search'
+                                        ..id = 'Search'
+                                        ..onKeyUp = _searchListener
                                         ..type = 'text',
                                       new VSpanElement()
                                         ..className = 'icon is-left'
@@ -146,8 +191,50 @@ class ViewMeal extends PComponent<ViewMealProps> {
         ],
     ];
 
+  _searchListener(_) {
+    InputElement search = querySelector('#Search');
+    if (search.value.isEmpty) {
+      setState((ViewMealProps, ViewMealState) => ViewMealState
+        ..found = <Meal>[]
+        ..searching = false);
+    } else {
+      List found = <Meal>[];
+
+      for (Meal meal in props.mealMap.values) {
+        for (String menuItem in meal.menu) {
+          if (menuItem.toLowerCase().contains(search.value.toLowerCase())) {
+            found.add(meal);
+            break;
+          }
+        }
+        if (meal.endTime.toString().contains(search.value)) {
+          found.add(meal);
+        } else if ("${meal.endTime.month}/${meal.endTime.day}/${meal.endTime.year}".contains(search.value)) {
+          found.add(meal);
+        } else if (meal.startTime.toString().contains(search.value)) {
+          found.add(meal);
+        } else if ("${meal.startTime.month}/${meal.startTime.day}/${meal.startTime.year}".contains(search.value)) {
+          found.add(meal);
+        } else if (_showTime(meal.startTime.hour, meal.startTime.minute.toString()).contains(search.value)) {
+          found.add(meal);
+        } else if (_showTime(meal.endTime.hour, meal.endTime.minute.toString()).contains(search.value)) {
+          found.add(meal);
+        }
+
+        setState((ViewMealProps, ViewMealState) => ViewMealState
+          ..found = found
+          ..searching = true);
+      }
+    }
+  }
+
   _onExportCsvClick(_) {
-    List<String> lines = props.mealMap.values.map((meal) => meal.toCsv()).toList();
+    List<String> lines;
+    if (!state.searching) {
+      lines = props.mealMap.values.map((meal) => meal.toCsv()).toList();
+    } else {
+      lines = state.found.map((meal) => meal.toCsv()).toList();
+    }
 
     // Add the header row
     lines.insert(0, ExportHeader.meal.join(',') + '\n');

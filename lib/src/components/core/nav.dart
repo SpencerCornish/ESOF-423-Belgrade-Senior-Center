@@ -121,6 +121,18 @@ class Nav extends Component<NavProps, NavState> {
                         ..className = "navbar-item"
                         ..text = 'Activities'
                         ..onClick = _onViewActivitiesClick,
+                      props.user.role == "admin"
+                          ? (new Va()
+                            ..className = "navbar-item"
+                            ..text = 'All Shifts'
+                            ..onClick = _onViewAllShiftsClick)
+                          : new VDivElement(),
+                      props.user.role == "admin" || props.user.role == "volunteer"
+                          ? (new Va()
+                            ..className = "navbar-item"
+                            ..text = 'My Shifts'
+                            ..onClick = _onViewMyShiftsClick)
+                          : new VDivElement(),
                     ],
                 ],
             ],
@@ -170,15 +182,19 @@ class Nav extends Component<NavProps, NavState> {
 
   _onNewMemberClick(_) => history.push(Routes.createMember);
 
-  _onNewMealClick(_) => print('Navigate to new meal form');
+  _onNewMealClick(_) => history.push(Routes.createMeal);
 
-  _onNewActivityClick(_) => print('Navigate to new activity form');
+  _onNewActivityClick(_) => history.push(Routes.createAct);
 
   _onViewMembersClick(_) => history.push(Routes.viewMembers);
 
   _onViewMealsClick(_) => history.push(Routes.viewMeal);
 
   _onViewActivitiesClick(_) => history.push(Routes.viewActivity);
+
+  _onViewAllShiftsClick(_) => history.push(Routes.viewAllShifts);
+
+  _onViewMyShiftsClick(_) => history.push(Routes.viewShifts);
 
   _onLogOutClick(_) async {
     await props.actions.setAuthState(AuthState.LOADING);

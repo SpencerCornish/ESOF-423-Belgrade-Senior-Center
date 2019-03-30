@@ -42,6 +42,14 @@ class _$User extends User {
   @override
   final String position;
   @override
+  final bool homeDeliver;
+  @override
+  final bool medRelease;
+  @override
+  final bool waiverRelease;
+  @override
+  final bool intakeForm;
+  @override
   final BuiltList<String> services;
 
   factory _$User([void updates(UserBuilder b)]) => (new UserBuilder()..update(updates)).build();
@@ -64,6 +72,10 @@ class _$User extends User {
       this.forms,
       this.medicalIssues,
       this.position,
+      this.homeDeliver,
+      this.medRelease,
+      this.waiverRelease,
+      this.intakeForm,
       this.services})
       : super._() {
     if (firstName == null) {
@@ -105,11 +117,14 @@ class _$User extends User {
     if (forms == null) {
       throw new BuiltValueNullFieldError('User', 'forms');
     }
-    if (medicalIssues == null) {
-      throw new BuiltValueNullFieldError('User', 'medicalIssues');
-    }
     if (position == null) {
       throw new BuiltValueNullFieldError('User', 'position');
+    }
+    if (waiverRelease == null) {
+      throw new BuiltValueNullFieldError('User', 'waiverRelease');
+    }
+    if (intakeForm == null) {
+      throw new BuiltValueNullFieldError('User', 'intakeForm');
     }
     if (services == null) {
       throw new BuiltValueNullFieldError('User', 'services');
@@ -143,6 +158,10 @@ class _$User extends User {
         forms == other.forms &&
         medicalIssues == other.medicalIssues &&
         position == other.position &&
+        homeDeliver == other.homeDeliver &&
+        medRelease == other.medRelease &&
+        waiverRelease == other.waiverRelease &&
+        intakeForm == other.intakeForm &&
         services == other.services;
   }
 
@@ -163,22 +182,32 @@ class _$User extends User {
                                                     $jc(
                                                         $jc(
                                                             $jc(
-                                                                $jc($jc($jc(0, loginUID.hashCode), docUID.hashCode),
-                                                                    firstName.hashCode),
-                                                                lastName.hashCode),
-                                                            email.hashCode),
-                                                        phoneNumber.hashCode),
-                                                    mobileNumber.hashCode),
-                                                address.hashCode),
-                                            role.hashCode),
-                                        dietaryRestrictions.hashCode),
-                                    emergencyContacts.hashCode),
-                                membershipStart.hashCode),
-                            membershipRenewal.hashCode),
-                        disabilities.hashCode),
-                    forms.hashCode),
-                medicalIssues.hashCode),
-            position.hashCode),
+                                                                $jc(
+                                                                    $jc(
+                                                                        $jc(
+                                                                            $jc(
+                                                                                $jc(
+                                                                                    $jc($jc(0, loginUID.hashCode),
+                                                                                        docUID.hashCode),
+                                                                                    firstName.hashCode),
+                                                                                lastName.hashCode),
+                                                                            email.hashCode),
+                                                                        phoneNumber.hashCode),
+                                                                    mobileNumber.hashCode),
+                                                                address.hashCode),
+                                                            role.hashCode),
+                                                        dietaryRestrictions.hashCode),
+                                                    emergencyContacts.hashCode),
+                                                membershipStart.hashCode),
+                                            membershipRenewal.hashCode),
+                                        disabilities.hashCode),
+                                    forms.hashCode),
+                                medicalIssues.hashCode),
+                            position.hashCode),
+                        homeDeliver.hashCode),
+                    medRelease.hashCode),
+                waiverRelease.hashCode),
+            intakeForm.hashCode),
         services.hashCode));
   }
 
@@ -202,6 +231,10 @@ class _$User extends User {
           ..add('forms', forms)
           ..add('medicalIssues', medicalIssues)
           ..add('position', position)
+          ..add('homeDeliver', homeDeliver)
+          ..add('medRelease', medRelease)
+          ..add('waiverRelease', waiverRelease)
+          ..add('intakeForm', intakeForm)
           ..add('services', services))
         .toString();
   }
@@ -280,6 +313,22 @@ class UserBuilder implements Builder<User, UserBuilder> {
   String get position => _$this._position;
   set position(String position) => _$this._position = position;
 
+  bool _homeDeliver;
+  bool get homeDeliver => _$this._homeDeliver;
+  set homeDeliver(bool homeDeliver) => _$this._homeDeliver = homeDeliver;
+
+  bool _medRelease;
+  bool get medRelease => _$this._medRelease;
+  set medRelease(bool medRelease) => _$this._medRelease = medRelease;
+
+  bool _waiverRelease;
+  bool get waiverRelease => _$this._waiverRelease;
+  set waiverRelease(bool waiverRelease) => _$this._waiverRelease = waiverRelease;
+
+  bool _intakeForm;
+  bool get intakeForm => _$this._intakeForm;
+  set intakeForm(bool intakeForm) => _$this._intakeForm = intakeForm;
+
   ListBuilder<String> _services;
   ListBuilder<String> get services => _$this._services ??= new ListBuilder<String>();
   set services(ListBuilder<String> services) => _$this._services = services;
@@ -305,6 +354,10 @@ class UserBuilder implements Builder<User, UserBuilder> {
       _forms = _$v.forms?.toBuilder();
       _medicalIssues = _$v.medicalIssues;
       _position = _$v.position;
+      _homeDeliver = _$v.homeDeliver;
+      _medRelease = _$v.medRelease;
+      _waiverRelease = _$v.waiverRelease;
+      _intakeForm = _$v.intakeForm;
       _services = _$v.services?.toBuilder();
       _$v = null;
     }
@@ -347,6 +400,10 @@ class UserBuilder implements Builder<User, UserBuilder> {
               forms: forms.build(),
               medicalIssues: medicalIssues,
               position: position,
+              homeDeliver: homeDeliver,
+              medRelease: medRelease,
+              waiverRelease: waiverRelease,
+              intakeForm: intakeForm,
               services: services.build());
     } catch (_) {
       String _$failedField;

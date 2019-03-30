@@ -32,7 +32,7 @@ abstract class User implements Built<User, UserBuilder> {
   /// [phoneNumber] may be an empty string
   String get phoneNumber;
 
-  /// [mobleNumber] may be an empty string
+  /// [mobileNumber] may be an empty string
   String get mobileNumber;
 
   /// [address] US only
@@ -62,11 +62,26 @@ abstract class User implements Built<User, UserBuilder> {
   BuiltList<String> get forms;
 
   /// [medicalIssues] required
+  @nullable
   String get medicalIssues;
 
   /// [position] may be blank for normal users
   /// The current position of the user, only used in case of admins and volunteers
   String get position;
+
+  /// [homeDelivery] is a boolean that tells admins whether or not the user gets their meals home delivered
+  @nullable
+  bool get homeDeliver;
+
+  /// [medRelease] is a boolean that tells admins whether or not someone has submitted their medical release form
+  @nullable
+  bool get medRelease;
+
+  /// [waiverRelease] is a boolean that tells admins whether or not someone has submitted their waiver & Release
+  bool get waiverRelease;
+
+  /// [intakeForm] is a boolean that tells admins whether or not someone has submitted their waiver & Release
+  bool get intakeForm;
 
   /// [services] required
   /// A list of services that are used by the user
@@ -91,8 +106,9 @@ abstract class User implements Built<User, UserBuilder> {
         ..phoneNumber = firestoreData['phone_number']
         ..mobileNumber = firestoreData['mobile_number']
         ..address = firestoreData['address']
-        ..role = firestoreData['role']
+        ..role = firestoreData['role'].toLowerCase()
         ..dietaryRestrictions = firestoreData['dietary_restrictions']
+        ..homeDeliver = firestoreData['homeDelivery'] ?? false
         ..emergencyContacts = emergencyContact.toBuilder()
         ..membershipStart = DateTime.parse(firestoreData['membership_start'])
         ..membershipRenewal = DateTime.parse(firestoreData['membership_renewal'])
@@ -100,7 +116,10 @@ abstract class User implements Built<User, UserBuilder> {
         ..forms = BuiltList<String>.from(firestoreData['forms']).toBuilder()
         ..medicalIssues = firestoreData['medical_issues']
         ..position = firestoreData['position']
-        ..services = BuiltList<String>.from(firestoreData['services']).toBuilder());
+        ..services = BuiltList<String>.from(firestoreData['services']).toBuilder()
+        ..medRelease = firestoreData['medRelease'] ?? false
+        ..waiverRelease = firestoreData['waiverRelease'] ?? false
+        ..intakeForm = firestoreData['intakeForm'] ?? false);
 
   Map<String, dynamic> toFirestore() => {
         'login_uid': loginUID ?? '',
@@ -110,8 +129,12 @@ abstract class User implements Built<User, UserBuilder> {
         'phone_number': phoneNumber,
         'mobile_number': mobileNumber,
         'address': address,
-        'role': role,
+        'role': role.toLowerCase(),
         'dietary_restrictions': dietaryRestrictions,
+        'homeDelivery': homeDeliver,
+        'medRelease': medRelease,
+        'waiverRelease': waiverRelease,
+        'intakeForm': intakeForm,
         'emergency_contacts': emergencyContacts.toList(),
         'membership_start': membershipStart.toIso8601String(),
         'membership_renewal': membershipRenewal.toIso8601String(),

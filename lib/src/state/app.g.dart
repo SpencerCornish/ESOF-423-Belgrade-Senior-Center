@@ -22,6 +22,10 @@ class _$AppActions extends AppActions {
       new ActionDispatcher<BuiltMap<String, Activity>>('AppActions-setActivityMap');
   final ActionDispatcher<BuiltMap<String, Meal>> setMealMap =
       new ActionDispatcher<BuiltMap<String, Meal>>('AppActions-setMealMap');
+  final ActionDispatcher<BuiltList<Shift>> setShiftList =
+      new ActionDispatcher<BuiltList<Shift>>('AppActions-setShiftList');
+  final ActionDispatcher<BuiltList<Shift>> setUserShiftList =
+      new ActionDispatcher<BuiltList<Shift>>('AppActions-setUserShiftList');
   final ServerMiddlewareActions server = new ServerMiddlewareActions();
 
   @override
@@ -32,6 +36,8 @@ class _$AppActions extends AppActions {
     setUserMap.setDispatcher(dispatcher);
     setActivityMap.setDispatcher(dispatcher);
     setMealMap.setDispatcher(dispatcher);
+    setShiftList.setDispatcher(dispatcher);
+    setUserShiftList.setDispatcher(dispatcher);
     server.setDispatcher(dispatcher);
   }
 }
@@ -46,6 +52,9 @@ class AppActionsNames {
       new ActionName<BuiltMap<String, Activity>>('AppActions-setActivityMap');
   static final ActionName<BuiltMap<String, Meal>> setMealMap =
       new ActionName<BuiltMap<String, Meal>>('AppActions-setMealMap');
+  static final ActionName<BuiltList<Shift>> setShiftList = new ActionName<BuiltList<Shift>>('AppActions-setShiftList');
+  static final ActionName<BuiltList<Shift>> setUserShiftList =
+      new ActionName<BuiltList<Shift>>('AppActions-setUserShiftList');
 }
 
 // **************************************************************************
@@ -65,10 +74,23 @@ class _$App extends App {
   final BuiltMap<String, Activity> activityMap;
   @override
   final BuiltMap<String, Meal> mealMap;
+  @override
+  final BuiltList<Shift> shiftList;
+  @override
+  final BuiltList<Shift> userShiftList;
 
   factory _$App([void updates(AppBuilder b)]) => (new AppBuilder()..update(updates)).build();
 
-  _$App._({this.user, this.isLoading, this.authState, this.userMap, this.activityMap, this.mealMap}) : super._() {
+  _$App._(
+      {this.user,
+      this.isLoading,
+      this.authState,
+      this.userMap,
+      this.activityMap,
+      this.mealMap,
+      this.shiftList,
+      this.userShiftList})
+      : super._() {
     if (isLoading == null) {
       throw new BuiltValueNullFieldError('App', 'isLoading');
     }
@@ -83,6 +105,12 @@ class _$App extends App {
     }
     if (mealMap == null) {
       throw new BuiltValueNullFieldError('App', 'mealMap');
+    }
+    if (shiftList == null) {
+      throw new BuiltValueNullFieldError('App', 'shiftList');
+    }
+    if (userShiftList == null) {
+      throw new BuiltValueNullFieldError('App', 'userShiftList');
     }
   }
 
@@ -101,15 +129,21 @@ class _$App extends App {
         authState == other.authState &&
         userMap == other.userMap &&
         activityMap == other.activityMap &&
-        mealMap == other.mealMap;
+        mealMap == other.mealMap &&
+        shiftList == other.shiftList &&
+        userShiftList == other.userShiftList;
   }
 
   @override
   int get hashCode {
     return $jf($jc(
-        $jc($jc($jc($jc($jc(0, user.hashCode), isLoading.hashCode), authState.hashCode), userMap.hashCode),
-            activityMap.hashCode),
-        mealMap.hashCode));
+        $jc(
+            $jc(
+                $jc($jc($jc($jc($jc(0, user.hashCode), isLoading.hashCode), authState.hashCode), userMap.hashCode),
+                    activityMap.hashCode),
+                mealMap.hashCode),
+            shiftList.hashCode),
+        userShiftList.hashCode));
   }
 
   @override
@@ -120,7 +154,9 @@ class _$App extends App {
           ..add('authState', authState)
           ..add('userMap', userMap)
           ..add('activityMap', activityMap)
-          ..add('mealMap', mealMap))
+          ..add('mealMap', mealMap)
+          ..add('shiftList', shiftList)
+          ..add('userShiftList', userShiftList))
         .toString();
   }
 }
@@ -152,6 +188,14 @@ class AppBuilder implements Builder<App, AppBuilder> {
   MapBuilder<String, Meal> get mealMap => _$this._mealMap ??= new MapBuilder<String, Meal>();
   set mealMap(MapBuilder<String, Meal> mealMap) => _$this._mealMap = mealMap;
 
+  ListBuilder<Shift> _shiftList;
+  ListBuilder<Shift> get shiftList => _$this._shiftList ??= new ListBuilder<Shift>();
+  set shiftList(ListBuilder<Shift> shiftList) => _$this._shiftList = shiftList;
+
+  ListBuilder<Shift> _userShiftList;
+  ListBuilder<Shift> get userShiftList => _$this._userShiftList ??= new ListBuilder<Shift>();
+  set userShiftList(ListBuilder<Shift> userShiftList) => _$this._userShiftList = userShiftList;
+
   AppBuilder();
 
   AppBuilder get _$this {
@@ -162,6 +206,8 @@ class AppBuilder implements Builder<App, AppBuilder> {
       _userMap = _$v.userMap?.toBuilder();
       _activityMap = _$v.activityMap?.toBuilder();
       _mealMap = _$v.mealMap?.toBuilder();
+      _shiftList = _$v.shiftList?.toBuilder();
+      _userShiftList = _$v.userShiftList?.toBuilder();
       _$v = null;
     }
     return this;
@@ -191,7 +237,9 @@ class AppBuilder implements Builder<App, AppBuilder> {
               authState: authState,
               userMap: userMap.build(),
               activityMap: activityMap.build(),
-              mealMap: mealMap.build());
+              mealMap: mealMap.build(),
+              shiftList: shiftList.build(),
+              userShiftList: userShiftList.build());
     } catch (_) {
       String _$failedField;
       try {
@@ -204,6 +252,10 @@ class AppBuilder implements Builder<App, AppBuilder> {
         activityMap.build();
         _$failedField = 'mealMap';
         mealMap.build();
+        _$failedField = 'shiftList';
+        shiftList.build();
+        _$failedField = 'userShiftList';
+        userShiftList.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError('App', _$failedField, e.toString());
       }

@@ -19,9 +19,6 @@ class _$Meal extends Meal {
   factory _$Meal([void updates(MealBuilder b)]) => (new MealBuilder()..update(updates)).build();
 
   _$Meal._({this.uid, this.startTime, this.endTime, this.menu}) : super._() {
-    if (uid == null) {
-      throw new BuiltValueNullFieldError('Meal', 'uid');
-    }
     if (startTime == null) {
       throw new BuiltValueNullFieldError('Meal', 'startTime');
     }

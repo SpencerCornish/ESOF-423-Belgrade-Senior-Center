@@ -1,11 +1,14 @@
-import 'package:email_validator/email_validator.dart';
 import 'dart:convert';
+
+import 'package:email_validator/email_validator.dart';
+import 'package:date_format/date_format.dart';
 
 /// [Routes] defines URIs for the application
 class Routes {
   /// Route to the base (or Home) of the app
   static const home = '/';
 
+  /// Route for forms page where new users can be created
   static const loginRedirect = '/login/next/:next_url';
 
   // Generate the above URL
@@ -13,6 +16,11 @@ class Routes {
 
   /// Route for forms page where new users, meals, and classes can be created
   static const createMember = '/new/member';
+
+  //route for new activity page
+  static const createAct = '/new/activity';
+
+  static const createMeal = '/new/meal';
 
   /// Route used after a password reset
   static const resetContinue = '/pw_reset/:email_hash';
@@ -22,14 +30,73 @@ class Routes {
   static const viewMembers = '/view/members';
 
   static const editMember = '/edit/member/:user_uid';
+  static const editMeal = '/edit/meal/:meal_uid';
+  static const editActivity = '/edit/activity/:activity_uid';
+  static const activitySignUp = '/signup/activity/byuser/:user_uid';
 
   static String generateEditMemberURL(String uid) => '/edit/member/$uid';
+  static String generateEditMealURL(String uid) => '/edit/meal/$uid';
+  static String generateEditActivityURL(String uid) => '/edit/activity/$uid';
+  static String generateActivitySignUpURL(String uid) => '/signup/activity/byuser/$uid';
 
   static const viewActivity = '/view/activities';
   static const viewMeal = '/view/meals';
 
+  static const viewShifts = '/view/shifts';
+
+  static const viewAllShifts = '/admin/shifts';
+
   // TODO: Fill in more routes here
 
+}
+
+//Validates various data types across project
+class InputValidator {
+  //Validates names, only issue is if blank
+  static bool nameValidator(String input) {
+    if (input == "") {
+      return false;
+    }
+    return true;
+  }
+
+  //Validates emails by using emailValidator function
+  static bool emailValidator(String input) {
+    return EmailValidator.validate(input);
+  }
+
+  //Validates phone numbers
+  static bool phoneNumberValidator(String input) {
+    //Splits string into a list
+    List<String> temp = input.split('');
+    //Counts digits in input string
+    int count = 0;
+    for (String x in temp) {
+      if (int.tryParse(x) != null) {
+        count++;
+      }
+    }
+    if (count == 10 || count == 11) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  //Validates addresses TODO finish this
+  static bool addressValidator(String input) {
+    return true;
+  }
+
+  //Validates DateTimes, not very complicated but moved here for code clarity
+  static bool timeValidator(DateTime start, DateTime end) {
+    return !start.isAfter(end);
+  }
+
+  //Validates capacity fields, only fails if less than -1
+  static bool capactiyValidator(int i) {
+    return i > -2;
+  }
 }
 
 class ExportHeader {
@@ -66,6 +133,15 @@ class ExportHeader {
     'End',
     'Menu',
   ];
+
+  static const shift = [
+    'Punch ID',
+    'First',
+    'Last',
+    'In Time',
+    'Out Time',
+    'Duration',
+  ];
 }
 
 enum Role {
@@ -77,13 +153,20 @@ enum Role {
 /// The different authentication states the UI can be in.
 /// This should not be used as a replacement for firebase
 /// auth checks.
-enum AuthState { LOADING, SUCCESS, INAUTHENTIC, PASS_RESET_SENT, ERR_PASSWORD, ERR_NOT_FOUND, ERR_EMAIL, ERR_OTHER }
+enum AuthState {
+  LOADING,
+  SUCCESS,
+  INAUTHENTIC,
+  PASS_RESET_SENT,
+  ERR_PASSWORD,
+  ERR_NOT_FOUND,
+  ERR_EMAIL,
+  ERR_OTHER,
+}
 
-/// Validates email addresses
-bool emailIsValid(String email) => EmailValidator.validate(email);
-
-/// Validates passwords meet minimum requirements
-bool passwordIsValid(String password) => password.length > 6 && password.contains(new RegExp(r'[0-9A-Z]*'));
+/// [formatTime] turns a time into a human readable string
+String formatTime(DateTime time) =>
+    time == null ? "" : formatDate(time, [DD, ", ", M, " ", dd, " ", yyyy, " at ", hh, ":", nn, " ", am]);
 
 String stringToBase(String email) => base64Encode(utf8.encode(email));
 

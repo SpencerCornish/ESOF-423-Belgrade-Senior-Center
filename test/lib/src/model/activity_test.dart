@@ -1,8 +1,8 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:test/test.dart';
 import 'package:bsc/src/model/activity.dart';
 
 void main() {
-  final mockUID = "e48bd850a0134e96b25de6432114a134";
   final mockActivityData = <String, dynamic>{
     'capacity': -1,
     'start_time': "2019-02-27T12:05:46.173",
@@ -10,10 +10,14 @@ void main() {
     'instructor': "Dan Bachler",
     'location': "A room",
     'name': "A class",
+    'users': ['test', 'data']
   };
   group('Activity - ', () {
     test('fromFirebase factory produces accurate model file', () {
-      Activity activity = new Activity.fromFirebase(mockActivityData, uid: "testID");
+      Activity activity = new Activity.fromFirebase(
+        mockActivityData,
+        uid: "testID",
+      );
       //Test that values are accurately carried over
       expect(activity.capacity, mockActivityData['capacity']);
       expect(activity.startTime.toIso8601String(), mockActivityData['start_time']);
@@ -21,6 +25,7 @@ void main() {
       expect(activity.instructor, mockActivityData['instructor']);
       expect(activity.location, mockActivityData['location']);
       expect(activity.name, mockActivityData['name']);
+      expect(activity.users.toList(), mockActivityData['users']);
     });
 
     test('toFirebase function produces a properly formatted map of data', () {

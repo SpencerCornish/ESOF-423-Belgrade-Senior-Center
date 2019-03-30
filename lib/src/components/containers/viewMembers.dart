@@ -9,18 +9,22 @@ import '../core/nav.dart';
 import '../../constants.dart';
 
 import '../../model/user.dart';
+import '../../model/activity.dart';
 
 import '../../state/app.dart';
 
 class ViewMembersProps {
   AppActions actions;
   User user;
+  BuiltMap<String, Activity> activityMap;
   BuiltMap<String, User> userMap;
 }
 
 class ViewMembersState {
   bool showMod;
-  bool checkedIn;
+  Map<User, Activity> checkedIn;
+  bool searching;
+  List<User> found;
   String modMem;
 }
 
@@ -29,12 +33,20 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
   ViewMembers(props) : super(props);
 
   @override
+  void componentWillMount() {
+    props.actions.server.fetchAllMembers();
+    props.actions.server.fetchAllActivities();
+  }
+
+  @override
   ViewMembersState getInitialState() => ViewMembersState()
     ..showMod = false
-    ..checkedIn = false
+    ..checkedIn = new Map()
+    ..found = <User>[]
+    ..searching = false
     ..modMem = null;
 
-  List<String> title = ["Last", "First"];
+  List<String> title = ["Last", "First", "", ""];
   History _history;
 
   /// Browser history entrypoint, to control page navigation
@@ -45,16 +57,20 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
 
   /// [_createRows] Scaling function to make rows based on amount of information available
   List<VNode> _createRows() {
-    List<User> users = props.userMap.values.toList();
-
-    //merge sort function by last name
-    users = _sort(users, 0, users.length - 1);
+    List<User> users;
     List<VNode> nodeList = <VNode>[];
-    nodeList.addAll(_titleRow());
-    for (User user in users) {
+
+    if (!state.searching) {
+      users = props.userMap.values.toList();
+
+      //merge sort function by last name
+      users = _sort(users, 0, users.length - 1);
+      state.found = users;
+      nodeList.addAll(_titleRow());
+    }
+    for (User user in state.found) {
       nodeList.add(new VTableRowElement()
         ..className = 'tr'
-        ..onClick = ((_) => _onUserClick(user.docUID))
         ..children = [
           new VTableCellElement()
             ..className = _tdClass(user.lastName)
@@ -62,17 +78,38 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
           new VTableCellElement()
             ..className = _tdClass(user.firstName)
             ..text = _checkText(user.firstName),
+          new VTableCellElement()
+            ..children = [
+              new VButtonElement()
+                ..className = "button is-success is-rounded is-small"
+                ..text = "CHECK-IN"
+                ..onClick = ((_) => _onActClick(user.docUID)),
+            ],
+          new VTableCellElement()
+            ..children = [
+              new VButtonElement()
+                ..className = "button is-rounded"
+                ..onClick = ((_) => _onUserClick(user.docUID))
+                ..children = [
+                  new VSpanElement()
+                    ..className = 'icon'
+                    ..children = [
+                      new Vi()..className = 'far fa-eye',
+                    ],
+                  new VSpanElement()..text = 'View',
+                ],
+            ]
         ]);
     }
     return nodeList;
   }
 
   _onUserClick(String uid) {
-    if (props.user.role.compareTo("Admin") == 0) {
-      history.push(Routes.generateEditMemberURL(uid));
-    } else {
-      _modOn(uid);
-    }
+    history.push(Routes.generateEditMemberURL(uid));
+  }
+
+  _onActClick(String uid) {
+    history.push(Routes.generateActivitySignUpURL(uid));
   }
 
   /// [sort] Merge sort by last name of user
@@ -158,7 +195,7 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
                     ],
                 ],
             ],
-          _modView(),
+          // _modView(),
         ],
     ];
 
@@ -193,6 +230,8 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
               new VInputElement()
                 ..className = 'input'
                 ..placeholder = 'Search'
+                ..id = 'Search'
+                ..onKeyUp = _searchListener
                 ..type = 'text',
               new VSpanElement()
                 ..className = 'icon is-left'
@@ -223,68 +262,109 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
         ],
     ];
 
-  VNode _modView() {
-    if (state.showMod) {
-      User selectedUser = props.userMap[state.modMem];
-
-      return (new VDivElement()
-        ..className = "modal ${state.showMod ? 'is-active' : ''}"
-        ..children = [
-          new VDataListElement()..className = "modal-background",
-          new VDivElement()
-            ..className = "modal-card"
-            ..children = [
-              new VHeadElement()
-                ..className = "modal-card-head"
-                ..children = [
-                  new VParagraphElement()
-                    ..className = "modal-card-title"
-                    ..text = "Welcome ${selectedUser.firstName} ${selectedUser.lastName}",
-                  new VButtonElement()
-                    ..className = 'delete'
-                    ..onClick = _modOff,
-                ],
-              new Vsection()
-                ..className = "modal-card-body"
-                ..children = [
-                  new VButtonElement()
-                    ..className = "button is-success"
-                    ..text = state.checkedIn ? "DONE" : "CHECK-IN"
-                    ..onClick = ((_) => _checkInClick(selectedUser)),
-                ],
-            ],
-        ]);
-    }
-    return new VDivElement();
-  }
-
-  _checkInClick(User user) {
-    if (!state.checkedIn) {
-      print("${user.firstName} ${user.lastName} has checked in!");
-      setState((props, state) => state..checkedIn = true);
+  _searchListener(_) {
+    InputElement search = querySelector('#Search');
+    if (search.value.isEmpty) {
+      setState((ViewMemberProps, ViewMembersState) => ViewMembersState
+        ..found = <User>[]
+        ..searching = false);
     } else {
-      setState((props, state) => state
-        ..showMod = false
-        ..checkedIn = false
-        ..modMem = null);
+      List found = <User>[];
+
+      for (User user in props.userMap.values) {
+        if (user.firstName.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(user);
+        } else if (user.lastName.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(user);
+        } else if (user.address.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(user);
+        } else if (user.dietaryRestrictions.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(user);
+        } else if (user.disabilities.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(user);
+        } else if (user.email.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(user);
+        } else if (user.medicalIssues.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(user);
+        } else if (user.mobileNumber.contains(search.value)) {
+          found.add(user);
+        } else if (user.phoneNumber.contains(search.value)) {
+          found.add(user);
+        } else if (user.position.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(user);
+        } else if (user.role.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(user);
+        } else if (user.services.contains(search.value)) {
+          found.add(user);
+        } else if (user.membershipRenewal.toString().contains(search.value)) {
+          found.add(user);
+        } else if ("${user.membershipRenewal.month}/${user.membershipRenewal.day}/${user.membershipRenewal.year}"
+            .contains(search.value)) {
+          found.add(user);
+        } else if ("${user.membershipStart.month}/${user.membershipStart.day}/${user.membershipStart.year}"
+            .contains(search.value)) {
+          found.add(user);
+        } else if (user.membershipStart.toString().contains(search.value)) {
+          found.add(user);
+        }
+      }
+
+      setState((ViewMemberProps, ViewMembersState) => ViewMembersState
+        ..found = found
+        ..searching = true);
     }
   }
 
-  _modOn(String uid) {
-    setState((props, state) => state
-      ..showMod = true
-      ..modMem = uid);
-  }
+  // _checkInClick(User user) {
+  //   if (!state.checkedIn.containsKey(user)) {
+  //     print("${user.firstName} ${user.lastName} has checked in!");
+  //     setState((props, state) => state..checkedIn.putIfAbsent(user, () => _recommend()));
+  //   } else {
+  //     Activity act = state.checkedIn[user];
 
-  _modOff(_) {
-    setState((props, state) => state
-      ..showMod = false
-      ..checkedIn = false
-      ..modMem = null);
-  }
+  //     ListBuilder<User> attList = new ListBuilder();
+
+  //     for (User u in act.attendance) {
+  //       attList.add(u);
+  //     }
+
+  //     attList.add(user);
+
+  //     Activity update = act.rebuild((builder) => builder
+  //       ..capacity = act.capacity
+  //       ..endTime = act.endTime
+  //       ..startTime = act.startTime
+  //       ..instructor = act.instructor
+  //       ..location = act.location
+  //       ..name = act.name
+  //       ..attendance = attList);
+
+  //     // print("updated not added");
+
+  //     // props.actions.server.updateOrCreateActivity(update);
+  //     // props.actions.server.fetchAllActivities();
+  //   }
+  // }
+
+  // _modOn(String uid) {
+  //   setState((props, state) => state
+  //     ..showMod = true
+  //     ..modMem = uid);
+  // }
+
+  // _modOff(_) {
+  //   setState((props, state) => state
+  //     ..showMod = false
+  //     ..modMem = null);
+  // }
 
   _onExportCsvClick(_) {
-    List<String> lines = props.userMap.values.map((user) => user.toCsv()).toList();
+    List<String> lines;
+    if (!state.searching) {
+      lines = props.userMap.values.map((user) => user.toCsv()).toList();
+    } else {
+      lines = state.found.map((user) => user.toCsv()).toList();
+    }
 
     // Add the header row
     lines.insert(0, ExportHeader.user.join(',') + '\n');

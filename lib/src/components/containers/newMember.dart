@@ -23,6 +23,12 @@ class NewMemberState {
   bool phoneNumberIsValid;
   bool cellNumberIsValid;
   bool addressIsValid;
+  bool mealBool;
+  bool dropDownActive;
+  bool medBool;
+  bool waiverBool;
+  bool intakeBool;
+  String role;
 }
 
 class NewMember extends Component<NewMemberProps, NewMemberState> {
@@ -35,7 +41,13 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     ..emailIsValid = true
     ..phoneNumberIsValid = true
     ..cellNumberIsValid = true
-    ..addressIsValid = true;
+    ..addressIsValid = true
+    ..mealBool = false
+    ..dropDownActive = false
+    ..medBool = false
+    ..waiverBool = false
+    ..intakeBool = false
+    ..role = "member";
 
   History _history;
 
@@ -281,11 +293,11 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                 ..children = [
                                   new VInputElement()
                                     ..onInput = _addressValidator
-                                    ..className = 'input ${state.cellNumberIsValid ? '' : 'is-danger'}'
+                                    ..className = 'input ${state.addressIsValid ? '' : 'is-danger'}'
                                     ..id = 'address-input'
                                     ..placeholder = "US Only",
                                   new VParagraphElement()
-                                    ..className = 'help is-danger ${state.cellNumberIsValid ? 'is-invisible' : ''}'
+                                    ..className = 'help is-danger ${state.addressIsValid ? 'is-invisible' : ''}'
                                     ..text = 'Address is invalid'
                                 ]
                             ]
@@ -444,47 +456,96 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
 
                   //TODO: Add a field for profile picture
 
-                  //create the drop down menu for establishing the type of user
                   new VDivElement()
-                    ..className = 'columns is-centered'
+                    ..className = 'columns'
                     ..children = [
                       new VDivElement()
-                        ..className = 'dropdown'
+                        ..className = 'column is-narrow'
                         ..children = [
                           new VDivElement()
-                            ..className = 'dropdown-trigger'
+                            ..className = 'control'
                             ..children = [
-                              new VAnchorElement()
-                                ..className = 'button is-dropdown-menu is-centered'
-                                ..children = [
-                                  new VSpanElement()
-                                    ..text = "Role"
-                                    ..children = [
-                                      new VSpanElement()
-                                        ..className = 'icon'
-                                        ..children = [new Vi()..className = "fas fa-angle-down"]
-                                    ],
-                                  new VDivElement()
-                                    ..className = 'dropdown-menu'
-                                    ..id = 'dropdown-menu'
-                                    ..children = [
-                                      new VDivElement()
-                                        ..className = 'dropdown-content'
-                                        ..children = [
-                                          new VDivElement()
-                                            ..className = 'dropdown-item'
-                                            ..text = "Member",
-                                          new VDivElement()
-                                            ..className = 'dropdown-item'
-                                            ..text = "Volunteer",
-                                          new VDivElement()
-                                            ..className = 'dropdown-item'
-                                            ..text = "Admin",
-                                        ],
-                                    ]
-                                ]
+                              new VCheckboxInputElement()
+                                ..className = 'checkbox'
+                                ..id = 'medRelease-input'
+                                ..onClick = _medCheckBoxCheck
                             ]
-                        ]
+                        ],
+                      new VDivElement()
+                        ..className = 'column is-narrow'
+                        ..children = [
+                          new VLabelElement()
+                            ..className = 'label'
+                            ..text = "Has completed Medical Form"
+                        ],
+                      new VDivElement()
+                        ..className = 'column is-narrow'
+                        ..children = [
+                          new VDivElement()
+                            ..className = 'control'
+                            ..children = [
+                              new VCheckboxInputElement()
+                                ..className = 'checkbox'
+                                ..id = 'waiverRelease-input'
+                                ..onClick = _waiverCheckBoxCheck
+                            ]
+                        ],
+                      new VDivElement()
+                        ..className = 'column is-narrow'
+                        ..children = [
+                          new VLabelElement()
+                            ..className = 'label'
+                            ..text = "Has completed the Waiver & Release Form"
+                        ],
+                      new VDivElement()
+                        ..className = 'column is-narrow'
+                        ..children = [
+                          new VDivElement()
+                            ..className = 'control'
+                            ..children = [
+                              new VCheckboxInputElement()
+                                ..className = 'checkbox'
+                                ..id = 'intakeForm-input'
+                                ..onClick = _intakeBoxCheck
+                            ]
+                        ],
+                      new VDivElement()
+                        ..className = 'column is-narrow'
+                        ..children = [
+                          new VLabelElement()
+                            ..className = 'label'
+                            ..text = "Has completed the Intake Form"
+                        ],
+                    ],
+
+                  //create the drop down menu for establishing the type of user
+                  new VDivElement()
+                    ..className = 'columns'
+                    ..children = [
+                      new VDivElement()
+                        ..className = 'column'
+                        ..children = [
+                          _roleHelper(),
+                        ],
+                      new VDivElement()
+                        ..className = 'column is-narrow'
+                        ..children = [
+                          new VDivElement()
+                            ..className = 'control'
+                            ..children = [
+                              new VCheckboxInputElement()
+                                ..className = 'checkbox'
+                                ..id = 'mealOption-input'
+                                ..onClick = _checkBoxCheck
+                            ]
+                        ],
+                      new VDivElement()
+                        ..className = 'column is-narrow'
+                        ..children = [
+                          new VLabelElement()
+                            ..className = 'label'
+                            ..text = "Requires Home Delivery for Meals"
+                        ],
                     ],
                   //create the submit button
                   new VDivElement()
@@ -510,13 +571,8 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
   void _firstNameValidation(_) {
     //Gets first field
     InputElement first = querySelector('#fName-input');
-    //Bool for setting state
-    bool isValid;
-    //Checks if value is blank
-    if (first.value == '') {
-      isValid = false;
-    } else
-      isValid = true;
+    //Checks if value is blank by calling InputValidator class
+    bool isValid = InputValidator.nameValidator(first.value);
     //Sets new state
     setState((NewMemberProps, NewMemberState) => NewMemberState..firstNameIsValid = isValid);
   }
@@ -525,13 +581,8 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
   void _lastNameValidation(_) {
     //Gets last field
     InputElement last = querySelector('#lName-input');
-    //Bool for setting state
-    bool isValid;
-    //Checks if value is blank
-    if (last.value == '') {
-      isValid = false;
-    } else
-      isValid = true;
+    //Validates with validator class
+    bool isValid = InputValidator.nameValidator(last.value);
     //Sets new state
     setState((NewMemberProps, NewMemberState) => NewMemberState..lastNameIsValid = isValid);
   }
@@ -540,15 +591,8 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
   void _emailValidator(_) {
     //Gets email field
     InputElement email = querySelector('#email-input');
-    //Bool for setting state
-    bool isValid;
-    if (emailIsValid(email.value)) {
-      isValid = true;
-    } else
-      isValid = false;
-    if (email.value == "") {
-      isValid = true;
-    }
+    //Input validation from input validator
+    bool isValid = InputValidator.emailValidator(email.value);
     setState((NewMemberProps, NewMemberState) => NewMemberState..emailIsValid = isValid);
   }
 
@@ -569,29 +613,12 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     //Gets phone field and then value from field
     InputElement phone = querySelector('#phoneNum-input');
     String value = phone.value;
-    //Bool for setting state
-    bool isValid;
     //If blank exit
     if (value == '') {
-      isValid = true;
-      setState((NewMemberProps, NewMemberState) => NewMemberState..phoneNumberIsValid = isValid);
       return;
     }
-    //Acual validation
-    //Splits string into a list
-    List<String> temp = value.split('');
-    //Counts digits in input string
-    int count = 0;
-    for (String x in temp) {
-      if (int.tryParse(x) != null) {
-        count++;
-      }
-    }
-    if (count == 10 || count == 11) {
-      isValid = true;
-    } else {
-      isValid = false;
-    }
+    //Validation by validation class
+    bool isValid = InputValidator.phoneNumberValidator(value);
     //Sets state
     setState((NewMemberProps, NewMemberState) => NewMemberState..phoneNumberIsValid = isValid);
   }
@@ -601,36 +628,20 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     //Gets cell field and then value from field
     InputElement cell = querySelector('#cellNum-input');
     String value = cell.value;
-    //Bool for setting state
-    bool isValid;
     //Exits if blank
     if (value == '') {
-      isValid = true;
-      setState((NewMemberProps, NewMemberState) => NewMemberState..cellNumberIsValid = isValid);
       return;
     }
-    //Acual validation
-    //Splits string into a list
-    List<String> temp = value.split('');
-    //Counts digits in input string
-    int count = 0;
-    for (String x in temp) {
-      if (int.tryParse(x) != null) {
-        count++;
-      }
-    }
-    if (count == 10 || count == 11) {
-      isValid = true;
-    } else {
-      isValid = false;
-    }
+    //Validation from validator class
+    bool isValid = InputValidator.phoneNumberValidator(value);
     //Sets state
     setState((NewMemberProps, NewMemberState) => NewMemberState..cellNumberIsValid = isValid);
   }
 
-  //Validation for address, does nothing for now
   void _addressValidator(_) {
-    InputElement address = querySelector('#address-input');
+    InputElement address = querySelector("#address-input");
+    bool isValid = InputValidator.addressValidator(address.value);
+    setState((NewMemberProps, NewMemberState) => NewMemberState..addressIsValid = isValid);
   }
 
   //method used for the submit click
@@ -650,6 +661,9 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     InputElement memStart = querySelector('#memStart-input');
     InputElement memRenew = querySelector('#memRenew-input');
 
+    print("This is what is in mealOp: ");
+    print(state.mealBool);
+
     //create a new user object
     User newUser = (new UserBuilder()
           ..firstName = first.value
@@ -665,14 +679,93 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
           ..membershipRenewal = DateTime.parse(memRenew.value)
           ..emergencyContacts = new ListBuilder<EmergencyContact>()
           ..services = new ListBuilder<String>()
-          ..role = "NULL"
+          ..role = state.role
           ..position = "NULL"
-          ..forms = new ListBuilder<String>())
+          ..forms = new ListBuilder<String>()
+          ..homeDeliver = state.mealBool
+          ..medRelease = state.medBool
+          ..waiverRelease = state.waiverBool
+          ..intakeForm = state.intakeBool)
         .build();
 
     props.actions.server.updateOrCreateUser(newUser);
     props.actions.server.fetchAllMembers();
 
     history.push(Routes.dashboard);
+  }
+
+  ///[roleHelper] creates dropdown for role selection
+  VNode _roleHelper() {
+    return (new VDivElement()
+      ..className = 'dropdown ${state.dropDownActive ? 'is-active' : ''}'
+      ..children = [
+        new VDivElement()
+          ..className = 'dropdown-trigger'
+          ..onClick = _dropDownClick
+          ..children = [
+            new VButtonElement()
+              ..className = 'button is-dropdown-menu is-centered'
+              ..children = [
+                new VSpanElement()..text = state.role,
+                new VSpanElement()
+                  ..className = 'icon'
+                  ..children = [new Vi()..className = "fas fa-angle-down"],
+                new VDivElement()
+                  ..className = 'dropdown-menu'
+                  ..id = 'dropdown-menu'
+                  ..children = [
+                    new VDivElement()
+                      ..className = 'dropdown-content'
+                      ..children = [
+                        new VAnchorElement()
+                          ..className = 'dropdown-item ${state.role.compareTo("member") == 0 ? 'is-active' : ''}'
+                          ..onClick = _changeRoleMemClick
+                          ..text = "member",
+                        new VAnchorElement()
+                          ..className = 'dropdown-item ${state.role.compareTo("volunteer") == 0 ? 'is-active' : ''}'
+                          ..onClick = _changeRoleVolClick
+                          ..text = "volunteer",
+                        new VAnchorElement()
+                          ..className = 'dropdown-item ${state.role.compareTo("admin") == 0 ? 'is-active' : ''}'
+                          ..onClick = _changeRoleAdminClick
+                          ..text = "admin",
+                      ],
+                  ],
+              ],
+          ],
+      ]);
+  }
+
+  _dropDownClick(_) {
+    setState((props, state) => state..dropDownActive = !state.dropDownActive);
+  }
+
+  _changeRoleMemClick(_) {
+    setState((props, state) => state..role = "member");
+  }
+
+  _changeRoleVolClick(_) {
+    setState((props, state) => state..role = "volunteer");
+  }
+
+  _changeRoleAdminClick(_) {
+    setState((props, state) => state..role = "admin");
+  }
+
+  //Every time this function is called (when the check box is ticked), it flips the state of mealBool (true when ticked, false when unticked)
+  _checkBoxCheck(_) {
+    setState((props, state) => state..mealBool = !state.mealBool);
+  }
+
+  _medCheckBoxCheck(_) {
+    setState((props, state) => state..medBool = !state.medBool);
+  }
+
+  _waiverCheckBoxCheck(_) {
+    setState((props, state) => state..waiverBool = !state.waiverBool);
+  }
+
+  _intakeBoxCheck(_) {
+    setState((props, state) => state..intakeBool = !state.intakeBool);
   }
 }
