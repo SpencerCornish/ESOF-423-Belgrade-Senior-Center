@@ -375,7 +375,9 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
                             ]
                         ]
                     ],
-                    new VParagraphElement()..className = 'title'..text = "Attendees",
+                  new VParagraphElement()
+                    ..className = 'title'
+                    ..text = "Attendees",
                   _renderAttendance(act),
                   //create the submit button
                   _renderButton(),
@@ -386,7 +388,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
 
   VNode _renderAttendance(Activity act) {
     List<VNode> nodeList = new List<VNode>();
-    
+
     nodeList.add(new VTableRowElement()
       ..className = 'tr'
       ..children = [

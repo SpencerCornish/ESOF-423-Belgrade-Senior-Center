@@ -84,7 +84,7 @@ createServerMiddleware(FirebaseClient client) => (new MiddlewareBuilder<App, App
       ..add<Null>(ServerMiddlewareActionsNames.fetchAllShifts, _fetchAllShifts(client))
       ..add<int>(ServerMiddlewareActionsNames.fetchShiftsForUser, _fetchShiftsForUser(client))
       ..add<bool>(ServerMiddlewareActionsNames.registerClockEvent, _registerClockEvent(client)))
-          .build();
+    .build();
 
 _signInAdmin(FirebaseClient client) => (
       MiddlewareApi<App, AppBuilder, AppActions> api,

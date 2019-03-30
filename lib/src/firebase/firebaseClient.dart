@@ -212,7 +212,6 @@ class FirebaseClient {
       print(doc.data());
       dataSet[doc.id] = new Activity.fromFirebase(
         doc.data(),
-        new BuiltList<String>(),
         uid: doc.id,
       );
     }

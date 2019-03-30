@@ -37,8 +37,7 @@ abstract class Activity implements Built<Activity, ActivityBuilder> {
   factory Activity([updates(ActivityBuilder b)]) = _$Activity;
 
   factory Activity.fromFirebase(
-    Map<String, dynamic> firestoreData,
-    BuiltList<String> user, {
+    Map<String, dynamic> firestoreData, {
     String uid,
   }) =>
       new Activity(
