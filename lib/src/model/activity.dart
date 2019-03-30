@@ -30,26 +30,28 @@ abstract class Activity implements Built<Activity, ActivityBuilder> {
   /// [name] required
   String get name;
 
-  /// [attendance] is a built list of [Users] objects
-  BuiltList<User> get attendance;
+  /// [users] is a built list of user ids
+  BuiltList<String> get users;
 
   Activity._();
   factory Activity([updates(ActivityBuilder b)]) = _$Activity;
 
   factory Activity.fromFirebase(
     Map<String, dynamic> firestoreData,
-    BuiltList<User> user, {
+    BuiltList<String> user, {
     String uid,
   }) =>
-      new Activity((ActivityBuilder builder) => builder
-        ..uid = uid
-        ..capacity = firestoreData['capacity']
-        ..startTime = DateTime.parse(firestoreData['start_time'])
-        ..endTime = DateTime.parse(firestoreData['end_time'])
-        ..instructor = firestoreData['instructor']
-        ..location = firestoreData['location']
-        ..name = firestoreData['name']
-        ..attendance = user.toBuilder());
+      new Activity(
+        (ActivityBuilder builder) => builder
+          ..uid = uid
+          ..capacity = firestoreData['capacity']
+          ..startTime = DateTime.parse(firestoreData['start_time'])
+          ..endTime = DateTime.parse(firestoreData['end_time'])
+          ..instructor = firestoreData['instructor']
+          ..location = firestoreData['location']
+          ..name = firestoreData['name']
+          ..users = new ListBuilder<String>(firestoreData['users'] ?? []),
+      );
 
   Map<String, dynamic> toFirestore() => {
         'capacity': capacity,
@@ -58,7 +60,7 @@ abstract class Activity implements Built<Activity, ActivityBuilder> {
         'instructor': instructor,
         'location': location,
         'name': name,
-        'attendance': attendance.toList(),
+        'users': users.toList(),
       };
 
   String toCsv() =>
@@ -70,7 +72,7 @@ abstract class Activity implements Built<Activity, ActivityBuilder> {
         '\"${location}\"',
         '\"${startTime}\"',
         '\"${endTime}\"',
-        '\"${attendance}\"'
+        '\"${users.join(',')}\"'
       ].join(',') +
       '\n';
 }

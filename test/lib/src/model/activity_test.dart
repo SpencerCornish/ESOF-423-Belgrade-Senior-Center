@@ -1,4 +1,3 @@
-import 'package:bsc/src/model/user.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:test/test.dart';
 import 'package:bsc/src/model/activity.dart';
@@ -16,7 +15,7 @@ void main() {
     test('fromFirebase factory produces accurate model file', () {
       Activity activity = new Activity.fromFirebase(
         mockActivityData,
-        new BuiltList<User>(),
+        new BuiltList<String>(),
         uid: "testID",
       );
       //Test that values are accurately carried over
@@ -29,7 +28,7 @@ void main() {
     });
 
     test('toFirebase function produces a properly formatted map of data', () {
-      Activity activity = new Activity.fromFirebase(mockActivityData, new BuiltList<User>(), uid: "testID");
+      Activity activity = new Activity.fromFirebase(mockActivityData, new BuiltList<String>(), uid: "testID");
       Map<String, dynamic> temp = activity.toFirestore();
       expect(mockActivityData, temp);
     });

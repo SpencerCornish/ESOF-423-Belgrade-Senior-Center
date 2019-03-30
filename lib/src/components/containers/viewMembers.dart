@@ -1,7 +1,5 @@
 import 'dart:html' hide History;
 
-import 'dart:math';
-
 import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
 import 'package:wui_builder/vhtml.dart';
@@ -48,7 +46,7 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
     ..searching = false
     ..modMem = null;
 
-  List<String> title = ["Last", "First"];
+  List<String> title = ["Last", "First", "", ""];
   History _history;
 
   /// Browser history entrypoint, to control page navigation
@@ -76,33 +74,42 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
         ..children = [
           new VTableCellElement()
             ..className = _tdClass(user.lastName)
-            ..onClick = ((_) => _onUserClick(user.docUID))
             ..text = _checkText(user.lastName),
           new VTableCellElement()
             ..className = _tdClass(user.firstName)
-            ..onClick = ((_) => _onUserClick(user.docUID))
             ..text = _checkText(user.firstName),
-          new VTableCellElement(),
           new VTableCellElement()
             ..children = [
               new VButtonElement()
-                ..className = "button is-success"
-                ..text = state.checkedIn.containsKey(user) ? "Try ${state.checkedIn[user].name}" : "CHECK-IN"
-                ..onClick = ((_) => _checkInClick(user)),
+                ..className = "button is-success is-rounded is-small"
+                ..text = "CHECK-IN"
+                ..onClick = ((_) => _onActClick(user.docUID)),
+            ],
+          new VTableCellElement()
+            ..children = [
+              new VButtonElement()
+                ..className = "button is-rounded"
+                ..onClick = ((_) => _onUserClick(user.docUID))
+                ..children = [
+                  new VSpanElement()
+                    ..className = 'icon'
+                    ..children = [
+                      new Vi()..className = 'far fa-eye',
+                    ],
+                  new VSpanElement()..text = 'View',
+                ],
             ]
         ]);
     }
     return nodeList;
   }
 
-  Activity _recommend() {
-    int index = new Random().nextInt(props.activityMap.length);
-
-    return props.activityMap.values.toList()[index];
-  }
-
   _onUserClick(String uid) {
     history.push(Routes.generateEditMemberURL(uid));
+  }
+
+  _onActClick(String uid) {
+    history.push(Routes.generateActivitySignUpURL(uid));
   }
 
   /// [sort] Merge sort by last name of user
@@ -188,7 +195,7 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
                     ],
                 ],
             ],
-          //_modView(),
+          // _modView(),
         ],
     ];
 
@@ -255,41 +262,6 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
         ],
     ];
 
-  // VNode _modView() {
-  //   if (state.showMod) {
-  //     User selectedUser = props.userMap[state.modMem];
-
-  //     return (new VDivElement()
-  //       ..className = "modal ${state.showMod ? 'is-active' : ''}"
-  //       ..children = [
-  //         new VDataListElement()..className = "modal-background",
-  //         new VDivElement()
-  //           ..className = "modal-card"
-  //           ..children = [
-  //             new VHeadElement()
-  //               ..className = "modal-card-head"
-  //               ..children = [
-  //                 new VParagraphElement()
-  //                   ..className = "modal-card-title"
-  //                   ..text = "Welcome ${selectedUser.firstName} ${selectedUser.lastName}",
-  //                 new VButtonElement()
-  //                   ..className = 'delete'
-  //                   ..onClick = _modOff,
-  //               ],
-  //             new Vsection()
-  //               ..className = "modal-card-body"
-  //               ..children = [
-  //                 new VButtonElement()
-  //                   ..className = "button is-success"
-  //                   ..text = state.checkedIn ? "DONE" : "CHECK-IN"
-  //                   ..onClick = ((_) => _checkInClick(selectedUser)),
-  //               ],
-  //           ],
-  //       ]);
-  //   }
-  //   return new VDivElement();
-  // }
-
   _searchListener(_) {
     InputElement search = querySelector('#Search');
     if (search.value.isEmpty) {
@@ -343,46 +315,48 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
     }
   }
 
-  _checkInClick(User user) {
-    if (!state.checkedIn.containsKey(user)) {
-      print("${user.firstName} ${user.lastName} has checked in!");
-      setState((props, state) => state..checkedIn.putIfAbsent(user, () => _recommend()));
-    } else {
-      Activity act = state.checkedIn[user];
+  // _checkInClick(User user) {
+  //   if (!state.checkedIn.containsKey(user)) {
+  //     print("${user.firstName} ${user.lastName} has checked in!");
+  //     setState((props, state) => state..checkedIn.putIfAbsent(user, () => _recommend()));
+  //   } else {
+  //     Activity act = state.checkedIn[user];
 
-      ListBuilder<User> attList = new ListBuilder();
+  //     ListBuilder<User> attList = new ListBuilder();
 
-      for (User u in act.attendance) {
-        attList.add(u);
-      }
+  //     for (User u in act.attendance) {
+  //       attList.add(u);
+  //     }
 
-      attList.add(user);
+  //     attList.add(user);
 
-      // Activity update = act.rebuild((builder) => builder
-      //   ..capacity = act.capacity
-      //   ..endTime = act.endTime
-      //   ..startTime = act.startTime
-      //   ..instructor = act.instructor
-      //   ..location = act.location
-      //   ..name = act.name
-      //   ..attendance = attList);
+  //     Activity update = act.rebuild((builder) => builder
+  //       ..capacity = act.capacity
+  //       ..endTime = act.endTime
+  //       ..startTime = act.startTime
+  //       ..instructor = act.instructor
+  //       ..location = act.location
+  //       ..name = act.name
+  //       ..attendance = attList);
 
-      // props.actions.server.updateOrCreateActivity(update);
-      // props.actions.server.fetchAllActivities();
-    }
-  }
+  //     // print("updated not added");
 
-  _modOn(String uid) {
-    setState((props, state) => state
-      ..showMod = true
-      ..modMem = uid);
-  }
+  //     // props.actions.server.updateOrCreateActivity(update);
+  //     // props.actions.server.fetchAllActivities();
+  //   }
+  // }
 
-  _modOff(_) {
-    setState((props, state) => state
-      ..showMod = false
-      ..modMem = null);
-  }
+  // _modOn(String uid) {
+  //   setState((props, state) => state
+  //     ..showMod = true
+  //     ..modMem = uid);
+  // }
+
+  // _modOff(_) {
+  //   setState((props, state) => state
+  //     ..showMod = false
+  //     ..modMem = null);
+  // }
 
   _onExportCsvClick(_) {
     List<String> lines;

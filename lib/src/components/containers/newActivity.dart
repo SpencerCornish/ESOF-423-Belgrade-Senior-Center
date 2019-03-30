@@ -471,7 +471,7 @@ class NewActivity extends Component<NewActivityProps, NewActivityState> {
           ..instructor = instructor.value
           ..location = location.value
           ..name = activity.value
-          ..attendance = new ListBuilder<User>())
+          ..users = new ListBuilder<String>())
         .build();
 
     props.actions.server.updateOrCreateActivity(newActivity);

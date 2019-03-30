@@ -22,7 +22,7 @@ class _$Activity extends Activity {
   @override
   final String name;
   @override
-  final BuiltList<User> attendance;
+  final BuiltList<String> users;
 
   factory _$Activity([void updates(ActivityBuilder b)]) =>
       (new ActivityBuilder()..update(updates)).build();
@@ -35,7 +35,7 @@ class _$Activity extends Activity {
       this.instructor,
       this.location,
       this.name,
-      this.attendance})
+      this.users})
       : super._() {
     if (capacity == null) {
       throw new BuiltValueNullFieldError('Activity', 'capacity');
@@ -55,8 +55,8 @@ class _$Activity extends Activity {
     if (name == null) {
       throw new BuiltValueNullFieldError('Activity', 'name');
     }
-    if (attendance == null) {
-      throw new BuiltValueNullFieldError('Activity', 'attendance');
+    if (users == null) {
+      throw new BuiltValueNullFieldError('Activity', 'users');
     }
   }
 
@@ -78,7 +78,7 @@ class _$Activity extends Activity {
         instructor == other.instructor &&
         location == other.location &&
         name == other.name &&
-        attendance == other.attendance;
+        users == other.users;
   }
 
   @override
@@ -94,7 +94,7 @@ class _$Activity extends Activity {
                     instructor.hashCode),
                 location.hashCode),
             name.hashCode),
-        attendance.hashCode));
+        users.hashCode));
   }
 
   @override
@@ -107,7 +107,7 @@ class _$Activity extends Activity {
           ..add('instructor', instructor)
           ..add('location', location)
           ..add('name', name)
-          ..add('attendance', attendance))
+          ..add('users', users))
         .toString();
   }
 }
@@ -143,11 +143,9 @@ class ActivityBuilder implements Builder<Activity, ActivityBuilder> {
   String get name => _$this._name;
   set name(String name) => _$this._name = name;
 
-  ListBuilder<User> _attendance;
-  ListBuilder<User> get attendance =>
-      _$this._attendance ??= new ListBuilder<User>();
-  set attendance(ListBuilder<User> attendance) =>
-      _$this._attendance = attendance;
+  ListBuilder<String> _users;
+  ListBuilder<String> get users => _$this._users ??= new ListBuilder<String>();
+  set users(ListBuilder<String> users) => _$this._users = users;
 
   ActivityBuilder();
 
@@ -160,7 +158,7 @@ class ActivityBuilder implements Builder<Activity, ActivityBuilder> {
       _instructor = _$v.instructor;
       _location = _$v.location;
       _name = _$v.name;
-      _attendance = _$v.attendance?.toBuilder();
+      _users = _$v.users?.toBuilder();
       _$v = null;
     }
     return this;
@@ -192,12 +190,12 @@ class ActivityBuilder implements Builder<Activity, ActivityBuilder> {
               instructor: instructor,
               location: location,
               name: name,
-              attendance: attendance.build());
+              users: users.build());
     } catch (_) {
       String _$failedField;
       try {
-        _$failedField = 'attendance';
-        attendance.build();
+        _$failedField = 'users';
+        users.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
             'Activity', _$failedField, e.toString());

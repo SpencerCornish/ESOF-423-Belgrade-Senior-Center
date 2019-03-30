@@ -16,7 +16,9 @@ import '../../constants.dart';
 class ViewActivityProps {
   AppActions actions;
   User user;
+  bool signUp;
   BuiltMap<String, Activity> activityMap;
+  String selectedMemberUID;
 }
 
 class ViewActivityState {
@@ -85,7 +87,31 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
   }
 
   _onActClick(String uid) {
-    history.push(Routes.generateEditActivityURL(uid));
+    if (!props.signUp) {
+      history.push(Routes.generateEditActivityURL(uid));
+    } else {
+      Activity act = props.activityMap[uid];
+      ListBuilder<String> list = new ListBuilder();
+
+      for (String id in act.users) {
+        list.add(id);
+      }
+
+      list.add(props.selectedMemberUID);
+
+      Activity update = act.rebuild((builder) => builder
+        ..capacity = act.capacity
+        ..endTime = act.endTime
+        ..startTime = act.startTime
+        ..instructor = act.instructor
+        ..location = act.location
+        ..name = act.name
+        ..users = list);
+
+      props.actions.server.updateOrCreateActivity(update);
+      props.actions.server.fetchAllActivities();
+      history.push(Routes.viewMembers);
+    }
   }
 
   String checkText(String text) => text != '' ? text : "N/A";

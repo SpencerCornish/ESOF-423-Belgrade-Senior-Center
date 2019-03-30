@@ -108,6 +108,9 @@ class Container extends PComponent<ContainerProps> {
                   path: Routes.editActivity,
                   componentFactory: (params) => _renderIfAuthenticated(_renderEditActivity(params))),
               new Route(
+                  path: Routes.activitySignUp,
+                  componentFactory: (params) => _renderIfAuthenticated(_renderSignUpActivity(params))),
+              new Route(
                   path: Routes.viewActivity, componentFactory: (_) => _renderIfAuthenticated(_renderViewActivity())),
               new Route(path: Routes.viewMeal, componentFactory: (_) => _renderIfAuthenticated(_renderViewMeal())),
               new Route(path: Routes.viewShifts, componentFactory: (_) => _renderIfAuthenticated(_renderViewShifts())),
@@ -189,13 +192,23 @@ class Container extends PComponent<ContainerProps> {
   _renderEditActivity(Map<String, String> params) => new EditActivity(new EditActivityProps()
     ..actions = props.storeContainer.store.actions
     ..user = appState.user
+    ..userMap = appState.userMap
     ..activityMap = appState.activityMap
     ..selectedActivityUID = params['activity_uid']);
 
   _renderViewActivity() => new ViewActivity(new ViewActivityProps()
     ..actions = props.storeContainer.store.actions
     ..user = appState.user
-    ..activityMap = appState.activityMap);
+    ..activityMap = appState.activityMap
+    ..selectedMemberUID = appState.user.docUID
+    ..signUp = false);
+
+  _renderSignUpActivity(Map<String, String> params) => new ViewActivity(new ViewActivityProps()
+    ..actions = props.storeContainer.store.actions
+    ..user = appState.user
+    ..activityMap = appState.activityMap
+    ..selectedMemberUID = params['user_uid']
+    ..signUp = true);
 
   _renderViewMeal() => new ViewMeal(new ViewMealProps()
     ..actions = props.storeContainer.store.actions
