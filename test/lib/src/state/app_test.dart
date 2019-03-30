@@ -30,6 +30,10 @@ void main() {
             ..mobileNumber = ''
             ..address = ''
             ..role = ''
+            ..homeDeliver = false
+            ..medRelease = false
+            ..waiverRelease = false
+            ..intakeForm = false
             ..dietaryRestrictions = ''
             ..emergencyContacts = new ListBuilder<EmergencyContact>()
             ..membershipStart = new DateTime.fromMillisecondsSinceEpoch(0)
