@@ -1,5 +1,6 @@
 import 'dart:html' hide History;
 
+import 'package:built_collection/built_collection.dart';
 import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
 import 'package:wui_builder/vhtml.dart';
@@ -463,15 +464,14 @@ class NewActivity extends Component<NewActivityProps, NewActivityState> {
     endTime = _parseDate(date, tempEnd);
     cap = int.parse(capacity.value);
 
-    print(startTime);
-
     Activity newActivity = (new ActivityBuilder()
           ..capacity = cap
           ..endTime = DateTime.parse(endTime)
           ..startTime = DateTime.parse(startTime)
           ..instructor = instructor.value
           ..location = location.value
-          ..name = activity.value)
+          ..name = activity.value
+          ..users = new ListBuilder<String>())
         .build();
 
     props.actions.server.updateOrCreateActivity(newActivity);

@@ -6,6 +6,7 @@ import 'package:wui_builder/vhtml.dart';
 import 'package:built_collection/built_collection.dart';
 
 import '../../model/activity.dart';
+import '../../middleware/serverMiddleware.dart';
 import '../../state/app.dart';
 import '../core/nav.dart';
 import '../../model/user.dart';
@@ -14,11 +15,15 @@ class EditActivityProps {
   AppActions actions;
   User user;
   BuiltMap<String, Activity> activityMap;
+  BuiltMap<String, User> userMap;
   String selectedActivityUID;
 }
 
 class EditActivityState {
   bool edit;
+  String userToDelete;
+  bool showDeletePrompt;
+  bool showAddUserPrompt;
 }
 
 class EditActivity extends Component<EditActivityProps, EditActivityState> {
@@ -27,14 +32,18 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
   History _history;
 
   @override
-  EditActivityState getInitialState() => EditActivityState()..edit = false;
+  EditActivityState getInitialState() => EditActivityState()
+    ..edit = false
+    ..showAddUserPrompt = false
+    ..showDeletePrompt = false
+    ..userToDelete = '';
 
   /// Browser history entrypoint, to control page navigation
   History get history => _history ?? findHistoryInContext(context);
 
   @override
-  void componentWillUpdate(EditActivityProps nextProps, EditActivityState nextState) {
-    super.componentWillUpdate(nextProps, nextState);
+  void componentWillMount() {
+    props.actions.server.fetchAllMembers();
   }
 
   @override
@@ -47,14 +56,15 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
           ..actions = props.actions
           ..user = props.user),
         new VDivElement()
-          ..className = 'container'
           ..children = [
+            _renderPromptForDeletion(act, state.userToDelete),
+            _renderAddUser(act, state.userToDelete),
             _activityCreation(act),
           ]
       ];
   }
 
-  //create the text boxes that are used to create new users
+  //create the text boxes that are used to create new activities
   VNode _activityCreation(Activity act) => new VDivElement()
     ..className = 'container'
     ..children = [
@@ -76,7 +86,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
                         ..children = [
                           new Vh1()
                             ..className = 'title'
-                            ..text = "Activity Creation"
+                            ..text = "Edit Activity"
                         ]
                     ],
                   //create the input fields for activity name and instructor's name
@@ -271,7 +281,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
                                                 ..className = 'input ${state.edit ? '' : 'is-static'}'
                                                 ..id = 'day-input'
                                                 ..type = 'date'
-                                                ..value = _showDate(act.startTime)
+                                                ..value = _dateFormat(act.startTime)
                                                 ..readOnly = !state.edit
                                             ]
                                         ]
@@ -317,7 +327,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
                                                 ..id = 'timeStart-input'
                                                 ..type = 'time'
                                                 ..readOnly = !state.edit
-                                                ..value = _showTime(
+                                                ..value = _timeFormat(
                                                     act.startTime.hour.toString(), act.startTime.minute.toString())
                                             ]
                                         ]
@@ -356,7 +366,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
                                                 ..id = 'timeEnd-input'
                                                 ..type = 'time'
                                                 ..readOnly = !state.edit
-                                                ..value = _showTime(
+                                                ..value = _timeFormat(
                                                     act.endTime.hour.toString(), act.endTime.minute.toString())
                                             ]
                                         ]
@@ -365,6 +375,10 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
                             ]
                         ]
                     ],
+                  new VParagraphElement()
+                    ..className = 'title'
+                    ..text = "Attendees",
+                  _renderAttendance(act),
                   //create the submit button
                   _renderButton(),
                 ]
@@ -372,8 +386,157 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
         ]
     ];
 
-  ///[_showTime] helper function to put a time into a proper format to view in a time type input box
-  String _showTime(String hour, String min) {
+  VNode _renderAttendance(Activity act) {
+    List<VNode> nodeList = new List<VNode>();
+
+    nodeList.add(new VTableRowElement()
+      ..className = 'tr'
+      ..children = [
+        new VTableCellElement()
+          ..className = 'subtitle is-5'
+          ..text = "First Name",
+        new VTableCellElement()
+          ..className = 'subtitle is-5'
+          ..text = "Last Name",
+        new VTableCellElement()
+          ..className = 'td'
+          ..text = "",
+        new VTableCellElement()
+          ..className = 'td'
+          ..children = [
+            new VButtonElement()
+              ..className = "button is-success is-rounded"
+              ..text = "Add"
+              ..onClick = _addClick,
+          ],
+      ]);
+
+    for (String userID in act.users) {
+      User userObj = props.userMap[userID];
+      nodeList.add(new VTableRowElement()
+        ..className = 'tr'
+        ..children = [
+          new VTableCellElement()
+            ..className = 'td'
+            ..text = userObj?.firstName ?? '',
+          new VTableCellElement()
+            ..className = 'td'
+            // ..id = 'name_cell${state.attNum}'
+            ..text = userObj?.lastName ?? '',
+          new VTableCellElement()
+            ..children = [
+              new VButtonElement()
+                ..className = "button is-danger is-rounded"
+                ..text = "Remove"
+                ..onClick = _promptForDeleteClick,
+            ]
+        ]);
+    }
+
+    return new VTableElement()
+      ..className = 'table is-narrow is-striped is-fullwidth'
+      ..id = "attendance"
+      ..children = nodeList;
+  }
+
+  VNode _renderPromptForDeletion(Activity act, String uid) => new VDivElement()
+    ..className = "modal ${state.showDeletePrompt ? 'is-active' : ''}"
+    ..children = [
+      new VDivElement()..className = 'modal-background',
+      new VDivElement()
+        ..className = 'modal-card'
+        ..children = [
+          new Vsection()
+            ..className = 'modal-card-body'
+            ..children = [
+              new VParagraphElement()..text = "Are you sure you want to remove this user?",
+            ],
+          new Vfooter()
+            ..className = 'modal-card-foot'
+            ..children = [
+              new VButtonElement()
+                ..className = 'button is-danger'
+                ..text = "Yes"
+                ..onClick = (_) => _removeClick(act, uid),
+              new VButtonElement()
+                ..className = 'button'
+                ..text = "No"
+                ..onClick = _cancelDeletionClick
+            ],
+        ],
+    ];
+
+  VNode _renderAddUser(Activity act, String uid) => new VDivElement()
+    ..className = "modal ${state.showAddUserPrompt ? 'is-active' : ''}"
+    ..children = [
+      new VDivElement()..className = 'modal-background',
+      new VDivElement()
+        ..className = 'modal-card'
+        ..children = [
+          new Vsection()
+            ..className = 'modal-card-body'
+            ..children = _renderUserTable(act),
+        ],
+    ];
+
+  List<VNode> _renderUserTable(Activity act) {
+    List<VNode> items = new List<VNode>();
+
+    items.add(new VTableRowElement()
+      ..children = [
+        new VTableCellElement()
+          ..className = 'td'
+          ..text = 'Name',
+        new VTableCellElement()
+          ..className = 'td'
+          ..text = '',
+      ]);
+
+    for (User u in props.userMap.values) {
+      items.add(
+        new VTableRowElement()
+          ..children = [
+            new VTableCellElement()
+              ..className = 'td'
+              // ..id = 'name_cell${state.attNum}'
+              ..text = "${u.firstName ?? ''} ${u.lastName ?? ''}",
+            new VTableCellElement()
+              ..className = 'td'
+              ..children = [
+                new VButtonElement()
+                  ..className = "button is-danger is-rounded"
+                  ..text = "Choose"
+                  ..onClick = (_) => _addUserClick(act, u.docUID),
+              ],
+          ],
+      );
+    }
+
+    return items;
+  }
+
+  _promptForDeleteClick(_) => setState((props, state) => state..showDeletePrompt = true);
+
+  _cancelDeletionClick(_) => setState((props, state) => state..showDeletePrompt = false);
+
+  _addClick(_) => setState((props, state) => state..showAddUserPrompt = true);
+
+  _cancelAddClick(_) => setState((props, state) => state..showAddUserPrompt = false);
+
+  _removeClick(Activity act, String userId) {
+    props.actions.server.updateOrCreateActivity(act.rebuild((builder) => builder..users.remove(userId)));
+    props.actions.server.fetchAllActivities();
+    setState((props, state) => state..showDeletePrompt = false);
+  }
+
+  _addUserClick(Activity act, String userId) {
+    props.actions.server.updateOrCreateActivity(act.rebuild((builder) => builder..users.add(userId)));
+    props.actions.server.fetchAllActivities();
+    setState((props, state) => state..showAddUserPrompt = false);
+  }
+
+  ///[_timeFormat] helper function to put a time into a proper format to view in a time type input box
+  String _timeFormat(String hour, String min) {
     if (hour.length == 1) {
       hour = "0${hour}";
     }
@@ -384,8 +547,9 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
     return hour + ":" + min;
   }
 
-  ///[_showDate] helper function to put a date into a proper format to view in a date type input box
-  String _showDate(DateTime date) {
+  //TODO:  Replace with date_parse library in constants.dart
+  ///[_dateFormat] helper function to put a date into a proper format to view in a date type input box
+  String _dateFormat(DateTime date) {
     String tempDay, tempMonth;
 
     if (date.day.toString().length == 1) {
@@ -424,11 +588,6 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
         ],
     ];
 
-  ///[_editClick] listener for the click action of the edit button to put page into an edit state
-  _editClick(_) {
-    setState((props, state) => state..edit = !state.edit);
-  }
-
   ///[_renderSubmit] create the submit button to collect the data
   _renderSubmit() => new VDivElement()
     ..className = 'field is-grouped is-grouped-right'
@@ -442,6 +601,11 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
             ..onClick = _submitClick
         ]
     ];
+
+  ///[_editClick] listener for the click action of the edit button to put page into an edit state
+  _editClick(_) {
+    setState((props, state) => state..edit = !state.edit);
+  }
 
   //method used for the submit click
   //timeEnd-input, timeStart-input, capacity-input, location-input, instructorName-input, act-input
@@ -477,7 +641,8 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
     setState((props, state) => state..edit = !state.edit);
   }
 
-  ///[_parseDate] is a function adopted from the _showDate function that Josh wrote to make a string from a date and time input compatible with DateTime data types
+  // TODO: Move to constants.dart
+  ///[_parseDate] is a function adopted from the _dateFormat function that Josh wrote to make a string from a date and time input compatible with DateTime data types
   String _parseDate(DateTime date, String time) {
     String tempDay, tempMonth, tempTime;
 

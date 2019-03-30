@@ -19,6 +19,13 @@ class AdminSignInPayload {
   AdminSignInPayload(this.email, this.password);
 }
 
+class RemoveUserPayload {
+  Activity activity;
+  String userUID;
+
+  RemoveUserPayload(this.activity, this.userUID);
+}
+
 // Actions to be handled ONLY by this middleware
 abstract class ServerMiddlewareActions extends ReduxActions {
   /// [signInAdmin] starts the sign in process for administrators

@@ -601,6 +601,20 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
   ///or return the orrigional string for all other conditions
   String _checkText(String text) => state.edit ? text : (text != '' ? text : "N/A");
 
+  VNode _renderEmergencyContact(User user) {
+    String contactList = '';
+
+    for (EmergencyContact em in user.emergencyContacts) {
+      contactList = contactList + em.uid + " : " + em.name + "\n";
+    }
+
+    return new VTextInputElement()
+      ..className = 'input ${state.edit ? '' : 'is-static'}'
+      ..id = "Emergency"
+      ..readOnly = !state.edit
+      ..text = contactList;
+  }
+
   // ///[_renderAddEmergencyContact] creates a button to add an input field for aditional emergency contacts if in edit state
   // VNode _renderAddEmergencyContact() {
   //   if (state.edit) {

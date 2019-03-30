@@ -21,10 +21,13 @@ class _$Activity extends Activity {
   final String location;
   @override
   final String name;
+  @override
+  final BuiltList<String> users;
 
   factory _$Activity([void updates(ActivityBuilder b)]) => (new ActivityBuilder()..update(updates)).build();
 
-  _$Activity._({this.uid, this.capacity, this.endTime, this.startTime, this.instructor, this.location, this.name})
+  _$Activity._(
+      {this.uid, this.capacity, this.endTime, this.startTime, this.instructor, this.location, this.name, this.users})
       : super._() {
     if (capacity == null) {
       throw new BuiltValueNullFieldError('Activity', 'capacity');
@@ -44,6 +47,9 @@ class _$Activity extends Activity {
     if (name == null) {
       throw new BuiltValueNullFieldError('Activity', 'name');
     }
+    if (users == null) {
+      throw new BuiltValueNullFieldError('Activity', 'users');
+    }
   }
 
   @override
@@ -62,17 +68,20 @@ class _$Activity extends Activity {
         startTime == other.startTime &&
         instructor == other.instructor &&
         location == other.location &&
-        name == other.name;
+        name == other.name &&
+        users == other.users;
   }
 
   @override
   int get hashCode {
     return $jf($jc(
         $jc(
-            $jc($jc($jc($jc($jc(0, uid.hashCode), capacity.hashCode), endTime.hashCode), startTime.hashCode),
-                instructor.hashCode),
-            location.hashCode),
-        name.hashCode));
+            $jc(
+                $jc($jc($jc($jc($jc(0, uid.hashCode), capacity.hashCode), endTime.hashCode), startTime.hashCode),
+                    instructor.hashCode),
+                location.hashCode),
+            name.hashCode),
+        users.hashCode));
   }
 
   @override
@@ -84,7 +93,8 @@ class _$Activity extends Activity {
           ..add('startTime', startTime)
           ..add('instructor', instructor)
           ..add('location', location)
-          ..add('name', name))
+          ..add('name', name)
+          ..add('users', users))
         .toString();
   }
 }
@@ -120,6 +130,10 @@ class ActivityBuilder implements Builder<Activity, ActivityBuilder> {
   String get name => _$this._name;
   set name(String name) => _$this._name = name;
 
+  ListBuilder<String> _users;
+  ListBuilder<String> get users => _$this._users ??= new ListBuilder<String>();
+  set users(ListBuilder<String> users) => _$this._users = users;
+
   ActivityBuilder();
 
   ActivityBuilder get _$this {
@@ -131,6 +145,7 @@ class ActivityBuilder implements Builder<Activity, ActivityBuilder> {
       _instructor = _$v.instructor;
       _location = _$v.location;
       _name = _$v.name;
+      _users = _$v.users?.toBuilder();
       _$v = null;
     }
     return this;
@@ -151,15 +166,28 @@ class ActivityBuilder implements Builder<Activity, ActivityBuilder> {
 
   @override
   _$Activity build() {
-    final _$result = _$v ??
-        new _$Activity._(
-            uid: uid,
-            capacity: capacity,
-            endTime: endTime,
-            startTime: startTime,
-            instructor: instructor,
-            location: location,
-            name: name);
+    _$Activity _$result;
+    try {
+      _$result = _$v ??
+          new _$Activity._(
+              uid: uid,
+              capacity: capacity,
+              endTime: endTime,
+              startTime: startTime,
+              instructor: instructor,
+              location: location,
+              name: name,
+              users: users.build());
+    } catch (_) {
+      String _$failedField;
+      try {
+        _$failedField = 'users';
+        users.build();
+      } catch (e) {
+        throw new BuiltValueNestedFieldError('Activity', _$failedField, e.toString());
+      }
+      rethrow;
+    }
     replace(_$result);
     return _$result;
   }
