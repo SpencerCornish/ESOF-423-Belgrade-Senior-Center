@@ -19,7 +19,7 @@ void main() {
     'dietary_restrictions': "dietaryRestrictions",
     'homeDelivery': false,
     'medRelease': false,
-    'waiverRelease':false,
+    'waiverRelease': false,
     'intakeForm': false,
     'emergency_contacts': emergencyContactList,
     'membership_start': "2019-02-27T12:05:46.173",

@@ -52,8 +52,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
   History get history => _history ?? findHistoryInContext(context);
 
   @override
-  void componentWillUpdate(
-      EditMemberProps nextProps, EditMemberState nextState) {
+  void componentWillUpdate(EditMemberProps nextProps, EditMemberState nextState) {
     super.componentWillUpdate(nextProps, nextState);
   }
 
@@ -87,18 +86,14 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
   ///[_pageElements] helper function to add all fields to the render method
   List<VNode> _pageElements(User user) {
     List<VNode> nodeList = <VNode>[];
-    state.edit
-        ? nodeList.addAll(_renderEditHeader(user))
-        : nodeList.addAll(_renderHeader(user));
+    state.edit ? nodeList.addAll(_renderEditHeader(user)) : nodeList.addAll(_renderHeader(user));
     nodeList.addAll(_renderMembership(user));
     nodeList.add(_renderAddress(user));
     nodeList.add(_renderNumber(user));
-    nodeList.add(_renderTextArea(
-        user, "Dietary Restrictions", user.dietaryRestrictions));
+    nodeList.add(_renderTextArea(user, "Dietary Restrictions", user.dietaryRestrictions));
     nodeList.add(_renderTextArea(user, "Disabilities", user.disabilities));
     nodeList.add(_renderTextArea(user, "Medical Issues", user.medicalIssues));
-    nodeList
-        .addAll(_renderListRows(user.emergencyContacts, "Emergency Contact"));
+    nodeList.addAll(_renderListRows(user.emergencyContacts, "Emergency Contact"));
     nodeList.addAll(_renderListRows(user.services, "Available Service"));
     nodeList.addAll(_renderCheckBoxes());
     return nodeList;
@@ -345,8 +340,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
                         ..className = "control"
                         ..children = [
                           new VInputElement()
-                            ..className =
-                                "input ${state.edit ? '' : 'is-static'}"
+                            ..className = "input ${state.edit ? '' : 'is-static'}"
                             ..defaultValue = _checkText("")
                             ..readOnly = !state.edit,
                           // _renderAddEmergencyContact(),
@@ -548,18 +542,15 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
                         ..className = 'dropdown-content'
                         ..children = [
                           new VAnchorElement()
-                            ..className =
-                                'dropdown-item ${state.role.compareTo("member") == 0 ? 'is-active' : ''}'
+                            ..className = 'dropdown-item ${state.role.compareTo("member") == 0 ? 'is-active' : ''}'
                             ..onClick = _changeRollMemClick
                             ..text = "member",
                           new VAnchorElement()
-                            ..className =
-                                'dropdown-item ${state.role.compareTo("volunteer") == 0 ? 'is-active' : ''}'
+                            ..className = 'dropdown-item ${state.role.compareTo("volunteer") == 0 ? 'is-active' : ''}'
                             ..onClick = _changeRollVolClick
                             ..text = "volunteer",
                           new VAnchorElement()
-                            ..className =
-                                'dropdown-item ${state.role.compareTo("admin") == 0 ? 'is-active' : ''}'
+                            ..className = 'dropdown-item ${state.role.compareTo("admin") == 0 ? 'is-active' : ''}'
                             ..onClick = _changeRollAdminClick
                             ..text = "admin",
                         ],
@@ -585,32 +576,30 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
   }
 
   ///[_renderTextArea] create each row ot text area items with a given label
-  _renderTextArea(User user, String label, String defaultValue) =>
+  _renderTextArea(User user, String label, String defaultValue) => new VDivElement()
+    ..className = 'columns is-mobile is-centered is-vcentered'
+    ..children = [
       new VDivElement()
-        ..className = 'columns is-mobile is-centered is-vcentered'
+        ..className = 'column is-2'
         ..children = [
-          new VDivElement()
-            ..className = 'column is-2'
-            ..children = [
-              new Vlabel()
-                ..className = 'label'
-                ..text = label,
-            ],
-          new VDivElement()
-            ..className = 'column is-four-fifths'
-            ..children = [
-              new VTextAreaElement()
-                ..className = 'textarea'
-                ..defaultValue = defaultValue
-                ..id = label.replaceAll(" ", "_")
-                ..readOnly = !state.edit,
-            ],
-        ];
+          new Vlabel()
+            ..className = 'label'
+            ..text = label,
+        ],
+      new VDivElement()
+        ..className = 'column is-four-fifths'
+        ..children = [
+          new VTextAreaElement()
+            ..className = 'textarea'
+            ..defaultValue = defaultValue
+            ..id = label.replaceAll(" ", "_")
+            ..readOnly = !state.edit,
+        ],
+    ];
 
   ///[_checkText] takes in passed text and will return N/A if string is empty and the user is not being eddited
   ///or return the orrigional string for all other conditions
-  String _checkText(String text) =>
-      state.edit ? text : (text != '' ? text : "N/A");
+  String _checkText(String text) => state.edit ? text : (text != '' ? text : "N/A");
 
   // ///[_renderAddEmergencyContact] creates a button to add an input field for aditional emergency contacts if in edit state
   // VNode _renderAddEmergencyContact() {
@@ -684,71 +673,71 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
     ];
 
   ///[_renderCheckBoxes] create the checkboxes for form submit checks
-  List<VNode> _renderCheckBoxes(){
+  List<VNode> _renderCheckBoxes() {
     List<VNode> nodeList = <VNode>[];
     nodeList.add(new VDivElement()
-    ..className = 'columns'
-    ..children = [
-      new VDivElement()
-        ..className = 'column is-narrow'
-        ..children = [
-          new VDivElement()
-            ..className = 'control'
-            ..children = [
-              new VCheckboxInputElement()
-                ..className = 'checkbox'
-                ..id = 'medRelease-input'
-                ..onClick = _medCheckBoxCheck
-            ]
-        ],
-      new VDivElement()
-        ..className = 'column is-narrow'
-        ..children = [
-          new VLabelElement()
-            ..className = 'label'
-            ..text = "Has completed Medical Form"
-        ],
-      new VDivElement()
-        ..className = 'column is-narrow'
-        ..children = [
-          new VDivElement()
-            ..className = 'control'
-            ..children = [
-              new VCheckboxInputElement()
-                ..className = 'checkbox'
-                ..id = 'waiverRelease-input'
-                ..onClick = _waiverCheckBoxCheck
-            ]
-        ],
-      new VDivElement()
-        ..className = 'column is-narrow'
-        ..children = [
-          new VLabelElement()
-            ..className = 'label'
-            ..text = "Has completed the Waiver & Release Form"
-        ],
-      new VDivElement()
-        ..className = 'column is-narrow'
-        ..children = [
-          new VDivElement()
-            ..className = 'control'
-            ..children = [
-              new VCheckboxInputElement()
-                ..className = 'checkbox'
-                ..id = 'intakeForm-input'
-                ..onClick = _intakeBoxCheck
-            ]
-        ],
-      new VDivElement()
-        ..className = 'column is-narrow'
-        ..children = [
-          new VLabelElement()
-            ..className = 'label'
-            ..text = "Has completed the Intake Form"
-        ],
-    ]);
+      ..className = 'columns'
+      ..children = [
+        new VDivElement()
+          ..className = 'column is-narrow'
+          ..children = [
+            new VDivElement()
+              ..className = 'control'
+              ..children = [
+                new VCheckboxInputElement()
+                  ..className = 'checkbox'
+                  ..id = 'medRelease-input'
+                  ..onClick = _medCheckBoxCheck
+              ]
+          ],
+        new VDivElement()
+          ..className = 'column is-narrow'
+          ..children = [
+            new VLabelElement()
+              ..className = 'label'
+              ..text = "Has completed Medical Form"
+          ],
+        new VDivElement()
+          ..className = 'column is-narrow'
+          ..children = [
+            new VDivElement()
+              ..className = 'control'
+              ..children = [
+                new VCheckboxInputElement()
+                  ..className = 'checkbox'
+                  ..id = 'waiverRelease-input'
+                  ..onClick = _waiverCheckBoxCheck
+              ]
+          ],
+        new VDivElement()
+          ..className = 'column is-narrow'
+          ..children = [
+            new VLabelElement()
+              ..className = 'label'
+              ..text = "Has completed the Waiver & Release Form"
+          ],
+        new VDivElement()
+          ..className = 'column is-narrow'
+          ..children = [
+            new VDivElement()
+              ..className = 'control'
+              ..children = [
+                new VCheckboxInputElement()
+                  ..className = 'checkbox'
+                  ..id = 'intakeForm-input'
+                  ..onClick = _intakeBoxCheck
+              ]
+          ],
+        new VDivElement()
+          ..className = 'column is-narrow'
+          ..children = [
+            new VLabelElement()
+              ..className = 'label'
+              ..text = "Has completed the Intake Form"
+          ],
+      ]);
     return nodeList;
-    } 
+  }
 
   _medCheckBoxCheck(_) {
     setState((props, state) => state..medBool = !state.medBool);
@@ -777,28 +766,27 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
     InputElement memRenew = querySelector('#Renewal');
     InputElement position = querySelector('#Position');
 
-    User userToUpdate =
-        props.userMap[props.selectedMemberUID].rebuild((builder) => builder
-          ..firstName = first.value
-          ..lastName = last.value
-          ..email = email.value
-          ..mobileNumber = cell.value
-          ..phoneNumber = phone.value
-          ..address = address.value
-          ..role = state.role
-          ..dietaryRestrictions = diet.value
-          ..disabilities = disability.value
-          ..medicalIssues = medical.value
-          ..membershipStart = DateTime.parse(memStart.value)
-          ..membershipRenewal = DateTime.parse(memRenew.value)
-          ..emergencyContacts = new ListBuilder<EmergencyContact>()
-          ..services = new ListBuilder<String>()
-          ..position = position.value
-          ..forms = new ListBuilder<String>()
-          ..homeDeliver = state.mealBool
-          ..medRelease = state.medBool
-          ..waiverRelease = state.waiverBool
-          ..intakeForm = state.intakeBool);
+    User userToUpdate = props.userMap[props.selectedMemberUID].rebuild((builder) => builder
+      ..firstName = first.value
+      ..lastName = last.value
+      ..email = email.value
+      ..mobileNumber = cell.value
+      ..phoneNumber = phone.value
+      ..address = address.value
+      ..role = state.role
+      ..dietaryRestrictions = diet.value
+      ..disabilities = disability.value
+      ..medicalIssues = medical.value
+      ..membershipStart = DateTime.parse(memStart.value)
+      ..membershipRenewal = DateTime.parse(memRenew.value)
+      ..emergencyContacts = new ListBuilder<EmergencyContact>()
+      ..services = new ListBuilder<String>()
+      ..position = position.value
+      ..forms = new ListBuilder<String>()
+      ..homeDeliver = state.mealBool
+      ..medRelease = state.medBool
+      ..waiverRelease = state.waiverBool
+      ..intakeForm = state.intakeBool);
 
     props.actions.server.updateOrCreateUser(userToUpdate);
     props.actions.server.fetchAllMembers();

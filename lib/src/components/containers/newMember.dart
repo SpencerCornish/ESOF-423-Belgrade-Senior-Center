@@ -117,14 +117,12 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                     ..className = 'control'
                                     ..children = [
                                       new VInputElement()
-                                        ..className =
-                                            'input ${state.firstNameIsValid ? '' : 'is-danger'}'
+                                        ..className = 'input ${state.firstNameIsValid ? '' : 'is-danger'}'
                                         ..onInput = _firstNameValidation
                                         ..id = 'fName-input'
                                         ..placeholder = "First Name",
                                       new VParagraphElement()
-                                        ..className =
-                                            'help is-danger ${state.firstNameIsValid ? 'is-invisible' : ''}'
+                                        ..className = 'help is-danger ${state.firstNameIsValid ? 'is-invisible' : ''}'
                                         ..text = 'First name is required'
                                     ],
                                   new VParagraphElement()
@@ -134,8 +132,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                         ..className = 'field is-horizontal'
                                         ..children = [
                                           new VDivElement()
-                                            ..className =
-                                                'field-label is-normal'
+                                            ..className = 'field-label is-normal'
                                             ..id = 'lName-lab'
                                             ..children = [
                                               new VLabelElement()
@@ -146,21 +143,17 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                             ..className = 'field'
                                             ..children = [
                                               new VParagraphElement()
-                                                ..className =
-                                                    'control is-expanded'
+                                                ..className = 'control is-expanded'
                                                 ..children = [
                                                   new VInputElement()
-                                                    ..className =
-                                                        'input ${state.lastNameIsValid ? '' : 'is-danger'}'
-                                                    ..onInput =
-                                                        _lastNameValidation
+                                                    ..className = 'input ${state.lastNameIsValid ? '' : 'is-danger'}'
+                                                    ..onInput = _lastNameValidation
                                                     ..id = 'lName-input'
                                                     ..placeholder = "Last Name",
                                                   new VParagraphElement()
                                                     ..className =
                                                         'help is-danger ${state.lastNameIsValid ? 'is-invisible' : ''}'
-                                                    ..text =
-                                                        'Last name is required'
+                                                    ..text = 'Last name is required'
                                                 ]
                                             ]
                                         ]
@@ -192,14 +185,12 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                 ..children = [
                                   new VInputElement()
                                     ..onInput = _emailValidator
-                                    ..className =
-                                        'input ${state.emailIsValid ? '' : 'is-danger'}'
+                                    ..className = 'input ${state.emailIsValid ? '' : 'is-danger'}'
                                     ..id = 'email-input'
                                     ..placeholder = "name@example.com"
                                     ..type = 'email',
                                   new VParagraphElement()
-                                    ..className =
-                                        'help is-danger ${state.emailIsValid ? 'is-invisible' : ''}'
+                                    ..className = 'help is-danger ${state.emailIsValid ? 'is-invisible' : ''}'
                                     ..text = 'Email is invalid'
                                 ]
                             ]
@@ -232,14 +223,12 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                     ..children = [
                                       new VInputElement()
                                         ..onInput = _phoneNumberValidator
-                                        ..className =
-                                            'input ${state.phoneNumberIsValid ? '' : 'is-danger'}'
+                                        ..className = 'input ${state.phoneNumberIsValid ? '' : 'is-danger'}'
                                         ..id = 'phoneNum-input'
                                         ..placeholder = "888-888-88888"
                                         ..type = 'tel',
                                       new VParagraphElement()
-                                        ..className =
-                                            'help is-danger ${state.phoneNumberIsValid ? 'is-invisible' : ''}'
+                                        ..className = 'help is-danger ${state.phoneNumberIsValid ? 'is-invisible' : ''}'
                                         ..text = 'Phone number is invalid'
                                     ],
                                   //create the Cell Phone Number Input field
@@ -250,8 +239,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                         ..className = 'field is-horizontal'
                                         ..children = [
                                           new VDivElement()
-                                            ..className =
-                                                'field-label is-normal'
+                                            ..className = 'field-label is-normal'
                                             ..id = 'cellNum-label'
                                             ..children = [
                                               new VLabelElement()
@@ -262,23 +250,18 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                             ..className = 'field'
                                             ..children = [
                                               new VParagraphElement()
-                                                ..className =
-                                                    'control is-expanded'
+                                                ..className = 'control is-expanded'
                                                 ..children = [
                                                   new VInputElement()
-                                                    ..onInput =
-                                                        _cellNumberValidator
-                                                    ..className =
-                                                        'input ${state.cellNumberIsValid ? '' : 'is-danger'}'
+                                                    ..onInput = _cellNumberValidator
+                                                    ..className = 'input ${state.cellNumberIsValid ? '' : 'is-danger'}'
                                                     ..id = 'cellNum-input'
-                                                    ..placeholder =
-                                                        "888-888-88888"
+                                                    ..placeholder = "888-888-88888"
                                                     ..type = 'tel',
                                                   new VParagraphElement()
                                                     ..className =
                                                         'help is-danger ${state.cellNumberIsValid ? 'is-invisible' : ''}'
-                                                    ..text =
-                                                        'Cell number is invalid'
+                                                    ..text = 'Cell number is invalid'
                                                 ]
                                             ]
                                         ]
@@ -310,13 +293,11 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                 ..children = [
                                   new VInputElement()
                                     ..onInput = _addressValidator
-                                    ..className =
-                                        'input ${state.addressIsValid ? '' : 'is-danger'}'
+                                    ..className = 'input ${state.addressIsValid ? '' : 'is-danger'}'
                                     ..id = 'address-input'
                                     ..placeholder = "US Only",
                                   new VParagraphElement()
-                                    ..className =
-                                        'help is-danger ${state.addressIsValid ? 'is-invisible' : ''}'
+                                    ..className = 'help is-danger ${state.addressIsValid ? 'is-invisible' : ''}'
                                     ..text = 'Address is invalid'
                                 ]
                             ]
@@ -447,8 +428,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                         ..className = 'field is-horizontal'
                                         ..children = [
                                           new VDivElement()
-                                            ..className =
-                                                'field-label is-normal'
+                                            ..className = 'field-label is-normal'
                                             ..id = 'memRenew-label'
                                             ..children = [
                                               new VLabelElement()
@@ -459,8 +439,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                             ..className = 'field'
                                             ..children = [
                                               new VParagraphElement()
-                                                ..className =
-                                                    'control is-expanded'
+                                                ..className = 'control is-expanded'
                                                 ..children = [
                                                   new VInputElement()
                                                     ..className = 'input'
@@ -595,8 +574,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     //Checks if value is blank by calling InputValidator class
     bool isValid = InputValidator.nameValidator(first.value);
     //Sets new state
-    setState((NewMemberProps, NewMemberState) =>
-        NewMemberState..firstNameIsValid = isValid);
+    setState((NewMemberProps, NewMemberState) => NewMemberState..firstNameIsValid = isValid);
   }
 
   //Validation for last name
@@ -606,8 +584,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     //Validates with validator class
     bool isValid = InputValidator.nameValidator(last.value);
     //Sets new state
-    setState((NewMemberProps, NewMemberState) =>
-        NewMemberState..lastNameIsValid = isValid);
+    setState((NewMemberProps, NewMemberState) => NewMemberState..lastNameIsValid = isValid);
   }
 
   //Validation for email using Spencer's function from constants.dart
@@ -616,8 +593,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     InputElement email = querySelector('#email-input');
     //Input validation from input validator
     bool isValid = InputValidator.emailValidator(email.value);
-    setState((NewMemberProps, NewMemberState) =>
-        NewMemberState..emailIsValid = isValid);
+    setState((NewMemberProps, NewMemberState) => NewMemberState..emailIsValid = isValid);
   }
 
   //Validation for phone numbers
@@ -644,8 +620,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     //Validation by validation class
     bool isValid = InputValidator.phoneNumberValidator(value);
     //Sets state
-    setState((NewMemberProps, NewMemberState) =>
-        NewMemberState..phoneNumberIsValid = isValid);
+    setState((NewMemberProps, NewMemberState) => NewMemberState..phoneNumberIsValid = isValid);
   }
 
   //Validation for cell number, doesnt check if blank
@@ -660,15 +635,13 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     //Validation from validator class
     bool isValid = InputValidator.phoneNumberValidator(value);
     //Sets state
-    setState((NewMemberProps, NewMemberState) =>
-        NewMemberState..cellNumberIsValid = isValid);
+    setState((NewMemberProps, NewMemberState) => NewMemberState..cellNumberIsValid = isValid);
   }
 
   void _addressValidator(_) {
     InputElement address = querySelector("#address-input");
     bool isValid = InputValidator.addressValidator(address.value);
-    setState((NewMemberProps, NewMemberState) =>
-        NewMemberState..addressIsValid = isValid);
+    setState((NewMemberProps, NewMemberState) => NewMemberState..addressIsValid = isValid);
   }
 
   //method used for the submit click
@@ -792,7 +765,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     setState((props, state) => state..waiverBool = !state.waiverBool);
   }
 
-  _intakeBoxCheck(_){
+  _intakeBoxCheck(_) {
     setState((props, state) => state..intakeBool = !state.intakeBool);
   }
 }
