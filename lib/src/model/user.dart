@@ -73,6 +73,16 @@ abstract class User implements Built<User, UserBuilder> {
   @nullable
   bool get homeDeliver;
 
+  /// [medRelease] is a boolean that tells admins whether or not someone has submitted their medical release form
+  @nullable
+  bool get medRelease;
+
+  /// [waiverRelease] is a boolean that tells admins whether or not someone has submitted their waiver & Release
+  bool get waiverRelease;
+  
+  /// [intakeForm] is a boolean that tells admins whether or not someone has submitted their waiver & Release
+  bool get intakeForm;
+
   /// [services] required
   /// A list of services that are used by the user
   BuiltList<String> get services;
@@ -106,7 +116,10 @@ abstract class User implements Built<User, UserBuilder> {
         ..forms = BuiltList<String>.from(firestoreData['forms']).toBuilder()
         ..medicalIssues = firestoreData['medical_issues']
         ..position = firestoreData['position']
-        ..services = BuiltList<String>.from(firestoreData['services']).toBuilder());
+        ..services = BuiltList<String>.from(firestoreData['services']).toBuilder()
+        ..medRelease =firestoreData['medRelease'] ?? false
+        ..waiverRelease =firestoreData['waiverRelease'] ?? false
+        ..intakeForm =firestoreData['intakeForm'] ?? false);
 
   Map<String, dynamic> toFirestore() => {
         'login_uid': loginUID ?? '',
@@ -119,6 +132,9 @@ abstract class User implements Built<User, UserBuilder> {
         'role': role.toLowerCase(),
         'dietary_restrictions': dietaryRestrictions,
         'homeDelivery': homeDeliver,
+        'medRelease': medRelease,
+        'waiverRelease':waiverRelease,
+        'intakeForm': intakeForm,
         'emergency_contacts': emergencyContacts.toList(),
         'membership_start': membershipStart.toIso8601String(),
         'membership_renewal': membershipRenewal.toIso8601String(),

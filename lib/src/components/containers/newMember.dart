@@ -687,7 +687,6 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     InputElement medical = querySelector('#medicalIssue-input');
     InputElement memStart = querySelector('#memStart-input');
     InputElement memRenew = querySelector('#memRenew-input');
-    CheckboxInputElement mealOp = querySelector('#mealOption-input');
 
     print("This is what is in mealOp: ");
     print(state.mealBool);
@@ -710,7 +709,10 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
           ..role = state.role
           ..position = "NULL"
           ..forms = new ListBuilder<String>()
-          ..homeDeliver = state.mealBool)
+          ..homeDeliver = state.mealBool
+          ..medRelease = state.medBool
+          ..waiverRelease = state.waiverBool
+          ..intakeForm = state.intakeBool)
         .build();
 
     props.actions.server.updateOrCreateUser(newUser);
