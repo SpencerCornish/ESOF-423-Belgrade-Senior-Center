@@ -27,7 +27,7 @@ class ViewMealState {
 /// [viewMeal] class / page to show a visual representation of current stored data
 class ViewMeal extends Component<ViewMealProps, ViewMealState> {
   ViewMeal(props) : super(props);
-  List<String> title = ["Start", "End"];
+  List<String> title = ["Date", "Start Time", "End Time"];
   History _history;
 
   @override
@@ -62,11 +62,29 @@ class ViewMeal extends Component<ViewMealProps, ViewMealState> {
             ..className = tdClass(meal.startTime.toString())
             ..text = checkText("${meal.startTime.month}/${meal.startTime.day}/${meal.startTime.year}"),
           new VTableCellElement()
-            ..className = tdClass(meal.endTime.toString())
-            ..text = checkText("${meal.endTime.month}/${meal.endTime.day}/${meal.endTime.year}"),
+            ..className = "time"
+            ..text = _showTime(meal.startTime.hour, meal.startTime.minute.toString()),
+          //checkText("${meal.startTime.hour}:${meal.startTime.minute}"),
+          new VTableCellElement()
+            ..className = "time"
+            ..text = _showTime(meal.endTime.hour, meal.endTime.minute.toString()),
         ]);
     }
     return nodeList;
+  }
+
+  ///[_showTime] helper function to put a time into a proper format to view in a time type input box
+  String _showTime(int hour, String min) {
+    String ampm = "A.M.";
+    if (hour > 12) {
+      hour = hour - 12;
+      ampm = "P.M.";
+    }
+
+    if (min.length == 1) {
+      min = "0${min}";
+    }
+    return hour.toString() + ":" + min + " " + ampm;
   }
 
   _onMealClick(String uid) {
@@ -196,6 +214,10 @@ class ViewMeal extends Component<ViewMealProps, ViewMealState> {
         } else if (meal.startTime.toString().contains(search.value)) {
           found.add(meal);
         } else if ("${meal.startTime.month}/${meal.startTime.day}/${meal.startTime.year}".contains(search.value)) {
+          found.add(meal);
+        } else if (_showTime(meal.startTime.hour, meal.startTime.minute.toString()).contains(search.value)) {
+          found.add(meal);
+        } else if (_showTime(meal.endTime.hour, meal.endTime.minute.toString()).contains(search.value)) {
           found.add(meal);
         }
 
