@@ -1,12 +1,12 @@
 # Belgrade Senior Center
 
 [![Build Status](https://travis-ci.com/SpencerCornish/belgrade-senior-center.svg?branch=master)](https://travis-ci.com/SpencerCornish/belgrade-senior-center)
-[![Coverage Status](https://coveralls.io/repos/github/SpencerCornish/belgrade-senior-center/badge.svg?branch=setup-travis)](https://coveralls.io/github/SpencerCornish/belgrade-senior-center?branch=setup-travis)
+[![Build Status](https://travis-ci.com/SpencerCornish/belgrade-senior-center.svg?branch=development)](https://travis-ci.com/SpencerCornish/belgrade-senior-center)
 
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/SpencerCornish/belgrade-senior-center.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/SpencerCornish/belgrade-senior-center/alerts/)
-[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/SpencerCornish/belgrade-senior-center.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/SpencerCornish/belgrade-senior-center/context:javascript)
+![GitHub](https://img.shields.io/github/license/spencercornish/belgrade-senior-center.svg?color=blue)
+![GitHub tag (latest SemVer)](https://img.shields.io/github/tag/spencercornish/belgrade-senior-center.svg?label=Current%20Tag)
 
-# Developer Documentation
+## Developer Documentation
 
 To obtain the source code for the Belgrade Senior Center Website, developers should clone the repo [here](https://github.com/SpencerCornish/belgrade-senior-center.git). The  `master` branch contains the source code for the current release, the `development` branch is the bleeding edge.
 
@@ -46,13 +46,13 @@ This is a non-exhaustive list of the tools and technologies we are using.
 
 - THe `sass` directory will eventually contain any custom styling for the project.
 
-[Old UML Diagram:](./classDiagram.png)
+[Old UML Diagram:](./readme_assets/classDiagram.png)
 
-![alt text](./classDiagram.png)
+![Class Diagram](./readme_assets/classDiagram.png)
 
-[UML Diagram:](./classDiagram2.png)
+[UML Diagram:](./readme_assets/classDiagram2.png)
 
-![alt text](./classDiagram2.png)
+![Class Diagram](./readme_assets/classDiagram2.png)
 
 ## Directions for Building from Source Code
 
@@ -60,7 +60,7 @@ This is a non-exhaustive list of the tools and technologies we are using.
 - Once Dart is installed, install `webdev`:
 
   ``` bash
-    $ pub global activate webdev
+    pub global activate webdev
   ```
 
   Add the pub cache to your path:
@@ -71,15 +71,15 @@ This is a non-exhaustive list of the tools and technologies we are using.
 
 - Now navigate to the repository within a terminal window, and use the command `make`. This will print out all avalible commands and their functions:
 
-``` bash
-build-js                       build to minified, release js
-firebase-serve                 Serves built JS files locally
-format                         Format the dart files
-install                        Runs pub get to get dependencies
-serve                          Serves the frontend app with ddevc
-```
+  ``` bash
+  build-js                       build to minified, release js
+  firebase-serve                 Serves built JS files locally
+  format                         Format the dart files
+  install                        Runs pub get to get dependencies
+  serve                          Serves the frontend app with ddevc
+  ```
 
-To run locally, type `make serve`. This will serve Just-in-time compiled dart code in javascipt, and automatically recompile for codechanges. to build the real, minified production javascript, run `make firebase-serve`. This will also run the Firebase Cloud Functions locally. This must be reran to regenerate.
+  To run locally, type `make serve`. This will serve Just-in-time compiled dart code in javascipt, and automatically recompile for codechanges. to build the real, minified production javascript, run `make firebase-serve`. This will also run the Firebase Cloud Functions locally. This must be reran to regenerate.
 
 ## Directions for Testing Source Code
 
@@ -88,6 +88,37 @@ To run locally, type `make serve`. This will serve Just-in-time compiled dart co
   - Navigate to test/functional
   - run `npm install` in the functions directory
   - run `npm run test`.
+
+## Directions for Accessing test coverage
+
+In Dart 2, generating coverage is surprisingly difficult for Chrome platform tests. As such, generating an LCOV report is not possible. However, viewing coverage is possible.
+
+1. First, run `make serve`
+![Coverage Panel](./readme_assets/serve.png)
+3. Once the application is serving, navigate your browser to <http://localhost:8081>. You will now see links to all tests:
+![Test Links](./readme_assets/testLinks.png)
+
+3. Next, open your browser's developer console
+`When you want to see logged messages or run JavaScript, press Command+Option+J (Mac) or Control+Shift+J (Windows, Linux, Chrome OS) to jump straight into the Console panel.`
+
+4. Switch to the sources page, and select the lower burger menu, then the coverage option
+![Coverage Panel](./readme_assets/coveragePanel.png)
+
+5. Now, select the record button
+![Coverage Panel](./readme_assets/recordCoverage.png)
+
+6. Select a test link. You will see in the console that these test passed after a short delay
+![Tests Passed](./readme_assets/testsPassed.png)
+
+7. From here, selecting the source-mapped file which was tested will show coverage on the left sidebar for the file. In this example, the path would be the following **in the sources panel** `top/localhost:8081/packages/bsc/src/state/app.dart`
+![path](./readme_assets/filePath.png)
+
+8. Once this file has been opened, the coverage will applied by the Chrome sourcemapper automatically (since Dart is transpiled to Javascript) and will be visible in the file explorer!
+![path](./readme_assets/coverage.png)
+
+*It's also possible to view the raw, unmapped coverage data by looking under the coverage tab, if necessary.*
+
+**For example reports of test coverage, [click here](test/coverage-reports/). These are not necessarily up to date.**
 
 ## Setting up Automated Weekly Build and Test
 
