@@ -45,29 +45,19 @@ class Routes {
   static const viewShifts = '/view/shifts';
 
   static const viewAllShifts = '/admin/shifts';
-
-  // TODO: Fill in more routes here
-
 }
 
 //Validates various data types across project
-class InputValidator {
-  //Validates names, only issue is if blank
-  static bool nameValidator(String input) {
-    if (input == "") {
-      return false;
-    }
-    return true;
-  }
+class Validator {
+  /// [name] returns true if the name is valid
+  static bool name(String input) => !(input == '');
 
-  //Validates emails by using emailValidator function
-  static bool emailValidator(String input) {
-    return EmailValidator.validate(input);
-  }
+  /// [email] validates emails, returns true if is valid
+  static bool email(String input) => EmailValidator.validate(input);
 
-  //Validates phone numbers
-  static bool phoneNumberValidator(String input) {
-    //Splits string into a list
+  /// [phoneNumber] validates if the string represents a valid phone number
+  static bool phoneNumber(String input) {
+    //Splits string into a list of chars
     List<String> temp = input.split('');
     //Counts digits in input string
     int count = 0;
@@ -83,22 +73,17 @@ class InputValidator {
     }
   }
 
-  //Validates addresses TODO finish this
-  static bool addressValidator(String input) {
-    return true;
-  }
+  // TODO: Finish this validator
+  static bool address(String input) => true;
 
-  //Validates DateTimes, not very complicated but moved here for code clarity
-  static bool timeValidator(DateTime start, DateTime end) {
-    return !start.isAfter(end);
-  }
+  /// [time] ensures start is before end
+  static bool time(DateTime start, DateTime end) => start.isBefore(end);
 
-  //Validates capacity fields, only fails if less than -1
-  static bool capactiyValidator(int i) {
-    return i > -2;
-  }
+  /// [capacity] ensures a valid usage size
+  static bool capacity(int i) => i > -2;
 }
 
+/// [ExportHeader] is the header strings for csv table outputs
 class ExportHeader {
   static const user = [
     'ID',
@@ -152,7 +137,7 @@ class HttpEndpoint {
 
 /// The different authentication states the UI can be in.
 /// This should not be used as a replacement for firebase
-/// auth checks.
+/// auth checks on the backend.
 enum AuthState {
   LOADING,
   SUCCESS,
@@ -168,6 +153,8 @@ enum AuthState {
 String formatTime(DateTime time) =>
     time == null ? "" : formatDate(time, [DD, ", ", M, " ", dd, " ", yyyy, " at ", hh, ":", nn, " ", am]);
 
+/// [stringToBase] encodes strings to base64 format
 String stringToBase(String email) => base64Encode(utf8.encode(email));
 
+/// [baseToString] encodes base64 strings to utf-8 decoded string format
 String baseToString(String base) => utf8.decode(base64Decode(base));

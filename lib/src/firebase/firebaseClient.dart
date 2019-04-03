@@ -6,7 +6,6 @@ import 'package:http/http.dart' as http;
 import 'package:built_collection/built_collection.dart';
 
 import '../state/app.dart';
-import './firebaseSubscriber.dart';
 import './dbRefs.dart';
 import '../constants.dart';
 
@@ -19,14 +18,13 @@ import '../model/emergencyContact.dart';
 class FirebaseClient {
   final DbRefs _refs;
   final AppActions _actions;
-  final FirebaseSubscriber _firebaseSubscriber;
   final fb.Auth _auth;
 
   // Stores the authenicated firebase token, for use with
   // authenticating http requests
   fb.User firebaseLoginUserPayload;
 
-  FirebaseClient(this._refs, this._auth, this._actions, this._firebaseSubscriber) {
+  FirebaseClient(this._refs, this._auth, this._actions) {
     // This will eventually listen to changes for the user/class/text listener
 
     _auth.onAuthStateChanged.listen(_onAuthChanged);
