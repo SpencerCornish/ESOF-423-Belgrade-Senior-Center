@@ -8,7 +8,6 @@ import '../state/app.dart';
 import '../model/user.dart';
 import '../model/activity.dart';
 import '../model/meal.dart';
-import '../model/shift.dart';
 
 part 'serverMiddleware.g.dart';
 

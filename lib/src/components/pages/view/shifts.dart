@@ -5,13 +5,11 @@ import 'package:wui_builder/wui_builder.dart';
 import 'package:wui_builder/vhtml.dart';
 import 'package:built_collection/built_collection.dart';
 
-import '../core/nav.dart';
-
-import '../../model/user.dart';
-import '../../model/shift.dart';
-
-import '../../state/app.dart';
-import '../../constants.dart';
+import '../../core/nav.dart';
+import '../../../model/user.dart';
+import '../../../model/shift.dart';
+import '../../../state/app.dart';
+import '../../../constants.dart';
 
 class ViewShiftProps {
   AppActions actions;

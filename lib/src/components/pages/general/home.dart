@@ -4,10 +4,10 @@ import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
 import 'package:wui_builder/vhtml.dart';
 
-import '../../constants.dart';
+import '../../../constants.dart';
 
-import '../../state/app.dart';
-import '../../middleware/serverMiddleware.dart';
+import '../../../state/app.dart';
+import '../../../middleware/serverMiddleware.dart';
 
 class HomeProps {
   AppActions actions;
@@ -201,7 +201,7 @@ class Home extends PComponent<HomeProps> {
     if (props.authState == AuthState.LOADING) return;
     InputElement email = querySelector('#email-input');
     InputElement pass = querySelector('#pass-input');
-    if (!InputValidator.emailValidator(email.value)) {
+    if (!Validator.email(email.value)) {
       props.actions.setAuthState(AuthState.ERR_EMAIL);
       return;
     }
@@ -219,7 +219,7 @@ class Home extends PComponent<HomeProps> {
   _onResetPasswordClick(_) {
     if (props.authState == AuthState.LOADING) return;
     InputElement email = querySelector('#email-input');
-    if (!InputValidator.emailValidator(email.value)) {
+    if (!Validator.email(email.value)) {
       props.actions.setAuthState(AuthState.ERR_EMAIL);
       return;
     }

@@ -5,11 +5,11 @@ import 'package:wui_builder/wui_builder.dart';
 import 'package:wui_builder/vhtml.dart';
 import 'package:built_collection/built_collection.dart';
 
-import '../../constants.dart';
-import '../../model/emergencyContact.dart';
-import '../../state/app.dart';
-import '../core/nav.dart';
-import '../../model/user.dart';
+import '../../../constants.dart';
+import '../../../model/emergencyContact.dart';
+import '../../../state/app.dart';
+import '../../core/nav.dart';
+import '../../../model/user.dart';
 
 class NewMemberProps {
   AppActions actions;
@@ -571,8 +571,8 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
   void _firstNameValidation(_) {
     //Gets first field
     InputElement first = querySelector('#fName-input');
-    //Checks if value is blank by calling InputValidator class
-    bool isValid = InputValidator.nameValidator(first.value);
+    //Checks if value is blank by calling Validator class
+    bool isValid = Validator.name(first.value);
     //Sets new state
     setState((NewMemberProps, NewMemberState) => NewMemberState..firstNameIsValid = isValid);
   }
@@ -582,7 +582,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     //Gets last field
     InputElement last = querySelector('#lName-input');
     //Validates with validator class
-    bool isValid = InputValidator.nameValidator(last.value);
+    bool isValid = Validator.name(last.value);
     //Sets new state
     setState((NewMemberProps, NewMemberState) => NewMemberState..lastNameIsValid = isValid);
   }
@@ -592,7 +592,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     //Gets email field
     InputElement email = querySelector('#email-input');
     //Input validation from input validator
-    bool isValid = InputValidator.emailValidator(email.value);
+    bool isValid = Validator.email(email.value);
     setState((NewMemberProps, NewMemberState) => NewMemberState..emailIsValid = isValid);
   }
 
@@ -618,7 +618,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
       return;
     }
     //Validation by validation class
-    bool isValid = InputValidator.phoneNumberValidator(value);
+    bool isValid = Validator.phoneNumber(value);
     //Sets state
     setState((NewMemberProps, NewMemberState) => NewMemberState..phoneNumberIsValid = isValid);
   }
@@ -633,14 +633,14 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
       return;
     }
     //Validation from validator class
-    bool isValid = InputValidator.phoneNumberValidator(value);
+    bool isValid = Validator.phoneNumber(value);
     //Sets state
     setState((NewMemberProps, NewMemberState) => NewMemberState..cellNumberIsValid = isValid);
   }
 
   void _addressValidator(_) {
     InputElement address = querySelector("#address-input");
-    bool isValid = InputValidator.addressValidator(address.value);
+    bool isValid = Validator.address(address.value);
     setState((NewMemberProps, NewMemberState) => NewMemberState..addressIsValid = isValid);
   }
 

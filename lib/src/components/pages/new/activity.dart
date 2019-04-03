@@ -5,11 +5,11 @@ import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
 import 'package:wui_builder/vhtml.dart';
 
-import '../../model/activity.dart';
-import '../../constants.dart';
-import '../../state/app.dart';
-import '../core/nav.dart';
-import '../../model/user.dart';
+import '../../../model/activity.dart';
+import '../../../constants.dart';
+import '../../../state/app.dart';
+import '../../core/nav.dart';
+import '../../../model/user.dart';
 
 class NewActivityProps {
   AppActions actions;
@@ -403,25 +403,25 @@ class NewActivity extends Component<NewActivityProps, NewActivityState> {
 
   void _activityNameValidator(_) {
     InputElement actName = querySelector('#act-input');
-    bool isValid = InputValidator.nameValidator(actName.value);
+    bool isValid = Validator.name(actName.value);
     setState((NewActivityProps, NewActivityState) => NewActivityState..activityNameIsValid = isValid);
   }
 
   void _instructorNameValidator(_) {
     InputElement instructorName = querySelector('#instructorName-input');
-    bool isValid = InputValidator.nameValidator(instructorName.value);
+    bool isValid = Validator.name(instructorName.value);
     setState((NewActivityProps, NewActivityState) => NewActivityState..instructorNameIsValid = isValid);
   }
 
   void _locationValidator(_) {
     InputElement location = querySelector('#location-input');
-    bool isValid = InputValidator.nameValidator(location.value);
+    bool isValid = Validator.name(location.value);
     setState((NewActivityProps, NewActivityState) => NewActivityState..locationIsValid = isValid);
   }
 
   void _capacityValidator(_) {
     InputElement capacity = querySelector('#capacity-input');
-    bool isValid = InputValidator.capactiyValidator(int.parse(capacity.value));
+    bool isValid = Validator.capacity(int.parse(capacity.value));
     setState((NewActivityProps, NewActivityState) => NewActivityState..capacityIsValid = isValid);
   }
 
@@ -438,8 +438,7 @@ class NewActivity extends Component<NewActivityProps, NewActivityState> {
     DateTime startDT = DateTime.parse(startTime);
     DateTime endDT = DateTime.parse(endTime);
 
-    //Is valid bool
-    bool isValid = InputValidator.timeValidator(startDT, endDT);
+    bool isValid = Validator.time(startDT, endDT);
 
     setState((NewActivityProps, NewActivityState) => NewActivityState..timeIsValid = isValid);
   }

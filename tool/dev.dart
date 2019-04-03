@@ -7,7 +7,7 @@ main(List<String> args) async {
 
   config.format
     ..lineLength = 120
-    ..paths = ['lib', 'test/lib'];
+    ..paths = ['lib', 'test/lib', 'web/main.dart'];
   // Available task configurations:
   // config.analyze
   // config.copyLicense

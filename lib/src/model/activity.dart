@@ -1,6 +1,5 @@
 library activity;
 
-import 'package:bsc/src/model/user.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 

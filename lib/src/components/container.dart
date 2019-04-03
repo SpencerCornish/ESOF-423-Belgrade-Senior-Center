@@ -1,31 +1,36 @@
 import 'dart:async';
-// import 'dart:html' hide History;
 
 // External Dependencies
 import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
 import 'package:wui_builder/vhtml.dart';
 
-import '../constants.dart';
+// pages and components
 
-// Containers and components
-import './containers/home.dart';
-import './containers/loading.dart';
-import './containers/newMember.dart';
-import './containers/dashboard.dart';
-import './containers/newActivity.dart';
-import './containers/newMeal.dart';
-import './containers/editMeal.dart';
-import './containers/editActivity.dart';
-import './containers/viewMembers.dart';
-import './containers/editMember.dart';
-import './containers/viewActivity.dart';
-import './containers/viewMeal.dart';
-import './containers/viewShifts.dart';
-// import './core/debug.dart';
+// Basic Pages
+import './pages/general/dashboard.dart';
+import './pages/general/home.dart';
+import './pages/general/loading.dart';
 
-// State
+// Add pages
+import './pages/new/activity.dart';
+import './pages/new/meal.dart';
+import './pages/new/member.dart';
+
+// Edit pages
+import './pages/edit/activity.dart';
+import './pages/edit/meal.dart';
+import './pages/edit/member.dart';
+
+// View pages (list views)
+import './pages/view/activities.dart';
+import './pages/view/meals.dart';
+import './pages/view/members.dart';
+import './pages/view/shifts.dart';
+
+// State and constants
 import '../state/app.dart';
+import '../constants.dart';
 import '../store.dart';
 
 class ContainerProps {
@@ -69,27 +74,21 @@ class Container extends PComponent<ContainerProps> {
         ..children = [
           new Router(
             routes: [
-              // Default homepage route. Redirects to the dashboard if the user is authenticated
               new Route(
                 path: Routes.home,
                 componentFactory: (_) => _renderHome(),
                 useAsDefault: true,
               ),
-              // resetContinue is for password reset continuation
-              new Route(path: Routes.resetContinue, componentFactory: (params) => _renderResetContinue(params)),
+              // The dashboard is the logged-in homepage
+              new Route(
+                path: Routes.dashboard,
+                componentFactory: (_) => _renderIfAuthenticated(_renderDashboard()),
+              ),
 
-              // loginRedirect is for redirects to log in the user
-              new Route(path: Routes.loginRedirect, componentFactory: (params) => _renderLoginRedirect(params)),
-
+              // Creation pages
               new Route(
                 path: Routes.createMember,
                 componentFactory: (params) => _renderIfAuthenticated(_renderCreateMember()),
-              ),
-              new Route(path: Routes.resetContinue, componentFactory: (params) => _renderResetContinue(params)),
-              new Route(path: Routes.dashboard, componentFactory: (_) => _renderIfAuthenticated(_renderDashboard())),
-              new Route(
-                path: Routes.viewMembers,
-                componentFactory: (_) => _renderIfAuthenticated(_renderViewMembers()),
               ),
               new Route(
                 path: Routes.createAct,
@@ -99,28 +98,75 @@ class Container extends PComponent<ContainerProps> {
                 path: Routes.createMeal,
                 componentFactory: (_) => _renderNewMeal(),
               ),
+
+              // View Pages
               new Route(
-                  path: Routes.editMember,
-                  componentFactory: (params) => _renderIfAuthenticated(_renderEditMember(params))),
+                path: Routes.viewMembers,
+                componentFactory: (_) => _renderIfAuthenticated(_renderViewMembers()),
+              ),
               new Route(
-                  path: Routes.editMeal, componentFactory: (params) => _renderIfAuthenticated(_renderEditMeal(params))),
+                path: Routes.viewActivity,
+                componentFactory: (_) => _renderIfAuthenticated(_renderViewActivity()),
+              ),
               new Route(
-                  path: Routes.editActivity,
-                  componentFactory: (params) => _renderIfAuthenticated(_renderEditActivity(params))),
+                path: Routes.viewMeal,
+                componentFactory: (_) => _renderIfAuthenticated(_renderViewMeal()),
+              ),
               new Route(
-                  path: Routes.activitySignUp,
-                  componentFactory: (params) => _renderIfAuthenticated(_renderSignUpActivity(params))),
+                path: Routes.viewShifts,
+                componentFactory: (_) => _renderIfAuthenticated(_renderViewShifts()),
+              ),
               new Route(
-                  path: Routes.viewActivity, componentFactory: (_) => _renderIfAuthenticated(_renderViewActivity())),
-              new Route(path: Routes.viewMeal, componentFactory: (_) => _renderIfAuthenticated(_renderViewMeal())),
-              new Route(path: Routes.viewShifts, componentFactory: (_) => _renderIfAuthenticated(_renderViewShifts())),
+                path: Routes.viewAllShifts,
+                componentFactory: (_) => _renderIfAuthenticated(_renderViewAllShifts()),
+              ),
+
+              // Edit pages
               new Route(
-                  path: Routes.viewAllShifts, componentFactory: (_) => _renderIfAuthenticated(_renderViewAllShifts())),
+                path: Routes.editMember,
+                componentFactory: (params) => _renderIfAuthenticated(_renderEditMember(params)),
+              ),
+              new Route(
+                path: Routes.editMeal,
+                componentFactory: (params) => _renderIfAuthenticated(_renderEditMeal(params)),
+              ),
+              new Route(
+                path: Routes.editActivity,
+                componentFactory: (params) => _renderIfAuthenticated(_renderEditActivity(params)),
+              ),
+
+              // Misc pages
+              new Route(
+                path: Routes.activitySignUp,
+                componentFactory: (params) => _renderIfAuthenticated(_renderSignUpActivity(params)),
+              ),
+              // resetContinue is for password reset continuation
+              new Route(
+                path: Routes.resetContinue,
+                componentFactory: (params) => _renderResetContinue(params),
+              ),
+              // loginRedirect is for redirects to log in the user
+              new Route(
+                path: Routes.loginRedirect,
+                componentFactory: (params) => _renderLoginRedirect(params),
+              ),
             ],
           ),
         ],
       // new Footer(new FooterProps()..actions = props.storeContainer.store.actions),
     ];
+
+  // Only renders if the user is properly authenticated. Otherwise, bail to the homepage
+  _renderIfAuthenticated(VNode page) {
+    if (appState.authState == AuthState.LOADING) return _renderLoading();
+    return appState.authState == AuthState.SUCCESS ? page : _redirectForAuthentication(history.path);
+  }
+
+  // Helper for performing quick redirects, typically in the case of fresh authentication
+  _redirectForAuthentication(String nextRoute) {
+    new Future.delayed(Duration(milliseconds: 10), (() => history.push(Routes.generateLoginRedirect(nextRoute))));
+    return new VDivElement();
+  }
 
   //Method used to render the newMeal page
   _renderNewMeal() => new NewMeal(new NewMealProps()
@@ -136,18 +182,6 @@ class Container extends PComponent<ContainerProps> {
   _renderCreateMember() => new NewMember(new NewMemberProps()
     ..actions = props.storeContainer.store.actions
     ..user = appState.user);
-
-  // Only renders if the user is properly authenticated. Otherwise, bail to the homepage
-  _renderIfAuthenticated(VNode page) {
-    if (appState.authState == AuthState.LOADING) return _renderLoading();
-    return appState.authState == AuthState.SUCCESS ? page : _redirectForAuthentication(history.path);
-  }
-
-  // Helper for performing quick redirects, typically in the case of fresh authentication
-  _redirectForAuthentication(String nextRoute) {
-    new Future.delayed(Duration(milliseconds: 10), (() => history.push(Routes.generateLoginRedirect(nextRoute))));
-    return new VDivElement();
-  }
 
   // A redirect to the homepage, used for passing custom messages into the homepage
   _renderResetContinue(Map<String, String> params) => _renderHome(
@@ -226,8 +260,4 @@ class Container extends PComponent<ContainerProps> {
     ..user = appState.user
     ..shiftList = appState.shiftList
     ..allShifts = true);
-
-  // _renderDebug() => (document.domain.contains("localhost"))
-  //     ? new DebugNavigator(new DebugNavigatorProps()..actions = props.storeContainer.store.actions)
-  //     : new Vspan();
 }
