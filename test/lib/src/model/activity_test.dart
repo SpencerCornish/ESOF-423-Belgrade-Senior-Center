@@ -1,4 +1,3 @@
-import 'package:built_collection/built_collection.dart';
 import 'package:test/test.dart';
 import 'package:bsc/src/model/activity.dart';
 

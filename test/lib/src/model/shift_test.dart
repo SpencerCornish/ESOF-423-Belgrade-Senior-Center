@@ -1,5 +1,4 @@
 import 'package:test/test.dart';
-import 'package:built_collection/built_collection.dart';
 import 'package:bsc/src/model/shift.dart';
 
 void main() {

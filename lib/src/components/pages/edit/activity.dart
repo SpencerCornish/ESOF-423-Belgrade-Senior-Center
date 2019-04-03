@@ -5,11 +5,10 @@ import 'package:wui_builder/wui_builder.dart';
 import 'package:wui_builder/vhtml.dart';
 import 'package:built_collection/built_collection.dart';
 
-import '../../model/activity.dart';
-import '../../middleware/serverMiddleware.dart';
-import '../../state/app.dart';
-import '../core/nav.dart';
-import '../../model/user.dart';
+import '../../../model/activity.dart';
+import '../../../state/app.dart';
+import '../../core/nav.dart';
+import '../../../model/user.dart';
 
 class EditActivityProps {
   AppActions actions;
@@ -498,7 +497,6 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
           ..children = [
             new VTableCellElement()
               ..className = 'td'
-              // ..id = 'name_cell${state.attNum}'
               ..text = "${u.firstName ?? ''} ${u.lastName ?? ''}",
             new VTableCellElement()
               ..className = 'td'

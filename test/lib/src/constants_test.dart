@@ -24,39 +24,39 @@ void main() {
   };
 
   group('Constants -', () {
-    //Testing for InputValidator Class
+    //Testing for Validator Class
     test('nameValidator only denies blank strings', () {
-      expect(InputValidator.nameValidator(""), false);
-      expect(InputValidator.nameValidator("test"), true);
+      expect(Validator.name(""), false);
+      expect(Validator.name("test"), true);
     });
     test('emailValidator correctly checks emails', () {
-      emails.forEach((email, isValid) => expect(InputValidator.emailValidator(email), isValid));
+      emails.forEach((email, isValid) => expect(Validator.email(email), isValid));
     });
     test('phoneNumberValidator works correctly', () {
-      phoneNumbers.forEach((number, isValid) => expect(InputValidator.phoneNumberValidator(number), isValid));
+      phoneNumbers.forEach((number, isValid) => expect(Validator.phoneNumber(number), isValid));
     });
 
-    //InputValidator.addressValidator currently only returns true, redo when method written
+    //Validator.addressValidator currently only returns true, redo when method written
     test('addressValidator', () {
-      expect(InputValidator.addressValidator("input"), true);
+      expect(Validator.address("input"), true);
     });
 
-    //InputValidator.timeValidator rejects times where the event ends before it starts
+    //Validator.timeValidator rejects times where the event ends before it starts
     test('timeValidator rejects time sets where end is before start', () {
       String moonLanding = "1969-07-20 20:18:04Z";
 
       DateTime moonLandingDT = DateTime.parse(moonLanding);
       DateTime now = DateTime.now();
 
-      expect(InputValidator.timeValidator(now, moonLandingDT), false);
+      expect(Validator.time(now, moonLandingDT), false);
     });
 
-    //InputValidator.capacityValidator rejects capacities below -2
+    //Validator.capacityValidator rejects capacities below -2
     test('capacityValidator rejects capacities below -2', () {
-      expect(InputValidator.capactiyValidator(-4), false);
-      expect(InputValidator.capactiyValidator(-1), true);
-      expect(InputValidator.capactiyValidator(0), true);
-      expect(InputValidator.capactiyValidator(20), true);
+      expect(Validator.capacity(-4), false);
+      expect(Validator.capacity(-1), true);
+      expect(Validator.capacity(0), true);
+      expect(Validator.capacity(20), true);
     });
     //Testing for other methods
     test('stringToBase and baseToString properly encodes strings', () {

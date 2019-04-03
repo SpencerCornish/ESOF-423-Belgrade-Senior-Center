@@ -2,7 +2,7 @@ import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
 import 'package:wui_builder/vhtml.dart';
 
-import '../../state/app.dart';
+import '../../../state/app.dart';
 
 class LoadingProps {
   AppActions actions;
