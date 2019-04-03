@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:firebase/firestore.dart' as fs;
 import 'package:firebase/firebase.dart' as fb;
+import 'package:http/http.dart' as http;
 
 import 'package:built_collection/built_collection.dart';
 
@@ -21,6 +22,10 @@ class FirebaseClient {
   final FirebaseSubscriber _firebaseSubscriber;
   final fb.Auth _auth;
 
+  // Stores the authenicated firebase token, for use with
+  // authenticating http requests
+  fb.User firebaseLoginUserPayload;
+
   FirebaseClient(this._refs, this._auth, this._actions, this._firebaseSubscriber) {
     // This will eventually listen to changes for the user/class/text listener
 
@@ -28,8 +33,9 @@ class FirebaseClient {
   }
 
   Future _onAuthChanged(fb.User fbUser) async {
-    User newUser = fbUser != null ? await _userLoginEvent(fbUser) : null;
+    firebaseLoginUserPayload = fbUser;
 
+    User newUser = fbUser != null ? await _userLoginEvent(fbUser) : null;
     _actions.setUser(newUser);
     _actions.setAuthState(newUser == null ? AuthState.INAUTHENTIC : AuthState.SUCCESS);
   }
@@ -111,6 +117,33 @@ class FirebaseClient {
     _auth.sendPasswordResetEmail(email,
         new fb.ActionCodeSettings(url: "https://bsc-development.firebaseapp.com/pw_reset/${stringToBase(email)}"));
     _actions.setAuthState(AuthState.PASS_RESET_SENT);
+  }
+
+  Future<Null> createLoginForNewUser(String email) async {
+    String authToken = '';
+    try {
+      authToken = await firebaseLoginUserPayload.getIdToken();
+    } catch (e) {
+      print("Error fetching an auth token: $e");
+      rethrow;
+    }
+    if (authToken == '') {
+      throw ("auth token cannot be empty");
+    }
+
+    final header = {'Authorization': 'bearer ${authToken}'};
+
+    final resp = await http.post(HttpEndpoint.createUserLogin, headers: header, body: email);
+
+    switch (resp.statusCode) {
+      case 201:
+
+      case 403:
+
+      case 404:
+
+      case 500:
+    }
   }
 
   /// [getAllMembers] get all member documents

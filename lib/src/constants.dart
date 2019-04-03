@@ -144,10 +144,10 @@ class ExportHeader {
   ];
 }
 
-enum Role {
-  ADMIN,
-  VOLUNTEER,
-  MEMBER,
+class HttpEndpoint {
+  static const baseUrl = "https://us-central1-bsc-development.cloudfunctions.net/";
+
+  static const createUserLogin = baseUrl + "addLoginCredForUser";
 }
 
 /// The different authentication states the UI can be in.
