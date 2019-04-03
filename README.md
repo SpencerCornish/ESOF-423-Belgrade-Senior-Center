@@ -83,7 +83,7 @@ This is a non-exhaustive list of the tools and technologies we are using.
 
 ## Directions for Testing Source Code
 
-- To run Dart tests, run `make test`.
+- To run Dart tests, run `make unit-test`.
 - To run functional js tests for the firebase serverless functions:
   - Navigate to test/functional
   - run `npm install` in the functions directory
@@ -95,7 +95,7 @@ In Dart 2, generating coverage is surprisingly difficult for Chrome platform tes
 
 1. First, run `make serve`
 ![Coverage Panel](./readme_assets/serve.png)
-3. Once the application is serving, navigate your browser to <http://localhost:8081>. You will now see links to all tests:
+2. Once the application is serving, navigate your browser to <http://localhost:8081>. You will now see links to all tests:
 ![Test Links](./readme_assets/testLinks.png)
 
 3. Next, open your browser's developer console
