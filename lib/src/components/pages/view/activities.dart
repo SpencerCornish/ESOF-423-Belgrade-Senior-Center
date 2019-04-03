@@ -5,34 +5,34 @@ import 'package:wui_builder/wui_builder.dart';
 import 'package:wui_builder/vhtml.dart';
 import 'package:built_collection/built_collection.dart';
 
-import '../core/nav.dart';
+import '../../core/nav.dart';
+import '../../../model/activity.dart';
+import '../../../model/user.dart';
+import '../../../state/app.dart';
+import '../../../constants.dart';
 
-import '../../model/user.dart';
-import '../../model/meal.dart';
-
-import '../../state/app.dart';
-import '../../constants.dart';
-
-class ViewMealProps {
+class ViewActivityProps {
   AppActions actions;
   User user;
-  BuiltMap<String, Meal> mealMap;
+  bool signUp;
+  BuiltMap<String, Activity> activityMap;
+  String selectedMemberUID;
 }
 
-class ViewMealState {
+class ViewActivityState {
   bool searching;
-  List<Meal> found;
+  List<Activity> found;
 }
 
-/// [viewMeal] class / page to show a visual representation of current stored data
-class ViewMeal extends Component<ViewMealProps, ViewMealState> {
-  ViewMeal(props) : super(props);
-  List<String> title = ["Date", "Start Time", "End Time"];
+/// [viewActivity] class / page to show a visual representation of current stored data
+class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
+  ViewActivity(props) : super(props);
+  List<String> title = ["Name", "Start", "End", "Location", "Capacity", "Instructor"];
   History _history;
 
   @override
-  ViewMealState getInitialState() => ViewMealState()
-    ..found = <Meal>[]
+  ViewActivityState getInitialState() => ViewActivityState()
+    ..found = <Activity>[]
     ..searching = false;
 
   /// Browser history entrypoint, to control page navigation
@@ -40,55 +40,76 @@ class ViewMeal extends Component<ViewMealProps, ViewMealState> {
 
   @override
   void componentWillMount() {
-    props.actions.server.fetchAllMeals();
+    props.actions.server.fetchAllActivities();
   }
+
+  VNode emailInputNode;
+  VNode passwordInputNode;
 
   /// [createRows] Scaling function to make rows based on amount of information available
   List<VNode> createRows() {
-    List<Meal> meals;
+    List<Activity> activities;
     List<VNode> nodeList = new List();
     if (!state.searching) {
-      meals = props.mealMap.values.toList();
+      activities = props.activityMap.values.toList();
     } else {
-      meals = state.found;
+      activities = state.found;
     }
     nodeList.addAll(titleRow());
-    for (Meal meal in meals) {
+    for (Activity act in activities) {
       nodeList.add(new VTableRowElement()
         ..className = 'tr'
-        ..onClick = ((_) => _onMealClick(meal.uid))
+        ..onClick = ((_) => _onActClick(act.uid))
         ..children = [
           new VTableCellElement()
-            ..className = tdClass(meal.startTime.toString())
-            ..text = checkText("${meal.startTime.month}/${meal.startTime.day}/${meal.startTime.year}"),
+            ..className = tdClass(act.name)
+            ..text = checkText(act.name),
           new VTableCellElement()
-            ..className = "time"
-            ..text = _showTime(meal.startTime.hour, meal.startTime.minute.toString()),
-          //checkText("${meal.startTime.hour}:${meal.startTime.minute}"),
+            ..className = tdClass(act.startTime.toString())
+            ..text = checkText("${act.startTime.month}/${act.startTime.day}/${act.startTime.year}"),
           new VTableCellElement()
-            ..className = "time"
-            ..text = _showTime(meal.endTime.hour, meal.endTime.minute.toString()),
+            ..className = tdClass(act.endTime.toString())
+            ..text = checkText("${act.endTime.month}/${act.endTime.day}/${act.endTime.year}"),
+          new VTableCellElement()
+            ..className = tdClass(act.location)
+            ..text = checkText(act.location),
+          new VTableCellElement()
+            ..className = tdClass(act.capacity.toString())
+            ..text = checkText(act.capacity.toString()),
+          new VTableCellElement()
+            ..className = tdClass(act.instructor)
+            ..text = checkText(act.instructor),
         ]);
     }
-    return nodeList;
+    return (nodeList);
   }
 
-  ///[_showTime] helper function to put a time into a proper format to view in a time type input box
-  String _showTime(int hour, String min) {
-    String ampm = "A.M.";
-    if (hour > 12) {
-      hour = hour - 12;
-      ampm = "P.M.";
-    }
+  _onActClick(String uid) {
+    if (!props.signUp) {
+      history.push(Routes.generateEditActivityURL(uid));
+    } else {
+      Activity act = props.activityMap[uid];
+      ListBuilder<String> list = new ListBuilder();
 
-    if (min.length == 1) {
-      min = "0${min}";
-    }
-    return hour.toString() + ":" + min + " " + ampm;
-  }
+      for (String id in act.users) {
+        list.add(id);
+      }
 
-  _onMealClick(String uid) {
-    history.push(Routes.generateEditMealURL(uid));
+      list.add(props.selectedMemberUID);
+
+      Activity update = act.rebuild((builder) => builder
+        ..capacity = act.capacity
+        ..endTime = act.endTime
+        ..startTime = act.startTime
+        ..instructor = act.instructor
+        ..location = act.location
+        ..name = act.name
+        ..users = list);
+
+      props.actions.server.updateOrCreateActivity(update);
+      props.actions.server.fetchAllActivities();
+      history.push(Routes.viewMembers);
+    }
   }
 
   String checkText(String text) => text != '' ? text : "N/A";
@@ -134,7 +155,7 @@ class ViewMeal extends Component<ViewMealProps, ViewMealState> {
                             ..children = [
                               new Vh4()
                                 ..className = 'title is-4'
-                                ..text = 'Meal Data',
+                                ..text = 'Activity Data',
                               new Vh1()
                                 ..className = 'subtitle is-7'
                                 ..text = " as of: ${DateTime.now().month}/${DateTime.now().day}/${DateTime.now().year}",
@@ -151,6 +172,7 @@ class ViewMeal extends Component<ViewMealProps, ViewMealState> {
                                       new VInputElement()
                                         ..className = 'input'
                                         ..placeholder = 'Search'
+                                        ..type = 'submit'
                                         ..id = 'Search'
                                         ..onKeyUp = _searchListener
                                         ..type = 'text',
@@ -194,34 +216,32 @@ class ViewMeal extends Component<ViewMealProps, ViewMealState> {
   _searchListener(_) {
     InputElement search = querySelector('#Search');
     if (search.value.isEmpty) {
-      setState((ViewMealProps, ViewMealState) => ViewMealState
-        ..found = <Meal>[]
+      setState((ViewActivityProps, ViewActivityState) => ViewActivityState
+        ..found = <Activity>[]
         ..searching = false);
     } else {
-      List found = <Meal>[];
+      List found = <Activity>[];
 
-      for (Meal meal in props.mealMap.values) {
-        for (String menuItem in meal.menu) {
-          if (menuItem.toLowerCase().contains(search.value.toLowerCase())) {
-            found.add(meal);
-            break;
-          }
-        }
-        if (meal.endTime.toString().contains(search.value)) {
-          found.add(meal);
-        } else if ("${meal.endTime.month}/${meal.endTime.day}/${meal.endTime.year}".contains(search.value)) {
-          found.add(meal);
-        } else if (meal.startTime.toString().contains(search.value)) {
-          found.add(meal);
-        } else if ("${meal.startTime.month}/${meal.startTime.day}/${meal.startTime.year}".contains(search.value)) {
-          found.add(meal);
-        } else if (_showTime(meal.startTime.hour, meal.startTime.minute.toString()).contains(search.value)) {
-          found.add(meal);
-        } else if (_showTime(meal.endTime.hour, meal.endTime.minute.toString()).contains(search.value)) {
-          found.add(meal);
+      for (Activity act in props.activityMap.values) {
+        if (act.name.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(act);
+        } else if (act.instructor.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(act);
+        } else if (act.location.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(act);
+        } else if (act.capacity.toString().contains(search.value.toLowerCase())) {
+          found.add(act);
+        } else if (act.startTime.toString().contains(search.value)) {
+          found.add(act);
+        } else if ("${act.startTime.month}/${act.startTime.day}/${act.startTime.year}".contains(search.value)) {
+          found.add(act);
+        } else if (act.endTime.toString().contains(search.value)) {
+          found.add(act);
+        } else if ("${act.endTime.month}/${act.endTime.day}/${act.endTime.year}".contains(search.value)) {
+          found.add(act);
         }
 
-        setState((ViewMealProps, ViewMealState) => ViewMealState
+        setState((ViewActivityProps, ViewActivityState) => ViewActivityState
           ..found = found
           ..searching = true);
       }
@@ -231,19 +251,19 @@ class ViewMeal extends Component<ViewMealProps, ViewMealState> {
   _onExportCsvClick(_) {
     List<String> lines;
     if (!state.searching) {
-      lines = props.mealMap.values.map((meal) => meal.toCsv()).toList();
+      lines = props.activityMap.values.map((activity) => activity.toCsv()).toList();
     } else {
-      lines = state.found.map((meal) => meal.toCsv()).toList();
+      lines = state.found.map((activity) => activity.toCsv()).toList();
     }
 
     // Add the header row
-    lines.insert(0, ExportHeader.meal.join(',') + '\n');
+    lines.insert(0, ExportHeader.activity.join(',') + '\n');
 
     Blob data = new Blob(lines, "text/csv");
 
     AnchorElement downloadLink = new AnchorElement(href: Url.createObjectUrlFromBlob(data));
     downloadLink.rel = 'text/csv';
-    downloadLink.download = 'meal-export-${new DateTime.now().toIso8601String()}.csv';
+    downloadLink.download = 'activity-export-${new DateTime.now().toIso8601String()}.csv';
 
     var event = new MouseEvent("click", view: window, cancelable: false);
     downloadLink.dispatchEvent(event);

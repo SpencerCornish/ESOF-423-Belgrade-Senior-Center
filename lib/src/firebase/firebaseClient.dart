@@ -5,7 +5,6 @@ import 'package:firebase/firebase.dart' as fb;
 import 'package:built_collection/built_collection.dart';
 
 import '../state/app.dart';
-import './firebaseSubscriber.dart';
 import './dbRefs.dart';
 import '../constants.dart';
 
@@ -18,10 +17,9 @@ import '../model/emergencyContact.dart';
 class FirebaseClient {
   final DbRefs _refs;
   final AppActions _actions;
-  final FirebaseSubscriber _firebaseSubscriber;
   final fb.Auth _auth;
 
-  FirebaseClient(this._refs, this._auth, this._actions, this._firebaseSubscriber) {
+  FirebaseClient(this._refs, this._auth, this._actions) {
     // This will eventually listen to changes for the user/class/text listener
 
     _auth.onAuthStateChanged.listen(_onAuthChanged);

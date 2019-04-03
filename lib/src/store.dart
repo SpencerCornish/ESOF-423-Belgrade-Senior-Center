@@ -9,13 +9,11 @@ import 'middleware/serverMiddleware.dart';
 import './state/app.dart';
 import 'firebase/dbRefs.dart';
 import 'firebase/firebaseClient.dart';
-import 'firebase/firebaseSubscriber.dart';
 
 class StoreContainer {
   Store<App, AppBuilder, AppActions> store;
   AppActions _actions;
   FirebaseClient _client;
-  FirebaseSubscriber _subscriber;
   final firebase.App fb;
   final firebase.Auth _firebaseAuth;
   final fs.Firestore _firebaseDatabase;
@@ -34,9 +32,7 @@ class StoreContainer {
 
     DbRefs _firebaseDbRefs = new DbRefs(_firebaseDatabase);
 
-    _subscriber = new FirebaseSubscriber();
-
-    _client = new FirebaseClient(_firebaseDbRefs, _firebaseAuth, _actions, _subscriber);
+    _client = new FirebaseClient(_firebaseDbRefs, _firebaseAuth, _actions);
 
     App app = new App();
 
@@ -44,8 +40,5 @@ class StoreContainer {
     if (document.domain.contains("localhost")) middlewares.add(loggingMiddleware);
 
     store = new Store<App, AppBuilder, AppActions>(reducerBuilder.build(), app, _actions, middleware: middlewares);
-
-    // _subscriber.initialize(_firebaseDbRefs, store);
-    // _subscriber.initializeGlobalSubs();
   }
 }
