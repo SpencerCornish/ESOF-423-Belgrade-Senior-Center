@@ -402,12 +402,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
           ..text = "",
         new VTableCellElement()
           ..className = 'td'
-          ..children = [
-            new VButtonElement()
-              ..className = "button is-success is-rounded"
-              ..text = "Add"
-              ..onClick = _addClick,
-          ],
+          ..children = [_renderAddButton()],
       ]);
 
     for (String userID in act.users) {
@@ -420,15 +415,8 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
             ..text = userObj?.firstName ?? '',
           new VTableCellElement()
             ..className = 'td'
-            // ..id = 'name_cell${state.attNum}'
             ..text = userObj?.lastName ?? '',
-          new VTableCellElement()
-            ..children = [
-              new VButtonElement()
-                ..className = "button is-danger is-rounded"
-                ..text = "Remove"
-                ..onClick = (_) => _promptForDeleteClick(userID),
-            ]
+          new VTableCellElement()..children = [_renderRemoveButton(userID)]
         ]);
     }
 
@@ -436,6 +424,26 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
       ..className = 'table is-narrow is-striped is-fullwidth'
       ..id = "attendance"
       ..children = nodeList;
+  }
+
+  VNode _renderAddButton() {
+    if (state.edit) {
+      return (new VButtonElement()
+        ..className = "button is-success is-rounded"
+        ..text = "Add"
+        ..onClick = _addClick);
+    }
+    return new VParagraphElement();
+  }
+
+  VNode _renderRemoveButton(String userID) {
+    if (state.edit) {
+      return (new VButtonElement()
+        ..className = "button is-danger is-rounded"
+        ..text = "Remove"
+        ..onClick = (_) => _promptForDeleteClick(userID));
+    }
+    return new VParagraphElement();
   }
 
   VNode _renderPromptForDeletion(Activity act) => new VDivElement()
