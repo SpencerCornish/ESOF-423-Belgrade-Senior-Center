@@ -56,7 +56,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
           ..user = props.user),
         new VDivElement()
           ..children = [
-            _renderPromptForDeletion(act, state.userToDelete),
+            _renderPromptForDeletion(act),
             _renderAddUser(act, state.userToDelete),
             _activityCreation(act),
           ]
@@ -427,7 +427,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
               new VButtonElement()
                 ..className = "button is-danger is-rounded"
                 ..text = "Remove"
-                ..onClick = _promptForDeleteClick,
+                ..onClick = (_) => _promptForDeleteClick(userID),
             ]
         ]);
     }
@@ -438,7 +438,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
       ..children = nodeList;
   }
 
-  VNode _renderPromptForDeletion(Activity act, String uid) => new VDivElement()
+  VNode _renderPromptForDeletion(Activity act) => new VDivElement()
     ..className = "modal ${state.showDeletePrompt ? 'is-active' : ''}"
     ..children = [
       new VDivElement()..className = 'modal-background',
@@ -456,7 +456,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
               new VButtonElement()
                 ..className = 'button is-danger'
                 ..text = "Yes"
-                ..onClick = (_) => _removeClick(act, uid),
+                ..onClick = (_) => _removeClick(act),
               new VButtonElement()
                 ..className = 'button'
                 ..text = "No"
@@ -473,8 +473,23 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
         ..className = 'modal-card'
         ..children = [
           new Vsection()
+            ..className = 'modal-card-head'
+            ..children = [
+              new VParagraphElement()
+                ..className = 'title is-4'
+                ..text = 'Select a Person to Add'
+            ],
+          new Vsection()
             ..className = 'modal-card-body'
             ..children = _renderUserTable(act),
+          new Vfooter()
+            ..className = 'modal-card-foot'
+            ..children = [
+              new VButtonElement()
+                ..className = 'button'
+                ..text = 'Cancel'
+                ..onClick = _cancelAddClick
+            ],
         ],
     ];
 
@@ -484,7 +499,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
     items.add(new VTableRowElement()
       ..children = [
         new VTableCellElement()
-          ..className = 'td'
+          ..className = 'title is-5'
           ..text = 'Name',
         new VTableCellElement()
           ..className = 'td'
@@ -492,6 +507,10 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
       ]);
 
     for (User u in props.userMap.values) {
+      // skip users present in activity already to disallow repeate user additions
+      if (act.users.contains(u.docUID)) {
+        continue;
+      }
       items.add(
         new VTableRowElement()
           ..children = [
@@ -513,7 +532,9 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
     return items;
   }
 
-  _promptForDeleteClick(_) => setState((props, state) => state..showDeletePrompt = true);
+  _promptForDeleteClick(String userID) => setState((props, state) => state
+    ..showDeletePrompt = true
+    ..userToDelete = userID);
 
   _cancelDeletionClick(_) => setState((props, state) => state..showDeletePrompt = false);
 
@@ -521,10 +542,12 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
 
   _cancelAddClick(_) => setState((props, state) => state..showAddUserPrompt = false);
 
-  _removeClick(Activity act, String userId) {
-    props.actions.server.updateOrCreateActivity(act.rebuild((builder) => builder..users.remove(userId)));
+  _removeClick(Activity act) {
+    props.actions.server.updateOrCreateActivity(act.rebuild((builder) => builder..users.remove(state.userToDelete)));
     props.actions.server.fetchAllActivities();
-    setState((props, state) => state..showDeletePrompt = false);
+    setState((props, state) => state
+      ..showDeletePrompt = false
+      ..userToDelete = '');
   }
 
   _addUserClick(Activity act, String userId) {
