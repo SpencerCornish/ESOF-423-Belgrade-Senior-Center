@@ -22,6 +22,8 @@ class ViewActivityProps {
 class ViewActivityState {
   bool searching;
   List<Activity> found;
+  bool showMod;
+  bool repeatFound;
 }
 
 /// [viewActivity] class / page to show a visual representation of current stored data
@@ -33,7 +35,9 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
   @override
   ViewActivityState getInitialState() => ViewActivityState()
     ..found = <Activity>[]
-    ..searching = false;
+    ..searching = false
+    ..repeatFound = false
+    ..showMod = false;
 
   /// Browser history entrypoint, to control page navigation
   History get history => _history ?? findHistoryInContext(context);
@@ -89,27 +93,51 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
       history.push(Routes.generateEditActivityURL(uid));
     } else {
       Activity act = props.activityMap[uid];
-      ListBuilder<String> list = new ListBuilder();
 
       for (String id in act.users) {
-        list.add(id);
+        if (props.selectedMemberUID.compareTo(id) == 0) {
+          setState((ViewActivityProps, ViewActivityState) => ViewActivityState..repeatFound = true);
+          break;
+        }
       }
 
-      list.add(props.selectedMemberUID);
+      if (!state.repeatFound) {
+        props.actions.server
+            .updateOrCreateActivity(act.rebuild((builder) => builder..users.add(props.selectedMemberUID)));
+        props.actions.server.fetchAllActivities();
+      }
 
-      Activity update = act.rebuild((builder) => builder
-        ..capacity = act.capacity
-        ..endTime = act.endTime
-        ..startTime = act.startTime
-        ..instructor = act.instructor
-        ..location = act.location
-        ..name = act.name
-        ..users = list);
-
-      props.actions.server.updateOrCreateActivity(update);
-      props.actions.server.fetchAllActivities();
-      history.push(Routes.viewMembers);
+      setState((ViewActivityProps, ViewActivityState) => ViewActivityState..showMod = true);
     }
+  }
+
+  VNode _renderAddInfoMod() => new VDivElement()
+    ..className = "modal ${state.showMod ? 'is-active' : ''}"
+    ..children = [
+      new VDivElement()..className = 'modal-background',
+      new VDivElement()
+        ..className = 'modal-card'
+        ..children = [
+          new Vsection()
+            ..className = 'modal-card-body'
+            ..children = [
+              new VParagraphElement()
+                ..className = 'title is-4'
+                ..text = '${state.repeatFound ? 'Already Checked-in' : 'Checked-in Successfully!'}'
+            ],
+          new Vfooter()
+            ..className = 'modal-card-foot'
+            ..children = [
+              new VButtonElement()
+                ..className = 'button'
+                ..text = 'Done'
+                ..onClick = _doneCheckinClick
+            ],
+        ],
+    ];
+
+  _doneCheckinClick(_) {
+    history.push(Routes.viewMembers);
   }
 
   String checkText(String text) => text != '' ? text : "N/A";
@@ -147,6 +175,7 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
                   new VDivElement()
                     ..className = 'box is-4'
                     ..children = [
+                      _renderAddInfoMod(),
                       new VDivElement()
                         ..className = 'columns is-mobile'
                         ..children = [
