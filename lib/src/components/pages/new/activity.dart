@@ -254,8 +254,7 @@ class NewActivity extends Component<NewActivityProps, NewActivityState> {
                                 ]
                             ]
                         ],
-
-                        new VDivElement()
+                      new VDivElement()
                         ..className = 'column is-narrow'
                         ..children = [
                           new VLabelElement()
@@ -488,13 +487,12 @@ class NewActivity extends Component<NewActivityProps, NewActivityState> {
     int activityCapacity; //capacity of activity
     startTime = _parseDate(date, tempStart);
     endTime = _parseDate(date, tempEnd);
-    
-    if(state.isUnlimited){
+
+    if (state.isUnlimited) {
       activityCapacity = -1;
-    }else{
+    } else {
       activityCapacity = int.parse(capacity.value);
     }
-    
 
     Activity newActivity = (new ActivityBuilder()
           ..capacity = activityCapacity

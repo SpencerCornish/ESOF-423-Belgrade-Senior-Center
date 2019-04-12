@@ -17,11 +17,9 @@ class _$Shift extends Shift {
   final DateTime outTime;
   Duration __durationWorked;
 
-  factory _$Shift([void updates(ShiftBuilder b)]) =>
-      (new ShiftBuilder()..update(updates)).build();
+  factory _$Shift([void updates(ShiftBuilder b)]) => (new ShiftBuilder()..update(updates)).build();
 
-  _$Shift._({this.punchID, this.userID, this.inTime, this.outTime})
-      : super._() {
+  _$Shift._({this.punchID, this.userID, this.inTime, this.outTime}) : super._() {
     if (userID == null) {
       throw new BuiltValueNullFieldError('Shift', 'userID');
     }
@@ -31,8 +29,7 @@ class _$Shift extends Shift {
   Duration get durationWorked => __durationWorked ??= super.durationWorked;
 
   @override
-  Shift rebuild(void updates(ShiftBuilder b)) =>
-      (toBuilder()..update(updates)).build();
+  Shift rebuild(void updates(ShiftBuilder b)) => (toBuilder()..update(updates)).build();
 
   @override
   ShiftBuilder toBuilder() => new ShiftBuilder()..replace(this);
@@ -49,9 +46,7 @@ class _$Shift extends Shift {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc($jc($jc(0, punchID.hashCode), userID.hashCode), inTime.hashCode),
-        outTime.hashCode));
+    return $jf($jc($jc($jc($jc(0, punchID.hashCode), userID.hashCode), inTime.hashCode), outTime.hashCode));
   }
 
   @override
@@ -112,9 +107,7 @@ class ShiftBuilder implements Builder<Shift, ShiftBuilder> {
 
   @override
   _$Shift build() {
-    final _$result = _$v ??
-        new _$Shift._(
-            punchID: punchID, userID: userID, inTime: inTime, outTime: outTime);
+    final _$result = _$v ?? new _$Shift._(punchID: punchID, userID: userID, inTime: inTime, outTime: outTime);
     replace(_$result);
     return _$result;
   }
