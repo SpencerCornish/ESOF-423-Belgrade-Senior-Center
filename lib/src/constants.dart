@@ -131,7 +131,6 @@ class ExportHeader {
 
 class HttpEndpoint {
   static const baseUrl = "https://us-central1-bsc-development.cloudfunctions.net/";
-  // static const baseUrl = "https://us-central1-bsc-development.cloudfunctions.net/";
 
   static const createUserLogin = baseUrl + "CreateAuthUser";
 }
