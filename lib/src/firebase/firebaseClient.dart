@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:firebase/firestore.dart' as fs;
 import 'package:firebase/firebase.dart' as fb;
 import 'package:http/http.dart' as http;
@@ -117,7 +118,7 @@ class FirebaseClient {
     _actions.setAuthState(AuthState.PASS_RESET_SENT);
   }
 
-  Future<Null> createLoginForNewUser(String email) async {
+  Future<String> createLoginForNewUser(String email) async {
     String authToken = '';
     try {
       authToken = await firebaseLoginUserPayload.getIdToken();
@@ -129,19 +130,30 @@ class FirebaseClient {
       throw ("auth token cannot be empty");
     }
 
-    final header = {'Authorization': 'bearer ${authToken}'};
+    authToken = authToken.trim();
+    http.Request req = new http.Request("POST", Uri.parse(HttpEndpoint.createUserLogin));
 
-    final resp = await http.post(HttpEndpoint.createUserLogin, headers: header, body: email);
+    final payload = {
+      'email': email,
+      'authorization': 'Bearer ${authToken}',
+    };
 
-    switch (resp.statusCode) {
-      case 201:
+    req.body = jsonEncode(payload);
 
-      case 403:
+    final resp = await req.send();
 
-      case 404:
+    final newUserUidString = resp.stream.bytesToString();
 
-      case 500:
+    print(newUserUidString);
+
+    // Success, probably
+    if (resp.statusCode < 300 && resp.statusCode >= 200) {
+      _auth.sendPasswordResetEmail(email);
+      return newUserUidString;
+    } else {
+      print("error creating user acct");
     }
+    return "";
   }
 
   /// [getAllMembers] get all member documents

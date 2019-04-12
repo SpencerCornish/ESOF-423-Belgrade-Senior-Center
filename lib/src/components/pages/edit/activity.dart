@@ -522,6 +522,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
   _cancelAddClick(_) => setState((props, state) => state..showAddUserPrompt = false);
 
   _removeClick(Activity act, String userId) {
+    Activity act2 = act.rebuild((builder) => builder.users.remove(1));
     props.actions.server.updateOrCreateActivity(act.rebuild((builder) => builder..users.remove(userId)));
     props.actions.server.fetchAllActivities();
     setState((props, state) => state..showDeletePrompt = false);
