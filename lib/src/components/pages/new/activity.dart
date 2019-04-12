@@ -242,6 +242,7 @@ class NewActivity extends Component<NewActivityProps, NewActivityState> {
                                                 ..onInput = _capacityValidator
                                                 ..className = 'input ${state.capacityIsValid ? '' : 'is-danger'}'
                                                 ..id = 'capacity-input'
+                                                ..disabled = state.isUnlimited
                                                 ..type = 'number',
                                               new VParagraphElement()
                                                 ..className =
@@ -532,12 +533,4 @@ class NewActivity extends Component<NewActivityProps, NewActivityState> {
 
     return "${date.year}-${tempMonth}-${tempDay} ${tempTime}";
   }
-
-  // int _unlimitedCheck(bool unlimited){
-  //   if(unlimited == true){
-  //     return -1;
-  //   }else{
-  //     return 0;
-  //   }
-  // }
 }

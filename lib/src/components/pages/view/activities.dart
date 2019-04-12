@@ -27,7 +27,14 @@ class ViewActivityState {
 /// [viewActivity] class / page to show a visual representation of current stored data
 class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
   ViewActivity(props) : super(props);
-  List<String> title = ["Name", "Start", "End", "Location", "Capacity", "Instructor"];
+  List<String> title = [
+    "Name",
+    "Start",
+    "End",
+    "Location",
+    "Capacity",
+    "Instructor"
+  ];
   History _history;
 
   @override
@@ -66,10 +73,12 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
             ..text = checkText(act.name),
           new VTableCellElement()
             ..className = tdClass(act.startTime.toString())
-            ..text = checkText("${act.startTime.month}/${act.startTime.day}/${act.startTime.year}"),
+            ..text = checkText(
+                "${act.startTime.month}/${act.startTime.day}/${act.startTime.year}"),
           new VTableCellElement()
             ..className = tdClass(act.endTime.toString())
-            ..text = checkText("${act.endTime.month}/${act.endTime.day}/${act.endTime.year}"),
+            ..text = checkText(
+                "${act.endTime.month}/${act.endTime.day}/${act.endTime.year}"),
           new VTableCellElement()
             ..className = tdClass(act.location)
             ..text = checkText(act.location),
@@ -112,7 +121,16 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
     }
   }
 
-  String checkText(String text) => text != '' ? text : "N/A";
+  String checkText(String text) {
+    if (text != ''){
+      if (text == '-1'){
+        text = "Unlimited";
+      }
+    }else{
+      text = "N/A";
+    }
+    return text;
+  }
 
   String tdClass(String text) => text != '' ? 'td' : "td has-text-grey";
 
@@ -158,7 +176,8 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
                                 ..text = 'Activity Data',
                               new Vh1()
                                 ..className = 'subtitle is-7'
-                                ..text = " as of: ${DateTime.now().month}/${DateTime.now().day}/${DateTime.now().year}",
+                                ..text =
+                                    " as of: ${DateTime.now().month}/${DateTime.now().day}/${DateTime.now().year}",
                             ],
                           new VDivElement()
                             ..className = 'column is-narrow'
@@ -178,7 +197,9 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
                                         ..type = 'text',
                                       new VSpanElement()
                                         ..className = 'icon is-left'
-                                        ..children = [new Vi()..className = 'fas fa-search'],
+                                        ..children = [
+                                          new Vi()..className = 'fas fa-search'
+                                        ],
                                     ],
                                 ],
                             ],
@@ -197,7 +218,10 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
                                         ..children = [
                                           new VSpanElement()
                                             ..className = 'icon'
-                                            ..children = [new Vi()..className = 'fas fa-file-csv'],
+                                            ..children = [
+                                              new Vi()
+                                                ..className = 'fas fa-file-csv'
+                                            ],
                                           new VSpanElement()..text = 'CSV',
                                         ],
                                     ],
@@ -225,19 +249,27 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
       for (Activity act in props.activityMap.values) {
         if (act.name.toLowerCase().contains(search.value.toLowerCase())) {
           found.add(act);
-        } else if (act.instructor.toLowerCase().contains(search.value.toLowerCase())) {
+        } else if (act.instructor
+            .toLowerCase()
+            .contains(search.value.toLowerCase())) {
           found.add(act);
-        } else if (act.location.toLowerCase().contains(search.value.toLowerCase())) {
+        } else if (act.location
+            .toLowerCase()
+            .contains(search.value.toLowerCase())) {
           found.add(act);
-        } else if (act.capacity.toString().contains(search.value.toLowerCase())) {
+        } else if (act.capacity
+            .toString()
+            .contains(search.value.toLowerCase())) {
           found.add(act);
         } else if (act.startTime.toString().contains(search.value)) {
           found.add(act);
-        } else if ("${act.startTime.month}/${act.startTime.day}/${act.startTime.year}".contains(search.value)) {
+        } else if ("${act.startTime.month}/${act.startTime.day}/${act.startTime.year}"
+            .contains(search.value)) {
           found.add(act);
         } else if (act.endTime.toString().contains(search.value)) {
           found.add(act);
-        } else if ("${act.endTime.month}/${act.endTime.day}/${act.endTime.year}".contains(search.value)) {
+        } else if ("${act.endTime.month}/${act.endTime.day}/${act.endTime.year}"
+            .contains(search.value)) {
           found.add(act);
         }
 
@@ -251,7 +283,8 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
   _onExportCsvClick(_) {
     List<String> lines;
     if (!state.searching) {
-      lines = props.activityMap.values.map((activity) => activity.toCsv()).toList();
+      lines =
+          props.activityMap.values.map((activity) => activity.toCsv()).toList();
     } else {
       lines = state.found.map((activity) => activity.toCsv()).toList();
     }
@@ -261,9 +294,11 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
 
     Blob data = new Blob(lines, "text/csv");
 
-    AnchorElement downloadLink = new AnchorElement(href: Url.createObjectUrlFromBlob(data));
+    AnchorElement downloadLink =
+        new AnchorElement(href: Url.createObjectUrlFromBlob(data));
     downloadLink.rel = 'text/csv';
-    downloadLink.download = 'activity-export-${new DateTime.now().toIso8601String()}.csv';
+    downloadLink.download =
+        'activity-export-${new DateTime.now().toIso8601String()}.csv';
 
     var event = new MouseEvent("click", view: window, cancelable: false);
     downloadLink.dispatchEvent(event);
