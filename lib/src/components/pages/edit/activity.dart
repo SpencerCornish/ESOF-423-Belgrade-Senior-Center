@@ -489,7 +489,11 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
             ],
           new Vsection()
             ..className = 'modal-card-body'
-            ..children = _renderUserTable(act),
+            ..children = [
+              new VTableElement()
+                ..className = 'table is-narrow is-striped is-fullwidth'
+                ..children = _renderUserTable(act),
+            ],
           new Vfooter()
             ..className = 'modal-card-foot'
             ..children = [
