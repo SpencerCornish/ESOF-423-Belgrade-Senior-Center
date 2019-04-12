@@ -213,6 +213,7 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
         ],
       _renderSearch(),
       _renderExport(),
+      _renderRefresh(),
     ];
 
   ///[_renderSearch] adds the seach layout to the tile bar
@@ -234,6 +235,28 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
               new VSpanElement()
                 ..className = 'icon is-left'
                 ..children = [new Vi()..className = 'fas fa-search'],
+            ],
+        ],
+    ];
+
+  _renderRefresh() => new VDivElement()
+    ..className = 'column is-narrow'
+    ..children = [
+      new VDivElement()
+        ..className = 'field'
+        ..children = [
+          new VDivElement()
+            ..className = 'control'
+            ..children = [
+              new VParagraphElement()
+                ..className = 'button is-rounded'
+                ..onClick = _onRefreshClick
+                ..children = [
+                  new VSpanElement()
+                    ..className = 'icon'
+                    ..children = [new Vi()..className = 'fas fa-sync-alt'],
+                  new VSpanElement()..text = 'Refresh',
+                ],
             ],
         ],
     ];
@@ -375,5 +398,9 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
 
     var event = new MouseEvent("click", view: window, cancelable: false);
     downloadLink.dispatchEvent(event);
+  }
+
+  _onRefreshClick(_) {
+    props.actions.server.fetchAllMembers();
   }
 }

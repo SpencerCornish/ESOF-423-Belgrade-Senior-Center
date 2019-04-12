@@ -203,11 +203,34 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
                                     ],
                                 ],
                             ],
+                          _renderRefresh(),
                         ],
                       new VTableElement()
                         ..className = 'table is-narrow is-striped is-fullwidth'
                         ..children = createRows(),
                     ],
+                ],
+            ],
+        ],
+    ];
+
+  _renderRefresh() => new VDivElement()
+    ..className = 'column is-narrow'
+    ..children = [
+      new VDivElement()
+        ..className = 'field'
+        ..children = [
+          new VDivElement()
+            ..className = 'control'
+            ..children = [
+              new VParagraphElement()
+                ..className = 'button is-rounded'
+                ..onClick = _onRefreshClick
+                ..children = [
+                  new VSpanElement()
+                    ..className = 'icon'
+                    ..children = [new Vi()..className = 'fas fa-sync-alt'],
+                  new VSpanElement()..text = 'Refresh',
                 ],
             ],
         ],
@@ -267,5 +290,9 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
 
     var event = new MouseEvent("click", view: window, cancelable: false);
     downloadLink.dispatchEvent(event);
+  }
+
+  _onRefreshClick(_) {
+    props.actions.server.fetchAllActivities();
   }
 }
