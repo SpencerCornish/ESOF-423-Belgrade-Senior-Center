@@ -19,13 +19,16 @@ class NewMealProps {
 
 class NewMealState {
   bool timeIsValid;
+  bool mealIsValid;
 }
 
 class NewMeal extends Component<NewMealProps, NewMealState> {
   NewMeal(props) : super(props);
 
   @override
-  NewMealState getInitialState() => NewMealState()..timeIsValid = true;
+  NewMealState getInitialState() => NewMealState()
+    ..timeIsValid = false
+    ..mealIsValid = false;
 
   History _history;
 
@@ -101,9 +104,15 @@ class NewMeal extends Component<NewMealProps, NewMealState> {
                                             ..className = 'control'
                                             ..children = [
                                               new VInputElement()
-                                                ..className = 'input'
+                                                ..onInput = _timeValidator
+                                                ..className = 'input ${state.timeIsValid ? '' : 'is-danger'}'
                                                 ..id = 'serveDate-input'
-                                                ..type = 'date'
+                                                ..type = 'date',
+                                              new VParagraphElement()
+                                                ..className =
+                                                    'help is-danger ${state.timeIsValid ? 'is-invisible' : ''}'
+                                                ..text =
+                                                    'Meal needs a date'
                                             ]
                                         ]
                                     ]
@@ -138,13 +147,15 @@ class NewMeal extends Component<NewMealProps, NewMealState> {
                                             ..children = [
                                               new VInputElement()
                                                 ..onInput = _timeValidator
-                                                ..className = 'input ${state.timeIsValid ? '' : 'is-danger'}'
+                                                ..className =
+                                                    'input ${state.timeIsValid ? '' : 'is-danger'}'
                                                 ..id = 'mealStart-input'
                                                 ..type = 'time',
                                               new VParagraphElement()
                                                 ..className =
                                                     'help is-danger ${state.timeIsValid ? 'is-invisible' : ''}'
-                                                ..text = 'Meal ends before it begins, please correct.'
+                                                ..text =
+                                                    'Meal ends before it begins, please correct.'
                                             ]
                                         ]
                                     ]
@@ -179,13 +190,15 @@ class NewMeal extends Component<NewMealProps, NewMealState> {
                                             ..children = [
                                               new VInputElement()
                                                 ..onInput = _timeValidator
-                                                ..className = 'input ${state.timeIsValid ? '' : 'is-danger'}'
+                                                ..className =
+                                                    'input ${state.timeIsValid ? '' : 'is-danger'}'
                                                 ..id = 'mealEnd-input'
                                                 ..type = 'time',
                                               new VParagraphElement()
                                                 ..className =
                                                     'help is-danger ${state.timeIsValid ? 'is-invisible' : ''}'
-                                                ..text = 'Meal ends before it begins, please correct.'
+                                                ..text =
+                                                    'Meal ends before it begins, please correct.'
                                             ]
                                         ]
                                     ]
@@ -223,9 +236,16 @@ class NewMeal extends Component<NewMealProps, NewMealState> {
                                 ..className = 'control'
                                 ..children = [
                                   new VTextAreaElement()
-                                    ..className = 'textarea'
+                                    ..onInput = _mealValidator
+                                    ..className =
+                                        'textarea ${state.mealIsValid ? '' : 'is-danger'}'
                                     ..id = 'meal-input'
-                                    ..placeholder = "Enter full meal"
+                                    ..placeholder = "Enter full meal",
+                                  new VParagraphElement()
+                                    ..className =
+                                        'help is-danger ${state.mealIsValid ? 'is-invisible' : ''}'
+                                    ..text =
+                                        'Meal needs a menu.'
                                 ]
                             ]
                         ]
@@ -239,8 +259,9 @@ class NewMeal extends Component<NewMealProps, NewMealState> {
                       new VDivElement()
                         ..className = 'control'
                         ..children = [
-                          new VAnchorElement()
+                          new VButtonElement()
                             ..className = 'button is-link'
+                            ..disabled = _canActivateSubmit()
                             ..text = "Submit"
                             ..onClick = _submitClick
                         ]
@@ -249,6 +270,20 @@ class NewMeal extends Component<NewMealProps, NewMealState> {
             ]
         ]
     ];
+
+  _mealValidator(_) {
+    TextAreaElement meal = querySelector('#meal-input');
+    String menu = meal.value;
+    bool isValid = Validator.name(menu);
+    setState((NewMealProps, NewMealState) => NewMealState..mealIsValid = isValid);
+  }
+
+  bool _canActivateSubmit() {
+    if (state.mealIsValid && state.timeIsValid) {
+      return false; //enables button on false
+    }
+    return true; //disables button on true
+  }
 
   //Checks that the meal does not start before it ends
   _timeValidator(_) {
@@ -267,7 +302,8 @@ class NewMeal extends Component<NewMealProps, NewMealState> {
 
     bool isValid = Validator.time(start, end);
 
-    setState((NewMealProps, NewMealState) => NewMealState..timeIsValid = isValid);
+    setState(
+        (NewMealProps, NewMealState) => NewMealState..timeIsValid = isValid);
   }
 
   //method used for the submit click
@@ -278,8 +314,10 @@ class NewMeal extends Component<NewMealProps, NewMealState> {
     InputElement end = querySelector('#mealEnd-input');
     TextAreaElement meal = querySelector('#meal-input');
     DateTime serveDay = DateTime.parse(date.value);
-    String tempStart = start.value; //make the start time a string for use in _parseDate
-    String tempEnd = end.value; //make the end time a string for use in _parseDate
+    String tempStart =
+        start.value; //make the start time a string for use in _parseDate
+    String tempEnd =
+        end.value; //make the end time a string for use in _parseDate
     String menu = meal.value;
     String startTime, endTime;
     startTime = _parseDate(serveDay, tempStart);
@@ -316,7 +354,6 @@ class NewMeal extends Component<NewMealProps, NewMealState> {
       tempMonth = date.month.toString();
     }
 
-    print(time);
     tempTime = "${time}:00.000";
 
     return "${date.year}-${tempMonth}-${tempDay} ${tempTime}";
