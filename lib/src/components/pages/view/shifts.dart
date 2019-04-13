@@ -16,13 +16,24 @@ class ViewShiftProps {
   User user;
   BuiltList<Shift> shiftList;
   bool allShifts;
+  BuiltMap<String, User> userMap;
+}
+
+class ViewShiftState {
+  bool searching;
+  List<Shift> found;
 }
 
 /// [viewShift] class / page to show a visual representation of current stored data
-class ViewShift extends PComponent<ViewShiftProps> {
+class ViewShift extends Component<ViewShiftProps, ViewShiftState> {
   ViewShift(props) : super(props);
-  List<String> title = ["User ID (Name coming soon)", "Start", "End"];
+  List<String> title = ["First Name", "Last Name", "Start", "End"];
   History _history;
+
+  @override
+  ViewShiftState getInitialState() => ViewShiftState()
+    ..found = <Shift>[]
+    ..searching = false;
 
   /// Browser history entrypoint, to control page navigation
   History get history => _history ?? findHistoryInContext(context);
@@ -32,24 +43,50 @@ class ViewShift extends PComponent<ViewShiftProps> {
     if (props.user.role.toLowerCase() != "admin" && props.user.role.toLowerCase() != "volunteer") {
       history.push(Routes.dashboard);
     }
+    _requestData();
+  }
+
+  @override
+  void componentWillUpdate(ViewShiftProps newProps, ViewShiftState newState) {
+    // We have transitioned between page types
+    if (props.allShifts != newProps.allShifts) {
+      _requestData();
+    }
+    super.componentWillUpdate(newProps, newState);
+  }
+
+  void _requestData() {
     if (props.allShifts && props.user.role == "admin") {
       props.actions.server.fetchAllShifts();
     } else {
       props.actions.server.fetchShiftsForUser(0);
     }
+    props.actions.server.fetchAllMembers();
   }
 
   /// [createRows] Scaling function to make rows based on amount of information available
   List<VNode> createRows() {
     List<VNode> nodeList = new List();
+    List<Shift> list;
+    if (state.searching) {
+      list = state.found;
+    } else {
+      list = props.shiftList.toList();
+    }
+
     nodeList.addAll(titleRow());
-    for (Shift shift in props.shiftList) {
+    for (Shift shift in list) {
+      User user = props.userMap[shift.userID];
+
       nodeList.add(new VTableRowElement()
         ..className = 'tr'
         ..children = [
           new VTableCellElement()
             ..className = tdClass(shift.inTime.toString())
-            ..text = checkText("${shift.userID}"),
+            ..text = checkText("${user?.firstName ?? shift.userID}"),
+          new VTableCellElement()
+            ..className = tdClass(shift.inTime.toString())
+            ..text = checkText("${user?.lastName ?? shift.userID}"),
           new VTableCellElement()
             ..className = tdClass(shift.inTime.toString())
             ..text = checkText("${formatTime(shift.inTime)}"),
@@ -121,6 +158,8 @@ class ViewShift extends PComponent<ViewShiftProps> {
                                       new VInputElement()
                                         ..className = 'input'
                                         ..placeholder = 'Search'
+                                        ..onKeyUp = _searchListener
+                                        ..id = 'Search'
                                         ..type = 'text',
                                       new VSpanElement()
                                         ..className = 'icon is-left'
@@ -160,6 +199,38 @@ class ViewShift extends PComponent<ViewShiftProps> {
         ],
     ];
 
+  _searchListener(_) {
+    InputElement search = querySelector('#Search');
+    if (search.value.isEmpty) {
+      setState((ViewShiftProps, ViewShiftState) => ViewShiftState
+        ..found = <Shift>[]
+        ..searching = false);
+    } else {
+      List found = <Shift>[];
+
+      for (Shift shift in props.shiftList) {
+        User user = props.userMap[shift.userID];
+        if (user.firstName.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(shift);
+        } else if (user.lastName.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(shift);
+        } else if (shift.inTime.toString().contains(search.value)) {
+          found.add(shift);
+        } else if (shift.outTime.toString().contains(search.value)) {
+          found.add(shift);
+        } else if ("${formatTime(shift.inTime).toLowerCase()}".contains(search.value.toLowerCase())) {
+          found.add(shift);
+        } else if ("${formatTime(shift.outTime).toLowerCase()}".contains(search.value.toLowerCase())) {
+          found.add(shift);
+        }
+      }
+
+      setState((ViewShiftProps, ViewShiftState) => ViewShiftState
+        ..found = found
+        ..searching = true);
+    }
+  }
+
   _renderRefresh() => new VDivElement()
     ..className = 'column is-narrow'
     ..children = [
@@ -183,11 +254,20 @@ class ViewShift extends PComponent<ViewShiftProps> {
     ];
 
   _onExportCsvClick(_) {
-    // TODO: Add first and last name, fuh real
-    List<String> lines = props.shiftList.map((meal) => meal.toCsv("FIRST", "LAST")).toList();
+    List<Shift> list;
+    if (state.searching) {
+      list = state.found;
+    } else {
+      list = props.shiftList.toList();
+    }
+
+    List<String> lines = list
+        .map((shift) =>
+            shift.toCsv(props.userMap[shift.userID].firstName ?? '', props.userMap[shift.userID].lastName ?? ''))
+        .toList();
 
     // Add the header row
-    lines.insert(0, ExportHeader.meal.join(',') + '\n');
+    lines.insert(0, ExportHeader.shift.join(',') + '\n');
 
     Blob data = new Blob(lines, "text/csv");
 
