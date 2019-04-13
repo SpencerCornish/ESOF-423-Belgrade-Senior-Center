@@ -144,7 +144,7 @@ class ViewShift extends PComponent<ViewShiftProps> {
                                           new VSpanElement()
                                             ..className = 'icon'
                                             ..children = [new Vi()..className = 'fas fa-file-csv'],
-                                          new VSpanElement()..text = 'CSV',
+                                          new VSpanElement()..text = 'Export',
                                         ],
                                     ],
                                 ],

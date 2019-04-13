@@ -137,7 +137,7 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
                 ..className = 'modal-card-foot'
                 ..children = [
                   new VButtonElement()
-                    ..className = 'button'
+                    ..className = 'button is-rounded'
                     ..text = 'Done'
                     ..onClick = _doneCheckinClick
                 ],
@@ -280,7 +280,7 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
                                           new VSpanElement()
                                             ..className = 'icon'
                                             ..children = [new Vi()..className = 'fas fa-file-csv'],
-                                          new VSpanElement()..text = 'CSV',
+                                          new VSpanElement()..text = 'Export',
                                         ],
                                     ],
                                 ],
