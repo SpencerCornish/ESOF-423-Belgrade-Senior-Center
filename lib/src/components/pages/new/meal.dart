@@ -252,7 +252,7 @@ class NewMeal extends Component<NewMealProps, NewMealState> {
                         ..className = 'control'
                         ..children = [
                           new VButtonElement()
-                            ..className = 'button is-link'
+                            ..className = 'button is-link is-rounded'
                             ..disabled = _canActivateSubmit()
                             ..text = "Submit"
                             ..onClick = _submitClick

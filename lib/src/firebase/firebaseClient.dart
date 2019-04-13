@@ -173,7 +173,7 @@ class FirebaseClient {
     final result = await baseQuery.get();
 
     for (fs.DocumentSnapshot doc in result.docs) {
-      dataSet.add(new Shift.fromFirebase(doc.data()));
+      dataSet.add(new Shift.fromFirebase(doc.id, doc.data()));
     }
 
     return dataSet.build();
@@ -185,7 +185,7 @@ class FirebaseClient {
     final result = await _refs.allShifts().orderBy('in_time', 'desc').get();
 
     for (fs.DocumentSnapshot doc in result.docs) {
-      dataSet.add(new Shift.fromFirebase(doc.data()));
+      dataSet.add(new Shift.fromFirebase(doc.id, doc.data()));
     }
 
     return dataSet.build();

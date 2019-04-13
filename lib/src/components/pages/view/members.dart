@@ -73,9 +73,16 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
           new VTableCellElement()
             ..children = [
               new VButtonElement()
-                ..className = "button is-success is-rounded is-small"
-                ..text = "CHECK-IN"
-                ..onClick = ((_) => _onActClick(user.docUID)),
+                ..className = "button is-success is-rounded"
+                ..onClick = ((_) => _onActClick(user.docUID))
+                ..children = [
+                  new VSpanElement()
+                    ..className = 'icon'
+                    ..children = [
+                      new Vi()..className = 'far fa-check-circle',
+                    ],
+                  new VSpanElement()..text = 'Check In',
+                ],
             ],
           new VTableCellElement()
             ..children = [
@@ -271,7 +278,7 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
                   new VSpanElement()
                     ..className = 'icon'
                     ..children = [new Vi()..className = 'fas fa-file-csv'],
-                  new VSpanElement()..text = 'CSV',
+                  new VSpanElement()..text = 'Export',
                 ],
             ],
         ],

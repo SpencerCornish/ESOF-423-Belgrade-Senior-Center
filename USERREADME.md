@@ -26,7 +26,7 @@ To view the current members (and their associated shifts), meals, or activities 
 
 You are able to search through the list by keywords.
 
-You can download all the information for what is currently displayed by clicking the `CSV` button in the right top corner of the screen.
+You can download all the information for what is currently displayed by clicking the `Export` button in the right top corner of the screen.
 
 The page can be refreshed to ensure any data added while the page was open is added to the table.
 

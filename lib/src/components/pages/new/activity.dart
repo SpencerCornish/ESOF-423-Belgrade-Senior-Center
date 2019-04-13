@@ -213,65 +213,74 @@ class NewActivity extends Component<NewActivityProps, NewActivityState> {
                             ]
                         ],
                       new VDivElement()
-                        ..className = 'column is-narrow'
+                        ..className = 'column'
                         ..children = [
                           new VDivElement()
-                            ..className = 'field is-grouped'
+                            ..className = 'columns is-mobile'
                             ..children = [
                               new VDivElement()
-                                ..className = 'field is-horizontal'
+                                ..className = 'column is-narrow'
                                 ..children = [
                                   new VDivElement()
-                                    ..className = 'field-body'
+                                    ..className = 'field is-grouped'
                                     ..children = [
-                                      new VDivElement()
-                                        ..className = 'field'
-                                        ..id = 'capacity-lab'
-                                        ..children = [
-                                          new VLabelElement()
-                                            ..className = 'label'
-                                            ..text = "Capacity"
-                                        ],
                                       new VDivElement()
                                         ..className = 'field is-horizontal'
                                         ..children = [
-                                          new VParagraphElement()
-                                            ..className = 'control'
+                                          new VDivElement()
+                                            ..className = 'field-body'
                                             ..children = [
-                                              new VInputElement()
-                                                ..onInput = _capacityValidator
-                                                ..className = 'input ${state.capacityIsValid ? '' : 'is-danger'}'
-                                                ..id = 'capacity-input'
-                                                ..disabled = state.isUnlimited
-                                                ..type = 'number',
-                                              new VParagraphElement()
-                                                ..className =
-                                                    'help is-danger ${state.capacityIsValid ? 'is-invisible' : ''}'
-                                                ..text = 'Capacity must be -1, or more than 0'
+                                              new VDivElement()
+                                                ..className = 'field'
+                                                ..id = 'capacity-lab'
+                                                ..children = [
+                                                  new VLabelElement()
+                                                    ..className = 'label'
+                                                    ..text = "Capacity"
+                                                ],
+                                              new VDivElement()
+                                                ..className = 'field is-horizontal'
+                                                ..children = [
+                                                  new VParagraphElement()
+                                                    ..className = 'control'
+                                                    ..children = [
+                                                      new VInputElement()
+                                                        ..onInput = _capacityValidator
+                                                        ..className =
+                                                            'input ${state.capacityIsValid ? '' : 'is-danger'}'
+                                                        ..id = 'capacity-input'
+                                                        ..disabled = state.isUnlimited
+                                                        ..type = 'number',
+                                                      new VParagraphElement()
+                                                        ..className =
+                                                            'help is-danger ${state.capacityIsValid ? 'is-invisible' : ''}'
+                                                        ..text = 'Capacity must be -1, or more than 0'
+                                                    ]
+                                                ]
                                             ]
                                         ]
+                                    ],
+                                ],
+                              new VDivElement()
+                                ..className = 'column is-narrow'
+                                ..children = [
+                                  new VLabelElement()
+                                    ..className = 'label'
+                                    ..text = "Unlimited"
+                                ],
+                              new VDivElement()
+                                ..className = 'column is-narrow'
+                                ..children = [
+                                  new VDivElement()
+                                    ..className = 'control'
+                                    ..children = [
+                                      new VCheckboxInputElement()
+                                        ..className = 'checkbox'
+                                        ..id = 'isUnlimited-input'
+                                        ..onClick = _unlimitedBoxCheck
                                     ]
-                                ]
-                            ]
-                        ],
-                      new VDivElement()
-                        ..className = 'column is-narrow'
-                        ..children = [
-                          new VLabelElement()
-                            ..className = 'label'
-                            ..text = "Unlimited"
-                        ],
-                      new VDivElement()
-                        ..className = 'column is-narrow'
-                        ..children = [
-                          new VDivElement()
-                            ..className = 'control'
-                            ..children = [
-                              new VCheckboxInputElement()
-                                ..className = 'checkbox'
-                                ..id = 'isUnlimited-input'
-                                ..onClick = _unlimitedBoxCheck
-                            ]
+                                ],
+                            ],
                         ],
                     ],
                   new VDivElement()
@@ -418,7 +427,7 @@ class NewActivity extends Component<NewActivityProps, NewActivityState> {
                         ..className = 'control'
                         ..children = [
                           new VButtonElement()
-                            ..className = 'button is-link'
+                            ..className = 'button is-link is-rounded'
                             ..text = "Submit"
                             ..disabled = _canActivateSubmit()
                             ..onClick = _submitClick
