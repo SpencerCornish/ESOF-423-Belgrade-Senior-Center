@@ -19,11 +19,8 @@ class ViewMembersProps {
 }
 
 class ViewMembersState {
-  bool showMod;
-  Map<User, Activity> checkedIn;
   bool searching;
   List<User> found;
-  String modMem;
 }
 
 /// [viewMember] class / page to show a visual representation of current stored data
@@ -38,11 +35,8 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
 
   @override
   ViewMembersState getInitialState() => ViewMembersState()
-    ..showMod = false
-    ..checkedIn = new Map()
     ..found = <User>[]
-    ..searching = false
-    ..modMem = null;
+    ..searching = false;
 
   List<String> title = ["Last", "First", "", ""];
   History _history;
@@ -213,6 +207,7 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
         ],
       _renderSearch(),
       _renderExport(),
+      _renderRefresh(),
     ];
 
   ///[_renderSearch] adds the seach layout to the tile bar
@@ -234,6 +229,28 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
               new VSpanElement()
                 ..className = 'icon is-left'
                 ..children = [new Vi()..className = 'fas fa-search'],
+            ],
+        ],
+    ];
+
+  _renderRefresh() => new VDivElement()
+    ..className = 'column is-narrow'
+    ..children = [
+      new VDivElement()
+        ..className = 'field'
+        ..children = [
+          new VDivElement()
+            ..className = 'control'
+            ..children = [
+              new VParagraphElement()
+                ..className = 'button is-rounded'
+                ..onClick = _onRefreshClick
+                ..children = [
+                  new VSpanElement()
+                    ..className = 'icon'
+                    ..children = [new Vi()..className = 'fas fa-sync-alt'],
+                  new VSpanElement()..text = 'Refresh',
+                ],
             ],
         ],
     ];
@@ -313,49 +330,6 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
     }
   }
 
-  // _checkInClick(User user) {
-  //   if (!state.checkedIn.containsKey(user)) {
-  //     print("${user.firstName} ${user.lastName} has checked in!");
-  //     setState((props, state) => state..checkedIn.putIfAbsent(user, () => _recommend()));
-  //   } else {
-  //     Activity act = state.checkedIn[user];
-
-  //     ListBuilder<User> attList = new ListBuilder();
-
-  //     for (User u in act.attendance) {
-  //       attList.add(u);
-  //     }
-
-  //     attList.add(user);
-
-  //     Activity update = act.rebuild((builder) => builder
-  //       ..capacity = act.capacity
-  //       ..endTime = act.endTime
-  //       ..startTime = act.startTime
-  //       ..instructor = act.instructor
-  //       ..location = act.location
-  //       ..name = act.name
-  //       ..attendance = attList);
-
-  //     // print("updated not added");
-
-  //     // props.actions.server.updateOrCreateActivity(update);
-  //     // props.actions.server.fetchAllActivities();
-  //   }
-  // }
-
-  // _modOn(String uid) {
-  //   setState((props, state) => state
-  //     ..showMod = true
-  //     ..modMem = uid);
-  // }
-
-  // _modOff(_) {
-  //   setState((props, state) => state
-  //     ..showMod = false
-  //     ..modMem = null);
-  // }
-
   _onExportCsvClick(_) {
     List<String> lines;
     if (!state.searching) {
@@ -375,5 +349,9 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
 
     var event = new MouseEvent("click", view: window, cancelable: false);
     downloadLink.dispatchEvent(event);
+  }
+
+  _onRefreshClick(_) {
+    props.actions.server.fetchAllMembers();
   }
 }

@@ -111,8 +111,21 @@ _addOrUpdateUser(FirebaseClient client) => (
       ActionHandler next,
       Action<User> action,
     ) async {
+      User updatedUser = action.payload;
+      final userRole = updatedUser.role.toLowerCase();
+
+      // This was a new user, and their new role is either admin or volunteer, so make a new login
+      if ((action.payload.docUID == null || action.payload.docUID == "") &&
+          (userRole == "admin" || userRole == "volunteer")) {
+        final loginUID = await client.createLoginForNewUser(action.payload.email);
+        // If we created a new login, add it to the user data
+        if (loginUID != "" || loginUID != null) {
+          updatedUser = action.payload.rebuild((builder) => builder..loginUID = loginUID);
+        }
+      }
+
       client.addOrUpdateUser(
-        action.payload.toFirestore(),
+        updatedUser.toFirestore(),
         documentID: action.payload.docUID,
       );
     };

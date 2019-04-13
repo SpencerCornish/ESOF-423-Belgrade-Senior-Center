@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:firebase/firestore.dart' as fs;
 import 'package:firebase/firebase.dart' as fb;
+import 'package:http/http.dart' as http;
 
 import 'package:built_collection/built_collection.dart';
 
@@ -19,6 +21,10 @@ class FirebaseClient {
   final AppActions _actions;
   final fb.Auth _auth;
 
+  // Stores the authenicated firebase token, for use with
+  // authenticating http requests
+  fb.User firebaseLoginUserPayload;
+
   FirebaseClient(this._refs, this._auth, this._actions) {
     // This will eventually listen to changes for the user/class/text listener
 
@@ -26,8 +32,9 @@ class FirebaseClient {
   }
 
   Future _onAuthChanged(fb.User fbUser) async {
-    User newUser = fbUser != null ? await _userLoginEvent(fbUser) : null;
+    firebaseLoginUserPayload = fbUser;
 
+    User newUser = fbUser != null ? await _userLoginEvent(fbUser) : null;
     _actions.setUser(newUser);
     _actions.setAuthState(newUser == null ? AuthState.INAUTHENTIC : AuthState.SUCCESS);
   }
@@ -106,9 +113,51 @@ class FirebaseClient {
   }
 
   void resetPassword(String email) {
+    _resetPassword(email);
+    _actions.setAuthState(AuthState.PASS_RESET_SENT);
+  }
+
+  void _resetPassword(String email) {
     _auth.sendPasswordResetEmail(email,
         new fb.ActionCodeSettings(url: "https://bsc-development.firebaseapp.com/pw_reset/${stringToBase(email)}"));
-    _actions.setAuthState(AuthState.PASS_RESET_SENT);
+  }
+
+  Future<String> createLoginForNewUser(String email) async {
+    String authToken = '';
+    try {
+      authToken = await firebaseLoginUserPayload.getIdToken();
+    } catch (e) {
+      print("Error fetching an auth token: $e");
+      rethrow;
+    }
+    if (authToken == '') {
+      throw ("auth token cannot be empty");
+    }
+
+    authToken = authToken.trim();
+    http.Request req = new http.Request("POST", Uri.parse(HttpEndpoint.createUserLogin));
+
+    final payload = {
+      'email': email,
+      'authorization': 'Bearer ${authToken}',
+    };
+
+    req.body = jsonEncode(payload);
+
+    final resp = await req.send();
+
+    final newUserUidString = resp.stream.bytesToString();
+
+    print(newUserUidString);
+
+    // Success, probably
+    if (resp.statusCode < 300 && resp.statusCode >= 200) {
+      _resetPassword(email);
+      return newUserUidString;
+    } else {
+      print("error creating user acct");
+    }
+    return "";
   }
 
   /// [getAllMembers] get all member documents
