@@ -253,11 +253,13 @@ class Container extends PComponent<ContainerProps> {
     ..actions = props.storeContainer.store.actions
     ..user = appState.user
     ..shiftList = appState.userShiftList
-    ..allShifts = false);
+    ..allShifts = false
+    ..userMap = appState.userMap);
 
   _renderViewAllShifts() => new ViewShift(new ViewShiftProps()
     ..actions = props.storeContainer.store.actions
     ..user = appState.user
     ..shiftList = appState.shiftList
-    ..allShifts = true);
+    ..allShifts = true
+    ..userMap = appState.userMap);
 }
