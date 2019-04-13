@@ -129,6 +129,12 @@ class ExportHeader {
   ];
 }
 
+class HttpEndpoint {
+  static const baseUrl = "https://us-central1-bsc-development.cloudfunctions.net/";
+
+  static const createUserLogin = baseUrl + "createUserLogin";
+}
+
 /// The different authentication states the UI can be in.
 /// This should not be used as a replacement for firebase
 /// auth checks on the backend.
