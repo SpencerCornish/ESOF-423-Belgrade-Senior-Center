@@ -22,6 +22,7 @@ class NewActivityState {
   bool locationIsValid;
   bool capacityIsValid;
   bool timeIsValid;
+  bool isUnlimited;
 }
 
 class NewActivity extends Component<NewActivityProps, NewActivityState> {
@@ -33,7 +34,8 @@ class NewActivity extends Component<NewActivityProps, NewActivityState> {
     ..instructorNameIsValid = true
     ..locationIsValid = true
     ..capacityIsValid = true
-    ..timeIsValid = true;
+    ..timeIsValid = true
+    ..isUnlimited = false;
 
   History _history;
 
@@ -211,7 +213,7 @@ class NewActivity extends Component<NewActivityProps, NewActivityState> {
                             ]
                         ],
                       new VDivElement()
-                        ..className = 'column'
+                        ..className = 'column is-narrow'
                         ..children = [
                           new VDivElement()
                             ..className = 'field is-grouped'
@@ -240,6 +242,7 @@ class NewActivity extends Component<NewActivityProps, NewActivityState> {
                                                 ..onInput = _capacityValidator
                                                 ..className = 'input ${state.capacityIsValid ? '' : 'is-danger'}'
                                                 ..id = 'capacity-input'
+                                                ..disabled = state.isUnlimited
                                                 ..type = 'number',
                                               new VParagraphElement()
                                                 ..className =
@@ -250,7 +253,26 @@ class NewActivity extends Component<NewActivityProps, NewActivityState> {
                                     ]
                                 ]
                             ]
-                        ]
+                        ],
+                      new VDivElement()
+                        ..className = 'column is-narrow'
+                        ..children = [
+                          new VLabelElement()
+                            ..className = 'label'
+                            ..text = "Unlimited"
+                        ],
+                      new VDivElement()
+                        ..className = 'column is-narrow'
+                        ..children = [
+                          new VDivElement()
+                            ..className = 'control'
+                            ..children = [
+                              new VCheckboxInputElement()
+                                ..className = 'checkbox'
+                                ..id = 'isUnlimited-input'
+                                ..onClick = _unlimitedBoxCheck
+                            ]
+                        ],
                     ],
                   new VDivElement()
                     ..className = 'columns'
@@ -425,6 +447,10 @@ class NewActivity extends Component<NewActivityProps, NewActivityState> {
     setState((NewActivityProps, NewActivityState) => NewActivityState..capacityIsValid = isValid);
   }
 
+  _unlimitedBoxCheck(_) {
+    setState((props, state) => state..isUnlimited = !state.isUnlimited);
+  }
+
   void _timeValidator(_) {
     InputElement start = querySelector('#timeStart-input');
     InputElement end = querySelector('#timeEnd-input');
@@ -458,13 +484,18 @@ class NewActivity extends Component<NewActivityProps, NewActivityState> {
     String tempEnd = end.value.toString(); //make the end time a string for use in _parseDate
 
     String startTime, endTime;
-    int cap; //capacity of activity
+    int activityCapacity; //capacity of activity
     startTime = _parseDate(date, tempStart);
     endTime = _parseDate(date, tempEnd);
-    cap = int.parse(capacity.value);
+
+    if (state.isUnlimited) {
+      activityCapacity = -1;
+    } else {
+      activityCapacity = int.parse(capacity.value);
+    }
 
     Activity newActivity = (new ActivityBuilder()
-          ..capacity = cap
+          ..capacity = activityCapacity
           ..endTime = DateTime.parse(endTime)
           ..startTime = DateTime.parse(startTime)
           ..instructor = instructor.value

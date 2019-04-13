@@ -184,7 +184,16 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
       ];
   }
 
-  String checkText(String text) => text != '' ? text : "N/A";
+  String checkText(String text) {
+    if (text != '') {
+      if (text == '-1') {
+        text = "Unlimited";
+      }
+    } else {
+      text = "N/A";
+    }
+    return text;
+  }
 
   String tdClass(String text) => text != '' ? 'td' : "td has-text-grey";
 
