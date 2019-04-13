@@ -1,4 +1,5 @@
 import 'dart:html' hide History;
+import 'dart:math';
 
 import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
@@ -94,6 +95,8 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
     } else {
       Activity act = props.activityMap[uid];
 
+      state.repeatFound = false;
+
       for (String id in act.users) {
         if (props.selectedMemberUID.compareTo(id) == 0) {
           setState((ViewActivityProps, ViewActivityState) => ViewActivityState..repeatFound = true);
@@ -111,33 +114,74 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
     }
   }
 
-  VNode _renderAddInfoMod() => new VDivElement()
-    ..className = "modal ${state.showMod ? 'is-active' : ''}"
-    ..children = [
-      new VDivElement()..className = 'modal-background',
-      new VDivElement()
-        ..className = 'modal-card'
+  VNode _renderAddInfoMod() {
+    if (props.signUp) {
+      return (new VDivElement()
+        ..className = "modal ${state.showMod ? 'is-active' : ''}"
         ..children = [
-          new Vsection()
-            ..className = 'modal-card-body'
+          new VDivElement()..className = 'modal-background',
+          new VDivElement()
+            ..className = 'modal-card'
             ..children = [
-              new VParagraphElement()
-                ..className = 'title is-4'
-                ..text = '${state.repeatFound ? 'Already Checked-in' : 'Checked-in Successfully!'}'
+              new Vsection()
+                ..className = 'modal-card-head'
+                ..children = [
+                  new VParagraphElement()
+                    ..className = 'title is-4'
+                    ..text = '${state.repeatFound ? 'Already Checked-in' : 'Checked-in Successfully!'}'
+                ],
+              new Vsection()
+                ..className = 'modal-card-body'
+                ..children = [_trySomething()],
+              new Vfooter()
+                ..className = 'modal-card-foot'
+                ..children = [
+                  new VButtonElement()
+                    ..className = 'button'
+                    ..text = 'Done'
+                    ..onClick = _doneCheckinClick
+                ],
             ],
-          new Vfooter()
-            ..className = 'modal-card-foot'
-            ..children = [
-              new VButtonElement()
-                ..className = 'button'
-                ..text = 'Done'
-                ..onClick = _doneCheckinClick
-            ],
-        ],
-    ];
+        ]);
+    }
+    return new VParagraphElement();
+  }
 
   _doneCheckinClick(_) {
     history.push(Routes.viewMembers);
+  }
+
+  VNode _trySomething() {
+    //all posible activities
+    List<Activity> actList = props.activityMap.values.toList();
+    //get a random index up to the length of the list - 1 to get a random activity
+    int tryIndex = new Random().nextInt(actList.length - 1);
+
+    return new VTableElement()
+      ..className = 'table is-fullwidth'
+      ..children = [
+        new VTableRowElement()
+          ..children = [
+            new VTableCellElement()..children = [new VParagraphElement()..text = 'While you\'re at it, why not try '],
+            new VTableCellElement()
+              ..children = [
+                new VDivElement()
+                  ..className = 'field'
+                  ..children = [
+                    new VDivElement()
+                      ..className = 'control'
+                      ..children = [
+                        new VParagraphElement()
+                          ..className = 'button is-rounded is-success'
+                          ..onClick = ((_) => _onActClick(actList[tryIndex].uid))
+                          ..children = [
+                            new VSpanElement()..text = actList[tryIndex].name,
+                          ],
+                      ],
+                  ],
+              ],
+          ],
+      ];
   }
 
   String checkText(String text) => text != '' ? text : "N/A";
