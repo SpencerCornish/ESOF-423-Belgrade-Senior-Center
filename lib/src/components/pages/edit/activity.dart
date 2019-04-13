@@ -705,7 +705,6 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
       tempMonth = date.month.toString();
     }
 
-    print(time);
     tempTime = "${time}:00.000";
 
     return "${date.year}-${tempMonth}-${tempDay} ${tempTime}";

@@ -111,7 +111,7 @@ class NewMeal extends Component<NewMealProps, NewMealState> {
                                               new VParagraphElement()
                                                 ..className =
                                                     'help is-danger ${state.timeIsValid ? 'is-invisible' : ''}'
-                                                ..text = 'Meal needs a date'
+                                                ..text = 'Meal needs a date and time'
                                             ]
                                         ]
                                     ]
@@ -283,18 +283,21 @@ class NewMeal extends Component<NewMealProps, NewMealState> {
     InputElement date = querySelector('#serveDate-input');
     InputElement time_start = querySelector('#mealStart-input');
     InputElement time_end = querySelector('#mealEnd-input');
+    try {
+      DateTime serveDay = DateTime.parse(date.value);
 
-    DateTime serveDay = DateTime.parse(date.value);
+      String startTime = _parseDate(serveDay, time_start.value);
+      String endTime = _parseDate(serveDay, time_end.value);
 
-    String startTime = _parseDate(serveDay, time_start.value);
-    String endTime = _parseDate(serveDay, time_end.value);
+      DateTime start = DateTime.parse(startTime);
+      DateTime end = DateTime.parse(endTime);
 
-    DateTime start = DateTime.parse(startTime);
-    DateTime end = DateTime.parse(endTime);
+      bool isValid = Validator.time(start, end);
 
-    bool isValid = Validator.time(start, end);
-
-    setState((NewMealProps, NewMealState) => NewMealState..timeIsValid = isValid);
+      setState((NewMealProps, NewMealState) => NewMealState..timeIsValid = isValid);
+    } catch (_) {
+      setState((NewMealProps, NewMealState) => NewMealState..timeIsValid = false);
+    }
   }
 
   //method used for the submit click

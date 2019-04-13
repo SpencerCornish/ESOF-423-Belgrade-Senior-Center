@@ -477,18 +477,21 @@ class NewActivity extends Component<NewActivityProps, NewActivityState> {
     InputElement start = querySelector('#timeStart-input');
     InputElement end = querySelector('#timeEnd-input');
     InputElement day = querySelector('#day-input');
+    try {
+      DateTime serveDay = DateTime.parse(day.value);
 
-    DateTime serveDay = DateTime.parse(day.value);
+      String startTime = _parseDate(serveDay, start.value);
+      String endTime = _parseDate(serveDay, end.value);
 
-    String startTime = _parseDate(serveDay, start.value);
-    String endTime = _parseDate(serveDay, end.value);
+      DateTime startDT = DateTime.parse(startTime);
+      DateTime endDT = DateTime.parse(endTime);
 
-    DateTime startDT = DateTime.parse(startTime);
-    DateTime endDT = DateTime.parse(endTime);
+      bool isValid = Validator.time(startDT, endDT);
 
-    bool isValid = Validator.time(startDT, endDT);
-
-    setState((NewActivityProps, NewActivityState) => NewActivityState..timeIsValid = isValid);
+      setState((NewActivityProps, NewActivityState) => NewActivityState..timeIsValid = isValid);
+    } catch (_) {
+      setState((NewActivityProps, NewActivityState) => NewActivityState..timeIsValid = false);
+    }
   }
 
   //method used for the submit click
@@ -548,7 +551,6 @@ class NewActivity extends Component<NewActivityProps, NewActivityState> {
       tempMonth = date.month.toString();
     }
 
-    print(time);
     tempTime = "${time}:00.000";
 
     return "${date.year}-${tempMonth}-${tempDay} ${tempTime}";

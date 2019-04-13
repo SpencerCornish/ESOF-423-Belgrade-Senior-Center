@@ -47,8 +47,7 @@ _reportToSentry(dynamic err, StackTrace stackTrace) async {
       extra: {
         "path": Uri?.base?.toString(),
         "userPlatform": window?.navigator?.platform,
-        // FIXME: Begin sending userdata when possible again
-        // "UID": storeContainer?.store?.state?.user?.uid,
+        "UID": storeContainer?.store?.state?.user?.docUID,
         "StateMap": storeContainer?.store?.state?.toString(),
       },
       exceptionValues: [

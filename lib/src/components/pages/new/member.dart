@@ -442,6 +442,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                       new VInputElement()
                                         ..className = 'input'
                                         ..id = 'memStart-input'
+                                        ..onInput = _membershipValidator
                                         ..type = 'date'
                                     ],
                                   //create the Membership Renewal Date Input field

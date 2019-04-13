@@ -148,8 +148,6 @@ class FirebaseClient {
 
     final newUserUidString = resp.stream.bytesToString();
 
-    print(newUserUidString);
-
     // Success, probably
     if (resp.statusCode < 300 && resp.statusCode >= 200) {
       _resetPassword(email);
@@ -260,7 +258,6 @@ class FirebaseClient {
     Map<String, Activity> dataSet = <String, Activity>{};
     fs.QuerySnapshot result = await _refs.allActivities().get();
     for (fs.DocumentSnapshot doc in result.docs) {
-      print(doc.data());
       dataSet[doc.id] = new Activity.fromFirebase(
         doc.data(),
         uid: doc.id,
