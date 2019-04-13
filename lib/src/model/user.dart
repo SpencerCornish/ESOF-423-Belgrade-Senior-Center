@@ -78,9 +78,11 @@ abstract class User implements Built<User, UserBuilder> {
   bool get medRelease;
 
   /// [waiverRelease] is a boolean that tells admins whether or not someone has submitted their waiver & Release
+  @nullable
   bool get waiverRelease;
 
   /// [intakeForm] is a boolean that tells admins whether or not someone has submitted their waiver & Release
+  @nullable
   bool get intakeForm;
 
   /// [services] required
