@@ -1,4 +1,5 @@
 import 'dart:html' hide History;
+import 'dart:math';
 
 import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
@@ -22,6 +23,8 @@ class ViewActivityProps {
 class ViewActivityState {
   bool searching;
   List<Activity> found;
+  bool showMod;
+  bool repeatFound;
 }
 
 /// [viewActivity] class / page to show a visual representation of current stored data
@@ -33,7 +36,9 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
   @override
   ViewActivityState getInitialState() => ViewActivityState()
     ..found = <Activity>[]
-    ..searching = false;
+    ..searching = false
+    ..repeatFound = false
+    ..showMod = false;
 
   /// Browser history entrypoint, to control page navigation
   History get history => _history ?? findHistoryInContext(context);
@@ -89,30 +94,106 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
       history.push(Routes.generateEditActivityURL(uid));
     } else {
       Activity act = props.activityMap[uid];
-      ListBuilder<String> list = new ListBuilder();
+
+      state.repeatFound = false;
 
       for (String id in act.users) {
-        list.add(id);
+        if (props.selectedMemberUID.compareTo(id) == 0) {
+          setState((ViewActivityProps, ViewActivityState) => ViewActivityState..repeatFound = true);
+          break;
+        }
       }
 
-      list.add(props.selectedMemberUID);
+      if (!state.repeatFound) {
+        props.actions.server
+            .updateOrCreateActivity(act.rebuild((builder) => builder..users.add(props.selectedMemberUID)));
+        props.actions.server.fetchAllActivities();
+      }
 
-      Activity update = act.rebuild((builder) => builder
-        ..capacity = act.capacity
-        ..endTime = act.endTime
-        ..startTime = act.startTime
-        ..instructor = act.instructor
-        ..location = act.location
-        ..name = act.name
-        ..users = list);
-
-      props.actions.server.updateOrCreateActivity(update);
-      props.actions.server.fetchAllActivities();
-      history.push(Routes.viewMembers);
+      setState((ViewActivityProps, ViewActivityState) => ViewActivityState..showMod = true);
     }
   }
 
-  String checkText(String text) => text != '' ? text : "N/A";
+  VNode _renderAddInfoMod() {
+    if (props.signUp) {
+      return (new VDivElement()
+        ..className = "modal ${state.showMod ? 'is-active' : ''}"
+        ..children = [
+          new VDivElement()..className = 'modal-background',
+          new VDivElement()
+            ..className = 'modal-card'
+            ..children = [
+              new Vsection()
+                ..className = 'modal-card-head'
+                ..children = [
+                  new VParagraphElement()
+                    ..className = 'title is-4'
+                    ..text = '${state.repeatFound ? 'Already Checked-in' : 'Checked-in Successfully!'}'
+                ],
+              new Vsection()
+                ..className = 'modal-card-body'
+                ..children = [_trySomething()],
+              new Vfooter()
+                ..className = 'modal-card-foot'
+                ..children = [
+                  new VButtonElement()
+                    ..className = 'button is-rounded'
+                    ..text = 'Done'
+                    ..onClick = _doneCheckinClick
+                ],
+            ],
+        ]);
+    }
+    return new VParagraphElement();
+  }
+
+  _doneCheckinClick(_) {
+    history.push(Routes.viewMembers);
+  }
+
+  VNode _trySomething() {
+    //all posible activities
+    List<Activity> actList = props.activityMap.values.toList();
+    //get a random index up to the length of the list - 1 to get a random activity
+    int tryIndex = new Random().nextInt(actList.length - 1);
+
+    return new VTableElement()
+      ..className = 'table is-fullwidth'
+      ..children = [
+        new VTableRowElement()
+          ..children = [
+            new VTableCellElement()..children = [new VParagraphElement()..text = 'While you\'re at it, why not try '],
+            new VTableCellElement()
+              ..children = [
+                new VDivElement()
+                  ..className = 'field'
+                  ..children = [
+                    new VDivElement()
+                      ..className = 'control'
+                      ..children = [
+                        new VParagraphElement()
+                          ..className = 'button is-rounded is-success'
+                          ..onClick = ((_) => _onActClick(actList[tryIndex].uid))
+                          ..children = [
+                            new VSpanElement()..text = actList[tryIndex].name,
+                          ],
+                      ],
+                  ],
+              ],
+          ],
+      ];
+  }
+
+  String checkText(String text) {
+    if (text != '') {
+      if (text == '-1') {
+        text = "Unlimited";
+      }
+    } else {
+      text = "N/A";
+    }
+    return text;
+  }
 
   String tdClass(String text) => text != '' ? 'td' : "td has-text-grey";
 
@@ -147,6 +228,7 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
                   new VDivElement()
                     ..className = 'box is-4'
                     ..children = [
+                      _renderAddInfoMod(),
                       new VDivElement()
                         ..className = 'columns is-mobile'
                         ..children = [
@@ -198,16 +280,39 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
                                           new VSpanElement()
                                             ..className = 'icon'
                                             ..children = [new Vi()..className = 'fas fa-file-csv'],
-                                          new VSpanElement()..text = 'CSV',
+                                          new VSpanElement()..text = 'Export',
                                         ],
                                     ],
                                 ],
                             ],
+                          _renderRefresh(),
                         ],
                       new VTableElement()
                         ..className = 'table is-narrow is-striped is-fullwidth'
                         ..children = createRows(),
                     ],
+                ],
+            ],
+        ],
+    ];
+
+  _renderRefresh() => new VDivElement()
+    ..className = 'column is-narrow'
+    ..children = [
+      new VDivElement()
+        ..className = 'field'
+        ..children = [
+          new VDivElement()
+            ..className = 'control'
+            ..children = [
+              new VParagraphElement()
+                ..className = 'button is-rounded'
+                ..onClick = _onRefreshClick
+                ..children = [
+                  new VSpanElement()
+                    ..className = 'icon'
+                    ..children = [new Vi()..className = 'fas fa-sync-alt'],
+                  new VSpanElement()..text = 'Refresh',
                 ],
             ],
         ],
@@ -267,5 +372,9 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
 
     var event = new MouseEvent("click", view: window, cancelable: false);
     downloadLink.dispatchEvent(event);
+  }
+
+  _onRefreshClick(_) {
+    props.actions.server.fetchAllActivities();
   }
 }

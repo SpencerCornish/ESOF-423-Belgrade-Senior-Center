@@ -1,28 +1,8 @@
 # User Documentation
 
-## Completed
+## Description
 
-- [x] Login
-- [x] View documentation
-- [x] Reset password
-- [x] Clear fields on login page with cancel button
-- [x] Add new member
-- [x] Add new meal
-- [x] Add new activity
-- [x] View current users
-- [x] View current meals
-- [x] View current activities
-- [x] View alerts
-- [x] See upcoming events
-- [x] Logout
-- [ ] Dismiss upcoming renewals 
-
-
-## Description  
-
-This webapp was built to allow the Belgrade Senior Center to easily manage client's information and schedules.  Client's are able to schedule
-meals and classes via the app, volunteers are able to /*TODO*/, and admins are able to easily compile reports and add new clients to the database.
-The goal of this webapp is to make an easy to use tool for Belgrade Senior Center so they can continue providing their services to the community.  
+This webapp was built to allow the Belgrade Senior Center to easily manage members’ information and schedules.  Members are able to sign up for activities and view meal and activity information via the app and admins are able to easily compile reports and add new members, activities, and meals to the database. The goal of this webapp is to make an easy to use tool for Belgrade Senior Center so they can continue providing their services to the community.
 
 ## Installation
 
@@ -34,48 +14,66 @@ To run the webapp, simply open in your web browser of choice, and follow the dir
 
 ## How to use
 
-When the page is loaded you must login /*TODO create a new acount to login for the first time*/, this step uses Google authentication for security. You will then be redirected to a dashboard page that will show any Alerts, upcoming events, or membership renewals that will be defined by users /*TODO for a later release*/. On the top left of every page there is a navigation bar where that links to every other page on the site.
+When the page is loaded you must login, this step uses Google authentication for security. You will then be redirected to a dashboard page that will show The current logged in member's time punches. On the top of every page there is a navigation bar that links to every other page on the site.
 
-Under the `New` tab there are links to different forms that will create a user, meal or activity and store the information in the main database when submited. The forms have built in validation so to ensure data is entered properly.
+Under the `View` tab there are links to different tables that will show the information currently stored in the main database.
 
-Under the `View` tab there are links to different tables that will show the information currently stored in the main database. You can also search through the users for certain names or traits.
-
-## Add Pages
-
-When you would like to add a new user, meal or activity you can hover over the `New` tab in the top left of the screen to select a form.  
-
-Select which item you would like to add, and fill out the form.  Don't worry if you unsure about the format as the form will let you know if you have made a mistake.
+Under the `New` tab there are links to different forms that will create a member, meal or activity and store the information in the main database when submitted. The forms have built in validation to ensure data is entered properly.
 
 ## View Pages
 
-To view the current users, meals, or activies you can hover over the `View` tab in the top left of the screen.  Select which category you would like to view.
+To view the current members (and their associated shifts), meals, or activities you can hover over the `View` tab in the top left of the screen then select which category you would like to view (Admin's will have the added option to view all shifts).
 
-You are able to search through the list by keywords, and can export the list you have searched by clicking the `CSV` button in the right top corner of the screen.
+You are able to search through the list by keywords.
 
-On any one of the pages, simply click on an item in the able and it will open a detailed page where the information can be edited with the click of a button.
+You can download all the information for what is currently displayed by clicking the `Export` button in the right top corner of the screen.
 
-## Formatting for `New` Forms
+The page can be refreshed to ensure any data added while the page was open is added to the table.
+
+On any one of the pages, simply click on the view button for a row and it will open a detailed page where the information can be edited with the click of a button accessible only to admins.
+
+## Add Pages
+
+To add a new member, meal or activity you can hover over the `New` tab in the top left of the screen and select which item you would like to add, then fill out the form.
+
+## Checking In
+
+There are two ways to add a member to an activity. Both ensure that the member being added is not already checked in.
+
+### 1) From the View Member's Page
+
+On each row there is a `Check in` button that will redirect the member to the a check in page that looks like the View Activities page. From this page the member can click on any Activities check in button which will create a popup explaining if the check in was successful (a non-successful check in will occur if the user is already checked in for a class and will be explained in the same popup). Included in the success message will be a suggestion to try out a different class which will have a button that repeatedly checks in a user to new classes until they are done and click `Done` in the bottom of the popup.
+
+### 2) From the Edit Activity Page
+
+While editing an activity you can add a member by clicking the `Add` button in the middle right portion of the page (after `Edit` is clicked) this creates a popup that will show all members not currently checked in for this activity.
+
+## Required Fields
 
 ### User
 
-First and last name are required, as is email and phone or cell number.  The membership date must also be filled out.
+- First and Last name
+- Email
+- Phone or Cell number
+- Membership date Start and End
 
 ### Meal
 
-For the meal form please ensure that the start time is before the end time.
-
-In the meal field please list the menu for the meal.
+- Start time
+- End time
+- Menu
 
 ### Activity
 
-The activity name, instructor name, location, and capacity fields must be filled out.  Please ensure that the start time is before the end time.
-
-For the capacity field -1 indicates there is no upper limit for the class.  0 indicates no spaces, and any number higher than zero represents that many spaces.
-
-#
+- Name
+- Instructor name
+- Location
+- Capacity
+- Start time
+- End time.
 
 ## Report a bug
 
-Please submit a GitHub issue [here](https://github.com/SpencerCornish/belgrade-senior-center/issues).  
+Please submit a GitHub issue [here](https://github.com/SpencerCornish/belgrade-senior-center/issues).
 Make sure to include the browser you are using, the operating system of your device and contact info for yourself.
-Here is a an [article](https://docs.oracle.com/javase/8/docs/technotes/guides/troubleshoot/bugreports002.html#CHDBFAEE) for how to write a good bug report, please refrence it before submitting yours.
+Here is a an [article](https://docs.oracle.com/javase/8/docs/technotes/guides/troubleshoot/bugreports002.html#CHDBFAEE) for how to write a good bug report, please reference it before submitting yours.

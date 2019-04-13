@@ -1,7 +1,6 @@
 name: bsc
 description: A web app for Belgrade Senior Center
 version: 0.0.1
-# homepage: https://www.msubot.com
 authors: Spencer Cornish <spencerjcornish@gmail.com>
 
 environment:
@@ -15,6 +14,7 @@ dependencies:
   email_validator: "^1.0.0"
   firebase: ^5.0.2
   googleapis_auth: ^0.2.6
+  http: ^0.12.0+1
   intl: ^0.15.7
   sentry_client: ^4.2.1
   stack_trace: ^1.9.3

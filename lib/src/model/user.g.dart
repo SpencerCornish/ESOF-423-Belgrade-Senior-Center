@@ -120,12 +120,6 @@ class _$User extends User {
     if (position == null) {
       throw new BuiltValueNullFieldError('User', 'position');
     }
-    if (waiverRelease == null) {
-      throw new BuiltValueNullFieldError('User', 'waiverRelease');
-    }
-    if (intakeForm == null) {
-      throw new BuiltValueNullFieldError('User', 'intakeForm');
-    }
     if (services == null) {
       throw new BuiltValueNullFieldError('User', 'services');
     }

@@ -28,6 +28,8 @@ class NewMemberState {
   bool medBool;
   bool waiverBool;
   bool intakeBool;
+  bool hasInvalid;
+  bool memIsValid;
   String role;
 }
 
@@ -36,17 +38,19 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
 
   @override
   NewMemberState getInitialState() => NewMemberState()
-    ..firstNameIsValid = true
-    ..lastNameIsValid = true
+    ..firstNameIsValid = false
+    ..lastNameIsValid = false
     ..emailIsValid = true
     ..phoneNumberIsValid = true
     ..cellNumberIsValid = true
-    ..addressIsValid = true
+    ..addressIsValid = false
     ..mealBool = false
     ..dropDownActive = false
     ..medBool = false
     ..waiverBool = false
     ..intakeBool = false
+    ..hasInvalid = true
+    ..memIsValid = false
     ..role = "member";
 
   History _history;
@@ -108,7 +112,12 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                 ..children = [
                                   new VLabelElement()
                                     ..className = 'label'
-                                    ..text = "First Name"
+                                    ..children = [
+                                      new VSpanElement()..text = "First Name",
+                                      new VSpanElement()
+                                        ..className = "has-text-danger"
+                                        ..text = '*'
+                                    ]
                                 ],
                               new VDivElement()
                                 ..className = 'field is-horizontal'
@@ -137,7 +146,12 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                             ..children = [
                                               new VLabelElement()
                                                 ..className = 'label'
-                                                ..text = "Last Name"
+                                                ..children = [
+                                                  new VSpanElement()..text = "Last Name",
+                                                  new VSpanElement()
+                                                    ..className = "has-text-danger"
+                                                    ..text = '*'
+                                                ]
                                             ],
                                           new VDivElement()
                                             ..className = 'field'
@@ -280,7 +294,12 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                         ..children = [
                           new VLabelElement()
                             ..className = 'label'
-                            ..text = "Address",
+                            ..children = [
+                              new VSpanElement()..text = "Mailing Address",
+                              new VSpanElement()
+                                ..className = "has-text-danger"
+                                ..text = '*'
+                            ]
                         ],
                       new VDivElement()
                         ..className = 'field-body'
@@ -407,7 +426,12 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                 ..children = [
                                   new VLabelElement()
                                     ..className = 'label'
-                                    ..text = "Membership Start",
+                                    ..children = [
+                                      new VSpanElement()..text = "Membership Start",
+                                      new VSpanElement()
+                                        ..className = "has-text-danger"
+                                        ..text = '*'
+                                    ]
                                 ],
                               new VDivElement()
                                 ..className = 'field is-horizontal'
@@ -418,6 +442,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                       new VInputElement()
                                         ..className = 'input'
                                         ..id = 'memStart-input'
+                                        ..onInput = _membershipValidator
                                         ..type = 'date'
                                     ],
                                   //create the Membership Renewal Date Input field
@@ -433,7 +458,12 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                             ..children = [
                                               new VLabelElement()
                                                 ..className = 'label'
-                                                ..text = "Membership Renewal"
+                                                ..children = [
+                                                  new VSpanElement()..text = "Memership Renewal",
+                                                  new VSpanElement()
+                                                    ..className = "has-text-danger"
+                                                    ..text = '*'
+                                                ]
                                             ],
                                           new VDivElement()
                                             ..className = 'field'
@@ -442,9 +472,14 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                                 ..className = 'control is-expanded'
                                                 ..children = [
                                                   new VInputElement()
+                                                    ..onInput = _membershipValidator
                                                     ..className = 'input'
                                                     ..id = 'memRenew-input'
-                                                    ..type = 'date'
+                                                    ..type = 'date',
+                                                  new VParagraphElement()
+                                                    ..className =
+                                                        'help is-danger ${state.memIsValid ? 'is-invisible' : ''}'
+                                                    ..text = "Renewal Date is before Start Date"
                                                 ]
                                             ]
                                         ]
@@ -453,99 +488,20 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                             ],
                         ]
                     ],
-
-                  //TODO: Add a field for profile picture
-
-                  new VDivElement()
-                    ..className = 'columns'
-                    ..children = [
-                      new VDivElement()
-                        ..className = 'column is-narrow'
-                        ..children = [
-                          new VDivElement()
-                            ..className = 'control'
-                            ..children = [
-                              new VCheckboxInputElement()
-                                ..className = 'checkbox'
-                                ..id = 'medRelease-input'
-                                ..onClick = _medCheckBoxCheck
-                            ]
-                        ],
-                      new VDivElement()
-                        ..className = 'column is-narrow'
-                        ..children = [
-                          new VLabelElement()
-                            ..className = 'label'
-                            ..text = "Has completed Medical Form"
-                        ],
-                      new VDivElement()
-                        ..className = 'column is-narrow'
-                        ..children = [
-                          new VDivElement()
-                            ..className = 'control'
-                            ..children = [
-                              new VCheckboxInputElement()
-                                ..className = 'checkbox'
-                                ..id = 'waiverRelease-input'
-                                ..onClick = _waiverCheckBoxCheck
-                            ]
-                        ],
-                      new VDivElement()
-                        ..className = 'column is-narrow'
-                        ..children = [
-                          new VLabelElement()
-                            ..className = 'label'
-                            ..text = "Has completed the Waiver & Release Form"
-                        ],
-                      new VDivElement()
-                        ..className = 'column is-narrow'
-                        ..children = [
-                          new VDivElement()
-                            ..className = 'control'
-                            ..children = [
-                              new VCheckboxInputElement()
-                                ..className = 'checkbox'
-                                ..id = 'intakeForm-input'
-                                ..onClick = _intakeBoxCheck
-                            ]
-                        ],
-                      new VDivElement()
-                        ..className = 'column is-narrow'
-                        ..children = [
-                          new VLabelElement()
-                            ..className = 'label'
-                            ..text = "Has completed the Intake Form"
-                        ],
-                    ],
-
                   //create the drop down menu for establishing the type of user
                   new VDivElement()
-                    ..className = 'columns'
+                    ..className = 'columns is-centered'
                     ..children = [
                       new VDivElement()
-                        ..className = 'column'
-                        ..children = [
-                          _roleHelper(),
-                        ],
+                        ..className = 'column is-three-quarters'
+                        ..children = [_renderRoleBox()],
+                    ],
+                  new VDivElement()
+                    ..className = 'columns is-centered'
+                    ..children = [
                       new VDivElement()
-                        ..className = 'column is-narrow'
-                        ..children = [
-                          new VDivElement()
-                            ..className = 'control'
-                            ..children = [
-                              new VCheckboxInputElement()
-                                ..className = 'checkbox'
-                                ..id = 'mealOption-input'
-                                ..onClick = _checkBoxCheck
-                            ]
-                        ],
-                      new VDivElement()
-                        ..className = 'column is-narrow'
-                        ..children = [
-                          new VLabelElement()
-                            ..className = 'label'
-                            ..text = "Requires Home Delivery for Meals"
-                        ],
+                        ..className = 'column is-half'
+                        ..children = [_renderCheckboxes()],
                     ],
                   //create the submit button
                   new VDivElement()
@@ -554,14 +510,201 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                       new VDivElement()
                         ..className = 'control'
                         ..children = [
-                          new VAnchorElement()
-                            ..className = 'button is-link'
+                          new VButtonElement()
+                            ..className = 'button is-link is-rounded'
+                            ..disabled = _canActivateSubmit()
                             ..text = "Submit"
                             ..onClick = _submitClick
                         ]
                     ]
                 ]
             ]
+        ]
+    ];
+
+  VNode _renderRoleBox() => new VDivElement()
+    ..className = 'box'
+    ..children = [
+      new VDivElement()
+        ..className = 'columns is-mobile is-centered'
+        ..children = [
+          new VDivElement()
+            ..className = 'column is-narrow'
+            ..children = [
+              new VLabelElement()
+                ..className = 'label'
+                ..text = "User Role "
+            ],
+          new VDivElement()
+            ..className = 'column is-narrow'
+            ..children = [
+              _renderRolePicker(),
+            ],
+        ],
+      new VParagraphElement()
+        ..children = [
+          new VSpanElement()
+            ..className = 'has-text-weight-bold'
+            ..text = 'Admin: ',
+          new VSpanElement()
+            ..className = ''
+            ..text = 'Can view, edit and create everything. Creates a login with the specified email.',
+        ],
+      new VParagraphElement()
+        ..children = [
+          new VSpanElement()
+            ..className = 'has-text-weight-bold'
+            ..text = 'Volunteer: ',
+          new VSpanElement()
+            ..className = ''
+            ..text =
+                'Can view, edit and create everything except other user\'s punches. Creates a login with the specified email.',
+        ],
+      new VParagraphElement()
+        ..children = [
+          new VSpanElement()
+            ..className = 'has-text-weight-bold'
+            ..text = 'Member: ',
+          new VSpanElement()
+            ..className = ''
+            ..text = 'Has no permissions, cannot log in.',
+        ],
+    ];
+
+  ///[roleHelper] creates dropdown for role selection
+  VNode _renderRolePicker() => new VDivElement()
+    ..className = 'dropdown ${state.dropDownActive ? 'is-active' : ''}'
+    ..children = [
+      new VDivElement()
+        ..className = 'dropdown-trigger'
+        ..onClick = _dropDownClick
+        ..children = [
+          new VButtonElement()
+            ..className = 'button is-dropdown-menu is-centered'
+            ..children = [
+              new VSpanElement()..text = state.role,
+              new VSpanElement()
+                ..className = 'icon'
+                ..children = [new Vi()..className = "fas fa-angle-down"],
+              new VDivElement()
+                ..className = 'dropdown-menu'
+                ..id = 'dropdown-menu'
+                ..children = [
+                  new VDivElement()
+                    ..className = 'dropdown-content'
+                    ..children = [
+                      new VAnchorElement()
+                        ..className = 'dropdown-item ${state.role.compareTo("member") == 0 ? 'is-active' : ''}'
+                        ..onClick = _changeRoleMemClick
+                        ..text = "member",
+                      new VAnchorElement()
+                        ..className = 'dropdown-item ${state.role.compareTo("volunteer") == 0 ? 'is-active' : ''}'
+                        ..onClick = _changeRoleVolClick
+                        ..text = "volunteer",
+                      new VAnchorElement()
+                        ..className = 'dropdown-item ${state.role.compareTo("admin") == 0 ? 'is-active' : ''}'
+                        ..onClick = _changeRoleAdminClick
+                        ..text = "admin",
+                    ],
+                ],
+            ],
+        ],
+    ];
+
+  VNode _renderCheckboxes() => new VDivElement()
+    ..className = 'box'
+    ..children = [
+      new VDivElement()
+        ..className = 'columns is-mobile'
+        ..children = [
+          new VDivElement()
+            ..className = 'column is-narrow'
+            ..children = [
+              new VDivElement()
+                ..className = 'control'
+                ..children = [
+                  new VCheckboxInputElement()
+                    ..className = 'checkbox'
+                    ..id = 'medRelease-input'
+                    ..onClick = _medCheckBoxCheck
+                ]
+            ],
+          new VDivElement()
+            ..className = 'column'
+            ..children = [
+              new VLabelElement()
+                ..className = 'label'
+                ..text = "Has completed Medical Form"
+            ],
+        ],
+      new VDivElement()
+        ..className = 'columns is-mobile'
+        ..children = [
+          new VDivElement()
+            ..className = 'column is-narrow'
+            ..children = [
+              new VDivElement()
+                ..className = 'control'
+                ..children = [
+                  new VCheckboxInputElement()
+                    ..className = 'checkbox'
+                    ..id = 'waiverRelease-input'
+                    ..onClick = _waiverCheckBoxCheck
+                ]
+            ],
+          new VDivElement()
+            ..className = 'column'
+            ..children = [
+              new VLabelElement()
+                ..className = 'label'
+                ..text = "Has completed the Waiver & Release Form"
+            ],
+        ],
+      new VDivElement()
+        ..className = 'columns is-mobile'
+        ..children = [
+          new VDivElement()
+            ..className = 'column is-narrow'
+            ..children = [
+              new VDivElement()
+                ..className = 'control'
+                ..children = [
+                  new VCheckboxInputElement()
+                    ..className = 'checkbox'
+                    ..id = 'intakeForm-input'
+                    ..onClick = _intakeBoxCheck
+                ]
+            ],
+          new VDivElement()
+            ..className = 'column'
+            ..children = [
+              new VLabelElement()
+                ..className = 'label'
+                ..text = "Has completed the Intake Form"
+            ],
+        ],
+      new VDivElement()
+        ..className = 'columns is-mobile'
+        ..children = [
+          new VDivElement()
+            ..className = 'column is-narrow'
+            ..children = [
+              new VDivElement()
+                ..className = 'control'
+                ..children = [
+                  new VCheckboxInputElement()
+                    ..className = 'checkbox'
+                    ..id = 'mealOption-input'
+                    ..onClick = _checkBoxCheck
+                ]
+            ],
+          new VDivElement()
+            ..className = 'column'
+            ..children = [
+              new VLabelElement()
+                ..className = 'label'
+                ..text = "Requires Home Delivery for Meals"
+            ],
         ]
     ];
 
@@ -575,6 +718,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     bool isValid = Validator.name(first.value);
     //Sets new state
     setState((NewMemberProps, NewMemberState) => NewMemberState..firstNameIsValid = isValid);
+    _canActivateSubmit;
   }
 
   //Validation for last name
@@ -585,6 +729,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     bool isValid = Validator.name(last.value);
     //Sets new state
     setState((NewMemberProps, NewMemberState) => NewMemberState..lastNameIsValid = isValid);
+    _canActivateSubmit;
   }
 
   //Validation for email using Spencer's function from constants.dart
@@ -607,6 +752,20 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
   //425-273-4489
   //1-425-273-4489
   //+1-425-273-4489
+
+  void _membershipValidator(_) {
+    InputElement memStart = querySelector('#memStart-input');
+    InputElement memRenew = querySelector('#memRenew-input');
+    try {
+      DateTime start = DateTime.parse(memStart.value);
+      DateTime end = DateTime.parse(memRenew.value);
+      bool isValid = Validator.time(start, end);
+      setState((NewMemberProps, NewMemberState) => NewMemberState..memIsValid = isValid);
+    } catch (_) {
+      state.memIsValid = false;
+    }
+    _canActivateSubmit;
+  }
 
   //Validation for phone number, doesnt check if blank
   void _phoneNumberValidator(_) {
@@ -642,6 +801,14 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     InputElement address = querySelector("#address-input");
     bool isValid = Validator.address(address.value);
     setState((NewMemberProps, NewMemberState) => NewMemberState..addressIsValid = isValid);
+    _canActivateSubmit();
+  }
+
+  bool _canActivateSubmit() {
+    if (state.firstNameIsValid && state.lastNameIsValid && state.addressIsValid && state.memIsValid) {
+      return false; //enables button on false
+    }
+    return true; //disables button on true
   }
 
   //method used for the submit click
@@ -660,9 +827,6 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     InputElement medical = querySelector('#medicalIssue-input');
     InputElement memStart = querySelector('#memStart-input');
     InputElement memRenew = querySelector('#memRenew-input');
-
-    print("This is what is in mealOp: ");
-    print(state.mealBool);
 
     //create a new user object
     User newUser = (new UserBuilder()
@@ -692,48 +856,6 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     props.actions.server.fetchAllMembers();
 
     history.push(Routes.dashboard);
-  }
-
-  ///[roleHelper] creates dropdown for role selection
-  VNode _roleHelper() {
-    return (new VDivElement()
-      ..className = 'dropdown ${state.dropDownActive ? 'is-active' : ''}'
-      ..children = [
-        new VDivElement()
-          ..className = 'dropdown-trigger'
-          ..onClick = _dropDownClick
-          ..children = [
-            new VButtonElement()
-              ..className = 'button is-dropdown-menu is-centered'
-              ..children = [
-                new VSpanElement()..text = state.role,
-                new VSpanElement()
-                  ..className = 'icon'
-                  ..children = [new Vi()..className = "fas fa-angle-down"],
-                new VDivElement()
-                  ..className = 'dropdown-menu'
-                  ..id = 'dropdown-menu'
-                  ..children = [
-                    new VDivElement()
-                      ..className = 'dropdown-content'
-                      ..children = [
-                        new VAnchorElement()
-                          ..className = 'dropdown-item ${state.role.compareTo("member") == 0 ? 'is-active' : ''}'
-                          ..onClick = _changeRoleMemClick
-                          ..text = "member",
-                        new VAnchorElement()
-                          ..className = 'dropdown-item ${state.role.compareTo("volunteer") == 0 ? 'is-active' : ''}'
-                          ..onClick = _changeRoleVolClick
-                          ..text = "volunteer",
-                        new VAnchorElement()
-                          ..className = 'dropdown-item ${state.role.compareTo("admin") == 0 ? 'is-active' : ''}'
-                          ..onClick = _changeRoleAdminClick
-                          ..text = "admin",
-                      ],
-                  ],
-              ],
-          ],
-      ]);
   }
 
   _dropDownClick(_) {

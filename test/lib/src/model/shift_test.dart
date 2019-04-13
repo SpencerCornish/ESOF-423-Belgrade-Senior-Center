@@ -13,7 +13,7 @@ void main() {
   });
   group('Shift -', () {
     test('fromFirebase factory produces accurate model file', () {
-      Shift shiftFromTestData = new Shift.fromFirebase(mockFirestoreShiftData);
+      Shift shiftFromTestData = new Shift.fromFirebase('', mockFirestoreShiftData);
 
       expect(shiftFromTestData.inTime, testInTime);
       expect(shiftFromTestData.outTime, testOutTime);
@@ -24,7 +24,7 @@ void main() {
     });
 
     test('toFirebase function produces a properly formatted map of data', () {
-      Shift shiftFromTestData = new Shift.fromFirebase(mockFirestoreShiftData);
+      Shift shiftFromTestData = new Shift.fromFirebase('', mockFirestoreShiftData);
 
       final firebaseMap = shiftFromTestData.toFirebase();
 

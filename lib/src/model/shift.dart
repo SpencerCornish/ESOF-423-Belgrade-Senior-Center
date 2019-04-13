@@ -23,9 +23,11 @@ abstract class Shift implements Built<Shift, ShiftBuilder> {
   factory Shift([updates(ShiftBuilder b)]) = _$Shift;
 
   factory Shift.fromFirebase(
+    String punchID,
     Map<String, dynamic> firestoreData,
   ) =>
       new Shift((ShiftBuilder builder) => builder
+        ..punchID = punchID
         ..userID = firestoreData["user_id"]
         ..inTime = DateTime.tryParse(firestoreData["in_time"])
         ..outTime = DateTime.tryParse(firestoreData["out_time"]));

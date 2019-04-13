@@ -73,8 +73,7 @@ class Validator {
     }
   }
 
-  // TODO: Finish this validator
-  static bool address(String input) => true;
+  static bool address(String input) => input != "";
 
   /// [time] ensures start is before end
   static bool time(DateTime start, DateTime end) => start.isBefore(end);
@@ -127,6 +126,12 @@ class ExportHeader {
     'Out Time',
     'Duration',
   ];
+}
+
+class HttpEndpoint {
+  static const baseUrl = "https://us-central1-bsc-development.cloudfunctions.net/";
+
+  static const createUserLogin = baseUrl + "createUserLogin";
 }
 
 /// The different authentication states the UI can be in.

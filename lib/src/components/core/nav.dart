@@ -157,7 +157,7 @@ class Nav extends Component<NavProps, NavState> {
                         ..className = 'column is-narrow'
                         ..children = [
                           new VAnchorElement()
-                            ..className = 'button'
+                            ..className = 'button is-rounded'
                             ..id = 'log-out-button'
                             ..onClick = _onLogOutClick
                             ..children = [

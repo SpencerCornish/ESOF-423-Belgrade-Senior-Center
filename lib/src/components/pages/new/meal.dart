@@ -19,13 +19,16 @@ class NewMealProps {
 
 class NewMealState {
   bool timeIsValid;
+  bool mealIsValid;
 }
 
 class NewMeal extends Component<NewMealProps, NewMealState> {
   NewMeal(props) : super(props);
 
   @override
-  NewMealState getInitialState() => NewMealState()..timeIsValid = true;
+  NewMealState getInitialState() => NewMealState()
+    ..timeIsValid = false
+    ..mealIsValid = false;
 
   History _history;
 
@@ -101,9 +104,14 @@ class NewMeal extends Component<NewMealProps, NewMealState> {
                                             ..className = 'control'
                                             ..children = [
                                               new VInputElement()
-                                                ..className = 'input'
+                                                ..onInput = _timeValidator
+                                                ..className = 'input ${state.timeIsValid ? '' : 'is-danger'}'
                                                 ..id = 'serveDate-input'
-                                                ..type = 'date'
+                                                ..type = 'date',
+                                              new VParagraphElement()
+                                                ..className =
+                                                    'help is-danger ${state.timeIsValid ? 'is-invisible' : ''}'
+                                                ..text = 'Meal needs a date and time'
                                             ]
                                         ]
                                     ]
@@ -223,9 +231,13 @@ class NewMeal extends Component<NewMealProps, NewMealState> {
                                 ..className = 'control'
                                 ..children = [
                                   new VTextAreaElement()
-                                    ..className = 'textarea'
+                                    ..onInput = _mealValidator
+                                    ..className = 'textarea ${state.mealIsValid ? '' : 'is-danger'}'
                                     ..id = 'meal-input'
-                                    ..placeholder = "Enter full meal"
+                                    ..placeholder = "Enter full meal",
+                                  new VParagraphElement()
+                                    ..className = 'help is-danger ${state.mealIsValid ? 'is-invisible' : ''}'
+                                    ..text = 'Meal needs a menu.'
                                 ]
                             ]
                         ]
@@ -239,8 +251,9 @@ class NewMeal extends Component<NewMealProps, NewMealState> {
                       new VDivElement()
                         ..className = 'control'
                         ..children = [
-                          new VAnchorElement()
-                            ..className = 'button is-link'
+                          new VButtonElement()
+                            ..className = 'button is-link is-rounded'
+                            ..disabled = _canActivateSubmit()
                             ..text = "Submit"
                             ..onClick = _submitClick
                         ]
@@ -250,24 +263,41 @@ class NewMeal extends Component<NewMealProps, NewMealState> {
         ]
     ];
 
+  _mealValidator(_) {
+    TextAreaElement meal = querySelector('#meal-input');
+    String menu = meal.value;
+    bool isValid = Validator.name(menu);
+    setState((NewMealProps, NewMealState) => NewMealState..mealIsValid = isValid);
+  }
+
+  bool _canActivateSubmit() {
+    if (state.mealIsValid && state.timeIsValid) {
+      return false; //enables button on false
+    }
+    return true; //disables button on true
+  }
+
   //Checks that the meal does not start before it ends
   _timeValidator(_) {
     //Gets the 3 date time inputs
     InputElement date = querySelector('#serveDate-input');
     InputElement time_start = querySelector('#mealStart-input');
     InputElement time_end = querySelector('#mealEnd-input');
+    try {
+      DateTime serveDay = DateTime.parse(date.value);
 
-    DateTime serveDay = DateTime.parse(date.value);
+      String startTime = _parseDate(serveDay, time_start.value);
+      String endTime = _parseDate(serveDay, time_end.value);
 
-    String startTime = _parseDate(serveDay, time_start.value);
-    String endTime = _parseDate(serveDay, time_end.value);
+      DateTime start = DateTime.parse(startTime);
+      DateTime end = DateTime.parse(endTime);
 
-    DateTime start = DateTime.parse(startTime);
-    DateTime end = DateTime.parse(endTime);
+      bool isValid = Validator.time(start, end);
 
-    bool isValid = Validator.time(start, end);
-
-    setState((NewMealProps, NewMealState) => NewMealState..timeIsValid = isValid);
+      setState((NewMealProps, NewMealState) => NewMealState..timeIsValid = isValid);
+    } catch (_) {
+      setState((NewMealProps, NewMealState) => NewMealState..timeIsValid = false);
+    }
   }
 
   //method used for the submit click
@@ -316,7 +346,6 @@ class NewMeal extends Component<NewMealProps, NewMealState> {
       tempMonth = date.month.toString();
     }
 
-    print(time);
     tempTime = "${time}:00.000";
 
     return "${date.year}-${tempMonth}-${tempDay} ${tempTime}";

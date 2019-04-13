@@ -22,6 +22,7 @@ class NewActivityState {
   bool locationIsValid;
   bool capacityIsValid;
   bool timeIsValid;
+  bool isUnlimited;
 }
 
 class NewActivity extends Component<NewActivityProps, NewActivityState> {
@@ -29,11 +30,12 @@ class NewActivity extends Component<NewActivityProps, NewActivityState> {
 
   @override
   NewActivityState getInitialState() => NewActivityState()
-    ..activityNameIsValid = true
+    ..activityNameIsValid = false
     ..instructorNameIsValid = true
     ..locationIsValid = true
     ..capacityIsValid = true
-    ..timeIsValid = true;
+    ..timeIsValid = false
+    ..isUnlimited = false;
 
   History _history;
 
@@ -214,43 +216,72 @@ class NewActivity extends Component<NewActivityProps, NewActivityState> {
                         ..className = 'column'
                         ..children = [
                           new VDivElement()
-                            ..className = 'field is-grouped'
+                            ..className = 'columns is-mobile'
                             ..children = [
                               new VDivElement()
-                                ..className = 'field is-horizontal'
+                                ..className = 'column is-narrow'
                                 ..children = [
                                   new VDivElement()
-                                    ..className = 'field-body'
+                                    ..className = 'field is-grouped'
                                     ..children = [
-                                      new VDivElement()
-                                        ..className = 'field'
-                                        ..id = 'capacity-lab'
-                                        ..children = [
-                                          new VLabelElement()
-                                            ..className = 'label'
-                                            ..text = "Capacity"
-                                        ],
                                       new VDivElement()
                                         ..className = 'field is-horizontal'
                                         ..children = [
-                                          new VParagraphElement()
-                                            ..className = 'control'
+                                          new VDivElement()
+                                            ..className = 'field-body'
                                             ..children = [
-                                              new VInputElement()
-                                                ..onInput = _capacityValidator
-                                                ..className = 'input ${state.capacityIsValid ? '' : 'is-danger'}'
-                                                ..id = 'capacity-input'
-                                                ..type = 'number',
-                                              new VParagraphElement()
-                                                ..className =
-                                                    'help is-danger ${state.capacityIsValid ? 'is-invisible' : ''}'
-                                                ..text = 'Capacity must be -1, or more than 0'
+                                              new VDivElement()
+                                                ..className = 'field'
+                                                ..id = 'capacity-lab'
+                                                ..children = [
+                                                  new VLabelElement()
+                                                    ..className = 'label'
+                                                    ..text = "Capacity"
+                                                ],
+                                              new VDivElement()
+                                                ..className = 'field is-horizontal'
+                                                ..children = [
+                                                  new VParagraphElement()
+                                                    ..className = 'control'
+                                                    ..children = [
+                                                      new VInputElement()
+                                                        ..onInput = _capacityValidator
+                                                        ..className =
+                                                            'input ${state.capacityIsValid ? '' : 'is-danger'}'
+                                                        ..id = 'capacity-input'
+                                                        ..disabled = state.isUnlimited
+                                                        ..type = 'number',
+                                                      new VParagraphElement()
+                                                        ..className =
+                                                            'help is-danger ${state.capacityIsValid ? 'is-invisible' : ''}'
+                                                        ..text = 'Capacity must be -1, or more than 0'
+                                                    ]
+                                                ]
                                             ]
                                         ]
+                                    ],
+                                ],
+                              new VDivElement()
+                                ..className = 'column is-narrow'
+                                ..children = [
+                                  new VLabelElement()
+                                    ..className = 'label'
+                                    ..text = "Unlimited"
+                                ],
+                              new VDivElement()
+                                ..className = 'column is-narrow'
+                                ..children = [
+                                  new VDivElement()
+                                    ..className = 'control'
+                                    ..children = [
+                                      new VCheckboxInputElement()
+                                        ..className = 'checkbox'
+                                        ..id = 'isUnlimited-input'
+                                        ..onClick = _unlimitedBoxCheck
                                     ]
-                                ]
-                            ]
-                        ]
+                                ],
+                            ],
+                        ],
                     ],
                   new VDivElement()
                     ..className = 'columns'
@@ -282,9 +313,14 @@ class NewActivity extends Component<NewActivityProps, NewActivityState> {
                                             ..className = 'control'
                                             ..children = [
                                               new VInputElement()
-                                                ..className = 'input'
+                                                ..onInput = _timeValidator
+                                                ..className = 'input ${state.timeIsValid ? '' : 'is-danger'}'
                                                 ..id = 'day-input'
-                                                ..type = 'date'
+                                                ..type = 'date',
+                                              new VParagraphElement()
+                                                ..className =
+                                                    'help is-danger ${state.timeIsValid ? 'is-invisible' : ''}'
+                                                ..text = 'Activity must include date'
                                             ]
                                         ]
                                     ]
@@ -390,9 +426,10 @@ class NewActivity extends Component<NewActivityProps, NewActivityState> {
                       new VDivElement()
                         ..className = 'control'
                         ..children = [
-                          new VAnchorElement()
-                            ..className = 'button is-link'
+                          new VButtonElement()
+                            ..className = 'button is-link is-rounded'
                             ..text = "Submit"
+                            ..disabled = _canActivateSubmit()
                             ..onClick = _submitClick
                         ]
                     ]
@@ -400,6 +437,13 @@ class NewActivity extends Component<NewActivityProps, NewActivityState> {
             ]
         ]
     ];
+
+  bool _canActivateSubmit() {
+    if (state.activityNameIsValid && state.timeIsValid) {
+      return false; //enables button on false
+    }
+    return true; //disables button on true
+  }
 
   void _activityNameValidator(_) {
     InputElement actName = querySelector('#act-input');
@@ -425,22 +469,29 @@ class NewActivity extends Component<NewActivityProps, NewActivityState> {
     setState((NewActivityProps, NewActivityState) => NewActivityState..capacityIsValid = isValid);
   }
 
+  _unlimitedBoxCheck(_) {
+    setState((props, state) => state..isUnlimited = !state.isUnlimited);
+  }
+
   void _timeValidator(_) {
     InputElement start = querySelector('#timeStart-input');
     InputElement end = querySelector('#timeEnd-input');
     InputElement day = querySelector('#day-input');
+    try {
+      DateTime serveDay = DateTime.parse(day.value);
 
-    DateTime serveDay = DateTime.parse(day.value);
+      String startTime = _parseDate(serveDay, start.value);
+      String endTime = _parseDate(serveDay, end.value);
 
-    String startTime = _parseDate(serveDay, start.value);
-    String endTime = _parseDate(serveDay, end.value);
+      DateTime startDT = DateTime.parse(startTime);
+      DateTime endDT = DateTime.parse(endTime);
 
-    DateTime startDT = DateTime.parse(startTime);
-    DateTime endDT = DateTime.parse(endTime);
+      bool isValid = Validator.time(startDT, endDT);
 
-    bool isValid = Validator.time(startDT, endDT);
-
-    setState((NewActivityProps, NewActivityState) => NewActivityState..timeIsValid = isValid);
+      setState((NewActivityProps, NewActivityState) => NewActivityState..timeIsValid = isValid);
+    } catch (_) {
+      setState((NewActivityProps, NewActivityState) => NewActivityState..timeIsValid = false);
+    }
   }
 
   //method used for the submit click
@@ -458,13 +509,18 @@ class NewActivity extends Component<NewActivityProps, NewActivityState> {
     String tempEnd = end.value.toString(); //make the end time a string for use in _parseDate
 
     String startTime, endTime;
-    int cap; //capacity of activity
+    int activityCapacity; //capacity of activity
     startTime = _parseDate(date, tempStart);
     endTime = _parseDate(date, tempEnd);
-    cap = int.parse(capacity.value);
+
+    if (state.isUnlimited) {
+      activityCapacity = -1;
+    } else {
+      activityCapacity = int.parse(capacity.value);
+    }
 
     Activity newActivity = (new ActivityBuilder()
-          ..capacity = cap
+          ..capacity = activityCapacity
           ..endTime = DateTime.parse(endTime)
           ..startTime = DateTime.parse(startTime)
           ..instructor = instructor.value
@@ -495,7 +551,6 @@ class NewActivity extends Component<NewActivityProps, NewActivityState> {
       tempMonth = date.month.toString();
     }
 
-    print(time);
     tempTime = "${time}:00.000";
 
     return "${date.year}-${tempMonth}-${tempDay} ${tempTime}";

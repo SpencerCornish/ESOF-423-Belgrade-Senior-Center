@@ -109,26 +109,4 @@ describe("Home Page", () => {
 
     await page.waitForSelector("#hint-invalidpassword");
   }, 16000);
-
-  test("navigates to Readme on User Doc click", async () => {
-    await page.goto(APP);
-    await page.waitForSelector("#home-container");
-
-    await page.click("#user-doc-button");
-
-    expect(await page.evaluate(() => document.URL)).toBe(
-      "https://github.com/SpencerCornish/belgrade-senior-center/blob/master/USERREADME.md"
-    );
-  }, 16000);
-
-  test("navigates to Readme on Dev Doc click", async () => {
-    await page.goto(APP);
-    await page.waitForSelector("#home-container");
-
-    await page.click("#dev-doc-button");
-
-    expect(await page.evaluate(() => document.URL)).toBe(
-      "https://github.com/SpencerCornish/belgrade-senior-center/blob/master/README.md"
-    );
-  }, 16000);
 });

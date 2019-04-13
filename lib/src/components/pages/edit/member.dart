@@ -659,7 +659,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
         ..className = 'control'
         ..children = [
           new VAnchorElement()
-            ..className = 'button is-link'
+            ..className = 'button is-link is-rounded'
             ..text = "Edit"
             ..onClick = _editClick
         ],
@@ -678,7 +678,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
         ..className = 'control'
         ..children = [
           new VAnchorElement()
-            ..className = 'button is-link'
+            ..className = 'button is-link is-rounded'
             ..text = "Submit"
             ..onClick = _submitClick
         ]
