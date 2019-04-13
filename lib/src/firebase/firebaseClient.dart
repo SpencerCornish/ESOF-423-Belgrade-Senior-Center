@@ -113,9 +113,13 @@ class FirebaseClient {
   }
 
   void resetPassword(String email) {
+    _resetPassword(email);
+    _actions.setAuthState(AuthState.PASS_RESET_SENT);
+  }
+
+  void _resetPassword(String email) {
     _auth.sendPasswordResetEmail(email,
         new fb.ActionCodeSettings(url: "https://bsc-development.firebaseapp.com/pw_reset/${stringToBase(email)}"));
-    _actions.setAuthState(AuthState.PASS_RESET_SENT);
   }
 
   Future<String> createLoginForNewUser(String email) async {
@@ -148,7 +152,7 @@ class FirebaseClient {
 
     // Success, probably
     if (resp.statusCode < 300 && resp.statusCode >= 200) {
-      _auth.sendPasswordResetEmail(email);
+      _resetPassword(email);
       return newUserUidString;
     } else {
       print("error creating user acct");
