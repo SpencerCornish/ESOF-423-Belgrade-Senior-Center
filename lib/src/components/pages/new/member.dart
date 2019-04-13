@@ -28,6 +28,8 @@ class NewMemberState {
   bool medBool;
   bool waiverBool;
   bool intakeBool;
+  bool hasInvalid;
+  bool memIsValid;
   String role;
 }
 
@@ -36,17 +38,19 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
 
   @override
   NewMemberState getInitialState() => NewMemberState()
-    ..firstNameIsValid = true
-    ..lastNameIsValid = true
+    ..firstNameIsValid = false
+    ..lastNameIsValid = false
     ..emailIsValid = true
     ..phoneNumberIsValid = true
     ..cellNumberIsValid = true
-    ..addressIsValid = true
+    ..addressIsValid = false
     ..mealBool = false
     ..dropDownActive = false
     ..medBool = false
     ..waiverBool = false
     ..intakeBool = false
+    ..hasInvalid = true
+    ..memIsValid = false
     ..role = "member";
 
   History _history;
@@ -108,7 +112,12 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                 ..children = [
                                   new VLabelElement()
                                     ..className = 'label'
-                                    ..text = "First Name"
+                                    ..children = [
+                                      new VSpanElement()..text = "First Name",
+                                      new VSpanElement()
+                                        ..className = "has-text-danger"
+                                        ..text = '*'
+                                    ]
                                 ],
                               new VDivElement()
                                 ..className = 'field is-horizontal'
@@ -137,7 +146,12 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                             ..children = [
                                               new VLabelElement()
                                                 ..className = 'label'
-                                                ..text = "Last Name"
+                                                ..children = [
+                                                  new VSpanElement()..text = "Last Name",
+                                                  new VSpanElement()
+                                                    ..className = "has-text-danger"
+                                                    ..text = '*'
+                                                ]
                                             ],
                                           new VDivElement()
                                             ..className = 'field'
@@ -280,7 +294,12 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                         ..children = [
                           new VLabelElement()
                             ..className = 'label'
-                            ..text = "Address",
+                            ..children = [
+                              new VSpanElement()..text = "Mailing Address",
+                              new VSpanElement()
+                                ..className = "has-text-danger"
+                                ..text = '*'
+                            ]
                         ],
                       new VDivElement()
                         ..className = 'field-body'
@@ -407,7 +426,12 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                 ..children = [
                                   new VLabelElement()
                                     ..className = 'label'
-                                    ..text = "Membership Start",
+                                    ..children = [
+                                      new VSpanElement()..text = "Membership Start",
+                                      new VSpanElement()
+                                        ..className = "has-text-danger"
+                                        ..text = '*'
+                                    ]
                                 ],
                               new VDivElement()
                                 ..className = 'field is-horizontal'
@@ -433,7 +457,12 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                             ..children = [
                                               new VLabelElement()
                                                 ..className = 'label'
-                                                ..text = "Membership Renewal"
+                                                ..children = [
+                                                  new VSpanElement()..text = "Memership Renewal",
+                                                  new VSpanElement()
+                                                    ..className = "has-text-danger"
+                                                    ..text = '*'
+                                                ]
                                             ],
                                           new VDivElement()
                                             ..className = 'field'
@@ -442,9 +471,14 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                                                 ..className = 'control is-expanded'
                                                 ..children = [
                                                   new VInputElement()
+                                                    ..onInput = _membershipValidator
                                                     ..className = 'input'
                                                     ..id = 'memRenew-input'
-                                                    ..type = 'date'
+                                                    ..type = 'date',
+                                                  new VParagraphElement()
+                                                    ..className =
+                                                        'help is-danger ${state.memIsValid ? 'is-invisible' : ''}'
+                                                    ..text = "Renewal Date is before Start Date"
                                                 ]
                                             ]
                                         ]
@@ -475,8 +509,9 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                       new VDivElement()
                         ..className = 'control'
                         ..children = [
-                          new VAnchorElement()
+                          new VButtonElement()
                             ..className = 'button is-link is-rounded'
+                            ..disabled = _canActivateSubmit()
                             ..text = "Submit"
                             ..onClick = _submitClick
                         ]
@@ -682,6 +717,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     bool isValid = Validator.name(first.value);
     //Sets new state
     setState((NewMemberProps, NewMemberState) => NewMemberState..firstNameIsValid = isValid);
+    _canActivateSubmit;
   }
 
   //Validation for last name
@@ -692,6 +728,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     bool isValid = Validator.name(last.value);
     //Sets new state
     setState((NewMemberProps, NewMemberState) => NewMemberState..lastNameIsValid = isValid);
+    _canActivateSubmit;
   }
 
   //Validation for email using Spencer's function from constants.dart
@@ -714,6 +751,20 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
   //425-273-4489
   //1-425-273-4489
   //+1-425-273-4489
+
+  void _membershipValidator(_) {
+    InputElement memStart = querySelector('#memStart-input');
+    InputElement memRenew = querySelector('#memRenew-input');
+    try {
+      DateTime start = DateTime.parse(memStart.value);
+      DateTime end = DateTime.parse(memRenew.value);
+      bool isValid = Validator.time(start, end);
+      setState((NewMemberProps, NewMemberState) => NewMemberState..memIsValid = isValid);
+    } catch (_) {
+      state.memIsValid = false;
+    }
+    _canActivateSubmit;
+  }
 
   //Validation for phone number, doesnt check if blank
   void _phoneNumberValidator(_) {
@@ -749,6 +800,14 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     InputElement address = querySelector("#address-input");
     bool isValid = Validator.address(address.value);
     setState((NewMemberProps, NewMemberState) => NewMemberState..addressIsValid = isValid);
+    _canActivateSubmit();
+  }
+
+  bool _canActivateSubmit() {
+    if (state.firstNameIsValid && state.lastNameIsValid && state.addressIsValid && state.memIsValid) {
+      return false; //enables button on false
+    }
+    return true; //disables button on true
   }
 
   //method used for the submit click
@@ -767,9 +826,6 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     InputElement medical = querySelector('#medicalIssue-input');
     InputElement memStart = querySelector('#memStart-input');
     InputElement memRenew = querySelector('#memRenew-input');
-
-    print("This is what is in mealOp: ");
-    print(state.mealBool);
 
     //create a new user object
     User newUser = (new UserBuilder()

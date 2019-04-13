@@ -30,11 +30,11 @@ class NewActivity extends Component<NewActivityProps, NewActivityState> {
 
   @override
   NewActivityState getInitialState() => NewActivityState()
-    ..activityNameIsValid = true
+    ..activityNameIsValid = false
     ..instructorNameIsValid = true
     ..locationIsValid = true
     ..capacityIsValid = true
-    ..timeIsValid = true
+    ..timeIsValid = false
     ..isUnlimited = false;
 
   History _history;
@@ -313,9 +313,14 @@ class NewActivity extends Component<NewActivityProps, NewActivityState> {
                                             ..className = 'control'
                                             ..children = [
                                               new VInputElement()
-                                                ..className = 'input'
+                                                ..onInput = _timeValidator
+                                                ..className = 'input ${state.timeIsValid ? '' : 'is-danger'}'
                                                 ..id = 'day-input'
-                                                ..type = 'date'
+                                                ..type = 'date',
+                                              new VParagraphElement()
+                                                ..className =
+                                                    'help is-danger ${state.timeIsValid ? 'is-invisible' : ''}'
+                                                ..text = 'Activity must include date'
                                             ]
                                         ]
                                     ]
@@ -421,9 +426,10 @@ class NewActivity extends Component<NewActivityProps, NewActivityState> {
                       new VDivElement()
                         ..className = 'control'
                         ..children = [
-                          new VAnchorElement()
+                          new VButtonElement()
                             ..className = 'button is-link is-rounded'
                             ..text = "Submit"
+                            ..disabled = _canActivateSubmit()
                             ..onClick = _submitClick
                         ]
                     ]
@@ -431,6 +437,13 @@ class NewActivity extends Component<NewActivityProps, NewActivityState> {
             ]
         ]
     ];
+
+  bool _canActivateSubmit() {
+    if (state.activityNameIsValid && state.timeIsValid) {
+      return false; //enables button on false
+    }
+    return true; //disables button on true
+  }
 
   void _activityNameValidator(_) {
     InputElement actName = querySelector('#act-input');

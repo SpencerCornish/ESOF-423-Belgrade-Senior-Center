@@ -73,8 +73,7 @@ class Validator {
     }
   }
 
-  // TODO: Finish this validator
-  static bool address(String input) => true;
+  static bool address(String input) => input != "";
 
   /// [time] ensures start is before end
   static bool time(DateTime start, DateTime end) => start.isBefore(end);
