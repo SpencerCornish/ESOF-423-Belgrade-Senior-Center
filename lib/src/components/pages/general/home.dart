@@ -1,4 +1,5 @@
 import 'dart:html' hide History;
+import 'dart:async';
 
 import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
@@ -22,6 +23,8 @@ class Home extends PComponent<HomeProps> {
 
   History _history;
 
+  StreamSubscription keyStream;
+
   /// Browser history entrypoint, to control page navigation
   History get history => _history ?? findHistoryInContext(context);
   @override
@@ -29,6 +32,8 @@ class Home extends PComponent<HomeProps> {
     if (props.authState == AuthState.SUCCESS) {
       history.push(props.nextUrl);
     }
+
+    keyStream = window.document.onKeyPress.listen(_onKeySubmitClick);
     super.componentWillMount();
   }
 
@@ -38,6 +43,12 @@ class Home extends PComponent<HomeProps> {
       history.push(props.nextUrl);
     }
     super.componentWillUpdate(nextProps, nextState);
+  }
+
+  @override
+  void componentWillUnmount() {
+    keyStream.cancel();
+    super.componentWillMount();
   }
 
   @override
@@ -77,7 +88,7 @@ class Home extends PComponent<HomeProps> {
             ..className = 'column is-narrow has-text-centered'
             ..children = [
               new VAnchorElement()
-                ..className = 'button is-text has-text-grey'
+                ..className = 'button is-text has-text-grey is-rounded'
                 ..id = 'dev-doc-button'
                 ..href = "https://github.com/SpencerCornish/belgrade-senior-center/blob/master/README.md"
                 ..text = "Development Documentation",
@@ -86,7 +97,7 @@ class Home extends PComponent<HomeProps> {
             ..className = 'column is-narrow has-text-centered'
             ..children = [
               new VAnchorElement()
-                ..className = 'button is-text has-text-grey'
+                ..className = 'button is-text has-text-grey is-rounded'
                 ..id = 'user-doc-button'
                 ..href = "https://github.com/SpencerCornish/belgrade-senior-center/blob/master/USERREADME.md"
                 ..text = "User Documentation",
@@ -157,7 +168,7 @@ class Home extends PComponent<HomeProps> {
             ..className = 'control'
             ..children = [
               new VButtonElement()
-                ..className = 'button'
+                ..className = 'button  is-rounded'
                 ..id = 'cancel-button'
                 ..onClick = _onCancelClick
                 ..text = 'Cancel',
@@ -166,7 +177,7 @@ class Home extends PComponent<HomeProps> {
             ..className = 'control'
             ..children = [
               new VButtonElement()
-                ..className = 'button is-link ${props.authState == AuthState.LOADING ? 'is-loading' : ''}'
+                ..className = 'button is-link is-rounded ${props.authState == AuthState.LOADING ? 'is-loading' : ''}'
                 ..id = 'login-submit-button'
                 ..onClick = _onSubmitClick
                 ..text = 'Submit',
@@ -195,6 +206,13 @@ class Home extends PComponent<HomeProps> {
     if (props.authState == AuthState.ERR_PASSWORD) {
       props.actions.setAuthState(AuthState.INAUTHENTIC);
     }
+  }
+
+  _onKeySubmitClick(KeyboardEvent e) {
+    if (e.charCode != 13) {
+      return;
+    }
+    _onSubmitClick(null);
   }
 
   _onSubmitClick(_) {

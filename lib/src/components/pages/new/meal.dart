@@ -240,7 +240,7 @@ class NewMeal extends Component<NewMealProps, NewMealState> {
                         ..className = 'control'
                         ..children = [
                           new VAnchorElement()
-                            ..className = 'button is-link'
+                            ..className = 'button is-link is-rounded'
                             ..text = "Submit"
                             ..onClick = _submitClick
                         ]

@@ -288,7 +288,7 @@ class EditMeal extends Component<EditMealProps, EditMealState> {
         ..className = 'control'
         ..children = [
           new VAnchorElement()
-            ..className = 'button is-link'
+            ..className = 'button is-link is-rounded'
             ..text = "Edit"
             ..onClick = _editClick
         ],
@@ -302,7 +302,7 @@ class EditMeal extends Component<EditMealProps, EditMealState> {
         ..className = 'control'
         ..children = [
           new VAnchorElement()
-            ..className = 'button is-link'
+            ..className = 'button is-link is-rounded'
             ..text = "Submit"
             ..onClick = _submitClick
         ]

@@ -1,3 +1,4 @@
+import 'dart:html' hide History;
 import 'dart:async';
 
 // External Dependencies
@@ -38,6 +39,7 @@ class ContainerProps {
 }
 
 class Container extends PComponent<ContainerProps> {
+  ImageElement prefetchImage;
   StreamSubscription storeContainerSub;
 
   /// Ease of use getter for appState

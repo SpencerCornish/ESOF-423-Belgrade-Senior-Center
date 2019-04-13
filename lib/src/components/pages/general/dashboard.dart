@@ -47,26 +47,6 @@ class Dashboard extends PComponent<DashboardProps> {
             ..className = 'columns is-centered margin-top'
             ..children = [
               _renderCard(
-                size: 3,
-                title: 'Alerts',
-                content: [
-                  new VParagraphElement()..text = 'Coming Soon!',
-                ],
-                footerContent: [
-                  // _renderFooterItem('More', (_) => print("foo")),
-                ],
-              ),
-              _renderCard(
-                size: 3,
-                title: 'Upcoming Events',
-                content: [
-                  new VParagraphElement()..text = 'Coming Soon!',
-                ],
-                footerContent: [
-                  _renderFooterItem('More', (_) => print("foo")),
-                ],
-              ),
-              _renderCard(
                 size: 6,
                 title: 'Time Entry',
                 content: _renderTimeEntry(),
@@ -150,7 +130,7 @@ class Dashboard extends PComponent<DashboardProps> {
                       ..className = 'buttons has-addons is-centered'
                       ..children = [
                         new VAnchorElement()
-                          ..className = 'button'
+                          ..className = 'button is-rounded'
                           ..key = (_isUserClockedIn() ? 'is-disabled-clock-in' : 'clock-in')
                           ..attributes = _isUserClockedIn() ? {'disabled': 'true'} : {}
                           ..children = [
@@ -163,7 +143,7 @@ class Dashboard extends PComponent<DashboardProps> {
                           ]
                           ..onClick = _onClockInClick,
                         new VAnchorElement()
-                          ..className = 'button'
+                          ..className = 'button is-rounded'
                           ..key = (_isUserClockedIn() ? 'clock-out' : 'is-disabled-clock-out')
                           ..attributes = _isUserClockedIn() ? {} : {'disabled': 'true'}
                           ..children = [

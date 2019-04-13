@@ -428,20 +428,34 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
 
   VNode _renderAddButton() {
     if (state.edit) {
-      return (new VButtonElement()
-        ..className = "button is-success is-rounded"
-        ..text = "Add"
-        ..onClick = _addClick);
+      return new VButtonElement()
+        ..className = "button is-rounded"
+        ..onClick = _addClick
+        ..children = [
+          new VSpanElement()
+            ..className = 'icon'
+            ..children = [
+              new Vi()..className = 'fas fa-user-plus',
+            ],
+          new VSpanElement()..text = 'Add',
+        ];
     }
     return new VParagraphElement();
   }
 
   VNode _renderRemoveButton(String userID) {
     if (state.edit) {
-      return (new VButtonElement()
-        ..className = "button is-danger is-rounded"
-        ..text = "Remove"
-        ..onClick = (_) => _promptForDeleteClick(userID));
+      return new VButtonElement()
+        ..className = "button is-small is-rounded"
+        ..onClick = ((_) => _promptForDeleteClick(userID))
+        ..children = [
+          new VSpanElement()
+            ..className = 'icon'
+            ..children = [
+              new Vi()..className = 'fas fa-minus-circle',
+            ],
+          new VSpanElement()..text = 'Remove'
+        ];
     }
     return new VParagraphElement();
   }
@@ -462,11 +476,11 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
             ..className = 'modal-card-foot'
             ..children = [
               new VButtonElement()
-                ..className = 'button is-danger'
+                ..className = 'button is-danger is-rounded'
                 ..text = "Yes"
                 ..onClick = (_) => _removeClick(act),
               new VButtonElement()
-                ..className = 'button'
+                ..className = 'button is-rounded'
                 ..text = "No"
                 ..onClick = _cancelDeletionClick
             ],
@@ -498,7 +512,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
             ..className = 'modal-card-foot'
             ..children = [
               new VButtonElement()
-                ..className = 'button'
+                ..className = 'button is-rounded'
                 ..text = 'Cancel'
                 ..onClick = _cancelAddClick
             ],
@@ -533,7 +547,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
               ..className = 'td'
               ..children = [
                 new VButtonElement()
-                  ..className = "button is-danger is-rounded"
+                  ..className = "button is-info is-rounded"
                   ..text = "Choose"
                   ..onClick = (_) => _addUserClick(act, u.docUID),
               ],
@@ -615,7 +629,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
         ..className = 'control'
         ..children = [
           new VAnchorElement()
-            ..className = 'button is-link'
+            ..className = 'button is-link is-rounded'
             ..text = "Edit"
             ..onClick = _editClick
         ],
@@ -629,7 +643,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
         ..className = 'control'
         ..children = [
           new VAnchorElement()
-            ..className = 'button is-link'
+            ..className = 'button is-link is-rounded'
             ..text = "Submit"
             ..onClick = _submitClick
         ]
