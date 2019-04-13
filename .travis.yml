@@ -14,14 +14,10 @@ jobs:
 
     - stage: Unit Testing
       name: Formatting and static analysis
-      before_script:
-        - npm --prefix functions install
       script:
         - pub run dart_dev analyze
         - pub run dart_dev format --check
-        - npm --prefix functions run lint
         - pub run test -p chrome
-        - npm --prefix functions run test
 
     - stage: Functional Testing
       name: Puppeteer functional tests
@@ -38,7 +34,6 @@ jobs:
 
 
 before_deploy:
-  - npm --prefix functions install
   - pub get
   - find . -name "*.g.dart" -type f -delete
   - pub global activate webdev
