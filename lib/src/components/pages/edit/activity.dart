@@ -85,7 +85,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
                         ..children = [
                           new Vh1()
                             ..className = 'title'
-                            ..text = "Edit Activity"
+                            ..text = "Activity Edit"
                         ]
                     ],
                   //create the input fields for activity name and instructor's name
@@ -385,6 +385,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
         ]
     ];
 
+  ///[_renderAttendance] show member first and last names that are checked in for an activity
   VNode _renderAttendance(Activity act) {
     List<VNode> nodeList = new List<VNode>();
 
@@ -426,6 +427,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
       ..children = nodeList;
   }
 
+  ///[_renderAddButton] button to check in more users
   VNode _renderAddButton() {
     if (state.edit) {
       return new VButtonElement()
@@ -443,6 +445,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
     return new VParagraphElement();
   }
 
+  ///[_renderRemoveButton] button to take users out of an activity
   VNode _renderRemoveButton(String userID) {
     if (state.edit) {
       return new VButtonElement()
@@ -460,6 +463,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
     return new VParagraphElement();
   }
 
+  ///[_renderPromptForDeletion] modal that double checks the member is the inteded member for removal
   VNode _renderPromptForDeletion(Activity act) => new VDivElement()
     ..className = "modal ${state.showDeletePrompt ? 'is-active' : ''}"
     ..children = [
@@ -467,6 +471,13 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
       new VDivElement()
         ..className = 'modal-card'
         ..children = [
+          new Vsection()
+            ..className = 'modal-card-head'
+            ..children = [
+              new VParagraphElement()
+                ..className = 'title is-4'
+                ..text = 'Remove User from Activity?'
+            ],
           new Vsection()
             ..className = 'modal-card-body'
             ..children = [
@@ -487,6 +498,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
         ],
     ];
 
+  ///[rederAddUser] modal containing list of members able to be added to current activity
   VNode _renderAddUser(Activity act, String uid) => new VDivElement()
     ..className = "modal ${state.showAddUserPrompt ? 'is-active' : ''}"
     ..children = [
@@ -519,6 +531,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
         ],
     ];
 
+  ///[_renderUserTable] the actual table of users for the addUser modal
   List<VNode> _renderUserTable(Activity act) {
     List<VNode> items = new List<VNode>();
 
@@ -558,16 +571,21 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
     return items;
   }
 
+  ///[_promptForDeleteClick] sets the state to show the deletion modal for a user
   _promptForDeleteClick(String userID) => setState((props, state) => state
     ..showDeletePrompt = true
     ..userToDelete = userID);
 
+  ///[_cancelDeletionClick] sets the state to hide the deletion modal with no action
   _cancelDeletionClick(_) => setState((props, state) => state..showDeletePrompt = false);
 
+  ///[_addClick] sets the state to show the addUser modal
   _addClick(_) => setState((props, state) => state..showAddUserPrompt = true);
 
+  ///[_cancelAddClick]sets the state to hide the addUser modal with no action
   _cancelAddClick(_) => setState((props, state) => state..showAddUserPrompt = false);
 
+  ///[_removeClick] actually removes a user from this activity and hides the modal
   _removeClick(Activity act) {
     props.actions.server.updateOrCreateActivity(act.rebuild((builder) => builder..users.remove(state.userToDelete)));
     props.actions.server.fetchAllActivities();
@@ -576,6 +594,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
       ..userToDelete = '');
   }
 
+  ///[_addUserClick] actually adds a user to this activity and hides the modal
   _addUserClick(Activity act, String userId) {
     props.actions.server.updateOrCreateActivity(act.rebuild((builder) => builder..users.add(userId)));
     props.actions.server.fetchAllActivities();
@@ -614,6 +633,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
     return "${date.year}-${tempMonth}-${tempDay}";
   }
 
+  ///[_renderButton] helper function to show either the edit or submit button based on state
   VNode _renderButton() {
     if (state.edit) {
       return _renderSubmit();

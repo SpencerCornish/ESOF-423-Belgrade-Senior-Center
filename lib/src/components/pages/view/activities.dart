@@ -12,6 +12,7 @@ import '../../../model/user.dart';
 import '../../../state/app.dart';
 import '../../../constants.dart';
 
+///[ViewActivityProps] class of passed in values
 class ViewActivityProps {
   AppActions actions;
   User user;
@@ -20,6 +21,7 @@ class ViewActivityProps {
   String selectedMemberUID;
 }
 
+///[ViewActivityState] class of page state values
 class ViewActivityState {
   bool searching;
   List<Activity> found;
@@ -30,7 +32,7 @@ class ViewActivityState {
 /// [viewActivity] class / page to show a visual representation of current stored data
 class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
   ViewActivity(props) : super(props);
-  List<String> title = ["Name", "Start", "End", "Location", "Capacity", "Instructor"];
+  List<String> title = ["Name", "Date", "Time", "Location", ""];
   History _history;
 
   @override
@@ -64,7 +66,7 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
     for (Activity act in activities) {
       nodeList.add(new VTableRowElement()
         ..className = 'tr'
-        ..onClick = ((_) => _onActClick(act.uid))
+        //..onClick = ((_) => _onActClick(act.uid))
         ..children = [
           new VTableCellElement()
             ..className = tdClass(act.name)
@@ -74,46 +76,80 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
             ..text = checkText("${act.startTime.month}/${act.startTime.day}/${act.startTime.year}"),
           new VTableCellElement()
             ..className = tdClass(act.endTime.toString())
-            ..text = checkText("${act.endTime.month}/${act.endTime.day}/${act.endTime.year}"),
+            ..text =
+                "${_showTime(act.startTime.hour, act.startTime.minute.toString())} - ${_showTime(act.endTime.hour, act.endTime.minute.toString())}",
           new VTableCellElement()
             ..className = tdClass(act.location)
             ..text = checkText(act.location),
-          new VTableCellElement()
-            ..className = tdClass(act.capacity.toString())
-            ..text = checkText(act.capacity.toString()),
-          new VTableCellElement()
-            ..className = tdClass(act.instructor)
-            ..text = checkText(act.instructor),
+          _renderButton(act.uid),
         ]);
     }
     return (nodeList);
   }
 
-  _onActClick(String uid) {
-    if (!props.signUp) {
-      history.push(Routes.generateEditActivityURL(uid));
+  ///[_renderButton] choice function to render either the view or check in button on sign up state
+  _renderButton(String uid) {
+    if (props.signUp) {
+      return (new VTableCellElement()
+        ..children = [
+          new VButtonElement()
+            ..className = "button is-success is-rounded"
+            ..onClick = ((_) => _onCheckClick(uid))
+            ..children = [
+              new VSpanElement()
+                ..className = 'icon'
+                ..children = [
+                  new Vi()..className = 'far fa-check-circle',
+                ],
+              new VSpanElement()..text = 'Check In',
+            ],
+        ]);
     } else {
-      Activity act = props.activityMap[uid];
-
-      state.repeatFound = false;
-
-      for (String id in act.users) {
-        if (props.selectedMemberUID.compareTo(id) == 0) {
-          setState((ViewActivityProps, ViewActivityState) => ViewActivityState..repeatFound = true);
-          break;
-        }
-      }
-
-      if (!state.repeatFound) {
-        props.actions.server
-            .updateOrCreateActivity(act.rebuild((builder) => builder..users.add(props.selectedMemberUID)));
-        props.actions.server.fetchAllActivities();
-      }
-
-      setState((ViewActivityProps, ViewActivityState) => ViewActivityState..showMod = true);
+      return (new VTableCellElement()
+        ..children = [
+          new VButtonElement()
+            ..className = "button is-rounded"
+            ..onClick = ((_) => _onActClick(uid))
+            ..children = [
+              new VSpanElement()
+                ..className = 'icon'
+                ..children = [
+                  new Vi()..className = 'far fa-eye',
+                ],
+              new VSpanElement()..text = 'View',
+            ],
+        ]);
     }
   }
 
+  ///[_onActClick] button listener to view a class through redirect
+  _onActClick(String uid) {
+    history.push(Routes.generateEditActivityURL(uid));
+  }
+
+  ///[_onCheckClick] button listener to check into a class and show the modal
+  _onCheckClick(String uid) {
+    Activity act = props.activityMap[uid];
+
+    state.repeatFound = false;
+
+    for (String id in act.users) {
+      if (props.selectedMemberUID.compareTo(id) == 0) {
+        setState((ViewActivityProps, ViewActivityState) => ViewActivityState..repeatFound = true);
+        break;
+      }
+    }
+
+    if (!state.repeatFound) {
+      props.actions.server
+          .updateOrCreateActivity(act.rebuild((builder) => builder..users.add(props.selectedMemberUID)));
+      props.actions.server.fetchAllActivities();
+    }
+
+    setState((ViewActivityProps, ViewActivityState) => ViewActivityState..showMod = true);
+  }
+
+  ///[_renderAddInfoMod] modal to tell user the outcome of class sign up and suggest additional classes
   VNode _renderAddInfoMod() {
     if (props.signUp) {
       return (new VDivElement()
@@ -147,10 +183,12 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
     return new VParagraphElement();
   }
 
+  ///[_doneCheckinClick] returns to viewMembers page for the next check in
   _doneCheckinClick(_) {
     history.push(Routes.viewMembers);
   }
 
+  ///[_trySomething] suggestion function to prompt the members to check in for a diffferent class in addition
   VNode _trySomething() {
     //all posible activities
     List<Activity> actList = props.activityMap.values.toList();
@@ -184,6 +222,7 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
       ];
   }
 
+  ///[checkText] converts capacity from the stored number (or lack there of) to a pretty output
   String checkText(String text) {
     if (text != '') {
       if (text == '-1') {
@@ -195,6 +234,7 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
     return text;
   }
 
+  ///[tdClass] will grey out a text field if the field is empty
   String tdClass(String text) => text != '' ? 'td' : "td has-text-grey";
 
   /// [titleRow] helper function to create the title row
@@ -296,6 +336,7 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
         ],
     ];
 
+  ///[_renderRefresh] a refresh button to ensure the data is up-to-date
   _renderRefresh() => new VDivElement()
     ..className = 'column is-narrow'
     ..children = [
@@ -318,6 +359,21 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
         ],
     ];
 
+  ///[_showTime] helper function to put a time into a proper format to view in a time type input box
+  String _showTime(int hour, String min) {
+    String ampm = "A.M.";
+    if (hour > 12) {
+      hour = hour - 12;
+      ampm = "P.M.";
+    }
+
+    if (min.length == 1) {
+      min = "0${min}";
+    }
+    return hour.toString() + ":" + min + " " + ampm;
+  }
+
+  ///[_searchListener] function to ensure the table is showing data that matches the search criteria
   _searchListener(_) {
     InputElement search = querySelector('#Search');
     if (search.value.isEmpty) {
@@ -340,9 +396,9 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
           found.add(act);
         } else if ("${act.startTime.month}/${act.startTime.day}/${act.startTime.year}".contains(search.value)) {
           found.add(act);
-        } else if (act.endTime.toString().contains(search.value)) {
+        } else if (_showTime(act.startTime.hour, act.startTime.minute.toString()).contains(search.value)) {
           found.add(act);
-        } else if ("${act.endTime.month}/${act.endTime.day}/${act.endTime.year}".contains(search.value)) {
+        } else if (_showTime(act.endTime.hour, act.endTime.minute.toString()).contains(search.value)) {
           found.add(act);
         }
 
@@ -353,6 +409,7 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
     }
   }
 
+  ///[_onExportCsvClick] exports the currently shown data to a csv file
   _onExportCsvClick(_) {
     List<String> lines;
     if (!state.searching) {
@@ -374,6 +431,7 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
     downloadLink.dispatchEvent(event);
   }
 
+  ///[_onRefreshClick] reloads the data for the page
   _onRefreshClick(_) {
     props.actions.server.fetchAllActivities();
   }
