@@ -273,6 +273,7 @@ class EditMeal extends Component<EditMealProps, EditMealState> {
         ]
     ];
 
+  ///[_renderButton] button selector method to show either submit or edit button based on state
   VNode _renderButton() {
     if (state.edit) {
       return _renderSubmit();
@@ -313,6 +314,7 @@ class EditMeal extends Component<EditMealProps, EditMealState> {
     setState((props, state) => state..edit = !state.edit);
   }
 
+  ///[_listHelper] helper function to display each item in a menu to the text area
   String _listHelper(Meal meal) {
     String menu = "";
 

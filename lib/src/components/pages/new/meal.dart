@@ -234,7 +234,8 @@ class NewMeal extends Component<NewMealProps, NewMealState> {
                                     ..onInput = _mealValidator
                                     ..className = 'textarea ${state.mealIsValid ? '' : 'is-danger'}'
                                     ..id = 'meal-input'
-                                    ..placeholder = "Enter full meal",
+                                    ..placeholder =
+                                        "Enter meal information. The first 15 characters will be visible as a title",
                                   new VParagraphElement()
                                     ..className = 'help is-danger ${state.mealIsValid ? 'is-invisible' : ''}'
                                     ..text = 'Meal needs a menu.'

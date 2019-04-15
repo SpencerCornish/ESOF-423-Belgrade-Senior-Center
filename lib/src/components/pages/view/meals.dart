@@ -11,12 +11,14 @@ import '../../../model/meal.dart';
 import '../../../state/app.dart';
 import '../../../constants.dart';
 
+///[ViewMealProps] class of passed in variables for the view meals page
 class ViewMealProps {
   AppActions actions;
   User user;
   BuiltMap<String, Meal> mealMap;
 }
 
+///[ViewMealSate] variable class to hold state change variables for the viewMeals page
 class ViewMealState {
   bool searching;
   List<Meal> found;
@@ -25,9 +27,10 @@ class ViewMealState {
 /// [viewMeal] class / page to show a visual representation of current stored data
 class ViewMeal extends Component<ViewMealProps, ViewMealState> {
   ViewMeal(props) : super(props);
-  List<String> title = ["Date", "Start Time", "End Time"];
+  List<String> title = ["Serving", "Date", "Time", " "];
   History _history;
 
+  //set states on page load
   @override
   ViewMealState getInitialState() => ViewMealState()
     ..found = <Meal>[]
@@ -36,6 +39,7 @@ class ViewMeal extends Component<ViewMealProps, ViewMealState> {
   /// Browser history entrypoint, to control page navigation
   History get history => _history ?? findHistoryInContext(context);
 
+  //fetch meal data on page load
   @override
   void componentWillMount() {
     props.actions.server.fetchAllMeals();
@@ -54,21 +58,43 @@ class ViewMeal extends Component<ViewMealProps, ViewMealState> {
     for (Meal meal in meals) {
       nodeList.add(new VTableRowElement()
         ..className = 'tr'
-        ..onClick = ((_) => _onMealClick(meal.uid))
         ..children = [
+          new VTableCellElement()
+            ..className = tdClass(_menuSubstring(meal.menu.toString()))
+            ..text = checkText(_menuSubstring(meal.menu.toString())),
           new VTableCellElement()
             ..className = tdClass(meal.startTime.toString())
             ..text = checkText("${meal.startTime.month}/${meal.startTime.day}/${meal.startTime.year}"),
           new VTableCellElement()
-            ..className = "time"
-            ..text = _showTime(meal.startTime.hour, meal.startTime.minute.toString()),
-          //checkText("${meal.startTime.hour}:${meal.startTime.minute}"),
+            ..className = tdClass(meal.startTime.toString())
+            ..text =
+                "${_showTime(meal.startTime.hour, meal.startTime.minute.toString())} - ${_showTime(meal.endTime.hour, meal.endTime.minute.toString())}",
           new VTableCellElement()
-            ..className = "time"
-            ..text = _showTime(meal.endTime.hour, meal.endTime.minute.toString()),
+            ..children = [
+              new VButtonElement()
+                ..className = "button is-rounded"
+                ..onClick = ((_) => _onMealClick(meal.uid))
+                ..children = [
+                  new VSpanElement()
+                    ..className = 'icon'
+                    ..children = [
+                      new Vi()..className = 'far fa-eye',
+                    ],
+                  new VSpanElement()..text = 'View',
+                ],
+            ]
         ]);
     }
     return nodeList;
+  }
+
+  ///[_menuSubstring] helper function to display the menu list item as a short string for table view
+  String _menuSubstring(String menu) {
+    if (menu.length <= 15) {
+      return menu.substring(1, menu.length - 1);
+    } else {
+      return menu.substring(1, 15);
+    }
   }
 
   ///[_showTime] helper function to put a time into a proper format to view in a time type input box
@@ -89,8 +115,10 @@ class ViewMeal extends Component<ViewMealProps, ViewMealState> {
     history.push(Routes.generateEditMealURL(uid));
   }
 
+  ///[checkText] will return N/A if a given string is empty, visual helper function
   String checkText(String text) => text != '' ? text : "N/A";
 
+  ///[tdClass] visual helper function, will set class name to has-text-grey to grey out text
   String tdClass(String text) => text != '' ? 'td' : "td has-text-grey";
 
   /// [titleRow] helper function to create the title row
