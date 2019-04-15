@@ -201,7 +201,7 @@ class NewActivity extends Component<NewActivityProps, NewActivityState> {
                                                 ..onInput = _locationValidator
                                                 ..className = 'input ${state.locationIsValid ? '' : 'is-danger'}'
                                                 ..id = 'location-input'
-                                                ..placeholder = "Where is the activity taking place?",
+                                                ..placeholder = "Where is the activity?",
                                               new VParagraphElement()
                                                 ..className =
                                                     'help is-danger ${state.locationIsValid ? 'is-invisible' : ''}'
