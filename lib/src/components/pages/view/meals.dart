@@ -165,6 +165,7 @@ class ViewMeal extends Component<ViewMealProps, ViewMealState> {
     }
   }
 
+  ///[_renderHeader] makes the title bar of the viewMeals page
   _renderHeader() => new VDivElement()
     ..className = 'columns is-mobile'
     ..children = [
@@ -183,6 +184,7 @@ class ViewMeal extends Component<ViewMealProps, ViewMealState> {
       renderRefresh(_onRefreshClick),
     ];
 
+  ///[_searchListener] function to ensure the table is showing data that matches the search criteria
   _searchListener(_) {
     InputElement search = querySelector('#Search');
     if (search.value.isEmpty) {
@@ -218,6 +220,7 @@ class ViewMeal extends Component<ViewMealProps, ViewMealState> {
     }
   }
 
+  ///[_onExportCsvClick] exports the currently shown data to a csv file
   _onExportCsvClick(_) {
     List<String> lines;
     if (!state.searching) {
@@ -239,10 +242,12 @@ class ViewMeal extends Component<ViewMealProps, ViewMealState> {
     downloadLink.dispatchEvent(event);
   }
 
+  ///[_onRefreshClick] reloads the data for the page
   _onRefreshClick(_) {
     props.actions.server.fetchAllMeals();
   }
 
+  ///[_onUserClick] view page for specific meal
   _onMealClick(String uid) {
     history.push(Routes.generateEditMealURL(uid));
   }
