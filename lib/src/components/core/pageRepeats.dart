@@ -87,9 +87,9 @@ List<VNode> titleRow(List<String> title) {
 }
 
 ///[renderEditSubmitButton] button selector method to show either submit or edit button based on state
-VNode renderEditSubmitButton(bool edit, _editClick(_), _submitClick(_)) {
+VNode renderEditSubmitButton(bool edit, _editClick(_), _submitClick(_), bool disable) {
   if (edit) {
-    return renderSubmit(_submitClick);
+    return renderSubmit(_submitClick, disable);
   }
   return (renderEdit(_editClick));
 }
@@ -108,16 +108,17 @@ renderEdit(_editClick(_)) => new VDivElement()
       ],
   ];
 
-///[_renderSubmit] create the submit button to collect the data
-renderSubmit(_submitClick(_)) => new VDivElement()
+///[renderSubmit] create the submit button to collect the data
+renderSubmit(_submitClick(_), bool disable) => new VDivElement()
   ..className = 'field is-grouped is-grouped-right'
   ..children = [
     new VDivElement()
       ..className = 'control'
       ..children = [
-        new VAnchorElement()
+        new VButtonElement()
           ..className = 'button is-link is-rounded'
           ..text = "Submit"
           ..onClick = _submitClick
+          ..disabled = disable
       ]
   ];

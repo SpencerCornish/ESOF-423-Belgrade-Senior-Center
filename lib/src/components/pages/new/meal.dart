@@ -1,5 +1,6 @@
 import 'dart:html' hide History;
 
+import 'package:bsc/src/components/core/pageRepeats.dart';
 import 'package:date_format/date_format.dart';
 import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
@@ -85,7 +86,7 @@ class NewMeal extends Component<NewMealProps, NewMealState> {
                   //create the input box for what the meal is
                   _renderMenuLabel(),
                   //create the submit button
-                  _renderSubmit(),
+                  renderSubmit(_submitClick, Validator.canActivateSubmit(state.mealIsValid, state.timeIsValid)),
                 ]
             ]
         ]
@@ -260,29 +261,6 @@ class NewMeal extends Component<NewMealProps, NewMealState> {
             ]
         ]
     ];
-
-  /// [_renderSubmit] render submit button
-  _renderSubmit() => new VDivElement()
-    ..className = 'field is-grouped is-grouped-right'
-    ..children = [
-      new VDivElement()
-        ..className = 'control'
-        ..children = [
-          new VButtonElement()
-            ..className = 'button is-link is-rounded'
-            ..disabled = _canActivateSubmit()
-            ..text = "Submit"
-            ..onClick = _submitClick
-        ]
-    ];
-
-  /// [_canActivateSubmit] validator function to ensure all required fields are present before submition is possible
-  bool _canActivateSubmit() {
-    if (state.mealIsValid && state.timeIsValid) {
-      return false; //enables button on false
-    }
-    return true; //disables button on true
-  }
 
   /// [_mealValidator] validator function to ensure menu is input correctly
   _mealValidator(_) {

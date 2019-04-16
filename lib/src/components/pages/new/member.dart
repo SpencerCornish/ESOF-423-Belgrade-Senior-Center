@@ -1,5 +1,6 @@
 import 'dart:html' hide History;
 
+import 'package:bsc/src/components/core/pageRepeats.dart';
 import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
 import 'package:wui_builder/vhtml.dart';
@@ -135,19 +136,10 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
             ..children = [_renderCheckboxes()],
         ],
       //create the submit button
-      new VDivElement()
-        ..className = 'field is-grouped is-grouped-right'
-        ..children = [
-          new VDivElement()
-            ..className = 'control'
-            ..children = [
-              new VButtonElement()
-                ..className = 'button is-link is-rounded'
-                ..disabled = _canActivateSubmit()
-                ..text = "Submit"
-                ..onClick = _submitClick
-            ]
-        ]
+      renderSubmit(
+          _submitClick,
+          Validator.canActivateSubmit(
+              state.firstNameIsValid, state.memIsValid, state.addressIsValid, state.lastNameIsValid))
     ];
 
   ///[_renderName] renders Name label and input
@@ -741,7 +733,6 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     bool isValid = Validator.name(first.value);
     //Sets new state
     setState((NewMemberProps, NewMemberState) => NewMemberState..firstNameIsValid = isValid);
-    _canActivateSubmit;
   }
 
   /// [_lastNameValidation] Validation for last name
@@ -752,7 +743,6 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     bool isValid = Validator.name(last.value);
     //Sets new state
     setState((NewMemberProps, NewMemberState) => NewMemberState..lastNameIsValid = isValid);
-    _canActivateSubmit;
   }
 
   /// [_emailValidator] Validation for email using Spencer's function from constants.dart
@@ -788,7 +778,6 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     } catch (_) {
       state.memIsValid = false;
     }
-    _canActivateSubmit;
   }
 
   /// [_phoneNumberValidator] Validation for phone number, doesnt check if blank
@@ -826,15 +815,6 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     InputElement address = querySelector("#address-input");
     bool isValid = Validator.address(address.value);
     setState((NewMemberProps, NewMemberState) => NewMemberState..addressIsValid = isValid);
-    _canActivateSubmit();
-  }
-
-  /// [_canActivateSubmit] if all are valid enables submit button
-  bool _canActivateSubmit() {
-    if (state.firstNameIsValid && state.lastNameIsValid && state.addressIsValid && state.memIsValid) {
-      return false; //enables button on false
-    }
-    return true; //disables button on true
   }
 
   /// [_submitClick] method used for the submit click

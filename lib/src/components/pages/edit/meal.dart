@@ -1,5 +1,6 @@
 import 'dart:html' hide History;
 
+import 'package:bsc/src/constants.dart';
 import 'package:date_format/date_format.dart';
 import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
@@ -22,6 +23,8 @@ class EditMealProps {
 
 ///[EditMealState] class to hold state of edit meal page
 class EditMealState {
+  bool timeIsValid;
+  bool mealIsValid;
   bool edit;
 }
 
@@ -30,7 +33,10 @@ class EditMeal extends Component<EditMealProps, EditMealState> {
   EditMeal(props) : super(props);
 
   @override
-  EditMealState getInitialState() => EditMealState()..edit = false;
+  EditMealState getInitialState() => EditMealState()
+    ..edit = false
+    ..timeIsValid = true
+    ..mealIsValid = true;
 
   @override
   void componentWillUpdate(EditMealProps nextProps, EditMealState nextState) {
@@ -92,7 +98,8 @@ class EditMeal extends Component<EditMealProps, EditMealState> {
                   //create the input box for what the meal is
                   _renderMenu(meal),
                   //create the submit or edit button
-                  renderEditSubmitButton(state.edit, _editClick, _submitClick)
+                  renderEditSubmitButton(state.edit, _editClick, _submitClick,
+                      Validator.canActivateSubmit(state.mealIsValid, state.timeIsValid))
                 ]
             ]
         ]
@@ -126,11 +133,16 @@ class EditMeal extends Component<EditMealProps, EditMealState> {
                         ..className = 'control'
                         ..children = [
                           new VInputElement()
-                            ..className = 'input ${state.edit ? '' : 'is-static'}'
+                            ..onInput = _timeValidator
+                            ..className =
+                                'input ${state.edit ? '' : 'is-static'} ${state.timeIsValid ? '' : 'is-danger'}'
                             ..id = 'serveDate-input'
                             ..type = 'date'
                             ..readOnly = !state.edit
-                            ..value = formatDate(meal.startTime, [yyyy, "-", mm, "-", dd])
+                            ..value = formatDate(meal.startTime, [yyyy, "-", mm, "-", dd]),
+                          new VParagraphElement()
+                            ..className = 'help is-danger ${state.timeIsValid ? 'is-invisible' : ''}'
+                            ..text = 'Meal needs a date and time'
                         ]
                     ]
                 ]
@@ -166,11 +178,16 @@ class EditMeal extends Component<EditMealProps, EditMealState> {
                         ..className = 'control'
                         ..children = [
                           new VInputElement()
-                            ..className = 'input ${state.edit ? '' : 'is-static'}'
+                            ..onInput = _timeValidator
+                            ..className =
+                                'input ${state.edit ? '' : 'is-static'} ${state.timeIsValid ? '' : 'is-danger'}'
                             ..id = 'mealStart-input'
                             ..type = 'time'
                             ..readOnly = !state.edit
-                            ..value = formatDate(meal.startTime, [hh, ":", mm])
+                            ..value = formatDate(meal.startTime, [hh, ":", mm]),
+                          new VParagraphElement()
+                            ..className = 'help is-danger ${state.timeIsValid ? 'is-invisible' : ''}'
+                            ..text = 'Meal ends before it begins, please correct.'
                         ]
                     ]
                 ]
@@ -206,11 +223,16 @@ class EditMeal extends Component<EditMealProps, EditMealState> {
                         ..className = 'control'
                         ..children = [
                           new VInputElement()
-                            ..className = 'input ${state.edit ? '' : 'is-static'}'
+                            ..onInput = _timeValidator
+                            ..className =
+                                'input ${state.edit ? '' : 'is-static'} ${state.timeIsValid ? '' : 'is-danger'}'
                             ..id = 'mealEnd-input'
                             ..type = 'time'
                             ..readOnly = !state.edit
-                            ..value = formatDate(meal.endTime, [hh, ":", mm])
+                            ..value = formatDate(meal.endTime, [hh, ":", mm]),
+                          new VParagraphElement()
+                            ..className = 'help is-danger ${state.timeIsValid ? 'is-invisible' : ''}'
+                            ..text = 'Meal ends before it begins, please correct.'
                         ]
                     ]
                 ]
@@ -247,10 +269,14 @@ class EditMeal extends Component<EditMealProps, EditMealState> {
                 ..className = 'control'
                 ..children = [
                   new VTextAreaElement()
-                    ..className = 'textarea'
+                    ..onInput = _mealValidator
+                    ..className = 'textarea ${state.mealIsValid ? '' : 'is-danger'}'
                     ..id = 'meal-input'
                     ..text = _listHelper(meal)
-                    ..readOnly = !state.edit
+                    ..readOnly = !state.edit,
+                  new VParagraphElement()
+                    ..className = 'help is-danger ${state.mealIsValid ? 'is-invisible' : ''}'
+                    ..text = 'Meal needs a menu.'
                 ]
             ]
         ]
@@ -265,6 +291,38 @@ class EditMeal extends Component<EditMealProps, EditMealState> {
     }
 
     return menu;
+  }
+
+  /// [_mealValidator] validator function to ensure menu is input correctly
+  _mealValidator(_) {
+    TextAreaElement meal = querySelector('#meal-input');
+    String menu = meal.value;
+    bool isValid = Validator.name(menu);
+    setState((NewMealProps, NewMealState) => NewMealState..mealIsValid = isValid);
+  }
+
+  //Checks that the meal does not start before it ends
+  /// [_timeValidator] validator function to ensure time is input correctly
+  _timeValidator(_) {
+    //Gets the 3 date time inputs
+    InputElement date = querySelector('#serveDate-input');
+    InputElement time_start = querySelector('#mealStart-input');
+    InputElement time_end = querySelector('#mealEnd-input');
+    try {
+      DateTime serveDay = DateTime.parse(date.value);
+
+      String startTime = formatDate(serveDay, [yyyy, "-", mm, "-", dd, " ${time_start.value}:00.000"]);
+      String endTime = formatDate(serveDay, [yyyy, "-", mm, "-", dd, " ${time_end.value}:00.000"]);
+
+      DateTime start = DateTime.parse(startTime);
+      DateTime end = DateTime.parse(endTime);
+
+      bool isValid = Validator.time(start, end);
+
+      setState((NewMealProps, NewMealState) => NewMealState..timeIsValid = isValid);
+    } catch (_) {
+      setState((NewMealProps, NewMealState) => NewMealState..timeIsValid = false);
+    }
   }
 
   //method used for the submit click

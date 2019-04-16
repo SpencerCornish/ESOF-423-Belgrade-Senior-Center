@@ -6,6 +6,7 @@ import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
 import 'package:wui_builder/vhtml.dart';
 
+import '../../core/pageRepeats.dart';
 import '../../../model/activity.dart';
 import '../../../constants.dart';
 import '../../../state/app.dart';
@@ -106,7 +107,7 @@ class NewActivity extends Component<NewActivityProps, NewActivityState> {
                       _renderStart(),
                       _renderEnd(),
                     ],
-                  _renderSubmit(),
+                  renderSubmit(_submitClick, Validator.canActivateSubmit(state.activityNameIsValid, state.timeIsValid)),
                 ]
             ]
         ]
@@ -437,29 +438,6 @@ class NewActivity extends Component<NewActivityProps, NewActivityState> {
             ]
         ]
     ];
-
-  /// [_renderSubmit] create the submit button
-  _renderSubmit() => new VDivElement()
-    ..className = 'field is-grouped is-grouped-right'
-    ..children = [
-      new VDivElement()
-        ..className = 'control'
-        ..children = [
-          new VButtonElement()
-            ..className = 'button is-link is-rounded'
-            ..text = "Submit"
-            ..disabled = _canActivateSubmit()
-            ..onClick = _submitClick
-        ]
-    ];
-
-  /// [_canActivateSubmit] validator function to ensure needed fields are correct before submit
-  bool _canActivateSubmit() {
-    if (state.activityNameIsValid && state.timeIsValid) {
-      return false; //enables button on false
-    }
-    return true; //disables button on true
-  }
 
   /// [_activityNameValidator] validator function to ensure name is input correctly
   void _activityNameValidator(_) {

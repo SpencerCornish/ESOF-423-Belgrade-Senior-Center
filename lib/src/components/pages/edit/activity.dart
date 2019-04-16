@@ -1,5 +1,6 @@
 import 'dart:html' hide History;
 
+import 'package:bsc/src/constants.dart';
 import 'package:date_format/date_format.dart';
 import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
@@ -27,6 +28,11 @@ class EditActivityState {
   String userToDelete;
   bool showDeletePrompt;
   bool showAddUserPrompt;
+  bool timeIsValid;
+  bool activityNameIsValid;
+  bool instructorNameIsValid;
+  bool locationIsValid;
+  bool capacityIsValid;
 }
 
 ///[EditActivity] class to create the edit activity page
@@ -40,7 +46,12 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
     ..edit = false
     ..showAddUserPrompt = false
     ..showDeletePrompt = false
-    ..userToDelete = '';
+    ..userToDelete = ''
+    ..activityNameIsValid = true
+    ..instructorNameIsValid = true
+    ..locationIsValid = true
+    ..capacityIsValid = true
+    ..timeIsValid = true;
 
   /// Browser history entrypoint, to control page navigation
   History get history => _history ?? findHistoryInContext(context);
@@ -114,7 +125,8 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
                     ..text = "Attendees",
                   _renderAttendance(act),
                   //create the submit button
-                  renderEditSubmitButton(state.edit, _editClick, _submitClick),
+                  renderEditSubmitButton(state.edit, _editClick, _submitClick,
+                      Validator.canActivateSubmit(state.activityNameIsValid, state.timeIsValid)),
                 ]
             ]
         ]
@@ -148,10 +160,15 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
                         ..className = 'control'
                         ..children = [
                           new VInputElement()
-                            ..className = 'input ${state.edit ? '' : 'is-static'}'
+                            ..onInput = _activityNameValidator
+                            ..className =
+                                'input ${state.edit ? '' : 'is-static'} ${state.activityNameIsValid ? '' : 'is-danger'}'
                             ..id = 'act-input'
                             ..defaultValue = act.name
-                            ..readOnly = !state.edit
+                            ..readOnly = !state.edit,
+                          new VParagraphElement()
+                            ..className = 'help is-danger ${state.activityNameIsValid ? 'is-invisible' : ''}'
+                            ..text = 'Activity name may not be empty'
                         ]
                     ]
                 ]
@@ -187,10 +204,15 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
                         ..className = 'control'
                         ..children = [
                           new VInputElement()
-                            ..className = 'input ${state.edit ? '' : 'is-static'}'
+                            ..onInput = _instructorNameValidator
+                            ..className =
+                                'input ${state.edit ? '' : 'is-static'} ${state.instructorNameIsValid ? '' : 'is-danger'}'
                             ..id = 'instructorName-input'
                             ..defaultValue = act.instructor
-                            ..readOnly = !state.edit
+                            ..readOnly = !state.edit,
+                          new VParagraphElement()
+                            ..className = 'help is-danger ${state.instructorNameIsValid ? 'is-invisible' : ''}'
+                            ..text = 'Instructor name may not be blank'
                         ]
                     ]
                 ]
@@ -226,10 +248,15 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
                         ..className = 'control'
                         ..children = [
                           new VInputElement()
-                            ..className = 'input ${state.edit ? '' : 'is-static'}'
+                            ..onInput = _locationValidator
+                            ..className =
+                                'input ${state.edit ? '' : 'is-static'} ${state.locationIsValid ? '' : 'is-danger'}'
                             ..id = 'location-input'
                             ..defaultValue = act.location
-                            ..readOnly = !state.edit
+                            ..readOnly = !state.edit,
+                          new VParagraphElement()
+                            ..className = 'help is-danger ${state.locationIsValid ? 'is-invisible' : ''}'
+                            ..text = 'Location may not be blank'
                         ]
                     ]
                 ]
@@ -265,10 +292,15 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
                         ..className = 'control'
                         ..children = [
                           new VInputElement()
-                            ..className = 'input ${state.edit ? '' : 'is-static'}'
+                            ..onInput = _capacityValidator
+                            ..className =
+                                'input ${state.edit ? '' : 'is-static'} ${state.capacityIsValid ? '' : 'is-danger'}'
                             ..id = 'capacity-input'
                             ..readOnly = !state.edit
-                            ..defaultValue = _capView(act.capacity.toString())
+                            ..defaultValue = _capView(act.capacity.toString()),
+                          new VParagraphElement()
+                            ..className = 'help is-danger ${state.capacityIsValid ? 'is-invisible' : ''}'
+                            ..text = 'Capacity must be -1, or more than 0'
                         ]
                     ]
                 ]
@@ -307,11 +339,16 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
                             ..className = 'control'
                             ..children = [
                               new VInputElement()
-                                ..className = 'input ${state.edit ? '' : 'is-static'}'
+                                ..onInput = _timeValidator
+                                ..className =
+                                    'input ${state.edit ? '' : 'is-static'} ${state.timeIsValid ? '' : 'is-danger'}'
                                 ..id = 'day-input'
                                 ..type = 'date'
                                 ..value = formatDate(act.startTime, [yyyy, "-", mm, "-", dd])
-                                ..readOnly = !state.edit
+                                ..readOnly = !state.edit,
+                              new VParagraphElement()
+                                ..className = 'help is-danger ${state.timeIsValid ? 'is-invisible' : ''}'
+                                ..text = 'Activity must include date'
                             ]
                         ]
                     ]
@@ -351,11 +388,16 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
                             ..className = 'control'
                             ..children = [
                               new VInputElement()
-                                ..className = 'input ${state.edit ? '' : 'is-static'}'
+                                ..onInput = _timeValidator
+                                ..className =
+                                    'input ${state.edit ? '' : 'is-static'} ${state.timeIsValid ? '' : 'is-danger'}'
                                 ..id = 'timeStart-input'
                                 ..type = 'time'
                                 ..readOnly = !state.edit
-                                ..value = formatDate(act.startTime, [hh, ":", mm])
+                                ..value = formatDate(act.startTime, [hh, ":", mm]),
+                              new VParagraphElement()
+                                ..className = 'help is-danger ${state.timeIsValid ? 'is-invisible' : ''}'
+                                ..text = 'Activity must start before it ends'
                             ]
                         ]
                     ]
@@ -389,11 +431,16 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
                             ..className = 'control'
                             ..children = [
                               new VInputElement()
-                                ..className = 'input ${state.edit ? '' : 'is-static'}'
+                                ..onInput = _timeValidator
+                                ..className =
+                                    'input ${state.edit ? '' : 'is-static'} ${state.timeIsValid ? '' : 'is-danger'}'
                                 ..id = 'timeEnd-input'
                                 ..type = 'time'
                                 ..readOnly = !state.edit
-                                ..value = formatDate(act.endTime, [hh, ":", mm])
+                                ..value = formatDate(act.endTime, [hh, ":", mm]),
+                              new VParagraphElement()
+                                ..className = 'help is-danger ${state.timeIsValid ? 'is-invisible' : ''}'
+                                ..text = 'Activity must start before it ends'
                             ]
                         ]
                     ]
@@ -612,6 +659,56 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
       return int.parse(cap);
     } else {
       return int.parse(cap);
+    }
+  }
+
+  /// [_activityNameValidator] validator function to ensure name is input correctly
+  void _activityNameValidator(_) {
+    InputElement actName = querySelector('#act-input');
+    bool isValid = Validator.name(actName.value);
+    setState((EditActivityProps, EditActivityState) => EditActivityState..activityNameIsValid = isValid);
+  }
+
+  /// [_instructorNameValidator] validator function to ensure instructor is input correctly
+  void _instructorNameValidator(_) {
+    InputElement instructorName = querySelector('#instructorName-input');
+    bool isValid = Validator.name(instructorName.value);
+    setState((EditActivityProps, EditActivityState) => EditActivityState..instructorNameIsValid = isValid);
+  }
+
+  /// [_locationValidator] validator function to ensure location is input correctly
+  void _locationValidator(_) {
+    InputElement location = querySelector('#location-input');
+    bool isValid = Validator.name(location.value);
+    setState((EditActivityProps, EditActivityState) => EditActivityState..locationIsValid = isValid);
+  }
+
+  /// [_capacityValidator] validator function to ensure capacity is input correctly
+  void _capacityValidator(_) {
+    InputElement capacity = querySelector('#capacity-input');
+    bool isValid = Validator.capacity(int.parse(capacity.value));
+    setState((EditActivityProps, EditActivityState) => EditActivityState..capacityIsValid = isValid);
+  }
+
+  /// [_timeValidator] validator function to ensure time is input correctly
+  void _timeValidator(_) {
+    InputElement start = querySelector('#timeStart-input');
+    InputElement end = querySelector('#timeEnd-input');
+    InputElement day = querySelector('#day-input');
+    try {
+      DateTime serveDay = DateTime.parse(day.value);
+
+      String startTime = formatDate(serveDay, [yyyy, "-", mm, "-", dd, " ${start.value}:00.000"]);
+      String endTime = formatDate(serveDay, [yyyy, "-", mm, "-", dd, " ${end.value}:00.000"]);
+
+      DateTime startDT = DateTime.parse(startTime);
+      DateTime endDT = DateTime.parse(endTime);
+
+      bool isValid = Validator.time(startDT, endDT);
+
+      setState((EditActivityProps, EditActivityState) => EditActivityState..timeIsValid = isValid);
+    } catch (_) {
+      setState((EditActivityProps, EditActivityState) => EditActivityState..timeIsValid = false);
     }
   }
 

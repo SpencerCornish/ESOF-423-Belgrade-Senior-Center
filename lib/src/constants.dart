@@ -80,6 +80,22 @@ class Validator {
 
   /// [capacity] ensures a valid usage size
   static bool capacity(int i) => i > -2;
+
+  /// [canActivateSubmit] validator function to ensure needed fields are correct before submit
+  static bool canActivateSubmit(bool nameIsValid, bool timeIsValid, [bool addressIsValid, bool lastNameIsValid]) {
+    if (addressIsValid != null && lastNameIsValid != null) {
+      if (nameIsValid && timeIsValid && addressIsValid && lastNameIsValid) {
+        if (addressIsValid != null && lastNameIsValid != null) {}
+        return false; //enables button on false
+      }
+    } else {
+      if (nameIsValid && timeIsValid) {
+        if (addressIsValid != null && lastNameIsValid != null) {}
+        return false; //enables button on false
+      }
+    }
+    return true; //disables button on true
+  }
 }
 
 /// [ExportHeader] is the header strings for csv table outputs

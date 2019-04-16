@@ -13,6 +13,7 @@ import '../../core/pageRepeats.dart';
 import '../../../model/user.dart';
 import '../../../state/app.dart';
 
+/// [EditMemberProps] class for the edit member page passed in propeerties
 class EditMemberProps {
   AppActions actions;
   User user;
@@ -20,7 +21,17 @@ class EditMemberProps {
   String selectedMemberUID;
 }
 
+/// [EditMemberState] state class for the edit member page
 class EditMemberState {
+  bool firstNameIsValid;
+  bool lastNameIsValid;
+  bool emailIsValid;
+  bool phoneNumberIsValid;
+  bool cellNumberIsValid;
+  bool addressIsValid;
+  bool hasInvalid;
+  bool memIsValid;
+
   bool edit;
   bool dropDownActive;
   int listsCreated;
@@ -37,6 +48,14 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
 
   @override
   EditMemberState getInitialState() => EditMemberState()
+    ..firstNameIsValid = false
+    ..lastNameIsValid = false
+    ..emailIsValid = true
+    ..phoneNumberIsValid = true
+    ..cellNumberIsValid = true
+    ..addressIsValid = false
+    ..hasInvalid = true
+    ..memIsValid = false
     ..edit = false
     ..dropDownActive = false
     ..listsCreated = 0
@@ -45,7 +64,6 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
     ..medBool = props.userMap[props.selectedMemberUID].medRelease
     ..waiverBool = props.userMap[props.selectedMemberUID].waiverRelease
     ..intakeBool = props.userMap[props.selectedMemberUID].intakeForm;
-  // ..addEm = 0;
 
   History _history;
 
@@ -159,7 +177,10 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
         new VDivElement()
           ..className = 'column is-2'
           ..children = [
-            renderSubmit(_submitClick),
+            renderSubmit(
+                _submitClick,
+                Validator.canActivateSubmit(
+                    state.firstNameIsValid, state.memIsValid, state.addressIsValid, state.lastNameIsValid)),
             new VLabelElement()
               ..className = 'label'
               ..text = "Role",
