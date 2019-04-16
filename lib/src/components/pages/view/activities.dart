@@ -120,13 +120,13 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
         ..children = [
           new VTableCellElement()
             ..className = tdClass(act.name)
-            ..text = _capView(act.name),
+            ..text = checkText(act.name),
           new VTableCellElement()
             ..className = tdClass(act.startTime.toString())
-            ..text = _capView(formatTimeRange(act.startTime, act.endTime)),
+            ..text = checkText(formatTimeRange(act.startTime, act.endTime)),
           new VTableCellElement()
             ..className = tdClass(act.location)
-            ..text = _capView(act.location),
+            ..text = checkText(act.location),
           _renderButton(act.uid),
         ]);
     }
@@ -275,18 +275,6 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
               ],
           ],
       ];
-  }
-
-  ///[_capView] converts capacity from the stored number (or lack there of) to a pretty output
-  String _capView(String text) {
-    if (text != '') {
-      if (text == '-1') {
-        text = "Unlimited";
-      }
-    } else {
-      text = "N/A";
-    }
-    return text;
   }
 
   ///[_searchListener] function to ensure the table is showing data that matches the search criteria

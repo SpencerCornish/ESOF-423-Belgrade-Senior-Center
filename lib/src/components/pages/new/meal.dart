@@ -326,9 +326,8 @@ class NewMeal extends Component<NewMealProps, NewMealState> {
         .build();
 
     props.actions.server.updateOrCreateMeal(newMeal);
-    props.actions.server.fetchAllMeals();
 
-    history.push(Routes.dashboard);
+    history.push(Routes.viewMeal);
   }
 
   ///[_parseDate] is a function adopted from the _showDate function that Josh wrote to make a string from a date and time input compatible with DateTime data types

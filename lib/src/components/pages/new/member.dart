@@ -853,9 +853,8 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
         .build();
 
     props.actions.server.updateOrCreateUser(newUser);
-    props.actions.server.fetchAllMembers();
 
-    history.push(Routes.dashboard);
+    history.push(Routes.viewMembers);
   }
 
   _dropDownClick(_) {

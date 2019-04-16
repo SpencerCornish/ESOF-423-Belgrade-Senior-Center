@@ -267,9 +267,8 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
                           new VInputElement()
                             ..className = 'input ${state.edit ? '' : 'is-static'}'
                             ..id = 'capacity-input'
-                            ..type = 'number'
                             ..readOnly = !state.edit
-                            ..defaultValue = act.capacity.toString()
+                            ..defaultValue = _capView(act.capacity.toString())
                         ]
                     ]
                 ]
@@ -592,6 +591,30 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
     return items;
   }
 
+  ///[_capView] converts capacity from the stored number (or lack there of) to a pretty output
+  String _capView(String text) {
+    if (text != '') {
+      if (text == '-1') {
+        text = "Unlimited";
+      }
+    } else {
+      text = "N/A";
+    }
+    return text;
+  }
+
+  ///[_capReset] converts capacity from the visual look to a  number for storage
+  int _capReset(String cap) {
+    if (cap != '') {
+      if (cap == 'Unlimited') {
+        return -1;
+      }
+      return int.parse(cap);
+    } else {
+      return int.parse(cap);
+    }
+  }
+
   ///[_promptForDeleteClick] sets the state to show the deletion modal for a user
   _promptForDeleteClick(String userID) => setState((props, state) => state
     ..showDeletePrompt = true
@@ -645,7 +668,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
     int cap; //capacity of activity
     startTime = formatDate(date, [yyyy, "-", mm, "-", dd, " ${tempStart}:00.000"]);
     endTime = formatDate(date, [yyyy, "-", mm, "-", dd, " ${tempEnd}:00.000"]);
-    cap = int.parse(capacity.value);
+    cap = _capReset(capacity.value);
 
     Activity update = props.activityMap[props.selectedActivityUID].rebuild((builder) => builder
       ..capacity = cap
