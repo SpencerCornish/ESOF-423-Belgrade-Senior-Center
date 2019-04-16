@@ -132,7 +132,7 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
     return nodeList;
   }
 
-  /// [sort] Merge sort by last name of user
+  /// [_sort] Merge sort by last name of user
   List<User> _sort(List<User> users, int left, int right) {
     if (left < right) {
       int mid = (left + right) ~/ 2;
@@ -192,6 +192,7 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
       renderRefresh(_onRefreshClick),
     ];
 
+  ///[_searchListener] function to ensure the table is showing data that matches the search criteria
   _searchListener(_) {
     InputElement search = querySelector('#Search');
     if (search.value.isEmpty) {
@@ -245,6 +246,7 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
     }
   }
 
+  ///[_onExportCsvClick] exports the currently shown data to a csv file
   _onExportCsvClick(_) {
     List<String> lines;
     if (!state.searching) {
@@ -266,14 +268,17 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
     downloadLink.dispatchEvent(event);
   }
 
+  ///[_onRefreshClick] reloads the data for the page
   _onRefreshClick(_) {
     props.actions.server.fetchAllMembers();
   }
 
+  ///[_onUserClick] view page for specific user
   _onUserClick(String uid) {
     history.push(Routes.generateEditMemberURL(uid));
   }
 
+  ///[_onActClick] check in function for user to activity
   _onActClick(String uid) {
     history.push(Routes.generateActivitySignUpURL(uid));
   }
