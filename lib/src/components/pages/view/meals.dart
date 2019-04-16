@@ -1,11 +1,13 @@
 import 'dart:html' hide History;
 
+import 'package:date_format/date_format.dart';
 import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
 import 'package:wui_builder/vhtml.dart';
 import 'package:built_collection/built_collection.dart';
 
 import '../../core/nav.dart';
+import '../../core/pageRepeats.dart';
 import '../../../model/user.dart';
 import '../../../model/meal.dart';
 import '../../../state/app.dart';
@@ -27,7 +29,7 @@ class ViewMealState {
 /// [viewMeal] class / page to show a visual representation of current stored data
 class ViewMeal extends Component<ViewMealProps, ViewMealState> {
   ViewMeal(props) : super(props);
-  List<String> title = ["Serving", "Date", "Time", " "];
+  List<String> title = ["Serving", "Date and Time", " "];
   History _history;
 
   //set states on page load
@@ -43,95 +45,6 @@ class ViewMeal extends Component<ViewMealProps, ViewMealState> {
   @override
   void componentWillMount() {
     props.actions.server.fetchAllMeals();
-  }
-
-  /// [createRows] Scaling function to make rows based on amount of information available
-  List<VNode> createRows() {
-    List<Meal> meals;
-    List<VNode> nodeList = new List();
-    if (!state.searching) {
-      meals = props.mealMap.values.toList();
-    } else {
-      meals = state.found;
-    }
-    nodeList.addAll(titleRow());
-    for (Meal meal in meals) {
-      nodeList.add(new VTableRowElement()
-        ..className = 'tr'
-        ..children = [
-          new VTableCellElement()
-            ..className = tdClass(_menuSubstring(meal.menu.toString()))
-            ..text = checkText(_menuSubstring(meal.menu.toString())),
-          new VTableCellElement()
-            ..className = tdClass(meal.startTime.toString())
-            ..text = checkText("${meal.startTime.month}/${meal.startTime.day}/${meal.startTime.year}"),
-          new VTableCellElement()
-            ..className = tdClass(meal.startTime.toString())
-            ..text =
-                "${_showTime(meal.startTime.hour, meal.startTime.minute.toString())} - ${_showTime(meal.endTime.hour, meal.endTime.minute.toString())}",
-          new VTableCellElement()
-            ..children = [
-              new VButtonElement()
-                ..className = "button is-rounded"
-                ..onClick = ((_) => _onMealClick(meal.uid))
-                ..children = [
-                  new VSpanElement()
-                    ..className = 'icon'
-                    ..children = [
-                      new Vi()..className = 'far fa-eye',
-                    ],
-                  new VSpanElement()..text = 'View',
-                ],
-            ]
-        ]);
-    }
-    return nodeList;
-  }
-
-  ///[_menuSubstring] helper function to display the menu list item as a short string for table view
-  String _menuSubstring(String menu) {
-    if (menu.length <= 15) {
-      return menu.substring(1, menu.length - 1);
-    } else {
-      return menu.substring(1, 15);
-    }
-  }
-
-  ///[_showTime] helper function to put a time into a proper format to view in a time type input box
-  String _showTime(int hour, String min) {
-    String ampm = "A.M.";
-    if (hour > 12) {
-      hour = hour - 12;
-      ampm = "P.M.";
-    }
-
-    if (min.length == 1) {
-      min = "0${min}";
-    }
-    return hour.toString() + ":" + min + " " + ampm;
-  }
-
-  _onMealClick(String uid) {
-    history.push(Routes.generateEditMealURL(uid));
-  }
-
-  ///[checkText] will return N/A if a given string is empty, visual helper function
-  String checkText(String text) => text != '' ? text : "N/A";
-
-  ///[tdClass] visual helper function, will set class name to has-text-grey to grey out text
-  String tdClass(String text) => text != '' ? 'td' : "td has-text-grey";
-
-  /// [titleRow] helper function to create the title row
-  List<VNode> titleRow() {
-    List<VNode> nodeList = new List();
-    for (String title in title) {
-      nodeList.add(
-        new VTableCellElement()
-          ..className = 'title is-5'
-          ..text = title,
-      );
-    }
-    return nodeList;
   }
 
   @override
@@ -152,63 +65,7 @@ class ViewMeal extends Component<ViewMealProps, ViewMealState> {
                   new VDivElement()
                     ..className = 'box is-4'
                     ..children = [
-                      new VDivElement()
-                        ..className = 'columns is-mobile'
-                        ..children = [
-                          new VDivElement()
-                            ..className = 'column'
-                            ..children = [
-                              new Vh4()
-                                ..className = 'title is-4'
-                                ..text = 'Meal Data',
-                              new Vh1()
-                                ..className = 'subtitle is-7'
-                                ..text = " as of: ${DateTime.now().month}/${DateTime.now().day}/${DateTime.now().year}",
-                            ],
-                          new VDivElement()
-                            ..className = 'column is-narrow'
-                            ..children = [
-                              new VDivElement()
-                                ..className = 'field'
-                                ..children = [
-                                  new VParagraphElement()
-                                    ..className = 'control has-icons-left'
-                                    ..children = [
-                                      new VInputElement()
-                                        ..className = 'input'
-                                        ..placeholder = 'Search'
-                                        ..id = 'Search'
-                                        ..onKeyUp = _searchListener
-                                        ..type = 'text',
-                                      new VSpanElement()
-                                        ..className = 'icon is-left'
-                                        ..children = [new Vi()..className = 'fas fa-search'],
-                                    ],
-                                ],
-                            ],
-                          new VDivElement()
-                            ..className = 'column is-narrow'
-                            ..children = [
-                              new VDivElement()
-                                ..className = 'field'
-                                ..children = [
-                                  new VDivElement()
-                                    ..className = 'control'
-                                    ..children = [
-                                      new VParagraphElement()
-                                        ..className = 'button is-rounded'
-                                        ..onClick = _onExportCsvClick
-                                        ..children = [
-                                          new VSpanElement()
-                                            ..className = 'icon'
-                                            ..children = [new Vi()..className = 'fas fa-file-csv'],
-                                          new VSpanElement()..text = 'Export',
-                                        ],
-                                    ],
-                                ],
-                            ],
-                          _renderRefresh(),
-                        ],
+                      _renderHeader(),
                       new VTableElement()
                         ..className = 'table is-narrow is-striped is-fullwidth'
                         ..children = createRows(),
@@ -218,26 +75,112 @@ class ViewMeal extends Component<ViewMealProps, ViewMealState> {
         ],
     ];
 
-  _renderRefresh() => new VDivElement()
-    ..className = 'column is-narrow'
-    ..children = [
-      new VDivElement()
-        ..className = 'field'
+  /// [createRows] Scaling function to make rows based on amount of information available
+  List<VNode> createRows() {
+    List<Meal> meals;
+    List<VNode> nodeList = new List();
+    if (!state.searching) {
+      meals = props.mealMap.values.toList();
+    } else {
+      meals = state.found;
+    }
+    meals = _sort(meals, 0, meals.length - 1);
+    nodeList.addAll(titleRow(title));
+    for (Meal meal in meals) {
+      nodeList.add(new VTableRowElement()
+        ..className = 'tr'
         ..children = [
-          new VDivElement()
-            ..className = 'control'
+          new VTableCellElement()
+            ..className = tdClass(_menuSubstring(meal.menu.toString()))
+            ..text = checkText(_menuSubstring(meal.menu.toString())),
+          new VTableCellElement()
+            ..className = tdClass(meal.startTime.toString())
+            ..text = formatTimeRange(meal.startTime, meal.endTime),
+          new VTableCellElement()
             ..children = [
-              new VParagraphElement()
-                ..className = 'button is-rounded'
-                ..onClick = _onRefreshClick
+              new VButtonElement()
+                ..className = "button is-rounded"
+                ..onClick = ((_) => _onMealClick(meal.uid))
                 ..children = [
                   new VSpanElement()
                     ..className = 'icon'
-                    ..children = [new Vi()..className = 'fas fa-sync-alt'],
-                  new VSpanElement()..text = 'Refresh',
+                    ..children = [
+                      new Vi()..className = 'far fa-eye',
+                    ],
+                  new VSpanElement()..text = 'View',
                 ],
-            ],
+            ]
+        ]);
+    }
+    return nodeList;
+  }
+
+  /// [_sort] Merge sort by last name of user
+  List<Meal> _sort(List<Meal> meal, int left, int right) {
+    if (left < right) {
+      int mid = (left + right) ~/ 2;
+
+      meal = _sort(meal, left, mid);
+      meal = _sort(meal, mid + 1, right);
+      meal = _merge(meal, left, mid, right);
+    }
+    return meal;
+  }
+
+  /// [_merge] Helper for the sort function for merging the lists back together
+  List<Meal> _merge(List<Meal> meal, int left, int mid, int right) {
+    List temp = new List();
+    int curLeft = left, curRight = mid + 1, tempIndex = 0;
+    while (curLeft <= mid && curRight <= right) {
+      if (meal.elementAt(curLeft).startTime.compareTo(meal.elementAt(curRight).startTime) <= 0) {
+        temp.insert(tempIndex, meal.elementAt(curLeft));
+        curLeft++;
+      } else {
+        temp.add(meal.elementAt(curRight));
+        curRight++;
+      }
+      tempIndex++;
+    }
+    while (curLeft <= mid) {
+      temp.add(meal.elementAt(curLeft));
+      curLeft++;
+      tempIndex++;
+    }
+    while (curRight <= right) {
+      temp.add(meal.elementAt(curRight));
+      curRight++;
+      tempIndex++;
+    }
+    meal.replaceRange(left, right + 1, temp.getRange(0, tempIndex).whereType<Meal>());
+
+    return meal;
+  }
+
+  ///[_menuSubstring] helper function to display the menu list item as a short string for table view
+  String _menuSubstring(String menu) {
+    if (menu.length <= 15) {
+      return menu.substring(1, menu.length - 1);
+    } else {
+      return menu.substring(1, 15);
+    }
+  }
+
+  _renderHeader() => new VDivElement()
+    ..className = 'columns is-mobile'
+    ..children = [
+      new VDivElement()
+        ..className = 'column'
+        ..children = [
+          new Vh4()
+            ..className = 'title is-4'
+            ..text = 'Meal Data',
+          new Vh1()
+            ..className = 'subtitle is-7'
+            ..text = " as of: ${formatTime(DateTime.now())}",
         ],
+      renderSearch(_searchListener),
+      renderExport(_onExportCsvClick),
+      renderRefresh(_onRefreshClick),
     ];
 
   _searchListener(_) {
@@ -258,15 +201,13 @@ class ViewMeal extends Component<ViewMealProps, ViewMealState> {
         }
         if (meal.endTime.toString().contains(search.value)) {
           found.add(meal);
-        } else if ("${meal.endTime.month}/${meal.endTime.day}/${meal.endTime.year}".contains(search.value)) {
+        } else if (formatDate(meal.startTime, [m, "/", d, "/", yyyy]).contains(search.value)) {
           found.add(meal);
         } else if (meal.startTime.toString().contains(search.value)) {
           found.add(meal);
-        } else if ("${meal.startTime.month}/${meal.startTime.day}/${meal.startTime.year}".contains(search.value)) {
+        } else if (formatDate(meal.endTime, [m, "/", d, "/", yyyy]).contains(search.value)) {
           found.add(meal);
-        } else if (_showTime(meal.startTime.hour, meal.startTime.minute.toString()).contains(search.value)) {
-          found.add(meal);
-        } else if (_showTime(meal.endTime.hour, meal.endTime.minute.toString()).contains(search.value)) {
+        } else if (formatTimeRange(meal.startTime, meal.endTime).toLowerCase().contains(search.value)) {
           found.add(meal);
         }
 
@@ -300,5 +241,9 @@ class ViewMeal extends Component<ViewMealProps, ViewMealState> {
 
   _onRefreshClick(_) {
     props.actions.server.fetchAllMeals();
+  }
+
+  _onMealClick(String uid) {
+    history.push(Routes.generateEditMealURL(uid));
   }
 }

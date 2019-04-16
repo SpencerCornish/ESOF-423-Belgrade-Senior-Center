@@ -417,6 +417,9 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
           new VTableCellElement()
             ..className = 'td'
             ..text = userObj?.lastName ?? '',
+          new VTableCellElement()
+            ..className = 'td'
+            ..text = "",
           new VTableCellElement()..children = [_renderRemoveButton(userID)]
         ]);
     }
@@ -498,7 +501,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
         ],
     ];
 
-  ///[rederAddUser] modal containing list of members able to be added to current activity
+  ///[_rederAddUser] modal containing list of members able to be added to current activity
   VNode _renderAddUser(Activity act, String uid) => new VDivElement()
     ..className = "modal ${state.showAddUserPrompt ? 'is-active' : ''}"
     ..children = [
