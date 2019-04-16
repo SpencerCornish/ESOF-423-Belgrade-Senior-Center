@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:email_validator/email_validator.dart';
 import 'package:date_format/date_format.dart';
+import 'package:wui_builder/vhtml.dart';
+import 'package:wui_builder/wui_builder.dart';
 
 /// [Routes] defines URIs for the application
 class Routes {
@@ -151,6 +153,105 @@ enum AuthState {
 /// [formatTime] turns a time into a human readable string
 String formatTime(DateTime time) =>
     time == null ? "" : formatDate(time, [DD, ", ", M, " ", dd, " ", yyyy, " at ", hh, ":", nn, " ", am]);
+
+/// [formatTimeRange] turns a start - end time into a human readable string
+String formatTimeRange(DateTime start, DateTime end) {
+  String range;
+  range = start == null ? "" : formatDate(start, [DD, ", ", M, " ", dd, " ", yyyy, ",\t", hh, ":", nn, " ", am]);
+  range = range + " - ";
+  range = range + (end == null ? "" : formatDate(end, [hh, ":", nn, " ", am]));
+
+  return range;
+}
+
+String checkText(String text) => text != '' ? text : "N/A";
+
+String tdClass(String text) => text != '' ? 'td' : "td has-text-grey";
+
+/// identical render methods for the various pages
+
+/// [renderSearch] render search bar
+renderSearch(_searchListener(_)) => new VDivElement()
+  ..className = 'column is-narrow'
+  ..children = [
+    new VDivElement()
+      ..className = 'field'
+      ..children = [
+        new VParagraphElement()
+          ..className = 'control has-icons-left'
+          ..children = [
+            new VInputElement()
+              ..className = 'input'
+              ..placeholder = 'Search'
+              ..type = 'submit'
+              ..id = 'Search'
+              ..onKeyUp = _searchListener
+              ..type = 'text',
+            new VSpanElement()
+              ..className = 'icon is-left'
+              ..children = [new Vi()..className = 'fas fa-search'],
+          ],
+      ],
+  ];
+
+/// [renderExport] render the export csv button
+renderExport(_onExportCsvClick(_)) => new VDivElement()
+  ..className = 'column is-narrow'
+  ..children = [
+    new VDivElement()
+      ..className = 'field'
+      ..children = [
+        new VDivElement()
+          ..className = 'control'
+          ..children = [
+            new VParagraphElement()
+              ..className = 'button is-rounded'
+              ..onClick = _onExportCsvClick
+              ..children = [
+                new VSpanElement()
+                  ..className = 'icon'
+                  ..children = [new Vi()..className = 'fas fa-file-csv'],
+                new VSpanElement()..text = 'Export',
+              ],
+          ],
+      ],
+  ];
+
+///[renderRefresh] a refresh button to ensure the data is up-to-date
+renderRefresh(_onRefreshClick(_)) => new VDivElement()
+  ..className = 'column is-narrow'
+  ..children = [
+    new VDivElement()
+      ..className = 'field'
+      ..children = [
+        new VDivElement()
+          ..className = 'control'
+          ..children = [
+            new VParagraphElement()
+              ..className = 'button is-rounded'
+              ..onClick = _onRefreshClick
+              ..children = [
+                new VSpanElement()
+                  ..className = 'icon'
+                  ..children = [new Vi()..className = 'fas fa-sync-alt'],
+                new VSpanElement()..text = 'Refresh',
+              ],
+          ],
+      ],
+  ];
+
+/// [titleRow] helper function to create the title row
+List<VNode> titleRow(List<String> title) {
+  List<VNode> nodeList = new List();
+  for (String title in title) {
+    nodeList.add(
+      new VTableCellElement()
+        ..className = 'title is-5'
+        ..text = title,
+    );
+  }
+  return nodeList;
+}
 
 /// [stringToBase] encodes strings to base64 format
 String stringToBase(String email) => base64Encode(utf8.encode(email));

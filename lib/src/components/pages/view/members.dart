@@ -54,22 +54,22 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
 
     if (!state.searching) {
       users = props.userMap.values.toList();
-
-      //merge sort function by last name
-      users = _sort(users, 0, users.length - 1);
-      state.found = users;
-      nodeList.addAll(_titleRow());
+    } else {
+      users = state.found;
     }
-    for (User user in state.found) {
+    nodeList.addAll(_titleRow());
+    //merge sort function by last name
+    users = _sort(users, 0, users.length - 1);
+    for (User user in users) {
       nodeList.add(new VTableRowElement()
         ..className = 'tr'
         ..children = [
           new VTableCellElement()
-            ..className = _tdClass(user.lastName)
-            ..text = _checkText(user.lastName),
+            ..className = tdClass(user.lastName)
+            ..text = checkText(user.lastName),
           new VTableCellElement()
-            ..className = _tdClass(user.firstName)
-            ..text = _checkText(user.firstName),
+            ..className = tdClass(user.firstName)
+            ..text = checkText(user.firstName),
           new VTableCellElement()
             ..children = [
               new VButtonElement()
@@ -151,10 +151,6 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
 
     return users;
   }
-
-  String _checkText(String text) => text != '' ? text : "N/A";
-
-  String _tdClass(String text) => text != '' ? 'td' : "td has-text-grey";
 
   /// [_titleRow] helper function to create the title row
   List<VNode> _titleRow() {
