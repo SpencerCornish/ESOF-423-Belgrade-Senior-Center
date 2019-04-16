@@ -9,6 +9,7 @@ import 'package:built_collection/built_collection.dart';
 import '../../../model/activity.dart';
 import '../../../state/app.dart';
 import '../../core/nav.dart';
+import '../../core/pageRepeats.dart';
 import '../../../model/user.dart';
 
 ///[EditActivityProps] class to hold passed in properties of edit activity page
@@ -113,7 +114,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
                     ..text = "Attendees",
                   _renderAttendance(act),
                   //create the submit button
-                  _renderButton(),
+                  renderEditSubmitButton(state.edit, _editClick, _submitClick),
                 ]
             ]
         ]
@@ -590,42 +591,6 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
 
     return items;
   }
-
-  ///[_renderButton] helper function to show either the edit or submit button based on state
-  VNode _renderButton() {
-    if (state.edit) {
-      return _renderSubmit();
-    }
-    return (_renderEdit());
-  }
-
-  ///[_renderEdit] creates a button to toggle from a view page to increase the number of input fields
-  _renderEdit() => new VDivElement()
-    ..className = 'field is-grouped is-grouped-right'
-    ..children = [
-      new VDivElement()
-        ..className = 'control'
-        ..children = [
-          new VAnchorElement()
-            ..className = 'button is-link is-rounded'
-            ..text = "Edit"
-            ..onClick = _editClick
-        ],
-    ];
-
-  ///[_renderSubmit] create the submit button to collect the data
-  _renderSubmit() => new VDivElement()
-    ..className = 'field is-grouped is-grouped-right'
-    ..children = [
-      new VDivElement()
-        ..className = 'control'
-        ..children = [
-          new VAnchorElement()
-            ..className = 'button is-link is-rounded'
-            ..text = "Submit"
-            ..onClick = _submitClick
-        ]
-    ];
 
   ///[_promptForDeleteClick] sets the state to show the deletion modal for a user
   _promptForDeleteClick(String userID) => setState((props, state) => state

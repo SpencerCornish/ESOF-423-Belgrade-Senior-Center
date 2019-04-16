@@ -85,3 +85,39 @@ List<VNode> titleRow(List<String> title) {
   }
   return nodeList;
 }
+
+///[renderEditSubmitButton] button selector method to show either submit or edit button based on state
+VNode renderEditSubmitButton(bool edit, _editClick(_), _submitClick(_)) {
+  if (edit) {
+    return renderSubmit(_submitClick);
+  }
+  return (renderEdit(_editClick));
+}
+
+///[_renderEdit] creates a button to toggle from a view page to increase the number of input fields
+renderEdit(_editClick(_)) => new VDivElement()
+  ..className = 'field is-grouped is-grouped-right'
+  ..children = [
+    new VDivElement()
+      ..className = 'control'
+      ..children = [
+        new VAnchorElement()
+          ..className = 'button is-link is-rounded'
+          ..text = "Edit"
+          ..onClick = _editClick
+      ],
+  ];
+
+///[_renderSubmit] create the submit button to collect the data
+renderSubmit(_submitClick(_)) => new VDivElement()
+  ..className = 'field is-grouped is-grouped-right'
+  ..children = [
+    new VDivElement()
+      ..className = 'control'
+      ..children = [
+        new VAnchorElement()
+          ..className = 'button is-link is-rounded'
+          ..text = "Submit"
+          ..onClick = _submitClick
+      ]
+  ];

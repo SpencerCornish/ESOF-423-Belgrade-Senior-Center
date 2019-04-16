@@ -1,5 +1,6 @@
 import 'dart:html' hide History;
 
+import 'package:date_format/date_format.dart';
 import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
 import 'package:wui_builder/vhtml.dart';
@@ -7,9 +8,11 @@ import 'package:built_collection/built_collection.dart';
 
 import '../../../state/app.dart';
 import '../../core/nav.dart';
+import '../../core/pageRepeats.dart';
 import '../../../model/meal.dart';
 import '../../../model/user.dart';
 
+///[EditMealProps] class to hold passed in properties of edit meal page
 class EditMealProps {
   AppActions actions;
   User user;
@@ -17,10 +20,12 @@ class EditMealProps {
   String selectedMealUID;
 }
 
+///[EditMealState] class to hold state of edit meal page
 class EditMealState {
   bool edit;
 }
 
+///[EditMeal] class to create the edit meal page
 class EditMeal extends Component<EditMealProps, EditMealState> {
   EditMeal(props) : super(props);
 
@@ -50,38 +55,7 @@ class EditMeal extends Component<EditMealProps, EditMealState> {
       ];
   }
 
-  ///[_showDate] helper function to put a date into a proper format to view in a date type input box
-  String _showDate(DateTime date) {
-    String tempDay, tempMonth;
-
-    if (date.day.toString().length == 1) {
-      tempDay = "0${date.day}";
-    } else {
-      tempDay = date.day.toString();
-    }
-
-    if (date.month.toString().length == 1) {
-      tempMonth = "0${date.month}";
-    } else {
-      tempMonth = date.month.toString();
-    }
-
-    return "${date.year}-${tempMonth}-${tempDay}";
-  }
-
-  ///[_showTime] helper function to put a time into a proper format to view in a time type input box
-  String _showTime(String hour, String min) {
-    if (hour.length == 1) {
-      hour = "0${hour}";
-    }
-
-    if (min.length == 1) {
-      min = "0${min}";
-    }
-    return hour + ":" + min;
-  }
-
-  //create the text boxes that are used to create new users
+  /// [_mealCreation] create the text boxes that are used to create new users
   VNode _mealCreation(Meal meal) => new VDivElement()
     ..className = 'container'
     ..children = [
@@ -110,209 +84,177 @@ class EditMeal extends Component<EditMealProps, EditMealState> {
                   new VDivElement()
                     ..className = 'columns'
                     ..children = [
-                      new VDivElement()
-                        ..className = 'column'
-                        ..children = [
-                          new VDivElement()
-                            ..className = 'field is-grouped'
-                            ..children = [
-                              new VDivElement()
-                                ..className = 'field is-horizontal'
-                                ..children = [
-                                  new VDivElement()
-                                    ..className = 'field-body'
-                                    ..children = [
-                                      new VDivElement()
-                                        ..className = 'field'
-                                        ..id = 'date-lab'
-                                        ..children = [
-                                          new VLabelElement()
-                                            ..className = 'label'
-                                            ..text = "Serving Date"
-                                        ],
-                                      new VDivElement()
-                                        ..className = 'field is-horizontal'
-                                        ..children = [
-                                          new VParagraphElement()
-                                            ..className = 'control'
-                                            ..children = [
-                                              new VInputElement()
-                                                ..className = 'input ${state.edit ? '' : 'is-static'}'
-                                                ..id = 'serveDate-input'
-                                                ..type = 'date'
-                                                ..readOnly = !state.edit
-                                                ..value = _showDate(meal.startTime)
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ],
-                      new VDivElement()
-                        ..className = 'column'
-                        ..children = [
-                          new VDivElement()
-                            ..className = 'field is-grouped'
-                            ..children = [
-                              new VDivElement()
-                                ..className = 'field is-horizontal'
-                                ..children = [
-                                  new VDivElement()
-                                    ..className = 'field-body'
-                                    ..children = [
-                                      new VDivElement()
-                                        ..className = 'field'
-                                        ..id = 'mealStart-lab'
-                                        ..children = [
-                                          new VLabelElement()
-                                            ..className = 'label'
-                                            ..text = "Start Time"
-                                        ],
-                                      new VDivElement()
-                                        ..className = 'field is-horizontal'
-                                        ..children = [
-                                          new VParagraphElement()
-                                            ..className = 'control'
-                                            ..children = [
-                                              new VInputElement()
-                                                ..className = 'input ${state.edit ? '' : 'is-static'}'
-                                                ..id = 'mealStart-input'
-                                                ..type = 'time'
-                                                ..readOnly = !state.edit
-                                                ..value = _showTime(
-                                                    meal.startTime.hour.toString(), meal.startTime.minute.toString())
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ],
-                      new VDivElement()
-                        ..className = 'column'
-                        ..children = [
-                          new VDivElement()
-                            ..className = 'field is-grouped'
-                            ..children = [
-                              new VDivElement()
-                                ..className = 'field is-horizontal'
-                                ..children = [
-                                  new VDivElement()
-                                    ..className = 'field-body'
-                                    ..children = [
-                                      new VDivElement()
-                                        ..className = 'field'
-                                        ..id = 'mealEnd-lab'
-                                        ..children = [
-                                          new VLabelElement()
-                                            ..className = 'label'
-                                            ..text = "End Time"
-                                        ],
-                                      new VDivElement()
-                                        ..className = 'field is-horizontal'
-                                        ..children = [
-                                          new VParagraphElement()
-                                            ..className = 'control'
-                                            ..children = [
-                                              new VInputElement()
-                                                ..className = 'input ${state.edit ? '' : 'is-static'}'
-                                                ..id = 'mealEnd-input'
-                                                ..type = 'time'
-                                                ..readOnly = !state.edit
-                                                ..value = _showTime(
-                                                    meal.endTime.hour.toString(), meal.endTime.minute.toString())
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ]
+                      _renderDate(meal),
+                      _renderStart(meal),
+                      _renderEnd(meal),
                     ],
 
                   //create the input box for what the meal is
-                  new VDivElement()
-                    ..className = 'columns'
-                    ..children = [
-                      new VDivElement()
-                        ..className = 'column is-narrow'
-                        ..children = [
-                          new VDivElement()
-                            ..className = 'field is-horizontal'
-                            ..children = [
-                              new VDivElement()
-                                ..className = 'field-label is-normal'
-                                ..children = [
-                                  new VLabelElement()
-                                    ..className = 'label'
-                                    ..text = "Meal",
-                                ]
-                            ]
-                        ],
-                      new VDivElement()
-                        ..className = 'field-body'
-                        ..children = [
-                          new VDivElement()
-                            ..className = 'field'
-                            ..children = [
-                              new VDivElement()
-                                ..className = 'control'
-                                ..children = [
-                                  new VTextAreaElement()
-                                    ..className = 'textarea'
-                                    ..id = 'meal-input'
-                                    ..text = _listHelper(meal)
-                                    ..readOnly = !state.edit
-                                ]
-                            ]
-                        ]
-                    ],
-
+                  _renderMenu(meal),
                   //create the submit or edit button
-                  _renderButton()
+                  renderEditSubmitButton(state.edit, _editClick, _submitClick)
                 ]
             ]
         ]
     ];
 
-  ///[_renderButton] button selector method to show either submit or edit button based on state
-  VNode _renderButton() {
-    if (state.edit) {
-      return _renderSubmit();
-    }
-    return (_renderEdit());
-  }
-
-  ///[_renderEdit] creates a button to toggle from a view page to increase the number of input fields
-  _renderEdit() => new VDivElement()
-    ..className = 'field is-grouped is-grouped-right'
+  /// [_renderDate] label and input for date
+  _renderDate(Meal meal) => new VDivElement()
+    ..className = 'column'
     ..children = [
       new VDivElement()
-        ..className = 'control'
+        ..className = 'field is-grouped'
         ..children = [
-          new VAnchorElement()
-            ..className = 'button is-link is-rounded'
-            ..text = "Edit"
-            ..onClick = _editClick
-        ],
-    ];
-
-  ///[_renderSubmit] create the submit button to collect the data
-  _renderSubmit() => new VDivElement()
-    ..className = 'field is-grouped is-grouped-right'
-    ..children = [
-      new VDivElement()
-        ..className = 'control'
-        ..children = [
-          new VAnchorElement()
-            ..className = 'button is-link is-rounded'
-            ..text = "Submit"
-            ..onClick = _submitClick
+          new VDivElement()
+            ..className = 'field is-horizontal'
+            ..children = [
+              new VDivElement()
+                ..className = 'field-body'
+                ..children = [
+                  new VDivElement()
+                    ..className = 'field'
+                    ..id = 'date-lab'
+                    ..children = [
+                      new VLabelElement()
+                        ..className = 'label'
+                        ..text = "Serving Date"
+                    ],
+                  new VDivElement()
+                    ..className = 'field is-horizontal'
+                    ..children = [
+                      new VParagraphElement()
+                        ..className = 'control'
+                        ..children = [
+                          new VInputElement()
+                            ..className = 'input ${state.edit ? '' : 'is-static'}'
+                            ..id = 'serveDate-input'
+                            ..type = 'date'
+                            ..readOnly = !state.edit
+                            ..value = formatDate(meal.startTime, [yyyy, "-", mm, "-", dd])
+                        ]
+                    ]
+                ]
+            ]
         ]
     ];
 
-  ///[_editClick] listener for the click action of the edit button to put page into an edit state
-  _editClick(_) {
-    setState((props, state) => state..edit = !state.edit);
-  }
+  /// [_renderMenu] label and input for start time
+  _renderStart(Meal meal) => new VDivElement()
+    ..className = 'column'
+    ..children = [
+      new VDivElement()
+        ..className = 'field is-grouped'
+        ..children = [
+          new VDivElement()
+            ..className = 'field is-horizontal'
+            ..children = [
+              new VDivElement()
+                ..className = 'field-body'
+                ..children = [
+                  new VDivElement()
+                    ..className = 'field'
+                    ..id = 'mealStart-lab'
+                    ..children = [
+                      new VLabelElement()
+                        ..className = 'label'
+                        ..text = "Start Time"
+                    ],
+                  new VDivElement()
+                    ..className = 'field is-horizontal'
+                    ..children = [
+                      new VParagraphElement()
+                        ..className = 'control'
+                        ..children = [
+                          new VInputElement()
+                            ..className = 'input ${state.edit ? '' : 'is-static'}'
+                            ..id = 'mealStart-input'
+                            ..type = 'time'
+                            ..readOnly = !state.edit
+                            ..value = formatDate(meal.startTime, [hh, ":", mm])
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ];
+
+  /// [_renderMenu] label and input for end time
+  _renderEnd(Meal meal) => new VDivElement()
+    ..className = 'column'
+    ..children = [
+      new VDivElement()
+        ..className = 'field is-grouped'
+        ..children = [
+          new VDivElement()
+            ..className = 'field is-horizontal'
+            ..children = [
+              new VDivElement()
+                ..className = 'field-body'
+                ..children = [
+                  new VDivElement()
+                    ..className = 'field'
+                    ..id = 'mealEnd-lab'
+                    ..children = [
+                      new VLabelElement()
+                        ..className = 'label'
+                        ..text = "End Time"
+                    ],
+                  new VDivElement()
+                    ..className = 'field is-horizontal'
+                    ..children = [
+                      new VParagraphElement()
+                        ..className = 'control'
+                        ..children = [
+                          new VInputElement()
+                            ..className = 'input ${state.edit ? '' : 'is-static'}'
+                            ..id = 'mealEnd-input'
+                            ..type = 'time'
+                            ..readOnly = !state.edit
+                            ..value = formatDate(meal.endTime, [hh, ":", mm])
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ];
+
+  /// [_renderMenu] label and input for menu
+  _renderMenu(Meal meal) => new VDivElement()
+    ..className = 'columns'
+    ..children = [
+      new VDivElement()
+        ..className = 'column is-narrow'
+        ..children = [
+          new VDivElement()
+            ..className = 'field is-horizontal'
+            ..children = [
+              new VDivElement()
+                ..className = 'field-label is-normal'
+                ..children = [
+                  new VLabelElement()
+                    ..className = 'label'
+                    ..text = "Meal",
+                ]
+            ]
+        ],
+      new VDivElement()
+        ..className = 'field-body'
+        ..children = [
+          new VDivElement()
+            ..className = 'field'
+            ..children = [
+              new VDivElement()
+                ..className = 'control'
+                ..children = [
+                  new VTextAreaElement()
+                    ..className = 'textarea'
+                    ..id = 'meal-input'
+                    ..text = _listHelper(meal)
+                    ..readOnly = !state.edit
+                ]
+            ]
+        ]
+    ];
 
   ///[_listHelper] helper function to display each item in a menu to the text area
   String _listHelper(Meal meal) {
@@ -337,8 +279,8 @@ class EditMeal extends Component<EditMealProps, EditMealState> {
     String tempEnd = end.value; //make the end time a string for use in _parseDate
     String menu = meal.value;
     String startTime, endTime;
-    startTime = _parseDate(serveDay, tempStart);
-    endTime = _parseDate(serveDay, tempEnd);
+    startTime = formatDate(serveDay, [yyyy, "-", mm, "-", dd, " ${tempStart}:00.000"]);
+    endTime = formatDate(serveDay, [yyyy, "-", mm, "-", dd, " ${tempEnd}:00.000"]);
 
     ListBuilder<String> temp = new ListBuilder();
     temp.add(menu);
@@ -354,38 +296,11 @@ class EditMeal extends Component<EditMealProps, EditMealState> {
     setState((props, state) => state..edit = !state.edit);
   }
 
+  ///[_editClick] listener for the click action of the edit button to put page into an edit state
+  _editClick(_) {
+    setState((props, state) => state..edit = !state.edit);
+  }
+
   ///[_renderUserNotFound] if the UID is bad this page will simply say the user was not found
   _renderMealNotFound() => new VDivElement()..text = 'not found!';
-
-  ///[_parseDate] is a function adopted from the _showDate function that Josh wrote to make a string from a date and time input compatible with DateTime data types
-  String _parseDate(DateTime date, String time) {
-    String tempDay, tempMonth, tempTime;
-    List<String> timeList;
-
-    if (date.day.toString().length == 1) {
-      tempDay = "0${date.day}";
-    } else {
-      tempDay = date.day.toString();
-    }
-
-    if (date.month.toString().length == 1) {
-      tempMonth = "0${date.month}";
-    } else {
-      tempMonth = date.month.toString();
-    }
-
-    timeList = time.split(":");
-
-    if (timeList[0].length == 1) {
-      timeList[0] = "0${timeList[0]}";
-    }
-
-    if (timeList[1].length == 1) {
-      timeList[1] = "0${timeList[1]}";
-    }
-
-    tempTime = timeList[0] + ":" + timeList[1] + ":00.000";
-
-    return "${date.year}-${tempMonth}-${tempDay} ${tempTime}";
-  }
 }

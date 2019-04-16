@@ -1,12 +1,15 @@
 import 'dart:html' hide History;
 
 import 'package:bsc/src/model/emergencyContact.dart';
+import 'package:date_format/date_format.dart';
 import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
 import 'package:wui_builder/vhtml.dart';
 import 'package:built_collection/built_collection.dart';
 
+import '../../../constants.dart';
 import '../../core/nav.dart';
+import '../../core/pageRepeats.dart';
 import '../../../model/user.dart';
 import '../../../state/app.dart';
 
@@ -123,7 +126,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
               ..className = "input"
               ..id = "First_Name"
               ..tabIndex = 1
-              ..defaultValue = _checkText(user.firstName),
+              ..defaultValue = checkText(user.firstName),
             new VLabelElement()
               ..className = "label"
               ..text = "Preferred Name",
@@ -131,7 +134,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
               ..className = "input"
               ..id = "Preferred_Name"
               ..tabIndex = 3
-              ..defaultValue = _checkText(user.firstName),
+              ..defaultValue = checkText(user.firstName),
           ],
         new VDivElement()
           ..className = 'column is-4'
@@ -143,7 +146,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
               ..className = "input"
               ..id = "Last_Name"
               ..tabIndex = 2
-              ..defaultValue = _checkText(user.lastName),
+              ..defaultValue = checkText(user.lastName),
             new VLabelElement()
               ..className = 'label'
               ..text = "Position",
@@ -151,12 +154,12 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
               ..className = "input"
               ..id = "Position"
               ..tabIndex = 4
-              ..defaultValue = _checkText(user.position)
+              ..defaultValue = checkText(user.position)
           ],
         new VDivElement()
           ..className = 'column is-2'
           ..children = [
-            _renderSubmit(),
+            renderSubmit(_submitClick),
             new VLabelElement()
               ..className = 'label'
               ..text = "Role",
@@ -196,7 +199,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
         new VDivElement()
           ..className = 'column is-one-fifth is-offset-1'
           ..children = [
-            _renderEdit(),
+            renderEdit(_editClick),
           ],
       ]);
     return nodeList;
@@ -222,7 +225,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
               new VInputElement()
                 ..className = "input ${state.edit ? '' : 'is-static'}"
                 ..id = "Address"
-                ..defaultValue = _checkText(user.address)
+                ..defaultValue = checkText(user.address)
                 ..readOnly = !state.edit,
             ],
         ],
@@ -244,7 +247,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
               new VInputElement()
                 ..className = "input ${state.edit ? '' : 'is-static'}"
                 ..id = "PhoneNumber"
-                ..defaultValue = _checkText(user.phoneNumber)
+                ..defaultValue = checkText(user.phoneNumber)
                 ..readOnly = !state.edit,
             ],
         ],
@@ -260,7 +263,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
               new VInputElement()
                 ..className = "input ${state.edit ? '' : 'is-static'}"
                 ..id = "Mobile"
-                ..defaultValue = _checkText(user.mobileNumber)
+                ..defaultValue = checkText(user.mobileNumber)
                 ..readOnly = !state.edit,
             ],
         ],
@@ -276,7 +279,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
               new VInputElement()
                 ..className = "input ${state.edit ? '' : 'is-static'}"
                 ..id = "Email"
-                ..defaultValue = _checkText(user.email)
+                ..defaultValue = checkText(user.email)
                 ..readOnly = !state.edit,
             ],
         ],
@@ -305,12 +308,6 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
                 new VDivElement()
                   ..className = 'column'
                   ..children = _renderListRowsHelper(list, type),
-                // new VDivElement()
-                //   ..className = 'column'
-                //   ..children = _addEmergencyContactHelper(user),
-                // new VDivElement()
-                //   ..className = 'column'
-                //   ..children = [_renderAddEmergencyContact()],
               ],
           ],
       );
@@ -339,9 +336,8 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
                         ..children = [
                           new VInputElement()
                             ..className = "input ${state.edit ? '' : 'is-static'}"
-                            ..defaultValue = _checkText("")
+                            ..defaultValue = checkText("")
                             ..readOnly = !state.edit,
-                          // _renderAddEmergencyContact(),
                         ],
                     ],
                 ],
@@ -362,7 +358,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
           new VInputElement()
             ..className = "input ${state.edit ? '' : 'is-static'}"
             ..id = type
-            ..defaultValue = _checkText(item.toString())
+            ..defaultValue = checkText(item.toString())
             ..readOnly = !state.edit,
         ]);
     }
@@ -424,7 +420,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
                 new VDateInputElement()
                   ..className = "input ${state.edit ? '' : 'is-static'}"
                   ..id = "Start"
-                  ..value = _showDate(user.membershipStart)
+                  ..value = formatDate(user.membershipStart, [yyyy, "-", mm, "-", dd])
                   ..readOnly = !state.edit,
               ],
           ],
@@ -444,31 +440,12 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
                 new VDateInputElement()
                   ..className = "input ${state.edit ? '' : 'is-static'}"
                   ..id = "Renewal"
-                  ..value = _showDate(user.membershipRenewal)
+                  ..value = formatDate(user.membershipRenewal, [yyyy, "-", mm, "-", dd])
                   ..readOnly = !state.edit,
               ],
           ],
       ]);
     return nodeList;
-  }
-
-  ///[_showDate] helper function to put a date into a proper format to view in a date type input box
-  String _showDate(DateTime date) {
-    String tempDay, tempMonth;
-
-    if (date.day.toString().length == 1) {
-      tempDay = "0${date.day}";
-    } else {
-      tempDay = date.day.toString();
-    }
-
-    if (date.month.toString().length == 1) {
-      tempMonth = "0${date.month}";
-    } else {
-      tempMonth = date.month.toString();
-    }
-
-    return "${date.year}-${tempMonth}-${tempDay}";
   }
 
   ///[_renderPosition] creates the position row
@@ -493,7 +470,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
                   new VInputElement()
                     ..className = "input is-static"
                     ..id = "Position"
-                    ..defaultValue = _checkText(user.position)
+                    ..defaultValue = checkText(user.position)
                     ..readOnly = true,
                 ],
             ],
@@ -563,14 +540,10 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
           new VInputElement()
             ..className = "input is-static"
             ..id = "Role"
-            ..defaultValue = _checkText(state.role)
+            ..defaultValue = checkText(state.role)
             ..readOnly = true,
         ]);
     }
-  }
-
-  _checkBoxCheck(_) {
-    setState((props, state) => state..mealBool = !state.mealBool);
   }
 
   ///[_renderTextArea] create each row ot text area items with a given label
@@ -593,95 +566,6 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
             ..id = label.replaceAll(" ", "_")
             ..readOnly = !state.edit,
         ],
-    ];
-
-  ///[_checkText] takes in passed text and will return N/A if string is empty and the user is not being eddited
-  ///or return the orrigional string for all other conditions
-  String _checkText(String text) => state.edit ? text : (text != '' ? text : "N/A");
-
-  VNode _renderEmergencyContact(User user) {
-    String contactList = '';
-
-    for (EmergencyContact em in user.emergencyContacts) {
-      contactList = contactList + em.uid + " : " + em.name + "\n";
-    }
-
-    return new VTextInputElement()
-      ..className = 'input ${state.edit ? '' : 'is-static'}'
-      ..id = "Emergency"
-      ..readOnly = !state.edit
-      ..text = contactList;
-  }
-
-  // ///[_renderAddEmergencyContact] creates a button to add an input field for aditional emergency contacts if in edit state
-  // VNode _renderAddEmergencyContact() {
-  //   if (state.edit) {
-  //     return (new VParagraphElement()
-  //       ..className = 'control'
-  //       ..children = [
-  //         new VAnchorElement()
-  //           ..className = 'button is-link'
-  //           ..text = "Add"
-  //           ..onClick = _renderAddEmergencyContactClick
-  //       ]);
-  //   } else {
-  //     return new VDivElement()..className = 'control';
-  //   }
-  // }
-
-  // ///[_renderAddEmergencyContactClick] listener for the click action of the addEmergencyContact button to put page into an edit state
-  // _renderAddEmergencyContactClick(_) {
-  //   print(state.addEm);
-  //   setState((props, state) => state..addEm = (state.addEm + 1));
-  // }
-
-  _dropDownClick(_) {
-    setState((props, state) => state..dropDownActive = !state.dropDownActive);
-  }
-
-  _changeRollMemClick(_) {
-    setState((props, state) => state..role = "member");
-  }
-
-  _changeRollVolClick(_) {
-    setState((props, state) => state..role = "volunteer");
-  }
-
-  _changeRollAdminClick(_) {
-    setState((props, state) => state..role = "admin");
-  }
-
-  ///[_renderEdit] creates a button to toggle from a view page to increase the number of input fields
-  _renderEdit() => new VDivElement()
-    ..className = 'field is-grouped is-grouped-right'
-    ..children = [
-      new VDivElement()
-        ..className = 'control'
-        ..children = [
-          new VAnchorElement()
-            ..className = 'button is-link is-rounded'
-            ..text = "Edit"
-            ..onClick = _editClick
-        ],
-    ];
-
-  ///[_editClick] listener for the click action of the edit button to put page into an edit state
-  _editClick(_) {
-    setState((props, state) => state..edit = !state.edit);
-  }
-
-  ///[_renderSubmit] create the submit button to collect the data
-  _renderSubmit() => new VDivElement()
-    ..className = 'field is-grouped is-grouped-right'
-    ..children = [
-      new VDivElement()
-        ..className = 'control'
-        ..children = [
-          new VAnchorElement()
-            ..className = 'button is-link is-rounded'
-            ..text = "Submit"
-            ..onClick = _submitClick
-        ]
     ];
 
   ///[_renderCheckBoxes] create the checkboxes for form submit checks
@@ -751,18 +635,6 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
     return nodeList;
   }
 
-  _medCheckBoxCheck(_) {
-    setState((props, state) => state..medBool = !state.medBool);
-  }
-
-  _waiverCheckBoxCheck(_) {
-    setState((props, state) => state..waiverBool = !state.waiverBool);
-  }
-
-  _intakeBoxCheck(_) {
-    setState((props, state) => state..intakeBool = !state.intakeBool);
-  }
-
   ///[_submitClick] listener to grab all available data on page and push to firebase
   _submitClick(_) {
     InputElement first = querySelector('#First_Name');
@@ -804,6 +676,51 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
     props.actions.server.fetchAllMembers();
 
     setState((props, state) => state..edit = !state.edit);
+  }
+
+  ///[_dropDownClick] listener to open the dropdown
+  _dropDownClick(_) {
+    setState((props, state) => state..dropDownActive = !state.dropDownActive);
+  }
+
+  ///[_changeRollMemClick] listener to close the dropdown and select member
+  _changeRollMemClick(_) {
+    setState((props, state) => state..role = "member");
+  }
+
+  ///[_changeRollVolClick] listener to close the dropdown and select volunteer
+  _changeRollVolClick(_) {
+    setState((props, state) => state..role = "volunteer");
+  }
+
+  ///[_changeRollAdminClick] listener to close the dropdown and select admin
+  _changeRollAdminClick(_) {
+    setState((props, state) => state..role = "admin");
+  }
+
+  ///[_editClick] listener for the click action of the edit button to put page into an edit state
+  _editClick(_) {
+    setState((props, state) => state..edit = !state.edit);
+  }
+
+  /// [_checkBoxCheck] on click to set state of checkbox
+  _checkBoxCheck(_) {
+    setState((props, state) => state..mealBool = !state.mealBool);
+  }
+
+  /// [_medCheckBoxCheck] on click to set state of checkbox
+  _medCheckBoxCheck(_) {
+    setState((props, state) => state..medBool = !state.medBool);
+  }
+
+  /// [_waiverCheckBoxCheck] on click to set state of checkbox
+  _waiverCheckBoxCheck(_) {
+    setState((props, state) => state..waiverBool = !state.waiverBool);
+  }
+
+  /// [_intakeBoxCheck] on click to set state of checkbox
+  _intakeBoxCheck(_) {
+    setState((props, state) => state..intakeBool = !state.intakeBool);
   }
 
   ///[_renderUserNotFound] if the UID is bad this page will simply say the user was not found
