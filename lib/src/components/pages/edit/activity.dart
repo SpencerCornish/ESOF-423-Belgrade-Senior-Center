@@ -355,7 +355,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
                                 ..id = 'timeStart-input'
                                 ..type = 'time'
                                 ..readOnly = !state.edit
-                                ..value = _timeFormat(act.startTime.hour.toString(), act.startTime.minute.toString())
+                                ..value = formatDate(act.startTime, [hh, ":", mm])
                             ]
                         ]
                     ]
@@ -393,7 +393,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
                                 ..id = 'timeEnd-input'
                                 ..type = 'time'
                                 ..readOnly = !state.edit
-                                ..value = _timeFormat(act.endTime.hour.toString(), act.endTime.minute.toString())
+                                ..value = formatDate(act.endTime, [hh, ":", mm])
                             ]
                         ]
                     ]
@@ -591,48 +591,6 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
     return items;
   }
 
-  ///[_promptForDeleteClick] sets the state to show the deletion modal for a user
-  _promptForDeleteClick(String userID) => setState((props, state) => state
-    ..showDeletePrompt = true
-    ..userToDelete = userID);
-
-  ///[_cancelDeletionClick] sets the state to hide the deletion modal with no action
-  _cancelDeletionClick(_) => setState((props, state) => state..showDeletePrompt = false);
-
-  ///[_addClick] sets the state to show the addUser modal
-  _addClick(_) => setState((props, state) => state..showAddUserPrompt = true);
-
-  ///[_cancelAddClick]sets the state to hide the addUser modal with no action
-  _cancelAddClick(_) => setState((props, state) => state..showAddUserPrompt = false);
-
-  ///[_removeClick] actually removes a user from this activity and hides the modal
-  _removeClick(Activity act) {
-    props.actions.server.updateOrCreateActivity(act.rebuild((builder) => builder..users.remove(state.userToDelete)));
-    props.actions.server.fetchAllActivities();
-    setState((props, state) => state
-      ..showDeletePrompt = false
-      ..userToDelete = '');
-  }
-
-  ///[_addUserClick] actually adds a user to this activity and hides the modal
-  _addUserClick(Activity act, String userId) {
-    props.actions.server.updateOrCreateActivity(act.rebuild((builder) => builder..users.add(userId)));
-    props.actions.server.fetchAllActivities();
-    setState((props, state) => state..showAddUserPrompt = false);
-  }
-
-  ///[_timeFormat] helper function to put a time into a proper format to view in a time type input box
-  String _timeFormat(String hour, String min) {
-    if (hour.length == 1) {
-      hour = "0${hour}";
-    }
-
-    if (min.length == 1) {
-      min = "0${min}";
-    }
-    return hour + ":" + min;
-  }
-
   ///[_renderButton] helper function to show either the edit or submit button based on state
   VNode _renderButton() {
     if (state.edit) {
@@ -668,6 +626,36 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
             ..onClick = _submitClick
         ]
     ];
+
+  ///[_promptForDeleteClick] sets the state to show the deletion modal for a user
+  _promptForDeleteClick(String userID) => setState((props, state) => state
+    ..showDeletePrompt = true
+    ..userToDelete = userID);
+
+  ///[_cancelDeletionClick] sets the state to hide the deletion modal with no action
+  _cancelDeletionClick(_) => setState((props, state) => state..showDeletePrompt = false);
+
+  ///[_addClick] sets the state to show the addUser modal
+  _addClick(_) => setState((props, state) => state..showAddUserPrompt = true);
+
+  ///[_cancelAddClick]sets the state to hide the addUser modal with no action
+  _cancelAddClick(_) => setState((props, state) => state..showAddUserPrompt = false);
+
+  ///[_removeClick] actually removes a user from this activity and hides the modal
+  _removeClick(Activity act) {
+    props.actions.server.updateOrCreateActivity(act.rebuild((builder) => builder..users.remove(state.userToDelete)));
+    props.actions.server.fetchAllActivities();
+    setState((props, state) => state
+      ..showDeletePrompt = false
+      ..userToDelete = '');
+  }
+
+  ///[_addUserClick] actually adds a user to this activity and hides the modal
+  _addUserClick(Activity act, String userId) {
+    props.actions.server.updateOrCreateActivity(act.rebuild((builder) => builder..users.add(userId)));
+    props.actions.server.fetchAllActivities();
+    setState((props, state) => state..showAddUserPrompt = false);
+  }
 
   ///[_editClick] listener for the click action of the edit button to put page into an edit state
   _editClick(_) {
