@@ -1,0 +1,454 @@
+@startuml BSCDiagram
+
+class AppActions <<abstract>>{
+  ServerMiddlewareActions server
+  ActionDispatcher setUser()
+  ActionDispatcher setLoading()
+  ActionDispatcher setAuthState()
+  ActionDispatcher setUserMap()
+  ActionDispatcher setActivityMap()
+  ActionDispatcher setMealMap()
+}
+
+class App <<abstract>>{
+    User user
+    bool isLoading()
+    AuthState authState()
+    BuiltMap userMap()
+    BuiltMap activityMap()
+    BuiltMap mealMap()
+    factory App()
+}
+
+class Routes{
+    static const home
+    static const createMember
+    static const resetContinue
+    static const dashboard
+    static const viewMembers
+    static const viewActivity
+}
+
+class StoreContainer{
+    Store store
+    -AppActions actions
+    -FirebaseClient client
+    -FirebaseSubscriber subscriber
+    final App fb
+    -final Auth firebaseAuth
+    -final Firestore firebaseDatabase
+    StoreContainer()
+}
+
+class User <<abstract>>{
+    String uid()
+    String firstName()
+    String lastName()
+    String email()
+    String phoneNumber()
+    String mobileNumber()
+    String address()
+    String role()
+    bool homeDelivery
+    String dietaryRestrictions()
+    BuiltList emergencyContacts()
+    DateTime membershipStart()
+    DateTime membershipRenewal()
+    String disabilities()
+    BuiltList forms()
+    String medicalIssues()
+    String position()
+    BuiltList services()
+    factory User()
+    factory User.fromFirebase()
+    Map toFirestore()
+}
+
+class EmergencyContact <<abstract>>{
+    String uid()
+    String name()
+    String relationship()
+    String number()
+    factory EmergencyContact()
+    Map toFirestore()
+}
+
+class Meal <<abstract>>{
+    DateTime startTime()
+    DateTime endTime()
+    String uid()
+    BuiltList menu()
+    factory Meal()
+    factory Meal.fromFirebase()
+    Map toFirestore()
+}
+
+class Activity <<abstract>>{
+    DateTime startTime()
+    DateTime endTime()
+    String uid()
+    int capacity()
+    String instructor()
+    String location()
+    String name()
+    factory Activity()
+    factory Activity.fromFirebase()
+    Map toFirestore()
+}
+
+class DbRefs{
+    -Firestore fs
+    DbRefs(fs)
+    CollectionReference allUsers()
+    DocumentReference user()
+    CollectionReference allMeals()
+    DocumentReference meal()
+    CollectionReference allActivities()
+    DocumentReference singleClas()
+}
+
+class FirebaseClient{
+    -final DbRefs refs
+    -final AppActions actions
+    -final BrowserClient httpClient
+    -final FirebaseSubscriber firebaseSubscriber
+    -final Auth auth
+    -final GoogleAuthProvider googleAuthProvider
+    FirebaseClient()
+    -Future onAuthChanged()
+    -Future userLoginEvent
+    Future logOut()
+    Future signInAdmin()
+    void resetPassword()
+    Future getAllMembers()
+    getMember()
+    getAllMeals()
+    getMeal()
+    Future getAllActivities()
+    getClassByStartDate()
+    getClassTaughtBy()
+    getClass()
+    String addOrUpdateUser()
+    void updateClass()
+    void updateMeal()
+    void deleteUser()
+    void deleteClass()
+    void deleteMeal()
+}
+
+class AdminSignInPayload{
+    String email
+    String password
+    AdminSignInPayload()
+}
+
+class ServerMiddlewareActions{
+    ActionDispatcher signInAdmin()
+    ActionDispatcher logOut()
+    ActionDispatcher resetPassword()
+    ActionDispatcher updateOrCreateUser()
+    ActionDispatcher fetchAllMembers()
+    factory ServerMiddlewareActions()
+}
+
+class ContainerProps{
+    StoreContainer storeContainer
+}
+
+class Container{
+    StreamSubscription storeContainerSub
+    App appState()
+    AppActions actions()
+    -History history
+    History history()
+    void componentWillMount()
+    void componentWillUnmount()
+    VNode render()
+    -VNode routes()
+    -renderCreateMember()
+    -renderIfAuthenticated()
+    -redirect()
+    -renderResetContinue()
+    -renderHome()
+    -renderDashboard()
+    -renderViewMembers()
+    -renderViewActivity()
+    -renderDebug()
+}
+
+class DashboardProps {
+  AppActions actions
+  User user
+}
+
+class Dashboard{
+    -History history
+    History history()
+    VNode emailInputNode
+    VNode passwordInputNode
+    VNode render()
+    -VNode renderCard()
+    -renderFooterItem()
+}
+
+class HomeProps {
+  AppActions actions
+  AuthState authState
+  String redirectCode
+  String emailPrefill
+}
+
+class Home{
+    -History history
+    History history()
+    void componentWillMount()
+    void componentDidMount()
+    void componentWillUpdate()
+    VNode render()
+    -VNode renderSignIn()
+    -renderHint()
+    -renderNotification()
+    -onEmailChange()
+    -onPassChange()
+    -onSubmitClick()
+    -onCancelClick()
+    -onResetPasswordClick()
+}
+
+class NewMember{
+    -History history
+    History history()
+    VNode render()
+    -VNode userCreation()
+    -submitClick()
+    User newUser()
+}
+
+class NewMealProps {
+  AppActions actions;
+  User user;
+  Meal meal;
+}
+
+class NewMealState {
+  bool timeIsValid;
+}
+
+class viewMealProps {
+  AppActions actions
+  User user
+  BuiltMap<String, Meal> mealMap
+}
+
+class viewActivityProps {
+  AppActions actions
+  User user
+  BuiltMap<String, Activity> activityMap
+}
+
+class ViewActivityState {
+  bool searching;
+  List found;
+}
+
+class NewActivityProps {
+  AppActions actions;
+  User user;
+}
+
+class NewActivityState {
+  bool activityNameIsValid;
+  bool instructorNameIsValid;
+  bool locationIsValid;
+  bool capacityIsValid;
+  bool timeIsValid;
+}
+
+class viewMembers{
+    List title
+    -History history
+    History history()
+    VNode emailInputNode
+    VNode passwordInputNode
+    List<VNode> createRows()
+    String checkText()
+    String tdClass()
+    List<VNode> titleRow()
+    VNode render()
+}
+
+class ViewMembersProps {
+  AppActions actions;
+  User user;
+  BuiltMap<String, User> userMap;
+}
+
+class ViewMembersState {
+  bool showMod;
+  bool checkedIn;
+  bool searching;
+  List found;
+  String modMem;
+}
+
+class NavProps {
+  AppActions actions
+  User user
+}
+
+class Nav{
+    -History history
+    History history()
+    void componentWillUpdate()
+    VNode render()
+    -onNewMemberClick()
+    -onNewMealClick()
+    -onNewActivityClick()
+    -onViewMembersClick()
+    -onViewMealsClick()
+    -onViewActivitiesClick()
+    -onLogOutClick()
+}
+
+class EditMemberProps {
+  AppActions actions;
+  User user;
+  BuiltMap<String, User> userMap;
+  String selectedMemberUID;
+}
+
+class EditMemberState {
+  bool edit;
+  bool dropDownActive;
+  int listsCreated;
+  String role;
+}
+
+class NewMemberProps {
+  AppActions actions;
+  User user;
+}
+
+class NewMemberState {
+  bool firstNameIsValid;
+  bool lastNameIsValid;
+  bool emailIsValid;
+  bool phoneNumberIsValid;
+  bool cellNumberIsValid;
+  bool addressIsValid;
+  bool mealBool;
+  bool dropDownActive;
+  String role;
+}
+
+class ViewShiftState {
+    bool searching;
+    List<Shift> found;
+}
+
+class ViewShiftProps {
+  AppActions actions;
+  User user;
+  BuiltList<Shift> shiftList;
+  bool allShifts;
+  BuiltMap<String, User> userMap;
+}
+
+class ViewShift {
+  List<String> title;
+  History _history;
+}
+
+class EditActivityProps {
+  AppActions actions;
+  User user;
+  BuiltMap<String, Activity> activityMap;
+  BuiltMap<String, User> userMap;
+  String selectedActivityUID;
+}
+
+class EditActivityState {
+  bool edit;
+  String userToDelete;
+  bool showDeletePrompt;
+  bool showAddUserPrompt;
+}
+
+class EditActivity{
+    render()
+}
+
+class EditMealProps {
+  AppActions actions;
+  User user;
+  BuiltMap<String, Meal> mealMap;
+  String selectedMealUID;
+}
+
+class EditMealState {
+  bool edit;
+}
+
+class EditMeal{
+    render()
+}
+
+Home --|> PComponent
+HomeProps -- Home
+PComponent <|-- Dashboard
+Dashboard -- DashboardProps
+PComponent <|-- Container
+Container -- ContainerProps
+Nav --|> PComponent
+NavProps -- Nav
+
+ViewShiftProps -- ViewShift
+ViewShiftState -- ViewShift
+ViewShift --|> Component
+
+newActivity --|> Component
+NewActivityProps -- newActivity
+NewActivityState -- newActivity
+
+viewActivity --|> Component
+ViewActivityState -- viewActivity
+viewActivityProps -- viewActivity
+
+Component <|-- EditActivity
+EditActivity -- EditActivityProps
+EditActivity -- EditActivityState
+
+Component <|-- NewMember
+NewMember -- NewMemberState
+NewMember -- NewMemberProps
+
+Component <|-- editMember
+editMember -- EditMemberProps
+editMember -- EditMemberState 
+
+Component <|-- viewMembers
+viewMembers -- ViewMembersProps
+viewMembers -- ViewMembersState
+
+Component <|-- viewMeal
+viewMeal -- viewMealProps
+
+NewMeal --|> Component
+NewMealProps -- NewMeal
+NewMealState -- NewMeal
+
+EditMeal --|> Component
+EditMealProps -- EditMeal
+EditMealState -- EditMeal
+
+
+
+Activity ..|> Built
+Built <|.. Meal
+Built <|.. EmergencyContact
+User ..|> Built
+
+App ..|> Built
+ReduxActions <|-- AppActions
+ServerMiddlewareActions --|> ReduxActions
+@enduml
