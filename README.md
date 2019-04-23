@@ -46,13 +46,21 @@ This is a non-exhaustive list of the tools and technologies we are using.
 
 - THe `sass` directory will eventually contain any custom styling for the project.
 
-[Old UML Diagram:](./readme_assets/classDiagram.png)
+## UML Diagrams
 
-![Class Diagram](./readme_assets/classDiagram.png)
+[Final:](./readme_assets/BSCDiagram.png)
 
-[UML Diagram:](./readme_assets/classDiagram2.png)
+![Class Diagram](./readme_assets/BSCDiagram.png)
+
+### Older Versions
+
+[Feature Complete:](./readme_assets/classDiagram2.png)
 
 ![Class Diagram](./readme_assets/classDiagram2.png)
+
+[First:](./readme_assets/classDiagram.png)
+
+![Class Diagram](./readme_assets/classDiagram.png)
 
 ## Directions for Building from Source Code
 
