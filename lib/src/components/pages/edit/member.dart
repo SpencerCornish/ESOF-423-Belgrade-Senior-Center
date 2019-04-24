@@ -71,7 +71,8 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
   History get history => _history ?? findHistoryInContext(context);
 
   @override
-  void componentWillUpdate(EditMemberProps nextProps, EditMemberState nextState) {
+  void componentWillUpdate(
+      EditMemberProps nextProps, EditMemberState nextState) {
     super.componentWillUpdate(nextProps, nextState);
   }
 
@@ -105,16 +106,20 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
   ///[_pageElements] helper function to add all fields to the render method
   List<VNode> _pageElements(User user) {
     List<VNode> nodeList = <VNode>[];
-    state.edit ? nodeList.addAll(_renderEditHeader(user)) : nodeList.addAll(_renderHeader(user));
+    state.edit
+        ? nodeList.addAll(_renderEditHeader(user))
+        : nodeList.addAll(_renderHeader(user));
     nodeList.addAll(_renderMembership(user));
     nodeList.add(_renderAddress(user));
     nodeList.add(_renderNumber(user));
-    nodeList.add(_renderTextArea(user, "Dietary Restrictions", user.dietaryRestrictions));
+    nodeList.add(_renderTextArea(
+        user, "Dietary Restrictions", user.dietaryRestrictions));
     nodeList.add(_renderTextArea(user, "Disabilities", user.disabilities));
     nodeList.add(_renderTextArea(user, "Medical Issues", user.medicalIssues));
-    nodeList.addAll(_renderListRows(user.emergencyContacts, "Emergency Contact"));
+    nodeList
+        .addAll(_renderListRows(user.emergencyContacts, "Emergency Contact"));
     nodeList.addAll(_renderListRows(user.services, "Available Service"));
-    nodeList.addAll(_renderCheckBoxes());
+    nodeList.add(_renderCheckboxes());
     return nodeList;
   }
 
@@ -147,16 +152,17 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
               ..tabIndex = 1
               ..defaultValue = checkText(user.firstName),
             new VParagraphElement()
-              ..className = 'help is-danger ${state.firstNameIsValid ? 'is-invisible' : ''}'
+              ..className =
+                  'help is-danger ${state.firstNameIsValid ? 'is-invisible' : ''}'
               ..text = 'First name is required',
             new VLabelElement()
-              ..className = "label"
-              ..text = "Preferred Name",
+              ..className = 'label'
+              ..text = "Position",
             new VInputElement()
               ..className = "input"
-              ..id = "Preferred_Name"
-              ..tabIndex = 3
-              ..defaultValue = checkText(user.firstName),
+              ..id = "Position"
+              ..tabIndex = 4
+              ..defaultValue = checkText(user.position)
           ],
         new VDivElement()
           ..className = 'column is-4'
@@ -171,16 +177,13 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
               ..tabIndex = 2
               ..defaultValue = checkText(user.lastName),
             new VParagraphElement()
-              ..className = 'help is-danger ${state.lastNameIsValid ? 'is-invisible' : ''}'
+              ..className =
+                  'help is-danger ${state.lastNameIsValid ? 'is-invisible' : ''}'
               ..text = 'Last name is required',
             new VLabelElement()
               ..className = 'label'
-              ..text = "Position",
-            new VInputElement()
-              ..className = "input"
-              ..id = "Position"
-              ..tabIndex = 4
-              ..defaultValue = checkText(user.position)
+              ..text = "Role",
+            _roleHelper(user),
           ],
         new VDivElement()
           ..className = 'column is-2'
@@ -188,11 +191,10 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
             renderSubmit(
                 _submitClick,
                 Validator.canActivateSubmit(
-                    state.firstNameIsValid, state.memIsValid, state.addressIsValid, state.lastNameIsValid)),
-            new VLabelElement()
-              ..className = 'label'
-              ..text = "Role",
-            _roleHelper(user),
+                    state.firstNameIsValid,
+                    state.memIsValid,
+                    state.addressIsValid,
+                    state.lastNameIsValid)),
           ],
       ]);
     return nodeList;
@@ -303,15 +305,18 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
                         ..className = 'dropdown-content'
                         ..children = [
                           new VAnchorElement()
-                            ..className = 'dropdown-item ${state.role.compareTo("member") == 0 ? 'is-active' : ''}'
+                            ..className =
+                                'dropdown-item ${state.role.compareTo("member") == 0 ? 'is-active' : ''}'
                             ..onClick = _changeRollMemClick
                             ..text = "member",
                           new VAnchorElement()
-                            ..className = 'dropdown-item ${state.role.compareTo("volunteer") == 0 ? 'is-active' : ''}'
+                            ..className =
+                                'dropdown-item ${state.role.compareTo("volunteer") == 0 ? 'is-active' : ''}'
                             ..onClick = _changeRollVolClick
                             ..text = "volunteer",
                           new VAnchorElement()
-                            ..className = 'dropdown-item ${state.role.compareTo("admin") == 0 ? 'is-active' : ''}'
+                            ..className =
+                                'dropdown-item ${state.role.compareTo("admin") == 0 ? 'is-active' : ''}'
                             ..onClick = _changeRollAdminClick
                             ..text = "admin",
                         ],
@@ -345,28 +350,6 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
               ..className = 'label'
               ..text = "Membership:",
           ],
-        new VDivElement()..className = 'column',
-        new VDivElement()
-          ..className = 'column is-narrow'
-          ..children = [
-            new VDivElement()
-              ..className = 'control'
-              ..children = [
-                new VCheckboxInputElement()
-                  ..className = 'checkbox'
-                  ..checked = state.mealBool
-                  ..disabled = !state.edit
-                  ..id = 'mealOption-input'
-                  ..onClick = _checkBoxCheck
-              ]
-          ],
-        new VDivElement()
-          ..className = 'column'
-          ..children = [
-            new VLabelElement()
-              ..className = 'label'
-              ..text = "Requires Home Delivery for Meals"
-          ],
       ]);
     nodeList.add(new VDivElement()
       ..className = 'columns is-mobile is-vcentered'
@@ -386,9 +369,11 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
               ..children = [
                 new VDateInputElement()
                   ..onInput = _membershipValidator
-                  ..className = "input ${state.edit ? '' : 'is-static'} ${state.memIsValid ? '' : 'is-danger'}"
+                  ..className =
+                      "input ${state.edit ? '' : 'is-static'} ${state.memIsValid ? '' : 'is-danger'}"
                   ..id = "Start"
-                  ..value = formatDate(user.membershipStart, [yyyy, "-", mm, "-", dd])
+                  ..value =
+                      formatDate(user.membershipStart, [yyyy, "-", mm, "-", dd])
                   ..readOnly = !state.edit,
               ],
           ],
@@ -407,14 +392,17 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
               ..children = [
                 new VDateInputElement()
                   ..onInput = _membershipValidator
-                  ..className = "input ${state.edit ? '' : 'is-static'} ${state.memIsValid ? '' : 'is-danger'}"
+                  ..className =
+                      "input ${state.edit ? '' : 'is-static'} ${state.memIsValid ? '' : 'is-danger'}"
                   ..id = "Renewal"
-                  ..value = formatDate(user.membershipRenewal, [yyyy, "-", mm, "-", dd])
+                  ..value = formatDate(
+                      user.membershipRenewal, [yyyy, "-", mm, "-", dd])
                   ..readOnly = !state.edit,
               ],
           ],
         new VParagraphElement()
-          ..className = 'help is-danger ${state.memIsValid ? 'is-invisible' : ''}'
+          ..className =
+              'help is-danger ${state.memIsValid ? 'is-invisible' : ''}'
           ..text = "Renewal Date is before Start Date",
       ]);
     return nodeList;
@@ -439,12 +427,14 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
             ..children = [
               new VInputElement()
                 ..onInput = _addressValidator
-                ..className = "input ${state.edit ? '' : 'is-static'} ${state.addressIsValid ? '' : 'is-danger'}"
+                ..className =
+                    "input ${state.edit ? '' : 'is-static'} ${state.addressIsValid ? '' : 'is-danger'}"
                 ..id = "Address"
                 ..defaultValue = checkText(user.address)
                 ..readOnly = !state.edit,
               new VParagraphElement()
-                ..className = 'help is-danger ${state.addressIsValid ? 'is-invisible' : ''}'
+                ..className =
+                    'help is-danger ${state.addressIsValid ? 'is-invisible' : ''}'
                 ..text = 'Address is invalid',
             ],
         ],
@@ -465,12 +455,14 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
             ..children = [
               new VInputElement()
                 ..onInput = _phoneNumberValidator
-                ..className = "input ${state.edit ? '' : 'is-static'} ${state.phoneNumberIsValid ? '' : 'is-danger'}"
+                ..className =
+                    "input ${state.edit ? '' : 'is-static'} ${state.phoneNumberIsValid ? '' : 'is-danger'}"
                 ..id = "PhoneNumber"
                 ..defaultValue = checkText(user.phoneNumber)
                 ..readOnly = !state.edit,
               new VParagraphElement()
-                ..className = 'help is-danger ${state.phoneNumberIsValid ? 'is-invisible' : ''}'
+                ..className =
+                    'help is-danger ${state.phoneNumberIsValid ? 'is-invisible' : ''}'
                 ..text = 'Phone number is invalid',
             ],
         ],
@@ -485,12 +477,14 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
             ..children = [
               new VInputElement()
                 ..onInput = _cellNumberValidator
-                ..className = "input ${state.edit ? '' : 'is-static'} ${state.cellNumberIsValid ? '' : 'is-danger'}"
+                ..className =
+                    "input ${state.edit ? '' : 'is-static'} ${state.cellNumberIsValid ? '' : 'is-danger'}"
                 ..id = "Mobile"
                 ..defaultValue = checkText(user.mobileNumber)
                 ..readOnly = !state.edit,
               new VParagraphElement()
-                ..className = 'help is-danger ${state.cellNumberIsValid ? 'is-invisible' : ''}'
+                ..className =
+                    'help is-danger ${state.cellNumberIsValid ? 'is-invisible' : ''}'
                 ..text = 'Cell number is invalid',
             ],
         ],
@@ -505,12 +499,14 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
             ..children = [
               new VInputElement()
                 ..onInput = _emailValidator
-                ..className = "input ${state.edit ? '' : 'is-static'} ${state.emailIsValid ? '' : 'is-danger'}"
+                ..className =
+                    "input ${state.edit ? '' : 'is-static'} ${state.emailIsValid ? '' : 'is-danger'}"
                 ..id = "Email"
                 ..defaultValue = checkText(user.email)
                 ..readOnly = !state.edit,
               new VParagraphElement()
-                ..className = 'help is-danger ${state.emailIsValid ? 'is-invisible' : ''}'
+                ..className =
+                    'help is-danger ${state.emailIsValid ? 'is-invisible' : ''}'
                 ..text = 'Email is invalid',
             ],
         ],
@@ -566,7 +562,8 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
                         ..className = "control"
                         ..children = [
                           new VInputElement()
-                            ..className = "input ${state.edit ? '' : 'is-static'}"
+                            ..className =
+                                "input ${state.edit ? '' : 'is-static'}"
                             ..defaultValue = checkText("")
                             ..readOnly = !state.edit,
                         ],
@@ -597,93 +594,124 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
   }
 
   ///[_renderTextArea] create each row ot text area items with a given label
-  _renderTextArea(User user, String label, String defaultValue) => new VDivElement()
-    ..className = 'columns is-mobile is-centered is-vcentered'
+  _renderTextArea(User user, String label, String defaultValue) =>
+      new VDivElement()
+        ..className = 'columns is-mobile is-centered is-vcentered'
+        ..children = [
+          new VDivElement()
+            ..className = 'column is-2'
+            ..children = [
+              new Vlabel()
+                ..className = 'label'
+                ..text = label,
+            ],
+          new VDivElement()
+            ..className = 'column is-four-fifths'
+            ..children = [
+              new VTextAreaElement()
+                ..className = 'textarea'
+                ..defaultValue = defaultValue
+                ..id = label.replaceAll(" ", "_")
+                ..readOnly = !state.edit,
+            ],
+        ];
+
+  VNode _renderCheckboxes() => new VDivElement()
+    ..className = 'box'
     ..children = [
       new VDivElement()
-        ..className = 'column is-2'
+        ..className = 'columns is-mobile'
         ..children = [
-          new Vlabel()
-            ..className = 'label'
-            ..text = label,
+          new VDivElement()
+            ..className = 'column is-narrow'
+            ..children = [
+              new VDivElement()
+                ..className = 'control'
+                ..children = [
+                  new VCheckboxInputElement()
+                    ..className = 'checkbox'
+                    ..id = 'medRelease-input'
+                    ..onClick = _medCheckBoxCheck
+                ]
+            ],
+          new VDivElement()
+            ..className = 'column'
+            ..children = [
+              new VLabelElement()
+                ..className = 'label'
+                ..text = "Has completed Medical Form"
+            ],
         ],
       new VDivElement()
-        ..className = 'column is-four-fifths'
+        ..className = 'columns is-mobile'
         ..children = [
-          new VTextAreaElement()
-            ..className = 'textarea'
-            ..defaultValue = defaultValue
-            ..id = label.replaceAll(" ", "_")
-            ..readOnly = !state.edit,
+          new VDivElement()
+            ..className = 'column is-narrow'
+            ..children = [
+              new VDivElement()
+                ..className = 'control'
+                ..children = [
+                  new VCheckboxInputElement()
+                    ..className = 'checkbox'
+                    ..id = 'waiverRelease-input'
+                    ..onClick = _waiverCheckBoxCheck
+                ]
+            ],
+          new VDivElement()
+            ..className = 'column'
+            ..children = [
+              new VLabelElement()
+                ..className = 'label'
+                ..text = "Has completed the Waiver & Release Form"
+            ],
         ],
+      new VDivElement()
+        ..className = 'columns is-mobile'
+        ..children = [
+          new VDivElement()
+            ..className = 'column is-narrow'
+            ..children = [
+              new VDivElement()
+                ..className = 'control'
+                ..children = [
+                  new VCheckboxInputElement()
+                    ..className = 'checkbox'
+                    ..id = 'intakeForm-input'
+                    ..onClick = _intakeBoxCheck
+                ]
+            ],
+          new VDivElement()
+            ..className = 'column'
+            ..children = [
+              new VLabelElement()
+                ..className = 'label'
+                ..text = "Has completed the Intake Form"
+            ],
+        ],
+      new VDivElement()
+        ..className = 'columns is-mobile'
+        ..children = [
+          new VDivElement()
+            ..className = 'column is-narrow'
+            ..children = [
+              new VDivElement()
+                ..className = 'control'
+                ..children = [
+                  new VCheckboxInputElement()
+                    ..className = 'checkbox'
+                    ..id = 'mealOption-input'
+                    ..onClick = _checkBoxCheck
+                ]
+            ],
+          new VDivElement()
+            ..className = 'column'
+            ..children = [
+              new VLabelElement()
+                ..className = 'label'
+                ..text = "Requires Home Delivery for Meals"
+            ],
+        ]
     ];
-
-  ///[_renderCheckBoxes] create the checkboxes for form submit checks
-  List<VNode> _renderCheckBoxes() {
-    List<VNode> nodeList = <VNode>[];
-    nodeList.add(new VDivElement()
-      ..className = 'columns'
-      ..children = [
-        new VDivElement()
-          ..className = 'column is-narrow'
-          ..children = [
-            new VDivElement()
-              ..className = 'control'
-              ..children = [
-                new VCheckboxInputElement()
-                  ..className = 'checkbox'
-                  ..id = 'medRelease-input'
-                  ..onClick = _medCheckBoxCheck
-              ]
-          ],
-        new VDivElement()
-          ..className = 'column is-narrow'
-          ..children = [
-            new VLabelElement()
-              ..className = 'label'
-              ..text = "Has completed Medical Form"
-          ],
-        new VDivElement()
-          ..className = 'column is-narrow'
-          ..children = [
-            new VDivElement()
-              ..className = 'control'
-              ..children = [
-                new VCheckboxInputElement()
-                  ..className = 'checkbox'
-                  ..id = 'waiverRelease-input'
-                  ..onClick = _waiverCheckBoxCheck
-              ]
-          ],
-        new VDivElement()
-          ..className = 'column is-narrow'
-          ..children = [
-            new VLabelElement()
-              ..className = 'label'
-              ..text = "Has completed the Waiver & Release Form"
-          ],
-        new VDivElement()
-          ..className = 'column is-narrow'
-          ..children = [
-            new VDivElement()
-              ..className = 'control'
-              ..children = [
-                new VCheckboxInputElement()
-                  ..className = 'checkbox'
-                  ..id = 'intakeForm-input'
-                  ..onClick = _intakeBoxCheck
-              ]
-          ],
-        new VDivElement()
-          ..className = 'column is-narrow'
-          ..children = [
-            new VLabelElement()
-              ..className = 'label'
-              ..text = "Has completed the Intake Form"
-          ],
-      ]);
-    return nodeList;
-  }
 
   //Input validation for each field
 
@@ -694,7 +722,8 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
     //Checks if value is blank by calling Validator class
     bool isValid = Validator.name(first.value);
     //Sets new state
-    setState((NewMemberProps, NewMemberState) => NewMemberState..firstNameIsValid = isValid);
+    setState((NewMemberProps, NewMemberState) =>
+        NewMemberState..firstNameIsValid = isValid);
   }
 
   /// [_lastNameValidation] Validation for last name
@@ -704,7 +733,8 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
     //Validates with validator class
     bool isValid = Validator.name(last.value);
     //Sets new state
-    setState((NewMemberProps, NewMemberState) => NewMemberState..lastNameIsValid = isValid);
+    setState((NewMemberProps, NewMemberState) =>
+        NewMemberState..lastNameIsValid = isValid);
   }
 
   /// [_emailValidator] Validation for email using Spencer's function from constants.dart
@@ -713,7 +743,8 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
     InputElement email = querySelector('#Email');
     //Input validation from input validator
     bool isValid = Validator.email(email.value);
-    setState((NewMemberProps, NewMemberState) => NewMemberState..emailIsValid = isValid);
+    setState((NewMemberProps, NewMemberState) =>
+        NewMemberState..emailIsValid = isValid);
   }
 
   //Validation for phone numbers
@@ -736,7 +767,8 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
       DateTime start = DateTime.parse(memStart.value);
       DateTime end = DateTime.parse(memRenew.value);
       bool isValid = Validator.time(start, end);
-      setState((NewMemberProps, NewMemberState) => NewMemberState..memIsValid = isValid);
+      setState((NewMemberProps, NewMemberState) =>
+          NewMemberState..memIsValid = isValid);
     } catch (_) {
       state.memIsValid = false;
     }
@@ -754,7 +786,8 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
     //Validation by validation class
     bool isValid = Validator.phoneNumber(value);
     //Sets state
-    setState((NewMemberProps, NewMemberState) => NewMemberState..phoneNumberIsValid = isValid);
+    setState((NewMemberProps, NewMemberState) =>
+        NewMemberState..phoneNumberIsValid = isValid);
   }
 
   /// [_cellNumberValidator] Validation for cell number, doesnt check if blank
@@ -769,14 +802,16 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
     //Validation from validator class
     bool isValid = Validator.phoneNumber(value);
     //Sets state
-    setState((NewMemberProps, NewMemberState) => NewMemberState..cellNumberIsValid = isValid);
+    setState((NewMemberProps, NewMemberState) =>
+        NewMemberState..cellNumberIsValid = isValid);
   }
 
   /// [_addressValidator] Validation for address
   void _addressValidator(_) {
     InputElement address = querySelector("#Address");
     bool isValid = Validator.address(address.value);
-    setState((NewMemberProps, NewMemberState) => NewMemberState..addressIsValid = isValid);
+    setState((NewMemberProps, NewMemberState) =>
+        NewMemberState..addressIsValid = isValid);
   }
 
   ///[_submitClick] listener to grab all available data on page and push to firebase
@@ -794,27 +829,28 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
     InputElement memRenew = querySelector('#Renewal');
     InputElement position = querySelector('#Position');
 
-    User userToUpdate = props.userMap[props.selectedMemberUID].rebuild((builder) => builder
-      ..firstName = first.value
-      ..lastName = last.value
-      ..email = email.value
-      ..mobileNumber = cell.value
-      ..phoneNumber = phone.value
-      ..address = address.value
-      ..role = state.role
-      ..dietaryRestrictions = diet.value
-      ..disabilities = disability.value
-      ..medicalIssues = medical.value
-      ..membershipStart = DateTime.parse(memStart.value)
-      ..membershipRenewal = DateTime.parse(memRenew.value)
-      ..emergencyContacts = new ListBuilder<EmergencyContact>()
-      ..services = new ListBuilder<String>()
-      ..position = position.value
-      ..forms = new ListBuilder<String>()
-      ..homeDeliver = state.mealBool
-      ..medRelease = state.medBool
-      ..waiverRelease = state.waiverBool
-      ..intakeForm = state.intakeBool);
+    User userToUpdate =
+        props.userMap[props.selectedMemberUID].rebuild((builder) => builder
+          ..firstName = first.value
+          ..lastName = last.value
+          ..email = email.value
+          ..mobileNumber = cell.value
+          ..phoneNumber = phone.value
+          ..address = address.value
+          ..role = state.role
+          ..dietaryRestrictions = diet.value
+          ..disabilities = disability.value
+          ..medicalIssues = medical.value
+          ..membershipStart = DateTime.parse(memStart.value)
+          ..membershipRenewal = DateTime.parse(memRenew.value)
+          ..emergencyContacts = new ListBuilder<EmergencyContact>()
+          ..services = new ListBuilder<String>()
+          ..position = position.value
+          ..forms = new ListBuilder<String>()
+          ..homeDeliver = state.mealBool
+          ..medRelease = state.medBool
+          ..waiverRelease = state.waiverBool
+          ..intakeForm = state.intakeBool);
 
     props.actions.server.updateOrCreateUser(userToUpdate);
     props.actions.server.fetchAllMembers();
