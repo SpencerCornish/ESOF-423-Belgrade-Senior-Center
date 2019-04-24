@@ -48,3 +48,12 @@ nav {
 html {
     background: url("assets/images/bg.jpg") repeat;
 }
+
+.tr-clickable {
+    cursor: pointer;
+
+}
+
+.tr-hoverable:hover td{
+    background-color: whitesmoke;
+}

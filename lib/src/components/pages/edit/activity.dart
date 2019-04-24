@@ -8,6 +8,7 @@ import 'package:built_collection/built_collection.dart';
 import '../../../model/activity.dart';
 import '../../../state/app.dart';
 import '../../core/nav.dart';
+import '../../core/modal.dart';
 import '../../../model/user.dart';
 
 class EditActivityProps {
@@ -21,7 +22,8 @@ class EditActivityProps {
 class EditActivityState {
   bool edit;
   String userToDelete;
-  bool showDeletePrompt;
+  bool showDeleteUserPrompt;
+  bool showDeleteActivityPrompt;
   bool showAddUserPrompt;
 }
 
@@ -34,7 +36,8 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
   EditActivityState getInitialState() => EditActivityState()
     ..edit = false
     ..showAddUserPrompt = false
-    ..showDeletePrompt = false
+    ..showDeleteUserPrompt = false
+    ..showDeleteActivityPrompt = false
     ..userToDelete = '';
 
   /// Browser history entrypoint, to control page navigation
@@ -56,7 +59,8 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
           ..user = props.user),
         new VDivElement()
           ..children = [
-            _renderPromptForDeletion(act),
+            _renderPromptForUserDeletion(act),
+            _renderPromptForActivityDeletion(),
             _renderAddUser(act, state.userToDelete),
             _activityCreation(act),
           ]
@@ -447,7 +451,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
     if (state.edit) {
       return new VButtonElement()
         ..className = "button is-small is-rounded"
-        ..onClick = ((_) => _promptForDeleteClick(userID))
+        ..onClick = ((_) => _promptForRemoveUserClick(userID))
         ..children = [
           new VSpanElement()
             ..className = 'icon'
@@ -460,32 +464,27 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
     return new VParagraphElement();
   }
 
-  VNode _renderPromptForDeletion(Activity act) => new VDivElement()
-    ..className = "modal ${state.showDeletePrompt ? 'is-active' : ''}"
-    ..children = [
-      new VDivElement()..className = 'modal-background',
-      new VDivElement()
-        ..className = 'modal-card'
-        ..children = [
-          new Vsection()
-            ..className = 'modal-card-body'
-            ..children = [
-              new VParagraphElement()..text = "Are you sure you want to remove this user?",
-            ],
-          new Vfooter()
-            ..className = 'modal-card-foot'
-            ..children = [
-              new VButtonElement()
-                ..className = 'button is-danger is-rounded'
-                ..text = "Yes"
-                ..onClick = (_) => _removeClick(act),
-              new VButtonElement()
-                ..className = 'button is-rounded'
-                ..text = "No"
-                ..onClick = _cancelDeletionClick
-            ],
-        ],
-    ];
+  VNode _renderPromptForUserDeletion(Activity act) => new ConfirmModal(ConfirmModalProps()
+    ..isOpen = state.showDeleteUserPrompt
+    ..cancelButtonStyle = ""
+    ..cancelButtonText = "Cancel"
+    ..submitButtonStyle = "is-danger"
+    ..submitButtonText = "Remove"
+    ..message = "Are you sure you want to remove this user?"
+    ..onCancel = _cancelRemoveUserClick
+    ..onConfirm = () => _removeUserClick(act));
+
+  VNode _renderPromptForActivityDeletion() => new ConfirmModal(ConfirmModalProps()
+    ..isOpen = state.showDeleteActivityPrompt
+    ..cancelButtonStyle = ""
+    ..cancelButtonText = "Cancel"
+    ..submitButtonStyle = "is-danger"
+    ..submitButtonText = "Remove"
+    ..message = "Are you sure you want to remove this activity? This cannot be undone."
+    ..onCancel = _cancelRemoveActivityClick
+    ..onConfirm = _removeActivityClick);
+
+
 
   VNode _renderAddUser(Activity act, String uid) => new VDivElement()
     ..className = "modal ${state.showAddUserPrompt ? 'is-active' : ''}"
@@ -558,22 +557,30 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
     return items;
   }
 
-  _promptForDeleteClick(String userID) => setState((props, state) => state
-    ..showDeletePrompt = true
+  _promptForRemoveUserClick(String userID) => setState((props, state) => state
+    ..showDeleteUserPrompt = true
     ..userToDelete = userID);
 
-  _cancelDeletionClick(_) => setState((props, state) => state..showDeletePrompt = false);
+  _cancelRemoveUserClick() => setState((props, state) => state..showDeleteUserPrompt = false);
+
+  _promptForRemoveActivityClick(_) => setState((props, state) => state..showDeleteActivityPrompt = true);
+
+  _cancelRemoveActivityClick() => setState((props, state) => state..showDeleteActivityPrompt = false);
 
   _addClick(_) => setState((props, state) => state..showAddUserPrompt = true);
 
   _cancelAddClick(_) => setState((props, state) => state..showAddUserPrompt = false);
 
-  _removeClick(Activity act) {
+  _removeUserClick(Activity act) {
     props.actions.server.updateOrCreateActivity(act.rebuild((builder) => builder..users.remove(state.userToDelete)));
     props.actions.server.fetchAllActivities();
     setState((props, state) => state
-      ..showDeletePrompt = false
+      ..showDeleteUserPrompt = false
       ..userToDelete = '');
+  }
+
+  _removeActivityClick() {
+    print("REMOVE THE ACTIVITY");
   }
 
   _addUserClick(Activity act, String userId) {
@@ -618,7 +625,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
     if (state.edit) {
       return _renderSubmit();
     }
-    return (_renderEdit());
+    return _renderEdit();
   }
 
   ///[_renderEdit] creates a button to toggle from a view page to increase the number of input fields
@@ -632,6 +639,14 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
             ..className = 'button is-link is-rounded'
             ..text = "Edit"
             ..onClick = _editClick
+        ],
+      new VDivElement()
+        ..className = 'control'
+        ..children = [
+          new VAnchorElement()
+            ..className = 'button is-danger is-rounded'
+            ..text = "Delete"
+            ..onClick = _promptForRemoveActivityClick
         ],
     ];
 

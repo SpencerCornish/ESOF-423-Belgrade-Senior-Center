@@ -63,7 +63,7 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
     nodeList.addAll(titleRow());
     for (Activity act in activities) {
       nodeList.add(new VTableRowElement()
-        ..className = 'tr'
+        ..className = 'tr tr-clickable tr-hoverable'
         ..onClick = ((_) => _onActClick(act.uid))
         ..children = [
           new VTableCellElement()

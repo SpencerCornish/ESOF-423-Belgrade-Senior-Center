@@ -53,7 +53,7 @@ class ViewMeal extends Component<ViewMealProps, ViewMealState> {
     nodeList.addAll(titleRow());
     for (Meal meal in meals) {
       nodeList.add(new VTableRowElement()
-        ..className = 'tr'
+        ..className = 'tr tr-clickable tr-hoverable'
         ..onClick = ((_) => _onMealClick(meal.uid))
         ..children = [
           new VTableCellElement()
