@@ -80,6 +80,22 @@ class Validator {
 
   /// [capacity] ensures a valid usage size
   static bool capacity(int i) => i > -2;
+
+  /// [canActivateSubmit] validator function to ensure needed fields are correct before submit
+  static bool canActivateSubmit(bool nameIsValid, bool timeIsValid, [bool addressIsValid, bool lastNameIsValid]) {
+    if (addressIsValid != null && lastNameIsValid != null) {
+      if (nameIsValid && timeIsValid && addressIsValid && lastNameIsValid) {
+        if (addressIsValid != null && lastNameIsValid != null) {}
+        return false; //enables button on false
+      }
+    } else {
+      if (nameIsValid && timeIsValid) {
+        if (addressIsValid != null && lastNameIsValid != null) {}
+        return false; //enables button on false
+      }
+    }
+    return true; //disables button on true
+  }
 }
 
 /// [ExportHeader] is the header strings for csv table outputs
@@ -151,6 +167,20 @@ enum AuthState {
 /// [formatTime] turns a time into a human readable string
 String formatTime(DateTime time) =>
     time == null ? "" : formatDate(time, [DD, ", ", M, " ", dd, " ", yyyy, " at ", hh, ":", nn, " ", am]);
+
+/// [formatTimeRange] turns a start - end time into a human readable string
+String formatTimeRange(DateTime start, DateTime end) {
+  String range;
+  range = start == null ? "" : formatDate(start, [DD, ", ", M, " ", dd, " ", yyyy, ",\t", hh, ":", nn, " ", am]);
+  range = range + " - ";
+  range = range + (end == null ? "" : formatDate(end, [hh, ":", nn, " ", am]));
+
+  return range;
+}
+
+String checkText(String text) => text != '' ? text : "N/A";
+
+String tdClass(String text) => text != '' ? 'td' : "td has-text-grey";
 
 /// [stringToBase] encodes strings to base64 format
 String stringToBase(String email) => base64Encode(utf8.encode(email));

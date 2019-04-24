@@ -1,17 +1,20 @@
 import 'dart:html' hide History;
 import 'dart:math';
 
+import 'package:date_format/date_format.dart';
 import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
 import 'package:wui_builder/vhtml.dart';
 import 'package:built_collection/built_collection.dart';
 
 import '../../core/nav.dart';
+import '../../core/pageRepeats.dart';
 import '../../../model/activity.dart';
 import '../../../model/user.dart';
 import '../../../state/app.dart';
 import '../../../constants.dart';
 
+///[ViewActivityProps] class of passed in values
 class ViewActivityProps {
   AppActions actions;
   User user;
@@ -20,6 +23,7 @@ class ViewActivityProps {
   String selectedMemberUID;
 }
 
+///[ViewActivityState] class of page state values
 class ViewActivityState {
   bool searching;
   List<Activity> found;
@@ -30,7 +34,7 @@ class ViewActivityState {
 /// [viewActivity] class / page to show a visual representation of current stored data
 class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
   ViewActivity(props) : super(props);
-  List<String> title = ["Name", "Start", "End", "Location", "Capacity", "Instructor"];
+  List<String> title = ["Name", "Date and Time", "Location", ""];
   History _history;
 
   @override
@@ -51,8 +55,56 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
   VNode emailInputNode;
   VNode passwordInputNode;
 
-  /// [createRows] Scaling function to make rows based on amount of information available
-  List<VNode> createRows() {
+  @override
+  VNode render() => new VDivElement()
+    ..children = [
+      new Nav(new NavProps()
+        ..actions = props.actions
+        ..user = props.user),
+      new VDivElement()
+        ..className = 'container'
+        ..children = [
+          new VDivElement()
+            ..className = 'columns is-mobile margin-top is-centered'
+            ..children = [
+              new VDivElement()
+                ..className = 'column is-four-fifths'
+                ..children = [
+                  new VDivElement()
+                    ..className = 'box is-4'
+                    ..children = [
+                      _renderAddInfoMod(),
+                      _renderHeader(),
+                      new VTableElement()
+                        ..className = 'table is-narrow is-striped is-fullwidth'
+                        ..children = _createRows(),
+                    ],
+                ],
+            ],
+        ],
+    ];
+
+  /// [_renderHeader] header with search bar etc
+  VNode _renderHeader() => new VDivElement()
+    ..className = 'columns is-mobile'
+    ..children = [
+      new VDivElement()
+        ..className = 'column'
+        ..children = [
+          new Vh4()
+            ..className = 'title is-4'
+            ..text = 'Activity Data',
+          new Vh1()
+            ..className = 'subtitle is-7'
+            ..text = " as of: ${formatTime(DateTime.now())}",
+        ],
+      renderSearch(_searchListener),
+      renderExport(_onExportCsvClick),
+      renderRefresh(_onRefreshClick),
+    ];
+
+  /// [_createRows] Scaling function to make rows based on amount of information available
+  List<VNode> _createRows() {
     List<Activity> activities;
     List<VNode> nodeList = new List();
     if (!state.searching) {
@@ -60,60 +112,104 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
     } else {
       activities = state.found;
     }
-    nodeList.addAll(titleRow());
+    activities = _sort(activities, 0, activities.length - 1);
+    nodeList.addAll(titleRow(title));
     for (Activity act in activities) {
       nodeList.add(new VTableRowElement()
         ..className = 'tr'
-        ..onClick = ((_) => _onActClick(act.uid))
         ..children = [
           new VTableCellElement()
             ..className = tdClass(act.name)
             ..text = checkText(act.name),
           new VTableCellElement()
             ..className = tdClass(act.startTime.toString())
-            ..text = checkText("${act.startTime.month}/${act.startTime.day}/${act.startTime.year}"),
-          new VTableCellElement()
-            ..className = tdClass(act.endTime.toString())
-            ..text = checkText("${act.endTime.month}/${act.endTime.day}/${act.endTime.year}"),
+            ..text = checkText(formatTimeRange(act.startTime, act.endTime)),
           new VTableCellElement()
             ..className = tdClass(act.location)
             ..text = checkText(act.location),
-          new VTableCellElement()
-            ..className = tdClass(act.capacity.toString())
-            ..text = checkText(act.capacity.toString()),
-          new VTableCellElement()
-            ..className = tdClass(act.instructor)
-            ..text = checkText(act.instructor),
+          _renderButton(act.uid),
         ]);
     }
     return (nodeList);
   }
 
-  _onActClick(String uid) {
-    if (!props.signUp) {
-      history.push(Routes.generateEditActivityURL(uid));
+  /// [_sort] Merge sort by last name of user
+  List<Activity> _sort(List<Activity> act, int left, int right) {
+    if (left < right) {
+      int mid = (left + right) ~/ 2;
+
+      act = _sort(act, left, mid);
+      act = _sort(act, mid + 1, right);
+      act = _merge(act, left, mid, right);
+    }
+    return act;
+  }
+
+  /// [_merge] Helper for the sort function for merging the lists back together
+  List<Activity> _merge(List<Activity> act, int left, int mid, int right) {
+    List temp = new List();
+    int curLeft = left, curRight = mid + 1, tempIndex = 0;
+    while (curLeft <= mid && curRight <= right) {
+      if (act.elementAt(curLeft).startTime.compareTo(act.elementAt(curRight).startTime) <= 0) {
+        temp.insert(tempIndex, act.elementAt(curLeft));
+        curLeft++;
+      } else {
+        temp.add(act.elementAt(curRight));
+        curRight++;
+      }
+      tempIndex++;
+    }
+    while (curLeft <= mid) {
+      temp.add(act.elementAt(curLeft));
+      curLeft++;
+      tempIndex++;
+    }
+    while (curRight <= right) {
+      temp.add(act.elementAt(curRight));
+      curRight++;
+      tempIndex++;
+    }
+    act.replaceRange(left, right + 1, temp.getRange(0, tempIndex).whereType<Activity>());
+
+    return act;
+  }
+
+  ///[_renderButton] choice function to render either the view or check in button on sign up state
+  _renderButton(String uid) {
+    if (props.signUp) {
+      return (new VTableCellElement()
+        ..children = [
+          new VButtonElement()
+            ..className = "button is-success is-rounded"
+            ..onClick = ((_) => _onCheckClick(uid))
+            ..children = [
+              new VSpanElement()
+                ..className = 'icon'
+                ..children = [
+                  new Vi()..className = 'far fa-check-circle',
+                ],
+              new VSpanElement()..text = 'Check In',
+            ],
+        ]);
     } else {
-      Activity act = props.activityMap[uid];
-
-      state.repeatFound = false;
-
-      for (String id in act.users) {
-        if (props.selectedMemberUID.compareTo(id) == 0) {
-          setState((ViewActivityProps, ViewActivityState) => ViewActivityState..repeatFound = true);
-          break;
-        }
-      }
-
-      if (!state.repeatFound) {
-        props.actions.server
-            .updateOrCreateActivity(act.rebuild((builder) => builder..users.add(props.selectedMemberUID)));
-        props.actions.server.fetchAllActivities();
-      }
-
-      setState((ViewActivityProps, ViewActivityState) => ViewActivityState..showMod = true);
+      return (new VTableCellElement()
+        ..children = [
+          new VButtonElement()
+            ..className = "button is-rounded"
+            ..onClick = ((_) => _onActClick(uid))
+            ..children = [
+              new VSpanElement()
+                ..className = 'icon'
+                ..children = [
+                  new Vi()..className = 'far fa-eye',
+                ],
+              new VSpanElement()..text = 'View',
+            ],
+        ]);
     }
   }
 
+  ///[_renderAddInfoMod] modal to tell user the outcome of class sign up and suggest additional classes
   VNode _renderAddInfoMod() {
     if (props.signUp) {
       return (new VDivElement()
@@ -147,10 +243,7 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
     return new VParagraphElement();
   }
 
-  _doneCheckinClick(_) {
-    history.push(Routes.viewMembers);
-  }
-
+  ///[_trySomething] suggestion function to prompt the members to check in for a diffferent class in addition
   VNode _trySomething() {
     //all posible activities
     List<Activity> actList = props.activityMap.values.toList();
@@ -184,140 +277,7 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
       ];
   }
 
-  String checkText(String text) {
-    if (text != '') {
-      if (text == '-1') {
-        text = "Unlimited";
-      }
-    } else {
-      text = "N/A";
-    }
-    return text;
-  }
-
-  String tdClass(String text) => text != '' ? 'td' : "td has-text-grey";
-
-  /// [titleRow] helper function to create the title row
-  List<VNode> titleRow() {
-    List<VNode> nodeList = new List();
-    for (String title in title) {
-      nodeList.add(
-        new VTableCellElement()
-          ..className = 'title is-5'
-          ..text = title,
-      );
-    }
-    return nodeList;
-  }
-
-  @override
-  VNode render() => new VDivElement()
-    ..children = [
-      new Nav(new NavProps()
-        ..actions = props.actions
-        ..user = props.user),
-      new VDivElement()
-        ..className = 'container'
-        ..children = [
-          new VDivElement()
-            ..className = 'columns is-mobile margin-top is-centered'
-            ..children = [
-              new VDivElement()
-                ..className = 'column is-four-fifths'
-                ..children = [
-                  new VDivElement()
-                    ..className = 'box is-4'
-                    ..children = [
-                      _renderAddInfoMod(),
-                      new VDivElement()
-                        ..className = 'columns is-mobile'
-                        ..children = [
-                          new VDivElement()
-                            ..className = 'column'
-                            ..children = [
-                              new Vh4()
-                                ..className = 'title is-4'
-                                ..text = 'Activity Data',
-                              new Vh1()
-                                ..className = 'subtitle is-7'
-                                ..text = " as of: ${DateTime.now().month}/${DateTime.now().day}/${DateTime.now().year}",
-                            ],
-                          new VDivElement()
-                            ..className = 'column is-narrow'
-                            ..children = [
-                              new VDivElement()
-                                ..className = 'field'
-                                ..children = [
-                                  new VParagraphElement()
-                                    ..className = 'control has-icons-left'
-                                    ..children = [
-                                      new VInputElement()
-                                        ..className = 'input'
-                                        ..placeholder = 'Search'
-                                        ..type = 'submit'
-                                        ..id = 'Search'
-                                        ..onKeyUp = _searchListener
-                                        ..type = 'text',
-                                      new VSpanElement()
-                                        ..className = 'icon is-left'
-                                        ..children = [new Vi()..className = 'fas fa-search'],
-                                    ],
-                                ],
-                            ],
-                          new VDivElement()
-                            ..className = 'column is-narrow'
-                            ..children = [
-                              new VDivElement()
-                                ..className = 'field'
-                                ..children = [
-                                  new VDivElement()
-                                    ..className = 'control'
-                                    ..children = [
-                                      new VParagraphElement()
-                                        ..className = 'button is-rounded'
-                                        ..onClick = _onExportCsvClick
-                                        ..children = [
-                                          new VSpanElement()
-                                            ..className = 'icon'
-                                            ..children = [new Vi()..className = 'fas fa-file-csv'],
-                                          new VSpanElement()..text = 'Export',
-                                        ],
-                                    ],
-                                ],
-                            ],
-                          _renderRefresh(),
-                        ],
-                      new VTableElement()
-                        ..className = 'table is-narrow is-striped is-fullwidth'
-                        ..children = createRows(),
-                    ],
-                ],
-            ],
-        ],
-    ];
-
-  _renderRefresh() => new VDivElement()
-    ..className = 'column is-narrow'
-    ..children = [
-      new VDivElement()
-        ..className = 'field'
-        ..children = [
-          new VDivElement()
-            ..className = 'control'
-            ..children = [
-              new VParagraphElement()
-                ..className = 'button is-rounded'
-                ..onClick = _onRefreshClick
-                ..children = [
-                  new VSpanElement()
-                    ..className = 'icon'
-                    ..children = [new Vi()..className = 'fas fa-sync-alt'],
-                  new VSpanElement()..text = 'Refresh',
-                ],
-            ],
-        ],
-    ];
-
+  ///[_searchListener] function to ensure the table is showing data that matches the search criteria
   _searchListener(_) {
     InputElement search = querySelector('#Search');
     if (search.value.isEmpty) {
@@ -338,11 +298,15 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
           found.add(act);
         } else if (act.startTime.toString().contains(search.value)) {
           found.add(act);
-        } else if ("${act.startTime.month}/${act.startTime.day}/${act.startTime.year}".contains(search.value)) {
+        } else if (formatTimeRange(act.startTime, act.endTime).toLowerCase().contains(search.value)) {
           found.add(act);
-        } else if (act.endTime.toString().contains(search.value)) {
+        } else if (formatDate(act.startTime, [m, "/", d, "/", yyyy]).contains(search.value)) {
           found.add(act);
-        } else if ("${act.endTime.month}/${act.endTime.day}/${act.endTime.year}".contains(search.value)) {
+        } else if (formatDate(act.startTime, [mm, "/", dd, "/", yyyy]).contains(search.value)) {
+          found.add(act);
+        } else if (formatTime(act.startTime).contains(search.value)) {
+          found.add(act);
+        } else if (formatTime(act.endTime).contains(search.value)) {
           found.add(act);
         }
 
@@ -353,6 +317,7 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
     }
   }
 
+  ///[_onExportCsvClick] exports the currently shown data to a csv file
   _onExportCsvClick(_) {
     List<String> lines;
     if (!state.searching) {
@@ -374,7 +339,40 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
     downloadLink.dispatchEvent(event);
   }
 
+  ///[_onRefreshClick] reloads the data for the page
   _onRefreshClick(_) {
     props.actions.server.fetchAllActivities();
+  }
+
+  ///[_onActClick] button listener to view a class through redirect
+  _onActClick(String uid) {
+    history.push(Routes.generateEditActivityURL(uid));
+  }
+
+  ///[_onCheckClick] button listener to check into a class and show the modal
+  _onCheckClick(String uid) {
+    Activity act = props.activityMap[uid];
+
+    state.repeatFound = false;
+
+    for (String id in act.users) {
+      if (props.selectedMemberUID.compareTo(id) == 0) {
+        setState((ViewActivityProps, ViewActivityState) => ViewActivityState..repeatFound = true);
+        break;
+      }
+    }
+
+    if (!state.repeatFound) {
+      props.actions.server
+          .updateOrCreateActivity(act.rebuild((builder) => builder..users.add(props.selectedMemberUID)));
+      props.actions.server.fetchAllActivities();
+    }
+
+    setState((ViewActivityProps, ViewActivityState) => ViewActivityState..showMod = true);
+  }
+
+  ///[_doneCheckinClick] returns to viewMembers page for the next check in
+  _doneCheckinClick(_) {
+    history.push(Routes.viewMembers);
   }
 }
