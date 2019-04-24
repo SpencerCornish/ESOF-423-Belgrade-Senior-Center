@@ -1,5 +1,7 @@
 import 'dart:html' hide History;
 
+import 'package:bsc/src/components/core/pageRepeats.dart';
+import 'package:date_format/date_format.dart';
 import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
 import 'package:wui_builder/vhtml.dart';
@@ -11,17 +13,20 @@ import '../../core/nav.dart';
 import '../../../model/meal.dart';
 import '../../../model/user.dart';
 
+/// [NewMealProps] class for the new meal page passed in propeerties
 class NewMealProps {
   AppActions actions;
   User user;
   Meal meal;
 }
 
+/// [NewMealState] state class for the new meal page
 class NewMealState {
   bool timeIsValid;
   bool mealIsValid;
 }
 
+/// [NewMeal] class to create the new meal page for creating an meal
 class NewMeal extends Component<NewMealProps, NewMealState> {
   NewMeal(props) : super(props);
 
@@ -41,14 +46,10 @@ class NewMeal extends Component<NewMealProps, NewMealState> {
       new Nav(new NavProps()
         ..actions = props.actions
         ..user = props.user),
-      // new VDivElement()
-      //   ..className = 'container'
-      //   ..children = [
       _mealCreation(),
-      //]
     ];
 
-  //create the text boxes that are used to create new users
+  /// [_mealCreation] create the text boxes that are used to create new users
   VNode _mealCreation() => new VDivElement()
     ..className = 'container'
     ..children = [
@@ -77,185 +78,55 @@ class NewMeal extends Component<NewMealProps, NewMealState> {
                   new VDivElement()
                     ..className = 'columns'
                     ..children = [
-                      new VDivElement()
-                        ..className = 'column'
-                        ..children = [
-                          new VDivElement()
-                            ..className = 'field is-grouped'
-                            ..children = [
-                              new VDivElement()
-                                ..className = 'field is-horizontal'
-                                ..children = [
-                                  new VDivElement()
-                                    ..className = 'field-body'
-                                    ..children = [
-                                      new VDivElement()
-                                        ..className = 'field'
-                                        ..id = 'date-lab'
-                                        ..children = [
-                                          new VLabelElement()
-                                            ..className = 'label'
-                                            ..text = "Serving Date"
-                                        ],
-                                      new VDivElement()
-                                        ..className = 'field is-horizontal'
-                                        ..children = [
-                                          new VParagraphElement()
-                                            ..className = 'control'
-                                            ..children = [
-                                              new VInputElement()
-                                                ..onInput = _timeValidator
-                                                ..className = 'input ${state.timeIsValid ? '' : 'is-danger'}'
-                                                ..id = 'serveDate-input'
-                                                ..type = 'date',
-                                              new VParagraphElement()
-                                                ..className =
-                                                    'help is-danger ${state.timeIsValid ? 'is-invisible' : ''}'
-                                                ..text = 'Meal needs a date and time'
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ],
-                      new VDivElement()
-                        ..className = 'column'
-                        ..children = [
-                          new VDivElement()
-                            ..className = 'field is-grouped'
-                            ..children = [
-                              new VDivElement()
-                                ..className = 'field is-horizontal'
-                                ..children = [
-                                  new VDivElement()
-                                    ..className = 'field-body'
-                                    ..children = [
-                                      new VDivElement()
-                                        ..className = 'field'
-                                        ..id = 'mealStart-lab'
-                                        ..children = [
-                                          new VLabelElement()
-                                            ..className = 'label'
-                                            ..text = "Start Time"
-                                        ],
-                                      new VDivElement()
-                                        ..className = 'field is-horizontal'
-                                        ..children = [
-                                          new VParagraphElement()
-                                            ..className = 'control'
-                                            ..children = [
-                                              new VInputElement()
-                                                ..onInput = _timeValidator
-                                                ..className = 'input ${state.timeIsValid ? '' : 'is-danger'}'
-                                                ..id = 'mealStart-input'
-                                                ..type = 'time',
-                                              new VParagraphElement()
-                                                ..className =
-                                                    'help is-danger ${state.timeIsValid ? 'is-invisible' : ''}'
-                                                ..text = 'Meal ends before it begins, please correct.'
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ],
-                      new VDivElement()
-                        ..className = 'column'
-                        ..children = [
-                          new VDivElement()
-                            ..className = 'field is-grouped'
-                            ..children = [
-                              new VDivElement()
-                                ..className = 'field is-horizontal'
-                                ..children = [
-                                  new VDivElement()
-                                    ..className = 'field-body'
-                                    ..children = [
-                                      new VDivElement()
-                                        ..className = 'field'
-                                        ..id = 'mealEnd-lab'
-                                        ..children = [
-                                          new VLabelElement()
-                                            ..className = 'label'
-                                            ..text = "End Time"
-                                        ],
-                                      new VDivElement()
-                                        ..className = 'field is-horizontal'
-                                        ..children = [
-                                          new VParagraphElement()
-                                            ..className = 'control'
-                                            ..children = [
-                                              new VInputElement()
-                                                ..onInput = _timeValidator
-                                                ..className = 'input ${state.timeIsValid ? '' : 'is-danger'}'
-                                                ..id = 'mealEnd-input'
-                                                ..type = 'time',
-                                              new VParagraphElement()
-                                                ..className =
-                                                    'help is-danger ${state.timeIsValid ? 'is-invisible' : ''}'
-                                                ..text = 'Meal ends before it begins, please correct.'
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ]
+                      _renderDate(),
+                      _renderStart(),
+                      _renderEnd(),
                     ],
 
                   //create the input box for what the meal is
-                  new VDivElement()
-                    ..className = 'columns'
-                    ..children = [
-                      new VDivElement()
-                        ..className = 'column is-narrow'
-                        ..children = [
-                          new VDivElement()
-                            ..className = 'field is-horizontal'
-                            ..children = [
-                              new VDivElement()
-                                ..className = 'field-label is-normal'
-                                ..children = [
-                                  new VLabelElement()
-                                    ..className = 'label'
-                                    ..text = "Meal",
-                                ]
-                            ]
-                        ],
-                      new VDivElement()
-                        ..className = 'field-body'
-                        ..children = [
-                          new VDivElement()
-                            ..className = 'field'
-                            ..children = [
-                              new VDivElement()
-                                ..className = 'control'
-                                ..children = [
-                                  new VTextAreaElement()
-                                    ..onInput = _mealValidator
-                                    ..className = 'textarea ${state.mealIsValid ? '' : 'is-danger'}'
-                                    ..id = 'meal-input'
-                                    ..placeholder = "Enter full meal",
-                                  new VParagraphElement()
-                                    ..className = 'help is-danger ${state.mealIsValid ? 'is-invisible' : ''}'
-                                    ..text = 'Meal needs a menu.'
-                                ]
-                            ]
-                        ]
-                    ],
-                  //TODO: possibly find a way for admin to add a picture to the database and allow activities to access and utilize them.
-
+                  _renderMenuLabel(),
                   //create the submit button
+                  renderSubmit(_submitClick, Validator.canActivateSubmit(state.mealIsValid, state.timeIsValid)),
+                ]
+            ]
+        ]
+    ];
+
+  /// [_renderDate] render date input and label
+  _renderDate() => new VDivElement()
+    ..className = 'column'
+    ..children = [
+      new VDivElement()
+        ..className = 'field is-grouped'
+        ..children = [
+          new VDivElement()
+            ..className = 'field is-horizontal'
+            ..children = [
+              new VDivElement()
+                ..className = 'field-body'
+                ..children = [
                   new VDivElement()
-                    ..className = 'field is-grouped is-grouped-right'
+                    ..className = 'field'
+                    ..id = 'date-lab'
                     ..children = [
-                      new VDivElement()
+                      new VLabelElement()
+                        ..className = 'label'
+                        ..text = "Serving Date"
+                    ],
+                  new VDivElement()
+                    ..className = 'field is-horizontal'
+                    ..children = [
+                      new VParagraphElement()
                         ..className = 'control'
                         ..children = [
-                          new VButtonElement()
-                            ..className = 'button is-link is-rounded'
-                            ..disabled = _canActivateSubmit()
-                            ..text = "Submit"
-                            ..onClick = _submitClick
+                          new VInputElement()
+                            ..onInput = _timeValidator
+                            ..className = 'input ${state.timeIsValid ? '' : 'is-danger'}'
+                            ..id = 'serveDate-input'
+                            ..type = 'date',
+                          new VParagraphElement()
+                            ..className = 'help is-danger ${state.timeIsValid ? 'is-invisible' : ''}'
+                            ..text = 'Meal needs a date and time'
                         ]
                     ]
                 ]
@@ -263,6 +134,135 @@ class NewMeal extends Component<NewMealProps, NewMealState> {
         ]
     ];
 
+  /// [_renderStart] render start input and label
+  _renderStart() => new VDivElement()
+    ..className = 'column'
+    ..children = [
+      new VDivElement()
+        ..className = 'field is-grouped'
+        ..children = [
+          new VDivElement()
+            ..className = 'field is-horizontal'
+            ..children = [
+              new VDivElement()
+                ..className = 'field-body'
+                ..children = [
+                  new VDivElement()
+                    ..className = 'field'
+                    ..id = 'mealStart-lab'
+                    ..children = [
+                      new VLabelElement()
+                        ..className = 'label'
+                        ..text = "Start Time"
+                    ],
+                  new VDivElement()
+                    ..className = 'field is-horizontal'
+                    ..children = [
+                      new VParagraphElement()
+                        ..className = 'control'
+                        ..children = [
+                          new VInputElement()
+                            ..onInput = _timeValidator
+                            ..className = 'input ${state.timeIsValid ? '' : 'is-danger'}'
+                            ..id = 'mealStart-input'
+                            ..type = 'time',
+                          new VParagraphElement()
+                            ..className = 'help is-danger ${state.timeIsValid ? 'is-invisible' : ''}'
+                            ..text = 'Meal ends before it begins, please correct.'
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ];
+
+  /// [_renderEnd] render end input and label
+  _renderEnd() => new VDivElement()
+    ..className = 'column'
+    ..children = [
+      new VDivElement()
+        ..className = 'field is-grouped'
+        ..children = [
+          new VDivElement()
+            ..className = 'field is-horizontal'
+            ..children = [
+              new VDivElement()
+                ..className = 'field-body'
+                ..children = [
+                  new VDivElement()
+                    ..className = 'field'
+                    ..id = 'mealEnd-lab'
+                    ..children = [
+                      new VLabelElement()
+                        ..className = 'label'
+                        ..text = "End Time"
+                    ],
+                  new VDivElement()
+                    ..className = 'field is-horizontal'
+                    ..children = [
+                      new VParagraphElement()
+                        ..className = 'control'
+                        ..children = [
+                          new VInputElement()
+                            ..onInput = _timeValidator
+                            ..className = 'input ${state.timeIsValid ? '' : 'is-danger'}'
+                            ..id = 'mealEnd-input'
+                            ..type = 'time',
+                          new VParagraphElement()
+                            ..className = 'help is-danger ${state.timeIsValid ? 'is-invisible' : ''}'
+                            ..text = 'Meal ends before it begins, please correct.'
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ];
+
+  /// [_renderMenuLabel] render menu label
+  _renderMenuLabel() => new VDivElement()
+    ..className = 'columns'
+    ..children = [
+      new VDivElement()
+        ..className = 'column is-narrow'
+        ..children = [
+          new VDivElement()
+            ..className = 'field is-horizontal'
+            ..children = [
+              new VDivElement()
+                ..className = 'field-label is-normal'
+                ..children = [
+                  new VLabelElement()
+                    ..className = 'label'
+                    ..text = "Meal",
+                ]
+            ]
+        ],
+      _renderMenu(),
+    ];
+
+  /// [_renderMenu] render menu input
+  _renderMenu() => new VDivElement()
+    ..className = 'field-body'
+    ..children = [
+      new VDivElement()
+        ..className = 'field'
+        ..children = [
+          new VDivElement()
+            ..className = 'control'
+            ..children = [
+              new VTextAreaElement()
+                ..onInput = _mealValidator
+                ..className = 'textarea ${state.mealIsValid ? '' : 'is-danger'}'
+                ..id = 'meal-input'
+                ..placeholder = "Enter meal information. The first 15 characters will be visible as a title",
+              new VParagraphElement()
+                ..className = 'help is-danger ${state.mealIsValid ? 'is-invisible' : ''}'
+                ..text = 'Meal needs a menu.'
+            ]
+        ]
+    ];
+
+  /// [_mealValidator] validator function to ensure menu is input correctly
   _mealValidator(_) {
     TextAreaElement meal = querySelector('#meal-input');
     String menu = meal.value;
@@ -270,14 +270,8 @@ class NewMeal extends Component<NewMealProps, NewMealState> {
     setState((NewMealProps, NewMealState) => NewMealState..mealIsValid = isValid);
   }
 
-  bool _canActivateSubmit() {
-    if (state.mealIsValid && state.timeIsValid) {
-      return false; //enables button on false
-    }
-    return true; //disables button on true
-  }
-
   //Checks that the meal does not start before it ends
+  /// [_timeValidator] validator function to ensure time is input correctly
   _timeValidator(_) {
     //Gets the 3 date time inputs
     InputElement date = querySelector('#serveDate-input');
@@ -286,8 +280,8 @@ class NewMeal extends Component<NewMealProps, NewMealState> {
     try {
       DateTime serveDay = DateTime.parse(date.value);
 
-      String startTime = _parseDate(serveDay, time_start.value);
-      String endTime = _parseDate(serveDay, time_end.value);
+      String startTime = formatDate(serveDay, [yyyy, "-", mm, "-", dd, " ${time_start.value}:00.000"]);
+      String endTime = formatDate(serveDay, [yyyy, "-", mm, "-", dd, " ${time_end.value}:00.000"]);
 
       DateTime start = DateTime.parse(startTime);
       DateTime end = DateTime.parse(endTime);
@@ -302,6 +296,7 @@ class NewMeal extends Component<NewMealProps, NewMealState> {
 
   //method used for the submit click
   //variable names serveDate-input, mealStart-input, mealEnd-input, meal-input
+  /// [_submitClick] method used for the submit click
   _submitClick(_) {
     InputElement date = querySelector('#serveDate-input');
     InputElement start = querySelector('#mealStart-input');
@@ -312,9 +307,8 @@ class NewMeal extends Component<NewMealProps, NewMealState> {
     String tempEnd = end.value; //make the end time a string for use in _parseDate
     String menu = meal.value;
     String startTime, endTime;
-    startTime = _parseDate(serveDay, tempStart);
-    endTime = _parseDate(serveDay, tempEnd);
-
+    startTime = formatDate(serveDay, [yyyy, "-", mm, "-", dd, " ${tempStart}:00.000"]);
+    endTime = formatDate(serveDay, [yyyy, "-", mm, "-", dd, " ${tempEnd}:00.000"]);
     ListBuilder<String> temp = new ListBuilder();
     temp.add(menu);
 
@@ -325,29 +319,7 @@ class NewMeal extends Component<NewMealProps, NewMealState> {
         .build();
 
     props.actions.server.updateOrCreateMeal(newMeal);
-    props.actions.server.fetchAllMeals();
 
-    history.push(Routes.dashboard);
-  }
-
-  ///[_parseDate] is a function adopted from the _showDate function that Josh wrote to make a string from a date and time input compatible with DateTime data types
-  String _parseDate(DateTime date, String time) {
-    String tempDay, tempMonth, tempTime;
-
-    if (date.day.toString().length == 1) {
-      tempDay = "0${date.day}";
-    } else {
-      tempDay = date.day.toString();
-    }
-
-    if (date.month.toString().length == 1) {
-      tempMonth = "0${date.month}";
-    } else {
-      tempMonth = date.month.toString();
-    }
-
-    tempTime = "${time}:00.000";
-
-    return "${date.year}-${tempMonth}-${tempDay} ${tempTime}";
+    history.push(Routes.viewMeal);
   }
 }

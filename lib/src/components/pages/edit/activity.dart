@@ -1,5 +1,7 @@
 import 'dart:html' hide History;
 
+import 'package:bsc/src/constants.dart';
+import 'package:date_format/date_format.dart';
 import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
 import 'package:wui_builder/vhtml.dart';
@@ -9,8 +11,10 @@ import '../../../model/activity.dart';
 import '../../../state/app.dart';
 import '../../core/nav.dart';
 import '../../core/modal.dart';
+import '../../core/pageRepeats.dart';
 import '../../../model/user.dart';
 
+///[EditActivityProps] class to hold passed in properties of edit activity page
 class EditActivityProps {
   AppActions actions;
   User user;
@@ -19,14 +23,21 @@ class EditActivityProps {
   String selectedActivityUID;
 }
 
+///[EditActivityState] class to hold state of edit activity page
 class EditActivityState {
   bool edit;
   String userToDelete;
   bool showDeleteUserPrompt;
   bool showDeleteActivityPrompt;
   bool showAddUserPrompt;
+  bool timeIsValid;
+  bool activityNameIsValid;
+  bool instructorNameIsValid;
+  bool locationIsValid;
+  bool capacityIsValid;
 }
 
+///[EditActivity] class to create the edit activity page
 class EditActivity extends Component<EditActivityProps, EditActivityState> {
   EditActivity(props) : super(props);
 
@@ -38,7 +49,12 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
     ..showAddUserPrompt = false
     ..showDeleteUserPrompt = false
     ..showDeleteActivityPrompt = false
-    ..userToDelete = '';
+        ..userToDelete = ''
+    ..activityNameIsValid = true
+    ..instructorNameIsValid = true
+    ..locationIsValid = true
+    ..capacityIsValid = true
+    ..timeIsValid = true;
 
   /// Browser history entrypoint, to control page navigation
   History get history => _history ?? findHistoryInContext(context);
@@ -67,7 +83,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
       ];
   }
 
-  //create the text boxes that are used to create new activities
+  /// [_activityCreation] create the text boxes that are used to create new activities
   VNode _activityCreation(Activity act) => new VDivElement()
     ..className = 'container'
     ..children = [
@@ -89,306 +105,355 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
                         ..children = [
                           new Vh1()
                             ..className = 'title'
-                            ..text = "Edit Activity"
+                            ..text = "Activity Edit"
                         ]
                     ],
                   //create the input fields for activity name and instructor's name
                   new VDivElement()
                     ..className = 'columns'
                     ..children = [
-                      new VDivElement()
-                        ..className = 'column'
-                        ..children = [
-                          new VDivElement()
-                            ..className = 'field is-grouped'
-                            ..children = [
-                              new VDivElement()
-                                ..className = 'field is-horizontal'
-                                ..children = [
-                                  new VDivElement()
-                                    ..className = 'field-body'
-                                    ..children = [
-                                      new VDivElement()
-                                        ..className = 'field'
-                                        ..id = 'actName-lab'
-                                        ..children = [
-                                          new VLabelElement()
-                                            ..className = 'label'
-                                            ..text = "Activity Name"
-                                        ],
-                                      new VDivElement()
-                                        ..className = 'field is-horizontal'
-                                        ..children = [
-                                          new VParagraphElement()
-                                            ..className = 'control'
-                                            ..children = [
-                                              new VInputElement()
-                                                ..className = 'input ${state.edit ? '' : 'is-static'}'
-                                                ..id = 'act-input'
-                                                ..defaultValue = act.name
-                                                ..readOnly = !state.edit
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ],
-                      new VDivElement()
-                        ..className = 'column'
-                        ..children = [
-                          new VDivElement()
-                            ..className = 'field is-grouped'
-                            ..children = [
-                              new VDivElement()
-                                ..className = 'field is-horizontal'
-                                ..children = [
-                                  new VDivElement()
-                                    ..className = 'field-body'
-                                    ..children = [
-                                      new VDivElement()
-                                        ..className = 'field'
-                                        ..id = 'instructName-lab'
-                                        ..children = [
-                                          new VLabelElement()
-                                            ..className = 'label'
-                                            ..text = "Instructor's Name"
-                                        ],
-                                      new VDivElement()
-                                        ..className = 'field is-horizontal'
-                                        ..children = [
-                                          new VParagraphElement()
-                                            ..className = 'control'
-                                            ..children = [
-                                              new VInputElement()
-                                                ..className = 'input ${state.edit ? '' : 'is-static'}'
-                                                ..id = 'instructorName-input'
-                                                ..defaultValue = act.instructor
-                                                ..readOnly = !state.edit
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ]
+                      _renderName(act),
+                      _renderInstructor(act),
                     ],
                   //create the Location And Capacity Input fields
                   new VDivElement()
                     ..className = 'columns'
                     ..children = [
-                      new VDivElement()
-                        ..className = 'column'
-                        ..children = [
-                          new VDivElement()
-                            ..className = 'field is-grouped'
-                            ..children = [
-                              new VDivElement()
-                                ..className = 'field is-horizontal'
-                                ..children = [
-                                  new VDivElement()
-                                    ..className = 'field-body'
-                                    ..children = [
-                                      new VDivElement()
-                                        ..className = 'field'
-                                        ..id = 'location-lab'
-                                        ..children = [
-                                          new VLabelElement()
-                                            ..className = 'label'
-                                            ..text = "Loaction"
-                                        ],
-                                      new VDivElement()
-                                        ..className = 'field is-horizontal'
-                                        ..children = [
-                                          new VParagraphElement()
-                                            ..className = 'control'
-                                            ..children = [
-                                              new VInputElement()
-                                                ..className = 'input ${state.edit ? '' : 'is-static'}'
-                                                ..id = 'location-input'
-                                                ..defaultValue = act.location
-                                                ..readOnly = !state.edit
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ],
-                      new VDivElement()
-                        ..className = 'column'
-                        ..children = [
-                          new VDivElement()
-                            ..className = 'field is-grouped'
-                            ..children = [
-                              new VDivElement()
-                                ..className = 'field is-horizontal'
-                                ..children = [
-                                  new VDivElement()
-                                    ..className = 'field-body'
-                                    ..children = [
-                                      new VDivElement()
-                                        ..className = 'field'
-                                        ..id = 'capacity-lab'
-                                        ..children = [
-                                          new VLabelElement()
-                                            ..className = 'label'
-                                            ..text = "Capacity"
-                                        ],
-                                      new VDivElement()
-                                        ..className = 'field is-horizontal'
-                                        ..children = [
-                                          new VParagraphElement()
-                                            ..className = 'control'
-                                            ..children = [
-                                              new VInputElement()
-                                                ..className = 'input ${state.edit ? '' : 'is-static'}'
-                                                ..id = 'capacity-input'
-                                                ..type = 'number'
-                                                ..readOnly = !state.edit
-                                                ..defaultValue = act.capacity.toString()
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ]
+                      _renderLocation(act),
+                      _renderCapacity(act),
                     ],
-                  new VDivElement()
-                    ..className = 'columns'
-                    ..children = [
-                      new VDivElement()
-                        ..className = 'column'
-                        ..children = [
-                          new VDivElement()
-                            ..className = 'field is-grouped'
-                            ..children = [
-                              new VDivElement()
-                                ..className = 'field is-horizontal'
-                                ..children = [
-                                  new VDivElement()
-                                    ..className = 'field-body'
-                                    ..children = [
-                                      new VDivElement()
-                                        ..className = 'field'
-                                        ..id = 'day-lab'
-                                        ..children = [
-                                          new VLabelElement()
-                                            ..className = 'label'
-                                            ..text = "Date"
-                                        ],
-                                      new VDivElement()
-                                        ..className = 'field is-horizontal'
-                                        ..children = [
-                                          new VParagraphElement()
-                                            ..className = 'control'
-                                            ..children = [
-                                              new VInputElement()
-                                                ..className = 'input ${state.edit ? '' : 'is-static'}'
-                                                ..id = 'day-input'
-                                                ..type = 'date'
-                                                ..value = _dateFormat(act.startTime)
-                                                ..readOnly = !state.edit
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ],
-
-                  //Create the start and end time input fields
-                  //create the Start Time Input field
-                  new VDivElement()
-                    ..className = 'columns'
-                    ..children = [
-                      new VDivElement()
-                        ..className = 'column'
-                        ..children = [
-                          new VDivElement()
-                            ..className = 'field is-grouped'
-                            ..children = [
-                              new VDivElement()
-                                ..className = 'field is-horizontal'
-                                ..children = [
-                                  new VDivElement()
-                                    ..className = 'field-body'
-                                    ..children = [
-                                      new VDivElement()
-                                        ..className = 'field'
-                                        ..id = 'timeStart-lab'
-                                        ..children = [
-                                          new VLabelElement()
-                                            ..className = 'label'
-                                            ..text = "Start Time"
-                                        ],
-                                      new VDivElement()
-                                        ..className = 'field is-horizontal'
-                                        ..children = [
-                                          new VParagraphElement()
-                                            ..className = 'control'
-                                            ..children = [
-                                              new VInputElement()
-                                                ..className = 'input ${state.edit ? '' : 'is-static'}'
-                                                ..id = 'timeStart-input'
-                                                ..type = 'time'
-                                                ..readOnly = !state.edit
-                                                ..value = _timeFormat(
-                                                    act.startTime.hour.toString(), act.startTime.minute.toString())
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ],
-                      new VDivElement()
-                        ..className = 'column'
-                        ..children = [
-                          new VDivElement()
-                            ..className = 'field is-grouped'
-                            ..children = [
-                              new VDivElement()
-                                ..className = 'field is-horizontal'
-                                ..children = [
-                                  new VDivElement()
-                                    ..className = 'field-body'
-                                    ..children = [
-                                      new VDivElement()
-                                        ..className = 'field'
-                                        ..id = 'timeEnd-lab'
-                                        ..children = [
-                                          new VLabelElement()
-                                            ..className = 'label'
-                                            ..text = "End Time"
-                                        ],
-                                      new VDivElement()
-                                        ..className = 'field is-horizontal'
-                                        ..children = [
-                                          new VParagraphElement()
-                                            ..className = 'control'
-                                            ..children = [
-                                              new VInputElement()
-                                                ..className = 'input ${state.edit ? '' : 'is-static'}'
-                                                ..id = 'timeEnd-input'
-                                                ..type = 'time'
-                                                ..readOnly = !state.edit
-                                                ..value = _timeFormat(
-                                                    act.endTime.hour.toString(), act.endTime.minute.toString())
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ],
+                  _renderDateField(act),
+                  _renderTimeFields(act),
                   new VParagraphElement()
                     ..className = 'title'
                     ..text = "Attendees",
                   _renderAttendance(act),
                   //create the submit button
-                  _renderButton(),
+                  renderEditSubmitButton(state.edit, _editClick, _submitClick,
+                      Validator.canActivateSubmit(state.activityNameIsValid, state.timeIsValid)),
                 ]
             ]
         ]
     ];
 
+  ///[_renderName] label and input for name
+  _renderName(Activity act) => new VDivElement()
+    ..className = 'column'
+    ..children = [
+      new VDivElement()
+        ..className = 'field is-grouped'
+        ..children = [
+          new VDivElement()
+            ..className = 'field is-horizontal'
+            ..children = [
+              new VDivElement()
+                ..className = 'field-body'
+                ..children = [
+                  new VDivElement()
+                    ..className = 'field'
+                    ..id = 'actName-lab'
+                    ..children = [
+                      new VLabelElement()
+                        ..className = 'label'
+                        ..text = "Activity Name"
+                    ],
+                  new VDivElement()
+                    ..className = 'field is-horizontal'
+                    ..children = [
+                      new VParagraphElement()
+                        ..className = 'control'
+                        ..children = [
+                          new VInputElement()
+                            ..onInput = _activityNameValidator
+                            ..className =
+                                'input ${state.edit ? '' : 'is-static'} ${state.activityNameIsValid ? '' : 'is-danger'}'
+                            ..id = 'act-input'
+                            ..defaultValue = act.name
+                            ..readOnly = !state.edit,
+                          new VParagraphElement()
+                            ..className = 'help is-danger ${state.activityNameIsValid ? 'is-invisible' : ''}'
+                            ..text = 'Activity name may not be empty'
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ];
+
+  ///[_renderInstructor] label and input for instructor
+  _renderInstructor(Activity act) => new VDivElement()
+    ..className = 'column'
+    ..children = [
+      new VDivElement()
+        ..className = 'field is-grouped'
+        ..children = [
+          new VDivElement()
+            ..className = 'field is-horizontal'
+            ..children = [
+              new VDivElement()
+                ..className = 'field-body'
+                ..children = [
+                  new VDivElement()
+                    ..className = 'field'
+                    ..id = 'instructName-lab'
+                    ..children = [
+                      new VLabelElement()
+                        ..className = 'label'
+                        ..text = "Instructor's Name"
+                    ],
+                  new VDivElement()
+                    ..className = 'field is-horizontal'
+                    ..children = [
+                      new VParagraphElement()
+                        ..className = 'control'
+                        ..children = [
+                          new VInputElement()
+                            ..onInput = _instructorNameValidator
+                            ..className =
+                                'input ${state.edit ? '' : 'is-static'} ${state.instructorNameIsValid ? '' : 'is-danger'}'
+                            ..id = 'instructorName-input'
+                            ..defaultValue = act.instructor
+                            ..readOnly = !state.edit,
+                          new VParagraphElement()
+                            ..className = 'help is-danger ${state.instructorNameIsValid ? 'is-invisible' : ''}'
+                            ..text = 'Instructor name may not be blank'
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ];
+
+  ///[_renderLocation] label and input for location
+  _renderLocation(Activity act) => new VDivElement()
+    ..className = 'column'
+    ..children = [
+      new VDivElement()
+        ..className = 'field is-grouped'
+        ..children = [
+          new VDivElement()
+            ..className = 'field is-horizontal'
+            ..children = [
+              new VDivElement()
+                ..className = 'field-body'
+                ..children = [
+                  new VDivElement()
+                    ..className = 'field'
+                    ..id = 'location-lab'
+                    ..children = [
+                      new VLabelElement()
+                        ..className = 'label'
+                        ..text = "Loaction"
+                    ],
+                  new VDivElement()
+                    ..className = 'field is-horizontal'
+                    ..children = [
+                      new VParagraphElement()
+                        ..className = 'control'
+                        ..children = [
+                          new VInputElement()
+                            ..onInput = _locationValidator
+                            ..className =
+                                'input ${state.edit ? '' : 'is-static'} ${state.locationIsValid ? '' : 'is-danger'}'
+                            ..id = 'location-input'
+                            ..defaultValue = act.location
+                            ..readOnly = !state.edit,
+                          new VParagraphElement()
+                            ..className = 'help is-danger ${state.locationIsValid ? 'is-invisible' : ''}'
+                            ..text = 'Location may not be blank'
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ];
+
+  ///[_renderCapacity] label and input for capacity
+  _renderCapacity(Activity act) => new VDivElement()
+    ..className = 'column'
+    ..children = [
+      new VDivElement()
+        ..className = 'field is-grouped'
+        ..children = [
+          new VDivElement()
+            ..className = 'field is-horizontal'
+            ..children = [
+              new VDivElement()
+                ..className = 'field-body'
+                ..children = [
+                  new VDivElement()
+                    ..className = 'field'
+                    ..id = 'capacity-lab'
+                    ..children = [
+                      new VLabelElement()
+                        ..className = 'label'
+                        ..text = "Capacity"
+                    ],
+                  new VDivElement()
+                    ..className = 'field is-horizontal'
+                    ..children = [
+                      new VParagraphElement()
+                        ..className = 'control'
+                        ..children = [
+                          new VInputElement()
+                            ..onInput = _capacityValidator
+                            ..className =
+                                'input ${state.edit ? '' : 'is-static'} ${state.capacityIsValid ? '' : 'is-danger'}'
+                            ..id = 'capacity-input'
+                            ..readOnly = !state.edit
+                            ..defaultValue = _capView(act.capacity.toString()),
+                          new VParagraphElement()
+                            ..className = 'help is-danger ${state.capacityIsValid ? 'is-invisible' : ''}'
+                            ..text = 'Capacity must be -1, or more than 0'
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ];
+
+  ///[_renderDateField] label and input for date
+  _renderDateField(Activity act) => new VDivElement()
+    ..className = 'columns'
+    ..children = [
+      new VDivElement()
+        ..className = 'column'
+        ..children = [
+          new VDivElement()
+            ..className = 'field is-grouped'
+            ..children = [
+              new VDivElement()
+                ..className = 'field is-horizontal'
+                ..children = [
+                  new VDivElement()
+                    ..className = 'field-body'
+                    ..children = [
+                      new VDivElement()
+                        ..className = 'field'
+                        ..id = 'day-lab'
+                        ..children = [
+                          new VLabelElement()
+                            ..className = 'label'
+                            ..text = "Date"
+                        ],
+                      new VDivElement()
+                        ..className = 'field is-horizontal'
+                        ..children = [
+                          new VParagraphElement()
+                            ..className = 'control'
+                            ..children = [
+                              new VInputElement()
+                                ..onInput = _timeValidator
+                                ..className =
+                                    'input ${state.edit ? '' : 'is-static'} ${state.timeIsValid ? '' : 'is-danger'}'
+                                ..id = 'day-input'
+                                ..type = 'date'
+                                ..value = formatDate(act.startTime, [yyyy, "-", mm, "-", dd])
+                                ..readOnly = !state.edit,
+                              new VParagraphElement()
+                                ..className = 'help is-danger ${state.timeIsValid ? 'is-invisible' : ''}'
+                                ..text = 'Activity must include date'
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ];
+
+  /// [_renderTimeFields] Create the start and end time input fields
+  _renderTimeFields(Activity act) => new VDivElement()
+    ..className = 'columns'
+    ..children = [
+      new VDivElement()
+        ..className = 'column'
+        ..children = [
+          new VDivElement()
+            ..className = 'field is-grouped'
+            ..children = [
+              new VDivElement()
+                ..className = 'field is-horizontal'
+                ..children = [
+                  new VDivElement()
+                    ..className = 'field-body'
+                    ..children = [
+                      new VDivElement()
+                        ..className = 'field'
+                        ..id = 'timeStart-lab'
+                        ..children = [
+                          new VLabelElement()
+                            ..className = 'label'
+                            ..text = "Start Time"
+                        ],
+                      new VDivElement()
+                        ..className = 'field is-horizontal'
+                        ..children = [
+                          new VParagraphElement()
+                            ..className = 'control'
+                            ..children = [
+                              new VInputElement()
+                                ..onInput = _timeValidator
+                                ..className =
+                                    'input ${state.edit ? '' : 'is-static'} ${state.timeIsValid ? '' : 'is-danger'}'
+                                ..id = 'timeStart-input'
+                                ..type = 'time'
+                                ..readOnly = !state.edit
+                                ..value = formatDate(act.startTime, [hh, ":", mm]),
+                              new VParagraphElement()
+                                ..className = 'help is-danger ${state.timeIsValid ? 'is-invisible' : ''}'
+                                ..text = 'Activity must start before it ends'
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ],
+      new VDivElement()
+        ..className = 'column'
+        ..children = [
+          new VDivElement()
+            ..className = 'field is-grouped'
+            ..children = [
+              new VDivElement()
+                ..className = 'field is-horizontal'
+                ..children = [
+                  new VDivElement()
+                    ..className = 'field-body'
+                    ..children = [
+                      new VDivElement()
+                        ..className = 'field'
+                        ..id = 'timeEnd-lab'
+                        ..children = [
+                          new VLabelElement()
+                            ..className = 'label'
+                            ..text = "End Time"
+                        ],
+                      new VDivElement()
+                        ..className = 'field is-horizontal'
+                        ..children = [
+                          new VParagraphElement()
+                            ..className = 'control'
+                            ..children = [
+                              new VInputElement()
+                                ..onInput = _timeValidator
+                                ..className =
+                                    'input ${state.edit ? '' : 'is-static'} ${state.timeIsValid ? '' : 'is-danger'}'
+                                ..id = 'timeEnd-input'
+                                ..type = 'time'
+                                ..readOnly = !state.edit
+                                ..value = formatDate(act.endTime, [hh, ":", mm]),
+                              new VParagraphElement()
+                                ..className = 'help is-danger ${state.timeIsValid ? 'is-invisible' : ''}'
+                                ..text = 'Activity must start before it ends'
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ];
+
+  ///[_renderAttendance] show member first and last names that are checked in for an activity
   VNode _renderAttendance(Activity act) {
     List<VNode> nodeList = new List<VNode>();
 
@@ -420,6 +485,9 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
           new VTableCellElement()
             ..className = 'td'
             ..text = userObj?.lastName ?? '',
+          new VTableCellElement()
+            ..className = 'td'
+            ..text = "",
           new VTableCellElement()..children = [_renderRemoveButton(userID)]
         ]);
     }
@@ -430,6 +498,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
       ..children = nodeList;
   }
 
+  ///[_renderAddButton] button to check in more users
   VNode _renderAddButton() {
     if (state.edit) {
       return new VButtonElement()
@@ -447,6 +516,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
     return new VParagraphElement();
   }
 
+  ///[_renderRemoveButton] button to take users out of an activity
   VNode _renderRemoveButton(String userID) {
     if (state.edit) {
       return new VButtonElement()
@@ -486,6 +556,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
 
 
 
+  ///[_rederAddUser] modal containing list of members able to be added to current activity
   VNode _renderAddUser(Activity act, String uid) => new VDivElement()
     ..className = "modal ${state.showAddUserPrompt ? 'is-active' : ''}"
     ..children = [
@@ -518,6 +589,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
         ],
     ];
 
+  ///[_renderUserTable] the actual table of users for the addUser modal
   List<VNode> _renderUserTable(Activity act) {
     List<VNode> items = new List<VNode>();
 
@@ -566,9 +638,86 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
   _promptForRemoveActivityClick(_) => setState((props, state) => state..showDeleteActivityPrompt = true);
 
   _cancelRemoveActivityClick() => setState((props, state) => state..showDeleteActivityPrompt = false);
+  
+  ///[_capView] converts capacity from the stored number (or lack there of) to a pretty output
+  String _capView(String text) {
+    if (text != '') {
+      if (text == '-1') {
+        text = "Unlimited";
+      }
+    } else {
+      text = "N/A";
+    }
+    return text;
+  }
 
+  ///[_capReset] converts capacity from the visual look to a  number for storage
+  int _capReset(String cap) {
+    if (cap != '') {
+      if (cap == 'Unlimited') {
+        return -1;
+      }
+      return int.parse(cap);
+    } else {
+      return int.parse(cap);
+    }
+  }
+
+  /// [_activityNameValidator] validator function to ensure name is input correctly
+  void _activityNameValidator(_) {
+    InputElement actName = querySelector('#act-input');
+    bool isValid = Validator.name(actName.value);
+    setState((EditActivityProps, EditActivityState) => EditActivityState..activityNameIsValid = isValid);
+  }
+
+  /// [_instructorNameValidator] validator function to ensure instructor is input correctly
+  void _instructorNameValidator(_) {
+    InputElement instructorName = querySelector('#instructorName-input');
+    bool isValid = Validator.name(instructorName.value);
+    setState((EditActivityProps, EditActivityState) => EditActivityState..instructorNameIsValid = isValid);
+  }
+
+  /// [_locationValidator] validator function to ensure location is input correctly
+  void _locationValidator(_) {
+    InputElement location = querySelector('#location-input');
+    bool isValid = Validator.name(location.value);
+    setState((EditActivityProps, EditActivityState) => EditActivityState..locationIsValid = isValid);
+  }
+
+  /// [_capacityValidator] validator function to ensure capacity is input correctly
+  void _capacityValidator(_) {
+    InputElement capacity = querySelector('#capacity-input');
+    bool isValid = Validator.capacity(int.parse(capacity.value));
+    setState((EditActivityProps, EditActivityState) => EditActivityState..capacityIsValid = isValid);
+  }
+
+  /// [_timeValidator] validator function to ensure time is input correctly
+  void _timeValidator(_) {
+    InputElement start = querySelector('#timeStart-input');
+    InputElement end = querySelector('#timeEnd-input');
+    InputElement day = querySelector('#day-input');
+    try {
+      DateTime serveDay = DateTime.parse(day.value);
+
+      String startTime = formatDate(serveDay, [yyyy, "-", mm, "-", dd, " ${start.value}:00.000"]);
+      String endTime = formatDate(serveDay, [yyyy, "-", mm, "-", dd, " ${end.value}:00.000"]);
+
+      DateTime startDT = DateTime.parse(startTime);
+      DateTime endDT = DateTime.parse(endTime);
+
+      bool isValid = Validator.time(startDT, endDT);
+
+      setState((EditActivityProps, EditActivityState) => EditActivityState..timeIsValid = isValid);
+    } catch (_) {
+      setState((EditActivityProps, EditActivityState) => EditActivityState..timeIsValid = false);
+    }
+  }
+
+
+  ///[_addClick] sets the state to show the addUser modal
   _addClick(_) => setState((props, state) => state..showAddUserPrompt = true);
 
+  ///[_cancelAddClick]sets the state to hide the addUser modal with no action
   _cancelAddClick(_) => setState((props, state) => state..showAddUserPrompt = false);
 
   _removeUserClick(Activity act) {
@@ -583,86 +732,12 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
     print("REMOVE THE ACTIVITY");
   }
 
+  ///[_addUserClick] actually adds a user to this activity and hides the modal
   _addUserClick(Activity act, String userId) {
     props.actions.server.updateOrCreateActivity(act.rebuild((builder) => builder..users.add(userId)));
     props.actions.server.fetchAllActivities();
     setState((props, state) => state..showAddUserPrompt = false);
   }
-
-  ///[_timeFormat] helper function to put a time into a proper format to view in a time type input box
-  String _timeFormat(String hour, String min) {
-    if (hour.length == 1) {
-      hour = "0${hour}";
-    }
-
-    if (min.length == 1) {
-      min = "0${min}";
-    }
-    return hour + ":" + min;
-  }
-
-  //TODO:  Replace with date_parse library in constants.dart
-  ///[_dateFormat] helper function to put a date into a proper format to view in a date type input box
-  String _dateFormat(DateTime date) {
-    String tempDay, tempMonth;
-
-    if (date.day.toString().length == 1) {
-      tempDay = "0${date.day}";
-    } else {
-      tempDay = date.day.toString();
-    }
-
-    if (date.month.toString().length == 1) {
-      tempMonth = "0${date.month}";
-    } else {
-      tempMonth = date.month.toString();
-    }
-
-    return "${date.year}-${tempMonth}-${tempDay}";
-  }
-
-  VNode _renderButton() {
-    if (state.edit) {
-      return _renderSubmit();
-    }
-    return _renderEdit();
-  }
-
-  ///[_renderEdit] creates a button to toggle from a view page to increase the number of input fields
-  _renderEdit() => new VDivElement()
-    ..className = 'field is-grouped is-grouped-right'
-    ..children = [
-      new VDivElement()
-        ..className = 'control'
-        ..children = [
-          new VAnchorElement()
-            ..className = 'button is-link is-rounded'
-            ..text = "Edit"
-            ..onClick = _editClick
-        ],
-      new VDivElement()
-        ..className = 'control'
-        ..children = [
-          new VAnchorElement()
-            ..className = 'button is-danger is-rounded'
-            ..text = "Delete"
-            ..onClick = _promptForRemoveActivityClick
-        ],
-    ];
-
-  ///[_renderSubmit] create the submit button to collect the data
-  _renderSubmit() => new VDivElement()
-    ..className = 'field is-grouped is-grouped-right'
-    ..children = [
-      new VDivElement()
-        ..className = 'control'
-        ..children = [
-          new VAnchorElement()
-            ..className = 'button is-link is-rounded'
-            ..text = "Submit"
-            ..onClick = _submitClick
-        ]
-    ];
 
   ///[_editClick] listener for the click action of the edit button to put page into an edit state
   _editClick(_) {
@@ -685,9 +760,9 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
 
     String startTime, endTime;
     int cap; //capacity of activity
-    startTime = _parseDate(date, tempStart);
-    endTime = _parseDate(date, tempEnd);
-    cap = int.parse(capacity.value);
+    startTime = formatDate(date, [yyyy, "-", mm, "-", dd, " ${tempStart}:00.000"]);
+    endTime = formatDate(date, [yyyy, "-", mm, "-", dd, " ${tempEnd}:00.000"]);
+    cap = _capReset(capacity.value);
 
     Activity update = props.activityMap[props.selectedActivityUID].rebuild((builder) => builder
       ..capacity = cap
@@ -701,28 +776,6 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
     props.actions.server.fetchAllActivities();
 
     setState((props, state) => state..edit = !state.edit);
-  }
-
-  // TODO: Move to constants.dart
-  ///[_parseDate] is a function adopted from the _dateFormat function that Josh wrote to make a string from a date and time input compatible with DateTime data types
-  String _parseDate(DateTime date, String time) {
-    String tempDay, tempMonth, tempTime;
-
-    if (date.day.toString().length == 1) {
-      tempDay = "0${date.day}";
-    } else {
-      tempDay = date.day.toString();
-    }
-
-    if (date.month.toString().length == 1) {
-      tempMonth = "0${date.month}";
-    } else {
-      tempMonth = date.month.toString();
-    }
-
-    tempTime = "${time}:00.000";
-
-    return "${date.year}-${tempMonth}-${tempDay} ${tempTime}";
   }
 }
 

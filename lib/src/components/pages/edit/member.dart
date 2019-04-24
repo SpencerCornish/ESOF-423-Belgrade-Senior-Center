@@ -1,15 +1,19 @@
 import 'dart:html' hide History;
 
 import 'package:bsc/src/model/emergencyContact.dart';
+import 'package:date_format/date_format.dart';
 import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
 import 'package:wui_builder/vhtml.dart';
 import 'package:built_collection/built_collection.dart';
 
+import '../../../constants.dart';
 import '../../core/nav.dart';
+import '../../core/pageRepeats.dart';
 import '../../../model/user.dart';
 import '../../../state/app.dart';
 
+/// [EditMemberProps] class for the edit member page passed in propeerties
 class EditMemberProps {
   AppActions actions;
   User user;
@@ -17,7 +21,17 @@ class EditMemberProps {
   String selectedMemberUID;
 }
 
+/// [EditMemberState] state class for the edit member page
 class EditMemberState {
+  bool firstNameIsValid;
+  bool lastNameIsValid;
+  bool emailIsValid;
+  bool phoneNumberIsValid;
+  bool cellNumberIsValid;
+  bool addressIsValid;
+  bool hasInvalid;
+  bool memIsValid;
+
   bool edit;
   bool dropDownActive;
   int listsCreated;
@@ -34,6 +48,14 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
 
   @override
   EditMemberState getInitialState() => EditMemberState()
+    ..firstNameIsValid = true
+    ..lastNameIsValid = true
+    ..emailIsValid = true
+    ..phoneNumberIsValid = true
+    ..cellNumberIsValid = true
+    ..addressIsValid = true
+    ..hasInvalid = true
+    ..memIsValid = true
     ..edit = false
     ..dropDownActive = false
     ..listsCreated = 0
@@ -42,7 +64,6 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
     ..medBool = props.userMap[props.selectedMemberUID].medRelease
     ..waiverBool = props.userMap[props.selectedMemberUID].waiverRelease
     ..intakeBool = props.userMap[props.selectedMemberUID].intakeForm;
-  // ..addEm = 0;
 
   History _history;
 
@@ -120,10 +141,14 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
               ..className = "label"
               ..text = "First Name",
             new VInputElement()
-              ..className = "input"
+              ..onInput = _firstNameValidation
+              ..className = "input ${state.lastNameIsValid ? '' : 'is-danger'}"
               ..id = "First_Name"
               ..tabIndex = 1
-              ..defaultValue = _checkText(user.firstName),
+              ..defaultValue = checkText(user.firstName),
+            new VParagraphElement()
+              ..className = 'help is-danger ${state.firstNameIsValid ? 'is-invisible' : ''}'
+              ..text = 'First name is required',
             new VLabelElement()
               ..className = "label"
               ..text = "Preferred Name",
@@ -131,7 +156,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
               ..className = "input"
               ..id = "Preferred_Name"
               ..tabIndex = 3
-              ..defaultValue = _checkText(user.firstName),
+              ..defaultValue = checkText(user.firstName),
           ],
         new VDivElement()
           ..className = 'column is-4'
@@ -140,10 +165,14 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
               ..className = "label"
               ..text = "Last Name",
             new VInputElement()
-              ..className = "input"
+              ..onInput = _lastNameValidation
+              ..className = "input ${state.lastNameIsValid ? '' : 'is-danger'}"
               ..id = "Last_Name"
               ..tabIndex = 2
-              ..defaultValue = _checkText(user.lastName),
+              ..defaultValue = checkText(user.lastName),
+            new VParagraphElement()
+              ..className = 'help is-danger ${state.lastNameIsValid ? 'is-invisible' : ''}'
+              ..text = 'Last name is required',
             new VLabelElement()
               ..className = 'label'
               ..text = "Position",
@@ -151,12 +180,15 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
               ..className = "input"
               ..id = "Position"
               ..tabIndex = 4
-              ..defaultValue = _checkText(user.position)
+              ..defaultValue = checkText(user.position)
           ],
         new VDivElement()
           ..className = 'column is-2'
           ..children = [
-            _renderSubmit(),
+            renderSubmit(
+                _submitClick,
+                Validator.canActivateSubmit(
+                    state.firstNameIsValid, state.memIsValid, state.addressIsValid, state.lastNameIsValid)),
             new VLabelElement()
               ..className = 'label'
               ..text = "Role",
@@ -196,279 +228,10 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
         new VDivElement()
           ..className = 'column is-one-fifth is-offset-1'
           ..children = [
-            _renderEdit(),
+            renderEdit(_editClick),
           ],
       ]);
     return nodeList;
-  }
-
-  ///[_renderAddress] row for address label and input
-  _renderAddress(User user) => new VDivElement()
-    ..className = 'columns is-mobile is-vcentered'
-    ..children = [
-      new VDivElement()
-        ..className = 'column is-narrow is-offset-1'
-        ..children = [
-          new VLabelElement()
-            ..className = 'label'
-            ..text = "Address",
-        ],
-      new VDivElement()
-        ..className = 'column'
-        ..children = [
-          new VDivElement()
-            ..className = "control"
-            ..children = [
-              new VInputElement()
-                ..className = "input ${state.edit ? '' : 'is-static'}"
-                ..id = "Address"
-                ..defaultValue = _checkText(user.address)
-                ..readOnly = !state.edit,
-            ],
-        ],
-    ];
-
-  ///[_renderNumber] row for numbers and email
-  _renderNumber(User user) => new VDivElement()
-    ..className = 'columns is-mobile is-centered is-vcentered'
-    ..children = [
-      new VDivElement()
-        ..className = 'column is-offset-1'
-        ..children = [
-          new VLabelElement()
-            ..className = 'label'
-            ..text = "Home Phone",
-          new VDivElement()
-            ..className = "control"
-            ..children = [
-              new VInputElement()
-                ..className = "input ${state.edit ? '' : 'is-static'}"
-                ..id = "PhoneNumber"
-                ..defaultValue = _checkText(user.phoneNumber)
-                ..readOnly = !state.edit,
-            ],
-        ],
-      new VDivElement()
-        ..className = 'column'
-        ..children = [
-          new VLabelElement()
-            ..className = 'label'
-            ..text = "Cell or Messsage Phone",
-          new VDivElement()
-            ..className = "control"
-            ..children = [
-              new VInputElement()
-                ..className = "input ${state.edit ? '' : 'is-static'}"
-                ..id = "Mobile"
-                ..defaultValue = _checkText(user.mobileNumber)
-                ..readOnly = !state.edit,
-            ],
-        ],
-      new VDivElement()
-        ..className = 'column'
-        ..children = [
-          new VLabelElement()
-            ..className = 'label'
-            ..text = "Email Address",
-          new VDivElement()
-            ..className = "control"
-            ..children = [
-              new VInputElement()
-                ..className = "input ${state.edit ? '' : 'is-static'}"
-                ..id = "Email"
-                ..defaultValue = _checkText(user.email)
-                ..readOnly = !state.edit,
-            ],
-        ],
-    ];
-
-  ///[_renderListRows] function for the list type items
-  ///will show at least one or as many as member has
-  List<VNode> _renderListRows(BuiltList<dynamic> list, String type) {
-    List<VNode> nodeList = <VNode>[];
-
-    if (list.isNotEmpty) {
-      nodeList.add(
-        new VDivElement()
-          ..className = 'box'
-          ..children = [
-            new VDivElement()
-              ..className = 'columns is-mobile is-centered is-vcentered'
-              ..children = [
-                new VDivElement()
-                  ..className = 'column is-narrow'
-                  ..children = [
-                    new VLabelElement()
-                      ..className = "label"
-                      ..text = type + "${list.length > 1 ? 's' : ''}",
-                  ],
-                new VDivElement()
-                  ..className = 'column'
-                  ..children = _renderListRowsHelper(list, type),
-                // new VDivElement()
-                //   ..className = 'column'
-                //   ..children = _addEmergencyContactHelper(user),
-                // new VDivElement()
-                //   ..className = 'column'
-                //   ..children = [_renderAddEmergencyContact()],
-              ],
-          ],
-      );
-    } else {
-      nodeList.add(new VDivElement()
-        ..className = 'box'
-        ..children = [
-          new VDivElement()
-            ..className = 'columns is-mobile is-centered is-vcentered'
-            ..children = [
-              new VDivElement()
-                ..className = 'column is-narrow'
-                ..children = [
-                  new VLabelElement()
-                    ..className = "label"
-                    ..text = type,
-                ],
-              new VDivElement()
-                ..className = 'column'
-                ..children = [
-                  new VDivElement()
-                    ..className = "field"
-                    ..children = [
-                      new VDivElement()
-                        ..className = "control"
-                        ..children = [
-                          new VInputElement()
-                            ..className = "input ${state.edit ? '' : 'is-static'}"
-                            ..defaultValue = _checkText("")
-                            ..readOnly = !state.edit,
-                          // _renderAddEmergencyContact(),
-                        ],
-                    ],
-                ],
-            ],
-        ]);
-    }
-    return nodeList;
-  }
-
-  ///[_renderListRowsHelper] helper function to create the input boxes for list type
-  List<VNode> _renderListRowsHelper(BuiltList<dynamic> list, String type) {
-    List<VNode> nodeList = <VNode>[];
-
-    for (Object item in list) {
-      nodeList.add(new VDivElement()
-        ..className = "control"
-        ..children = [
-          new VInputElement()
-            ..className = "input ${state.edit ? '' : 'is-static'}"
-            ..id = type
-            ..defaultValue = _checkText(item.toString())
-            ..readOnly = !state.edit,
-        ]);
-    }
-    return nodeList;
-  }
-
-  ///[_renderMembership] creates the membership row
-  List<VNode> _renderMembership(User user) {
-    List<VNode> nodeList = <VNode>[];
-    nodeList.add(new VDivElement()
-      ..className = 'columns is-mobile is-vcentered'
-      ..children = [
-        new VDivElement()
-          ..className = 'column is-narrow is-offset-1'
-          ..children = [
-            new VLabelElement()
-              ..className = 'label'
-              ..text = "Membership:",
-          ],
-        new VDivElement()..className = 'column',
-        new VDivElement()
-          ..className = 'column is-narrow'
-          ..children = [
-            new VDivElement()
-              ..className = 'control'
-              ..children = [
-                new VCheckboxInputElement()
-                  ..className = 'checkbox'
-                  ..checked = state.mealBool
-                  ..disabled = !state.edit
-                  ..id = 'mealOption-input'
-                  ..onClick = _checkBoxCheck
-              ]
-          ],
-        new VDivElement()
-          ..className = 'column'
-          ..children = [
-            new VLabelElement()
-              ..className = 'label'
-              ..text = "Requires Home Delivery for Meals"
-          ],
-      ]);
-    nodeList.add(new VDivElement()
-      ..className = 'columns is-mobile is-vcentered'
-      ..children = [
-        new VDivElement()
-          ..className = 'column is-narrow is-offset-2'
-          ..children = [
-            new VLabelElement()
-              ..className = 'label'
-              ..text = "Start",
-          ],
-        new VDivElement()
-          ..className = 'column is-3'
-          ..children = [
-            new VParagraphElement()
-              ..className = "control"
-              ..children = [
-                new VDateInputElement()
-                  ..className = "input ${state.edit ? '' : 'is-static'}"
-                  ..id = "Start"
-                  ..value = _showDate(user.membershipStart)
-                  ..readOnly = !state.edit,
-              ],
-          ],
-        new VDivElement()
-          ..className = 'column is-narrow'
-          ..children = [
-            new VLabelElement()
-              ..className = 'label'
-              ..text = "Renewal",
-          ],
-        new VDivElement()
-          ..className = 'column is-3'
-          ..children = [
-            new VParagraphElement()
-              ..className = "control"
-              ..children = [
-                new VDateInputElement()
-                  ..className = "input ${state.edit ? '' : 'is-static'}"
-                  ..id = "Renewal"
-                  ..value = _showDate(user.membershipRenewal)
-                  ..readOnly = !state.edit,
-              ],
-          ],
-      ]);
-    return nodeList;
-  }
-
-  ///[_showDate] helper function to put a date into a proper format to view in a date type input box
-  String _showDate(DateTime date) {
-    String tempDay, tempMonth;
-
-    if (date.day.toString().length == 1) {
-      tempDay = "0${date.day}";
-    } else {
-      tempDay = date.day.toString();
-    }
-
-    if (date.month.toString().length == 1) {
-      tempMonth = "0${date.month}";
-    } else {
-      tempMonth = date.month.toString();
-    }
-
-    return "${date.year}-${tempMonth}-${tempDay}";
   }
 
   ///[_renderPosition] creates the position row
@@ -493,7 +256,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
                   new VInputElement()
                     ..className = "input is-static"
                     ..id = "Position"
-                    ..defaultValue = _checkText(user.position)
+                    ..defaultValue = checkText(user.position)
                     ..readOnly = true,
                 ],
             ],
@@ -563,14 +326,274 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
           new VInputElement()
             ..className = "input is-static"
             ..id = "Role"
-            ..defaultValue = _checkText(state.role)
+            ..defaultValue = checkText(state.role)
             ..readOnly = true,
         ]);
     }
   }
 
-  _checkBoxCheck(_) {
-    setState((props, state) => state..mealBool = !state.mealBool);
+  ///[_renderMembership] creates the membership row
+  List<VNode> _renderMembership(User user) {
+    List<VNode> nodeList = <VNode>[];
+    nodeList.add(new VDivElement()
+      ..className = 'columns is-mobile is-vcentered'
+      ..children = [
+        new VDivElement()
+          ..className = 'column is-narrow is-offset-1'
+          ..children = [
+            new VLabelElement()
+              ..className = 'label'
+              ..text = "Membership:",
+          ],
+        new VDivElement()..className = 'column',
+        new VDivElement()
+          ..className = 'column is-narrow'
+          ..children = [
+            new VDivElement()
+              ..className = 'control'
+              ..children = [
+                new VCheckboxInputElement()
+                  ..className = 'checkbox'
+                  ..checked = state.mealBool
+                  ..disabled = !state.edit
+                  ..id = 'mealOption-input'
+                  ..onClick = _checkBoxCheck
+              ]
+          ],
+        new VDivElement()
+          ..className = 'column'
+          ..children = [
+            new VLabelElement()
+              ..className = 'label'
+              ..text = "Requires Home Delivery for Meals"
+          ],
+      ]);
+    nodeList.add(new VDivElement()
+      ..className = 'columns is-mobile is-vcentered'
+      ..children = [
+        new VDivElement()
+          ..className = 'column is-narrow is-offset-2'
+          ..children = [
+            new VLabelElement()
+              ..className = 'label'
+              ..text = "Start",
+          ],
+        new VDivElement()
+          ..className = 'column is-3'
+          ..children = [
+            new VParagraphElement()
+              ..className = "control"
+              ..children = [
+                new VDateInputElement()
+                  ..onInput = _membershipValidator
+                  ..className = "input ${state.edit ? '' : 'is-static'} ${state.memIsValid ? '' : 'is-danger'}"
+                  ..id = "Start"
+                  ..value = formatDate(user.membershipStart, [yyyy, "-", mm, "-", dd])
+                  ..readOnly = !state.edit,
+              ],
+          ],
+        new VDivElement()
+          ..className = 'column is-narrow'
+          ..children = [
+            new VLabelElement()
+              ..className = 'label'
+              ..text = "Renewal",
+          ],
+        new VDivElement()
+          ..className = 'column is-3'
+          ..children = [
+            new VParagraphElement()
+              ..className = "control"
+              ..children = [
+                new VDateInputElement()
+                  ..onInput = _membershipValidator
+                  ..className = "input ${state.edit ? '' : 'is-static'} ${state.memIsValid ? '' : 'is-danger'}"
+                  ..id = "Renewal"
+                  ..value = formatDate(user.membershipRenewal, [yyyy, "-", mm, "-", dd])
+                  ..readOnly = !state.edit,
+              ],
+          ],
+        new VParagraphElement()
+          ..className = 'help is-danger ${state.memIsValid ? 'is-invisible' : ''}'
+          ..text = "Renewal Date is before Start Date",
+      ]);
+    return nodeList;
+  }
+
+  ///[_renderAddress] row for address label and input
+  _renderAddress(User user) => new VDivElement()
+    ..className = 'columns is-mobile is-vcentered'
+    ..children = [
+      new VDivElement()
+        ..className = 'column is-narrow is-offset-1'
+        ..children = [
+          new VLabelElement()
+            ..className = 'label'
+            ..text = "Address",
+        ],
+      new VDivElement()
+        ..className = 'column'
+        ..children = [
+          new VDivElement()
+            ..className = "control"
+            ..children = [
+              new VInputElement()
+                ..onInput = _addressValidator
+                ..className = "input ${state.edit ? '' : 'is-static'} ${state.addressIsValid ? '' : 'is-danger'}"
+                ..id = "Address"
+                ..defaultValue = checkText(user.address)
+                ..readOnly = !state.edit,
+              new VParagraphElement()
+                ..className = 'help is-danger ${state.addressIsValid ? 'is-invisible' : ''}'
+                ..text = 'Address is invalid',
+            ],
+        ],
+    ];
+
+  ///[_renderNumber] row for numbers and email
+  _renderNumber(User user) => new VDivElement()
+    ..className = 'columns is-mobile is-centered is-vcentered'
+    ..children = [
+      new VDivElement()
+        ..className = 'column is-offset-1'
+        ..children = [
+          new VLabelElement()
+            ..className = 'label'
+            ..text = "Home Phone",
+          new VDivElement()
+            ..className = "control"
+            ..children = [
+              new VInputElement()
+                ..onInput = _phoneNumberValidator
+                ..className = "input ${state.edit ? '' : 'is-static'} ${state.phoneNumberIsValid ? '' : 'is-danger'}"
+                ..id = "PhoneNumber"
+                ..defaultValue = checkText(user.phoneNumber)
+                ..readOnly = !state.edit,
+              new VParagraphElement()
+                ..className = 'help is-danger ${state.phoneNumberIsValid ? 'is-invisible' : ''}'
+                ..text = 'Phone number is invalid',
+            ],
+        ],
+      new VDivElement()
+        ..className = 'column'
+        ..children = [
+          new VLabelElement()
+            ..className = 'label'
+            ..text = "Cell or Messsage Phone",
+          new VDivElement()
+            ..className = "control"
+            ..children = [
+              new VInputElement()
+                ..onInput = _cellNumberValidator
+                ..className = "input ${state.edit ? '' : 'is-static'} ${state.cellNumberIsValid ? '' : 'is-danger'}"
+                ..id = "Mobile"
+                ..defaultValue = checkText(user.mobileNumber)
+                ..readOnly = !state.edit,
+              new VParagraphElement()
+                ..className = 'help is-danger ${state.cellNumberIsValid ? 'is-invisible' : ''}'
+                ..text = 'Cell number is invalid',
+            ],
+        ],
+      new VDivElement()
+        ..className = 'column'
+        ..children = [
+          new VLabelElement()
+            ..className = 'label'
+            ..text = "Email Address",
+          new VDivElement()
+            ..className = "control"
+            ..children = [
+              new VInputElement()
+                ..onInput = _emailValidator
+                ..className = "input ${state.edit ? '' : 'is-static'} ${state.emailIsValid ? '' : 'is-danger'}"
+                ..id = "Email"
+                ..defaultValue = checkText(user.email)
+                ..readOnly = !state.edit,
+              new VParagraphElement()
+                ..className = 'help is-danger ${state.emailIsValid ? 'is-invisible' : ''}'
+                ..text = 'Email is invalid',
+            ],
+        ],
+    ];
+
+  ///[_renderListRows] function for the list type items
+  ///will show at least one or as many as member has
+  List<VNode> _renderListRows(BuiltList<dynamic> list, String type) {
+    List<VNode> nodeList = <VNode>[];
+
+    if (list.isNotEmpty) {
+      nodeList.add(
+        new VDivElement()
+          ..className = 'box'
+          ..children = [
+            new VDivElement()
+              ..className = 'columns is-mobile is-centered is-vcentered'
+              ..children = [
+                new VDivElement()
+                  ..className = 'column is-narrow'
+                  ..children = [
+                    new VLabelElement()
+                      ..className = "label"
+                      ..text = type + "${list.length > 1 ? 's' : ''}",
+                  ],
+                new VDivElement()
+                  ..className = 'column'
+                  ..children = _renderListRowsHelper(list, type),
+              ],
+          ],
+      );
+    } else {
+      nodeList.add(new VDivElement()
+        ..className = 'box'
+        ..children = [
+          new VDivElement()
+            ..className = 'columns is-mobile is-centered is-vcentered'
+            ..children = [
+              new VDivElement()
+                ..className = 'column is-narrow'
+                ..children = [
+                  new VLabelElement()
+                    ..className = "label"
+                    ..text = type,
+                ],
+              new VDivElement()
+                ..className = 'column'
+                ..children = [
+                  new VDivElement()
+                    ..className = "field"
+                    ..children = [
+                      new VDivElement()
+                        ..className = "control"
+                        ..children = [
+                          new VInputElement()
+                            ..className = "input ${state.edit ? '' : 'is-static'}"
+                            ..defaultValue = checkText("")
+                            ..readOnly = !state.edit,
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
+    return nodeList;
+  }
+
+  ///[_renderListRowsHelper] helper function to create the input boxes for list type
+  List<VNode> _renderListRowsHelper(BuiltList<dynamic> list, String type) {
+    List<VNode> nodeList = <VNode>[];
+
+    for (Object item in list) {
+      nodeList.add(new VDivElement()
+        ..className = "control"
+        ..children = [
+          new VInputElement()
+            ..className = "input ${state.edit ? '' : 'is-static'}"
+            ..id = type
+            ..defaultValue = checkText(item.toString())
+            ..readOnly = !state.edit,
+        ]);
+    }
+    return nodeList;
   }
 
   ///[_renderTextArea] create each row ot text area items with a given label
@@ -593,95 +616,6 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
             ..id = label.replaceAll(" ", "_")
             ..readOnly = !state.edit,
         ],
-    ];
-
-  ///[_checkText] takes in passed text and will return N/A if string is empty and the user is not being eddited
-  ///or return the orrigional string for all other conditions
-  String _checkText(String text) => state.edit ? text : (text != '' ? text : "N/A");
-
-  VNode _renderEmergencyContact(User user) {
-    String contactList = '';
-
-    for (EmergencyContact em in user.emergencyContacts) {
-      contactList = contactList + em.uid + " : " + em.name + "\n";
-    }
-
-    return new VTextInputElement()
-      ..className = 'input ${state.edit ? '' : 'is-static'}'
-      ..id = "Emergency"
-      ..readOnly = !state.edit
-      ..text = contactList;
-  }
-
-  // ///[_renderAddEmergencyContact] creates a button to add an input field for aditional emergency contacts if in edit state
-  // VNode _renderAddEmergencyContact() {
-  //   if (state.edit) {
-  //     return (new VParagraphElement()
-  //       ..className = 'control'
-  //       ..children = [
-  //         new VAnchorElement()
-  //           ..className = 'button is-link'
-  //           ..text = "Add"
-  //           ..onClick = _renderAddEmergencyContactClick
-  //       ]);
-  //   } else {
-  //     return new VDivElement()..className = 'control';
-  //   }
-  // }
-
-  // ///[_renderAddEmergencyContactClick] listener for the click action of the addEmergencyContact button to put page into an edit state
-  // _renderAddEmergencyContactClick(_) {
-  //   print(state.addEm);
-  //   setState((props, state) => state..addEm = (state.addEm + 1));
-  // }
-
-  _dropDownClick(_) {
-    setState((props, state) => state..dropDownActive = !state.dropDownActive);
-  }
-
-  _changeRollMemClick(_) {
-    setState((props, state) => state..role = "member");
-  }
-
-  _changeRollVolClick(_) {
-    setState((props, state) => state..role = "volunteer");
-  }
-
-  _changeRollAdminClick(_) {
-    setState((props, state) => state..role = "admin");
-  }
-
-  ///[_renderEdit] creates a button to toggle from a view page to increase the number of input fields
-  _renderEdit() => new VDivElement()
-    ..className = 'field is-grouped is-grouped-right'
-    ..children = [
-      new VDivElement()
-        ..className = 'control'
-        ..children = [
-          new VAnchorElement()
-            ..className = 'button is-link is-rounded'
-            ..text = "Edit"
-            ..onClick = _editClick
-        ],
-    ];
-
-  ///[_editClick] listener for the click action of the edit button to put page into an edit state
-  _editClick(_) {
-    setState((props, state) => state..edit = !state.edit);
-  }
-
-  ///[_renderSubmit] create the submit button to collect the data
-  _renderSubmit() => new VDivElement()
-    ..className = 'field is-grouped is-grouped-right'
-    ..children = [
-      new VDivElement()
-        ..className = 'control'
-        ..children = [
-          new VAnchorElement()
-            ..className = 'button is-link is-rounded'
-            ..text = "Submit"
-            ..onClick = _submitClick
-        ]
     ];
 
   ///[_renderCheckBoxes] create the checkboxes for form submit checks
@@ -751,16 +685,98 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
     return nodeList;
   }
 
-  _medCheckBoxCheck(_) {
-    setState((props, state) => state..medBool = !state.medBool);
+  //Input validation for each field
+
+  /// [_firstNameValidation]Validation for first name
+  void _firstNameValidation(_) {
+    //Gets first field
+    InputElement first = querySelector('#First_Name');
+    //Checks if value is blank by calling Validator class
+    bool isValid = Validator.name(first.value);
+    //Sets new state
+    setState((NewMemberProps, NewMemberState) => NewMemberState..firstNameIsValid = isValid);
   }
 
-  _waiverCheckBoxCheck(_) {
-    setState((props, state) => state..waiverBool = !state.waiverBool);
+  /// [_lastNameValidation] Validation for last name
+  void _lastNameValidation(_) {
+    //Gets last field
+    InputElement last = querySelector('#Last_Name');
+    //Validates with validator class
+    bool isValid = Validator.name(last.value);
+    //Sets new state
+    setState((NewMemberProps, NewMemberState) => NewMemberState..lastNameIsValid = isValid);
   }
 
-  _intakeBoxCheck(_) {
-    setState((props, state) => state..intakeBool = !state.intakeBool);
+  /// [_emailValidator] Validation for email using Spencer's function from constants.dart
+  void _emailValidator(_) {
+    //Gets email field
+    InputElement email = querySelector('#Email');
+    //Input validation from input validator
+    bool isValid = Validator.email(email.value);
+    setState((NewMemberProps, NewMemberState) => NewMemberState..emailIsValid = isValid);
+  }
+
+  //Validation for phone numbers
+  //Area code is required
+
+  //Possible formats
+  //4252734489
+  //14252734489
+  //(425)2734489
+  //1(425)2734489
+  //425-273-4489
+  //1-425-273-4489
+  //+1-425-273-4489
+
+  /// [_membershipValidator] Validation for membership
+  void _membershipValidator(_) {
+    InputElement memStart = querySelector('#Start');
+    InputElement memRenew = querySelector('#Renewal');
+    try {
+      DateTime start = DateTime.parse(memStart.value);
+      DateTime end = DateTime.parse(memRenew.value);
+      bool isValid = Validator.time(start, end);
+      setState((NewMemberProps, NewMemberState) => NewMemberState..memIsValid = isValid);
+    } catch (_) {
+      state.memIsValid = false;
+    }
+  }
+
+  /// [_phoneNumberValidator] Validation for phone number, doesnt check if blank
+  void _phoneNumberValidator(_) {
+    //Gets phone field and then value from field
+    InputElement phone = querySelector('#PhoneNumber');
+    String value = phone.value;
+    //If blank exit
+    if (value == '') {
+      return;
+    }
+    //Validation by validation class
+    bool isValid = Validator.phoneNumber(value);
+    //Sets state
+    setState((NewMemberProps, NewMemberState) => NewMemberState..phoneNumberIsValid = isValid);
+  }
+
+  /// [_cellNumberValidator] Validation for cell number, doesnt check if blank
+  void _cellNumberValidator(_) {
+    //Gets cell field and then value from field
+    InputElement cell = querySelector('#Mobile');
+    String value = cell.value;
+    //Exits if blank
+    if (value == '') {
+      return;
+    }
+    //Validation from validator class
+    bool isValid = Validator.phoneNumber(value);
+    //Sets state
+    setState((NewMemberProps, NewMemberState) => NewMemberState..cellNumberIsValid = isValid);
+  }
+
+  /// [_addressValidator] Validation for address
+  void _addressValidator(_) {
+    InputElement address = querySelector("#Address");
+    bool isValid = Validator.address(address.value);
+    setState((NewMemberProps, NewMemberState) => NewMemberState..addressIsValid = isValid);
   }
 
   ///[_submitClick] listener to grab all available data on page and push to firebase
@@ -804,6 +820,51 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
     props.actions.server.fetchAllMembers();
 
     setState((props, state) => state..edit = !state.edit);
+  }
+
+  ///[_dropDownClick] listener to open the dropdown
+  _dropDownClick(_) {
+    setState((props, state) => state..dropDownActive = !state.dropDownActive);
+  }
+
+  ///[_changeRollMemClick] listener to close the dropdown and select member
+  _changeRollMemClick(_) {
+    setState((props, state) => state..role = "member");
+  }
+
+  ///[_changeRollVolClick] listener to close the dropdown and select volunteer
+  _changeRollVolClick(_) {
+    setState((props, state) => state..role = "volunteer");
+  }
+
+  ///[_changeRollAdminClick] listener to close the dropdown and select admin
+  _changeRollAdminClick(_) {
+    setState((props, state) => state..role = "admin");
+  }
+
+  ///[_editClick] listener for the click action of the edit button to put page into an edit state
+  _editClick(_) {
+    setState((props, state) => state..edit = !state.edit);
+  }
+
+  /// [_checkBoxCheck] on click to set state of checkbox
+  _checkBoxCheck(_) {
+    setState((props, state) => state..mealBool = !state.mealBool);
+  }
+
+  /// [_medCheckBoxCheck] on click to set state of checkbox
+  _medCheckBoxCheck(_) {
+    setState((props, state) => state..medBool = !state.medBool);
+  }
+
+  /// [_waiverCheckBoxCheck] on click to set state of checkbox
+  _waiverCheckBoxCheck(_) {
+    setState((props, state) => state..waiverBool = !state.waiverBool);
+  }
+
+  /// [_intakeBoxCheck] on click to set state of checkbox
+  _intakeBoxCheck(_) {
+    setState((props, state) => state..intakeBool = !state.intakeBool);
   }
 
   ///[_renderUserNotFound] if the UID is bad this page will simply say the user was not found
