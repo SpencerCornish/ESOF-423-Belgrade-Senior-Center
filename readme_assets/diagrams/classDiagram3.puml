@@ -393,6 +393,8 @@ class EditMeal{
     render()
 }
 
+PComponent -|> Component
+
 Home --|> PComponent
 HomeProps -- Home
 PComponent <|-- Dashboard
