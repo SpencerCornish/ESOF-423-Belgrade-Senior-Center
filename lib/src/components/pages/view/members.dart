@@ -221,6 +221,12 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
           found.add(user);
         } else if (user.phoneNumber.contains(search.value)) {
           found.add(user);
+        } else if (user.emergencyContactName.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(user);
+        } else if (user.emergencyContactNumber.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(user);
+        } else if (user.emergencyContactRelation.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(user);
         } else if (user.position.toLowerCase().contains(search.value.toLowerCase())) {
           found.add(user);
         } else if (user.role.toLowerCase().contains(search.value.toLowerCase())) {
