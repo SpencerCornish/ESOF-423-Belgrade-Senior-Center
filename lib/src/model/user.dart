@@ -174,8 +174,8 @@ abstract class User implements Built<User, UserBuilder> {
         '\"${emergencyContactName}\"',
         '\"${emergencyContactNumber}\"',
         '\"${emergencyContactRelation}\"',
-        '\"${services.join(',')}\"'
-            '\"${membershipStart.month}/${membershipStart.day}/${membershipStart.year}\"',
+        '\"${services.join(',')}\"',
+        '\"${membershipStart.month}/${membershipStart.day}/${membershipStart.year}\"',
         '\"${membershipRenewal.month}/${membershipRenewal.day}/${membershipRenewal.year}\"',
       ].join(',') +
       '\n';

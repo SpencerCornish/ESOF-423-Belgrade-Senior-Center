@@ -113,6 +113,10 @@ class ExportHeader {
     'Dietary Restrictions',
     'Disabilities',
     'Medical Issues',
+    'emergencyContactName',
+    'emergencyContactNumber',
+    'emergencyContactRelation',
+    'services',
     'Membership Start Date',
     'Membership Renewal Date',
   ];
