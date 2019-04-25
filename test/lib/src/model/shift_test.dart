@@ -3,16 +3,19 @@ import 'package:bsc/src/model/shift.dart';
 
 void main() {
   final testUserUID = "e93da15510b8434d8202";
-  final testInTime = "2019-04-25 16:29:39.094717";
-  final testOutTime = '2019-04-27 16:29:39.094717';
+  final testInTime = new DateTime.now();
+  final testOutTime = new DateTime.now().add(Duration(days: 2));
 
   final mockFirestoreShiftData = new Map<String, dynamic>.from({
     "user_id": testUserUID,
-    "in_time": testInTime,
-    "out_time": testOutTime,
+    "in_time": testInTime.toIso8601String(),
+    "out_time": testOutTime.toIso8601String(),
   });
-  final mockShiftCsv =
-      '"testUID","foo","bar","2019-04-25 16:29:39.094717","2019-04-27 16:29:39.094717","-48:00:00.000000"\n';
+  final mockShiftCsv = '"testUID","foo","bar","' +
+      testInTime.toIso8601String() +
+      '","' +
+      testOutTime.toIso8601String() +
+      '","-48:00:00.000000"\n';
   group('Shift -', () {
     test('fromFirebase factory produces accurate model file', () {
       Shift shiftFromTestData = new Shift.fromFirebase('', mockFirestoreShiftData);
