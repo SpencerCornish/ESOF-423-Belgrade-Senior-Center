@@ -30,7 +30,8 @@ void main() {
     'position': "position",
     'services': serviceList,
   });
-  final mockUserCsv = '"data_UID","Bachler","Dan","test@example.com","443 E Main Street Bozeman, MT 59715","phoneNumber","phoneNumber","position","admin","dietaryRestrictions","disabilities","medicalIssues","2/27/2019","2/27/2019"\n';
+  final mockUserCsv =
+      '"data_UID","Bachler","Dan","test@example.com","443 E Main Street Bozeman, MT 59715","phoneNumber","phoneNumber","position","admin","dietaryRestrictions","disabilities","medicalIssues","2/27/2019","2/27/2019"\n';
   group('User -', () {
     test('fromFirebase factory produces accurate model file', () {
       User userFromTestData = new User.fromFirebase(mockFirestoreUserData, new BuiltList<EmergencyContact>(),
@@ -52,7 +53,7 @@ void main() {
       expect(mockFirestoreUserData, output);
     });
 
-    test('toCsv function properly formatted csv file of the activity', (){
+    test('toCsv function properly formatted csv file of the activity', () {
       User user = new User.fromFirebase(mockFirestoreUserData, new BuiltList<EmergencyContact>(),
           loginUID: 'Login_UID', docUID: 'data_UID');
       String temp = user.toCsv();

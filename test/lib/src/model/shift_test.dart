@@ -11,7 +11,8 @@ void main() {
     "in_time": testInTime,
     "out_time": testOutTime,
   });
-  final mockShiftCsv = '"testUID","foo","bar","2019-04-25 16:29:39.094717","2019-04-27 16:29:39.094717","-48:00:00.000000"\n';
+  final mockShiftCsv =
+      '"testUID","foo","bar","2019-04-25 16:29:39.094717","2019-04-27 16:29:39.094717","-48:00:00.000000"\n';
   group('Shift -', () {
     test('fromFirebase factory produces accurate model file', () {
       Shift shiftFromTestData = new Shift.fromFirebase('', mockFirestoreShiftData);
@@ -32,7 +33,7 @@ void main() {
       expect(firebaseMap, mockFirestoreShiftData);
     });
 
-    test('toCsv function properly formatted csv file of the activity', (){
+    test('toCsv function properly formatted csv file of the activity', () {
       Shift testShift = new Shift.fromFirebase('testUID', mockFirestoreShiftData);
       String temp = testShift.toCsv("foo", "bar");
       expect(temp, mockShiftCsv);

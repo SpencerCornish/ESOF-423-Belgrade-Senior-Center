@@ -11,7 +11,8 @@ void main() {
     'name': "A class",
     'users': ['test', 'data']
   };
-  final mockActivityCsv = '"testID","A class","Dan Bachler","-1","A room","2019-02-27 12:05:46.173","2019-02-27 12:05:58.478","test,data"\n';
+  final mockActivityCsv =
+      '"testID","A class","Dan Bachler","-1","A room","2019-02-27 12:05:46.173","2019-02-27 12:05:58.478","test,data"\n';
   group('Activity - ', () {
     test('fromFirebase factory produces accurate model file', () {
       Activity activity = new Activity.fromFirebase(
@@ -34,7 +35,7 @@ void main() {
       expect(mockActivityData, temp);
     });
 
-    test('toCsv function properly formatted csv file of the activity', (){
+    test('toCsv function properly formatted csv file of the activity', () {
       Activity activity = new Activity.fromFirebase(mockActivityData, uid: "testID");
       String temp = activity.toCsv();
       expect(temp, mockActivityCsv);

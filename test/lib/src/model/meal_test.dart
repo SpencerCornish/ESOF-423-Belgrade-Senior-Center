@@ -24,7 +24,7 @@ void main() {
       expect(mockMealData, output);
     });
 
-    test('toCsv function properly formatted csv file of the activity', (){
+    test('toCsv function properly formatted csv file of the activity', () {
       Meal testMeal = new Meal.fromFirebase(mockMealData, uid: "testID");
       String temp = testMeal.toCsv();
       print(temp);
