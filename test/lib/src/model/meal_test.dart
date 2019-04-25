@@ -8,6 +8,7 @@ void main() {
     'end_time': "2019-02-27T12:05:58.478",
     'menu': menuList,
   });
+  final mockMealCsv = '"testID","2019-02-27 12:05:46.173","2019-02-27 12:05:58.478","[pizza, tuna, cheese]"\n';
   group('Meal -', () {
     test('fromFirebase factory produces accurate model file', () {
       Meal testMeal = new Meal.fromFirebase(mockMealData, uid: "testID");
@@ -21,6 +22,13 @@ void main() {
       Meal testMeal = new Meal.fromFirebase(mockMealData, uid: "testID");
       Map<String, dynamic> output = testMeal.toFirestore();
       expect(mockMealData, output);
+    });
+
+    test('toCsv function properly formatted csv file of the activity', (){
+      Meal testMeal = new Meal.fromFirebase(mockMealData, uid: "testID");
+      String temp = testMeal.toCsv();
+      print(temp);
+      expect(temp, mockMealCsv);
     });
   });
 }
