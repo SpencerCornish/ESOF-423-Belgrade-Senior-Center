@@ -121,7 +121,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
     nodeList.add(_renderTextArea(user, "Medical Issues", user.medicalIssues));
     nodeList.addAll(_renderListRows(user.emergencyContacts, "Emergency Contact"));
     nodeList.addAll(_renderListRows(user.services, "Available Service"));
-    nodeList.addAll(_renderCheckBoxes());
+    nodeList.add(_renderCheckboxes());
     nodeList.add(_renderDeleteModal());
 
     return nodeList;
@@ -159,13 +159,13 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
               ..className = 'help is-danger ${state.firstNameIsValid ? 'is-invisible' : ''}'
               ..text = 'First name is required',
             new VLabelElement()
-              ..className = "label"
-              ..text = "Preferred Name",
+              ..className = 'label'
+              ..text = "Position",
             new VInputElement()
               ..className = "input"
-              ..id = "Preferred_Name"
-              ..tabIndex = 3
-              ..defaultValue = checkText(user.firstName),
+              ..id = "Position"
+              ..tabIndex = 4
+              ..defaultValue = checkText(user.position)
           ],
         new VDivElement()
           ..className = 'column is-4'
@@ -184,12 +184,8 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
               ..text = 'Last name is required',
             new VLabelElement()
               ..className = 'label'
-              ..text = "Position",
-            new VInputElement()
-              ..className = "input"
-              ..id = "Position"
-              ..tabIndex = 4
-              ..defaultValue = checkText(user.position)
+              ..text = "Role",
+            _roleHelper(user),
           ],
         new VDivElement()
           ..className = 'column is-2'
@@ -249,9 +245,6 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
             new Vh4()
               ..className = 'title is-4'
               ..text = user.firstName + " " + user.lastName,
-            new Vh5()
-              ..className = 'subtitle is-5'
-              ..text = "Preferred Name: " + user.firstName,
             _renderPosition(user),
           ],
       ]);
@@ -368,28 +361,6 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
             new VLabelElement()
               ..className = 'label'
               ..text = "Membership:",
-          ],
-        new VDivElement()..className = 'column',
-        new VDivElement()
-          ..className = 'column is-narrow'
-          ..children = [
-            new VDivElement()
-              ..className = 'control'
-              ..children = [
-                new VCheckboxInputElement()
-                  ..className = 'checkbox'
-                  ..checked = state.mealBool
-                  ..disabled = !state.edit
-                  ..id = 'mealOption-input'
-                  ..onClick = _checkBoxCheck
-              ]
-          ],
-        new VDivElement()
-          ..className = 'column'
-          ..children = [
-            new VLabelElement()
-              ..className = 'label'
-              ..text = "Requires Home Delivery for Meals"
           ],
       ]);
     nodeList.add(new VDivElement()
@@ -642,72 +613,102 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
         ],
     ];
 
-  ///[_renderCheckBoxes] create the checkboxes for form submit checks
-  List<VNode> _renderCheckBoxes() {
-    List<VNode> nodeList = <VNode>[];
-    nodeList.add(new VDivElement()
-      ..className = 'columns'
-      ..children = [
-        new VDivElement()
-          ..className = 'column is-narrow'
-          ..children = [
-            new VDivElement()
-              ..className = 'control'
-              ..children = [
-                new VCheckboxInputElement()
-                  ..className = 'checkbox'
-                  ..id = 'medRelease-input'
-                  ..onClick = _medCheckBoxCheck
-              ]
-          ],
-        new VDivElement()
-          ..className = 'column is-narrow'
-          ..children = [
-            new VLabelElement()
-              ..className = 'label'
-              ..text = "Has completed Medical Form"
-          ],
-        new VDivElement()
-          ..className = 'column is-narrow'
-          ..children = [
-            new VDivElement()
-              ..className = 'control'
-              ..children = [
-                new VCheckboxInputElement()
-                  ..className = 'checkbox'
-                  ..id = 'waiverRelease-input'
-                  ..onClick = _waiverCheckBoxCheck
-              ]
-          ],
-        new VDivElement()
-          ..className = 'column is-narrow'
-          ..children = [
-            new VLabelElement()
-              ..className = 'label'
-              ..text = "Has completed the Waiver & Release Form"
-          ],
-        new VDivElement()
-          ..className = 'column is-narrow'
-          ..children = [
-            new VDivElement()
-              ..className = 'control'
-              ..children = [
-                new VCheckboxInputElement()
-                  ..className = 'checkbox'
-                  ..id = 'intakeForm-input'
-                  ..onClick = _intakeBoxCheck
-              ]
-          ],
-        new VDivElement()
-          ..className = 'column is-narrow'
-          ..children = [
-            new VLabelElement()
-              ..className = 'label'
-              ..text = "Has completed the Intake Form"
-          ],
-      ]);
-    return nodeList;
-  }
+  VNode _renderCheckboxes() => new VDivElement()
+    ..className = 'box'
+    ..children = [
+      new VDivElement()
+        ..className = 'columns is-mobile'
+        ..children = [
+          new VDivElement()
+            ..className = 'column is-narrow'
+            ..children = [
+              new VDivElement()
+                ..className = 'control'
+                ..children = [
+                  new VCheckboxInputElement()
+                    ..className = 'checkbox'
+                    ..id = 'medRelease-input'
+                    ..onClick = _medCheckBoxCheck
+                ]
+            ],
+          new VDivElement()
+            ..className = 'column'
+            ..children = [
+              new VLabelElement()
+                ..className = 'label'
+                ..text = "Has completed Medical Form"
+            ],
+        ],
+      new VDivElement()
+        ..className = 'columns is-mobile'
+        ..children = [
+          new VDivElement()
+            ..className = 'column is-narrow'
+            ..children = [
+              new VDivElement()
+                ..className = 'control'
+                ..children = [
+                  new VCheckboxInputElement()
+                    ..className = 'checkbox'
+                    ..id = 'waiverRelease-input'
+                    ..onClick = _waiverCheckBoxCheck
+                ]
+            ],
+          new VDivElement()
+            ..className = 'column'
+            ..children = [
+              new VLabelElement()
+                ..className = 'label'
+                ..text = "Has completed the Waiver & Release Form"
+            ],
+        ],
+      new VDivElement()
+        ..className = 'columns is-mobile'
+        ..children = [
+          new VDivElement()
+            ..className = 'column is-narrow'
+            ..children = [
+              new VDivElement()
+                ..className = 'control'
+                ..children = [
+                  new VCheckboxInputElement()
+                    ..className = 'checkbox'
+                    ..id = 'intakeForm-input'
+                    ..onClick = _intakeBoxCheck
+                ]
+            ],
+          new VDivElement()
+            ..className = 'column'
+            ..children = [
+              new VLabelElement()
+                ..className = 'label'
+                ..text = "Has completed the Intake Form"
+            ],
+        ],
+      new VDivElement()
+        ..className = 'columns is-mobile'
+        ..children = [
+          new VDivElement()
+            ..className = 'column is-narrow'
+            ..children = [
+              new VDivElement()
+                ..className = 'control'
+                ..children = [
+                  new VCheckboxInputElement()
+                    ..className = 'checkbox'
+                    ..id = 'mealOption-input'
+                    ..onClick = _checkBoxCheck
+                ]
+            ],
+          new VDivElement()
+            ..className = 'column'
+            ..children = [
+              new VLabelElement()
+                ..className = 'label'
+                ..text = "Requires Home Delivery for Meals"
+            ],
+        ]
+    ];
 
   VNode _renderDeleteModal() => new ConfirmModal(ConfirmModalProps()
     ..isOpen = state.promptForMemberDeletion
