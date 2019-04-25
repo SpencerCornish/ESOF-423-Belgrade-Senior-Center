@@ -231,7 +231,7 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
           found.add(user);
         } else if (user.role.toLowerCase().contains(search.value.toLowerCase())) {
           found.add(user);
-        } else if (user.services.contains(search.value)) {
+        } else if (user.services.toString().contains(search.value)) {
           found.add(user);
         } else if (user.membershipRenewal.toString().contains(search.value)) {
           found.add(user);
