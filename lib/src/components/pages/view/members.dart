@@ -193,7 +193,7 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
     ];
 
   ///[_searchListener] function to ensure the table is showing data that matches the search criteria
-  _searchListener(_) {
+  _searchListener() {
     InputElement search = querySelector('#Search');
     if (search.value.isEmpty) {
       setState((ViewMemberProps, ViewMembersState) => ViewMembersState
@@ -247,7 +247,7 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
   }
 
   ///[_onExportCsvClick] exports the currently shown data to a csv file
-  _onExportCsvClick(_) {
+  _onExportCsvClick() {
     List<String> lines;
     if (!state.searching) {
       lines = props.userMap.values.map((user) => user.toCsv()).toList();
@@ -269,7 +269,7 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
   }
 
   ///[_onRefreshClick] reloads the data for the page
-  _onRefreshClick(_) {
+  _onRefreshClick() {
     props.actions.server.fetchAllMembers();
   }
 

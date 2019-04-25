@@ -297,7 +297,7 @@ class NewMeal extends Component<NewMealProps, NewMealState> {
   //method used for the submit click
   //variable names serveDate-input, mealStart-input, mealEnd-input, meal-input
   /// [_submitClick] method used for the submit click
-  _submitClick(_) {
+  _submitClick() {
     InputElement date = querySelector('#serveDate-input');
     InputElement start = querySelector('#mealStart-input');
     InputElement end = querySelector('#mealEnd-input');

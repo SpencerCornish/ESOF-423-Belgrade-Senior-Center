@@ -145,7 +145,7 @@ class ViewShift extends Component<ViewShiftProps, ViewShiftState> {
   }
 
   ///[_searchListener] function to ensure the table is showing data that matches the search criteria
-  _searchListener(_) {
+  _searchListener() {
     InputElement search = querySelector('#Search');
     if (search.value.isEmpty) {
       setState((ViewShiftProps, ViewShiftState) => ViewShiftState
@@ -178,7 +178,7 @@ class ViewShift extends Component<ViewShiftProps, ViewShiftState> {
   }
 
   ///[_onExportCsvClick] exports the currently shown data to a csv file
-  _onExportCsvClick(_) {
+  _onExportCsvClick() {
     List<Shift> list;
     if (state.searching) {
       list = state.found;
@@ -205,7 +205,7 @@ class ViewShift extends Component<ViewShiftProps, ViewShiftState> {
   }
 
   ///[_onRefreshClick] reloads the data for the page
-  _onRefreshClick(_) {
+  _onRefreshClick() {
     props.actions.server.fetchAllShifts();
   }
 }

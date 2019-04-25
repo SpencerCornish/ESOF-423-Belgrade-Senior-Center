@@ -546,7 +546,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
           new VTextAreaElement()
             ..className = 'textarea'
             ..placeholder = "Service 1, Service 2"
-            ..id = "Service"
+            ..id = "Available_Service"
         ],
     ];
 
@@ -931,7 +931,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
   //will need to send fName-input, lName-input, email-input,
   //cellNum-input, phoneNum-input, address-input, diet-input,
   //disabilities-input, medicalIssue-input, memStart-input , and memRenew-input, and role type to database
-  _submitClick(_) {
+  _submitClick() {
     InputElement first = querySelector('#fName-input');
     InputElement last = querySelector('#lName-input');
     InputElement email = querySelector('#email-input');

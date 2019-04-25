@@ -98,9 +98,9 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
             ..className = 'subtitle is-7'
             ..text = " as of: ${formatTime(DateTime.now())}",
         ],
-      renderSearch(_searchListener),
-      renderExport(_onExportCsvClick),
-      renderRefresh(_onRefreshClick),
+      renderSearch(_searchListener()),
+      renderExport(_onExportCsvClick()),
+      renderRefresh(_onRefreshClick()),
     ];
 
   /// [_createRows] Scaling function to make rows based on amount of information available
@@ -278,7 +278,7 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
   }
 
   ///[_searchListener] function to ensure the table is showing data that matches the search criteria
-  _searchListener(_) {
+  _searchListener() {
     InputElement search = querySelector('#Search');
     if (search.value.isEmpty) {
       setState((ViewActivityProps, ViewActivityState) => ViewActivityState
@@ -318,7 +318,7 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
   }
 
   ///[_onExportCsvClick] exports the currently shown data to a csv file
-  _onExportCsvClick(_) {
+  _onExportCsvClick() {
     List<String> lines;
     if (!state.searching) {
       lines = props.activityMap.values.map((activity) => activity.toCsv()).toList();
@@ -340,7 +340,7 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
   }
 
   ///[_onRefreshClick] reloads the data for the page
-  _onRefreshClick(_) {
+  _onRefreshClick() {
     props.actions.server.fetchAllActivities();
   }
 

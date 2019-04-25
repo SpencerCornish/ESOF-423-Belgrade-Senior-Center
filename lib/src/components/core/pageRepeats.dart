@@ -4,7 +4,7 @@ import 'package:wui_builder/wui_builder.dart';
 /// identical render methods for the various pages
 
 /// [renderSearch] render search bar
-renderSearch(_searchListener(_)) => new VDivElement()
+renderSearch(Function _searchListener) => new VDivElement()
   ..className = 'column is-narrow'
   ..children = [
     new VDivElement()
@@ -18,8 +18,8 @@ renderSearch(_searchListener(_)) => new VDivElement()
               ..placeholder = 'Search'
               ..type = 'submit'
               ..id = 'Search'
-              ..onKeyUp = _searchListener
-              ..type = 'text',
+              ..type = 'text'
+              ..onKeyUp = (_) => _searchListener(),
             new VSpanElement()
               ..className = 'icon is-left'
               ..children = [new Vi()..className = 'fas fa-search'],
@@ -28,7 +28,7 @@ renderSearch(_searchListener(_)) => new VDivElement()
   ];
 
 /// [renderExport] render the export csv button
-renderExport(_onExportCsvClick(_)) => new VDivElement()
+renderExport(Function _onExportCsvClick) => new VDivElement()
   ..className = 'column is-narrow'
   ..children = [
     new VDivElement()
@@ -39,19 +39,19 @@ renderExport(_onExportCsvClick(_)) => new VDivElement()
           ..children = [
             new VParagraphElement()
               ..className = 'button is-rounded'
-              ..onClick = _onExportCsvClick
               ..children = [
                 new VSpanElement()
                   ..className = 'icon'
                   ..children = [new Vi()..className = 'fas fa-file-csv'],
                 new VSpanElement()..text = 'Export',
-              ],
+              ]
+              ..onClick = (_) => _onExportCsvClick(),
           ],
       ],
   ];
 
 ///[renderRefresh] a refresh button to ensure the data is up-to-date
-renderRefresh(_onRefreshClick(_)) => new VDivElement()
+renderRefresh(Function _onRefreshClick) => new VDivElement()
   ..className = 'column is-narrow'
   ..children = [
     new VDivElement()
@@ -62,13 +62,13 @@ renderRefresh(_onRefreshClick(_)) => new VDivElement()
           ..children = [
             new VParagraphElement()
               ..className = 'button is-rounded'
-              ..onClick = _onRefreshClick
               ..children = [
                 new VSpanElement()
                   ..className = 'icon'
                   ..children = [new Vi()..className = 'fas fa-sync-alt'],
                 new VSpanElement()..text = 'Refresh',
-              ],
+              ]
+              ..onClick = (_) => _onRefreshClick(),
           ],
       ],
   ];
