@@ -500,6 +500,16 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
         ]);
     }
 
+    if (act.users.length == 0) {
+      nodeList.add(new VTableRowElement()
+        ..className = 'tr'
+        ..children = [
+          new VParagraphElement()
+            ..className = 'has-text-grey'
+            ..text = "No attendees added"
+        ]);
+    }
+
     return new VTableElement()
       ..className = 'table is-narrow is-striped is-fullwidth'
       ..id = "attendance"

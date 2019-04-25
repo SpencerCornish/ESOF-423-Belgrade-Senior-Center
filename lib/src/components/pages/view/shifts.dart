@@ -44,21 +44,21 @@ class ViewShift extends Component<ViewShiftProps, ViewShiftState> {
     if (props.user.role.toLowerCase() != "admin" && props.user.role.toLowerCase() != "volunteer") {
       history.push(Routes.dashboard);
     }
-    _requestData();
+    _requestData(props.allShifts);
   }
 
   @override
   void componentWillUpdate(ViewShiftProps newProps, ViewShiftState newState) {
     // We have transitioned between page types
     if (props.allShifts != newProps.allShifts) {
-      _requestData();
+      _requestData(newProps.allShifts);
     }
     super.componentWillUpdate(newProps, newState);
   }
 
   ///[_requestData] re-fetches data when it is needed
-  void _requestData() {
-    if (props.allShifts && props.user.role == "admin") {
+  void _requestData(bool allShifts) {
+    if (allShifts && props.user.role == "admin") {
       props.actions.server.fetchAllShifts();
     } else {
       props.actions.server.fetchShiftsForUser(0);
@@ -123,16 +123,16 @@ class ViewShift extends Component<ViewShiftProps, ViewShiftState> {
     nodeList.addAll(titleRow(title));
     for (Shift shift in list) {
       User user = props.userMap[shift.userID];
-
+      if (user == null) continue;
       nodeList.add(new VTableRowElement()
         ..className = 'tr tr-hoverable'
         ..children = [
           new VTableCellElement()
             ..className = tdClass(shift.inTime.toString())
-            ..text = checkText("${user?.firstName ?? shift.userID}"),
+            ..text = checkText("${user?.firstName ?? 'Deleted'}"),
           new VTableCellElement()
             ..className = tdClass(shift.inTime.toString())
-            ..text = checkText("${user?.lastName ?? shift.userID}"),
+            ..text = checkText("${user?.lastName ?? 'Deleted'}"),
           new VTableCellElement()
             ..className = tdClass(shift.inTime.toString())
             ..text = checkText("${formatTime(shift.inTime)}"),
