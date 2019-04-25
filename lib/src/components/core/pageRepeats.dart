@@ -87,15 +87,16 @@ List<VNode> titleRow(List<String> title) {
 }
 
 ///[renderEditSubmitButton] button selector method to show either submit or edit button based on state
-VNode renderEditSubmitButton(bool edit, _editClick(_), _submitClick(_), bool disable) {
+VNode renderEditSubmitButton(
+    {bool edit, Function onEditClick, Function onSubmitClick, Function onDeleteClick, bool submitIsDisabled}) {
   if (edit) {
-    return renderSubmit(_submitClick, disable);
+    return renderSubmit(onSubmitClick, submitIsDisabled);
   }
-  return (renderEdit(_editClick));
+  return _renderEdit(onEditClick, onDeleteClick);
 }
 
 ///[_renderEdit] creates a button to toggle from a view page to increase the number of input fields
-renderEdit(_editClick(_)) => new VDivElement()
+_renderEdit(Function onEditClick, Function onDeleteClick) => new VDivElement()
   ..className = 'field is-grouped is-grouped-right'
   ..children = [
     new VDivElement()
@@ -104,12 +105,20 @@ renderEdit(_editClick(_)) => new VDivElement()
         new VAnchorElement()
           ..className = 'button is-link is-rounded'
           ..text = "Edit"
-          ..onClick = _editClick
+          ..onClick = (_) => onEditClick()
+      ],
+    new VDivElement()
+      ..className = 'control'
+      ..children = [
+        new VAnchorElement()
+          ..className = 'button is-danger is-rounded'
+          ..text = "Delete"
+          ..onClick = (_) => onDeleteClick()
       ],
   ];
 
 ///[renderSubmit] create the submit button to collect the data
-renderSubmit(_submitClick(_), bool disable) => new VDivElement()
+renderSubmit(Function onSubmitClick, bool disable) => new VDivElement()
   ..className = 'field is-grouped is-grouped-right'
   ..children = [
     new VDivElement()
@@ -118,7 +127,7 @@ renderSubmit(_submitClick(_), bool disable) => new VDivElement()
         new VButtonElement()
           ..className = 'button is-link is-rounded'
           ..text = "Submit"
-          ..onClick = _submitClick
           ..disabled = disable
+          ..onClick = (_) => onSubmitClick()
       ]
   ];

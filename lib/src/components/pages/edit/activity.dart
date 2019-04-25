@@ -49,7 +49,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
     ..showAddUserPrompt = false
     ..showDeleteUserPrompt = false
     ..showDeleteActivityPrompt = false
-        ..userToDelete = ''
+    ..userToDelete = ''
     ..activityNameIsValid = true
     ..instructorNameIsValid = true
     ..locationIsValid = true
@@ -96,17 +96,28 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
               new VDivElement()
                 ..className = 'box'
                 ..children = [
-                  //create the Title of Box
                   new VDivElement()
-                    ..className = 'field is-grouped is-grouped-left'
+                    ..className = 'columns'
                     ..children = [
                       new VDivElement()
-                        ..className = 'cloumn has-text-centered'
+                        ..className = 'column is-narrow'
                         ..children = [
                           new Vh1()
                             ..className = 'title'
                             ..text = "Activity Edit"
-                        ]
+                        ],
+                      new VDivElement()..className = 'column',
+                      new VDivElement()
+                        ..className = 'column is-narrow'
+                        ..children = [
+                          renderEditSubmitButton(
+                              edit: state.edit,
+                              onEditClick: _editClick,
+                              onSubmitClick: _submitClick,
+                              onDeleteClick: _promptForRemoveActivityClick,
+                              submitIsDisabled:
+                                  Validator.canActivateSubmit(state.activityNameIsValid, state.timeIsValid)),
+                        ],
                     ],
                   //create the input fields for activity name and instructor's name
                   new VDivElement()
@@ -128,9 +139,6 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
                     ..className = 'title'
                     ..text = "Attendees",
                   _renderAttendance(act),
-                  //create the submit button
-                  renderEditSubmitButton(state.edit, _editClick, _submitClick,
-                      Validator.canActivateSubmit(state.activityNameIsValid, state.timeIsValid)),
                 ]
             ]
         ]
@@ -554,8 +562,6 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
     ..onCancel = _cancelRemoveActivityClick
     ..onConfirm = _removeActivityClick);
 
-
-
   ///[_rederAddUser] modal containing list of members able to be added to current activity
   VNode _renderAddUser(Activity act, String uid) => new VDivElement()
     ..className = "modal ${state.showAddUserPrompt ? 'is-active' : ''}"
@@ -635,10 +641,10 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
 
   _cancelRemoveUserClick() => setState((props, state) => state..showDeleteUserPrompt = false);
 
-  _promptForRemoveActivityClick(_) => setState((props, state) => state..showDeleteActivityPrompt = true);
+  _promptForRemoveActivityClick() => setState((props, state) => state..showDeleteActivityPrompt = true);
 
   _cancelRemoveActivityClick() => setState((props, state) => state..showDeleteActivityPrompt = false);
-  
+
   ///[_capView] converts capacity from the stored number (or lack there of) to a pretty output
   String _capView(String text) {
     if (text != '') {
@@ -713,7 +719,6 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
     }
   }
 
-
   ///[_addClick] sets the state to show the addUser modal
   _addClick(_) => setState((props, state) => state..showAddUserPrompt = true);
 
@@ -740,13 +745,13 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
   }
 
   ///[_editClick] listener for the click action of the edit button to put page into an edit state
-  _editClick(_) {
+  _editClick() {
     setState((props, state) => state..edit = !state.edit);
   }
 
   //method used for the submit click
   //timeEnd-input, timeStart-input, capacity-input, location-input, instructorName-input, act-input
-  _submitClick(_) {
+  _submitClick() {
     InputElement activity = querySelector('#act-input');
     InputElement instructor = querySelector('#instructorName-input');
     InputElement location = querySelector('#location-input');

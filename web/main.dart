@@ -30,14 +30,14 @@ void main() {
       ));
 }
 
-_handleZonedError(var err, StackTrace stackTrace) {
-  print("$err ${stackTrace.toString()}");
+_handleZonedError(var err, StackTrace stackTrace) async {
   _reportToSentry(err, stackTrace);
+  window.console.error("$err ${stackTrace.toString()}");
 }
 
-_handleUncaught(Zone zone, ZoneDelegate zoneDelegate, Zone zone2, var err, StackTrace stackTrace) {
-  print("$err ${stackTrace.toString()}");
+_handleUncaught(Zone zone, ZoneDelegate zoneDelegate, Zone zone2, var err, StackTrace stackTrace) async {
   _reportToSentry(err, stackTrace);
+  window.console.error("$err ${stackTrace.toString()}");
 }
 
 _reportToSentry(dynamic err, StackTrace stackTrace) async {

@@ -125,7 +125,7 @@ class ViewShift extends Component<ViewShiftProps, ViewShiftState> {
       User user = props.userMap[shift.userID];
 
       nodeList.add(new VTableRowElement()
-        ..className = 'tr tr-clickable tr-hoverable'
+        ..className = 'tr tr-hoverable'
         ..children = [
           new VTableCellElement()
             ..className = tdClass(shift.inTime.toString())

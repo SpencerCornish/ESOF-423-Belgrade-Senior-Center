@@ -116,8 +116,7 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
     nodeList.addAll(titleRow(title));
     for (Activity act in activities) {
       nodeList.add(new VTableRowElement()
-        ..className = 'tr tr-clickable tr-hoverable'
-        ..onClick = ((_) => _onActClick(act.uid))
+        ..className = 'tr tr-hoverable'
         ..children = [
           new VTableCellElement()
             ..className = tdClass(act.name)
@@ -196,7 +195,7 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
       return (new VTableCellElement()
         ..children = [
           new VButtonElement()
-            ..className = "button is-rounded"
+            ..className = "button is-rounded is-small"
             ..onClick = ((_) => _onActClick(uid))
             ..children = [
               new VSpanElement()

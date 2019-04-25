@@ -8,6 +8,7 @@ import 'package:wui_builder/vhtml.dart';
 import 'package:built_collection/built_collection.dart';
 
 import '../../../state/app.dart';
+import '../../core/modal.dart';
 import '../../core/nav.dart';
 import '../../core/pageRepeats.dart';
 import '../../../model/meal.dart';
@@ -26,6 +27,7 @@ class EditMealState {
   bool timeIsValid;
   bool mealIsValid;
   bool edit;
+  bool promptForMealDelete;
 }
 
 ///[EditMeal] class to create the edit meal page
@@ -36,7 +38,8 @@ class EditMeal extends Component<EditMealProps, EditMealState> {
   EditMealState getInitialState() => EditMealState()
     ..edit = false
     ..timeIsValid = true
-    ..mealIsValid = true;
+    ..mealIsValid = true
+    ..promptForMealDelete = false;
 
   @override
   void componentWillUpdate(EditMealProps nextProps, EditMealState nextState) {
@@ -58,6 +61,7 @@ class EditMeal extends Component<EditMealProps, EditMealState> {
           ..actions = props.actions
           ..user = props.user),
         _mealCreation(meal),
+        _renderDeleteModal(),
       ];
   }
 
@@ -74,17 +78,27 @@ class EditMeal extends Component<EditMealProps, EditMealState> {
               new VDivElement()
                 ..className = 'box'
                 ..children = [
-                  //create the Title of Box
                   new VDivElement()
-                    ..className = 'field is-grouped is-grouped-left'
+                    ..className = 'columns'
                     ..children = [
                       new VDivElement()
-                        ..className = 'cloumn has-text-centered'
+                        ..className = 'column is-narrow'
                         ..children = [
                           new Vh1()
                             ..className = 'title'
                             ..text = "Meal Edit"
-                        ]
+                        ],
+                      new VDivElement()..className = 'column',
+                      new VDivElement()
+                        ..className = 'column is-narrow'
+                        ..children = [
+                          renderEditSubmitButton(
+                              edit: state.edit,
+                              onEditClick: _editClick,
+                              onSubmitClick: _submitClick,
+                              onDeleteClick: _promptForRemoveMealClick,
+                              submitIsDisabled: Validator.canActivateSubmit(state.mealIsValid, state.timeIsValid)),
+                        ],
                     ],
                   //create the input fields for meal start and end times, and date
                   new VDivElement()
@@ -97,9 +111,6 @@ class EditMeal extends Component<EditMealProps, EditMealState> {
 
                   //create the input box for what the meal is
                   _renderMenu(meal),
-                  //create the submit or edit button
-                  renderEditSubmitButton(state.edit, _editClick, _submitClick,
-                      Validator.canActivateSubmit(state.mealIsValid, state.timeIsValid))
                 ]
             ]
         ]
@@ -282,6 +293,16 @@ class EditMeal extends Component<EditMealProps, EditMealState> {
         ]
     ];
 
+  VNode _renderDeleteModal() => new ConfirmModal(ConfirmModalProps()
+    ..isOpen = state.promptForMealDelete
+    ..cancelButtonStyle = ""
+    ..cancelButtonText = "Cancel"
+    ..submitButtonStyle = "is-danger"
+    ..submitButtonText = "Remove"
+    ..message = "Are you sure you want to remove this activity? This cannot be undone."
+    ..onCancel = _cancelRemoveMealClick
+    ..onConfirm = _removeMealClick);
+
   ///[_listHelper] helper function to display each item in a menu to the text area
   String _listHelper(Meal meal) {
     String menu = "";
@@ -327,7 +348,7 @@ class EditMeal extends Component<EditMealProps, EditMealState> {
 
   //method used for the submit click
   //variable names serveDate-input, mealStart-input, mealEnd-input, meal-input
-  _submitClick(_) {
+  _submitClick() {
     InputElement date = querySelector('#serveDate-input');
     InputElement start = querySelector('#mealStart-input');
     InputElement end = querySelector('#mealEnd-input');
@@ -354,8 +375,20 @@ class EditMeal extends Component<EditMealProps, EditMealState> {
     setState((props, state) => state..edit = !state.edit);
   }
 
+  _promptForRemoveMealClick() {
+    setState((props, state) => state..promptForMealDelete = true);
+  }
+
+  _cancelRemoveMealClick() {
+    setState((props, state) => state..promptForMealDelete = false);
+  }
+
+  _removeMealClick() {
+    print("DELETE A MEAL");
+  }
+
   ///[_editClick] listener for the click action of the edit button to put page into an edit state
-  _editClick(_) {
+  _editClick() {
     setState((props, state) => state..edit = !state.edit);
   }
 
