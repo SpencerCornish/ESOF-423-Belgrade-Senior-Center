@@ -7,7 +7,6 @@ import 'package:wui_builder/vhtml.dart';
 import 'package:built_collection/built_collection.dart';
 
 import '../../../constants.dart';
-import '../../../model/emergencyContact.dart';
 import '../../../state/app.dart';
 import '../../core/nav.dart';
 import '../../../model/user.dart';
@@ -33,6 +32,7 @@ class NewMemberState {
   bool intakeBool;
   bool hasInvalid;
   bool memIsValid;
+  bool emValid;
   String role;
 }
 
@@ -55,6 +55,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     ..intakeBool = false
     ..hasInvalid = true
     ..memIsValid = false
+    ..emValid = true
     ..role = "member";
 
   History _history;
@@ -120,6 +121,10 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
       _renderMedIssue(),
       //create the Membership Start Date Input field and renewal
       _renderMembershipDates(),
+      //text area for services
+      _renderTextArea(),
+      //create emergency contact input
+      _renderEmergencyContact(),
       //create the drop down menu for establishing the type of user
       new VDivElement()
         ..className = 'columns is-centered'
@@ -454,6 +459,97 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
         ]
     ];
 
+  ///[_renderEmergencyContact] create emergency contact input
+  _renderEmergencyContact() => new VDivElement()
+    ..className = 'columns is-mobile is-centered is-vcentered'
+    ..children = [
+      new VDivElement()
+        ..className = 'column is-2 is-offset-1'
+        ..children = [
+          new VLabelElement()
+            ..className = 'label'
+            ..text = "Emergency Contact"
+        ],
+      new VDivElement()
+        ..className = 'column'
+        ..children = [
+          new VLabelElement()
+            ..className = 'label'
+            ..text = "Contact Name",
+          new VDivElement()
+            ..className = "control"
+            ..children = [
+              new VInputElement()
+                ..onInput = _firstNameValidation
+                ..className = "input ${state.emValid ? '' : 'is-danger'}"
+                ..id = "emName"
+                ..placeholder = "Contact Name",
+              new VParagraphElement()
+                ..className = 'help is-danger ${state.emValid ? 'is-invisible' : ''}'
+                ..text = 'Need full name number and ralationship',
+            ],
+        ],
+      new VDivElement()
+        ..className = 'column'
+        ..children = [
+          new VLabelElement()
+            ..className = 'label'
+            ..text = "Cell or Messsage Phone",
+          new VDivElement()
+            ..className = "control"
+            ..children = [
+              new VInputElement()
+                ..onInput = _emergencyValidation
+                ..className = "input ${state.emValid ? '' : 'is-danger'}"
+                ..id = "emNumber"
+                ..placeholder = "888-888-8888",
+              new VParagraphElement()
+                ..className = 'help is-danger ${state.emValid ? 'is-invisible' : ''}'
+                ..text = 'Need full name number and ralationship',
+            ],
+        ],
+      new VDivElement()
+        ..className = 'column'
+        ..children = [
+          new VLabelElement()
+            ..className = 'label'
+            ..text = "Relationship to Member",
+          new VDivElement()
+            ..className = "control"
+            ..children = [
+              new VInputElement()
+                ..onInput = _emergencyValidation
+                ..className = "input ${state.emValid ? '' : 'is-danger'}"
+                ..id = "emRelation"
+                ..placeholder = "e.g. Mother",
+              new VParagraphElement()
+                ..className = 'help is-danger ${state.emValid ? 'is-invisible' : ''}'
+                ..text = 'Need full name number and ralationship',
+            ],
+        ],
+    ];
+
+  ///[_renderTextArea] text area for services
+  _renderTextArea() => new VDivElement()
+    ..className = 'columns is-mobile is-centered is-vcentered'
+    ..children = [
+      new VDivElement()
+        ..className = 'column is-2'
+        ..children = [
+          new Vlabel()
+            ..className = 'label'
+            ..text = "Available Service",
+        ],
+      new VDivElement()
+        ..className = 'column is-four-fifths'
+        ..children = [
+          new VTextAreaElement()
+            ..className = 'textarea'
+            ..placeholder = "Service 1, Service 2"
+            ..id = "Service"
+        ],
+    ];
+
   ///[_renderMembershipDates] renders membership start label and input and calls to render membership renewal
   VNode _renderMembershipDates() => new VDivElement()
     ..className = 'field is-grouped'
@@ -745,6 +841,20 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     setState((NewMemberProps, NewMemberState) => NewMemberState..lastNameIsValid = isValid);
   }
 
+  /// [_emergencyValidation] Validation for last name
+  void _emergencyValidation(_) {
+    //Gets last field
+    InputElement name = querySelector('#emName');
+    InputElement number = querySelector('#emNumber');
+    InputElement relation = querySelector('#emRelation');
+    //Validates with validator class
+    bool nameValid = Validator.name(name.value);
+    bool numValid = Validator.phoneNumber(number.value);
+    bool relValid = Validator.name(relation.value);
+    //Sets new state
+    setState((NewMemberProps, NewMemberState) => NewMemberState..emValid = (nameValid && numValid && relValid));
+  }
+
   /// [_emailValidator] Validation for email using Spencer's function from constants.dart
   void _emailValidator(_) {
     //Gets email field
@@ -833,6 +943,10 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     InputElement medical = querySelector('#medicalIssue-input');
     InputElement memStart = querySelector('#memStart-input');
     InputElement memRenew = querySelector('#memRenew-input');
+    InputElement emName = querySelector('#emName');
+    InputElement emNumber = querySelector('#emNumber');
+    InputElement emRel = querySelector('#emRelation');
+    TextAreaElement service = querySelector('#Available_Service');
 
     //create a new user object
     User newUser = (new UserBuilder()
@@ -847,8 +961,10 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
           ..medicalIssues = medical.value
           ..membershipStart = DateTime.parse(memStart.value)
           ..membershipRenewal = DateTime.parse(memRenew.value)
-          ..emergencyContacts = new ListBuilder<EmergencyContact>()
-          ..services = new ListBuilder<String>()
+          ..emergencyContactName = emName.value
+          ..emergencyContactNumber = emNumber.value
+          ..emergencyContactRelation = emRel.value
+          ..services = new ListBuilder<String>(service.value.split(","))
           ..role = state.role
           ..position = "NULL"
           ..forms = new ListBuilder<String>()

@@ -64,7 +64,9 @@ class FirebaseClient {
             ..address = ''
             ..role = ''
             ..dietaryRestrictions = ''
-            ..emergencyContacts = new ListBuilder<EmergencyContact>()
+            ..emergencyContactName = ''
+            ..emergencyContactNumber = ''
+            ..emergencyContactRelation = ''
             ..membershipStart = new DateTime.fromMillisecondsSinceEpoch(0)
             ..membershipRenewal = new DateTime.fromMillisecondsSinceEpoch(0)
             ..homeDeliver = false
@@ -176,7 +178,7 @@ class FirebaseClient {
     return dataSet.build();
   }
 
-  /// [getAllMembers] get all member documents
+  /// [getAllShifts] get all member shifts
   Future<BuiltList<Shift>> getAllShifts() async {
     ListBuilder<Shift> dataSet = new ListBuilder<Shift>();
     final result = await _refs.allShifts().orderBy('in_time', 'desc').get();

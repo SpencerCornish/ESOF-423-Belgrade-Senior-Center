@@ -14,24 +14,33 @@ class _$ServerMiddlewareActions extends ServerMiddlewareActions {
   _$ServerMiddlewareActions._() : super._();
 
   final ActionDispatcher<AdminSignInPayload> signInAdmin =
-      new ActionDispatcher<AdminSignInPayload>('ServerMiddlewareActions-signInAdmin');
-  final ActionDispatcher<Null> logOut = new ActionDispatcher<Null>('ServerMiddlewareActions-logOut');
-  final ActionDispatcher<String> resetPassword = new ActionDispatcher<String>('ServerMiddlewareActions-resetPassword');
+      new ActionDispatcher<AdminSignInPayload>(
+          'ServerMiddlewareActions-signInAdmin');
+  final ActionDispatcher<Null> logOut =
+      new ActionDispatcher<Null>('ServerMiddlewareActions-logOut');
+  final ActionDispatcher<String> resetPassword =
+      new ActionDispatcher<String>('ServerMiddlewareActions-resetPassword');
   final ActionDispatcher<User> updateOrCreateUser =
       new ActionDispatcher<User>('ServerMiddlewareActions-updateOrCreateUser');
   final ActionDispatcher<Activity> updateOrCreateActivity =
-      new ActionDispatcher<Activity>('ServerMiddlewareActions-updateOrCreateActivity');
+      new ActionDispatcher<Activity>(
+          'ServerMiddlewareActions-updateOrCreateActivity');
   final ActionDispatcher<Meal> updateOrCreateMeal =
       new ActionDispatcher<Meal>('ServerMiddlewareActions-updateOrCreateMeal');
   final ActionDispatcher<Activity> removeActivity =
       new ActionDispatcher<Activity>('ServerMiddlewareActions-removeActivity');
-  final ActionDispatcher<Meal> removeMeal = new ActionDispatcher<Meal>('ServerMiddlewareActions-removeMeal');
-  final ActionDispatcher<User> removeMember = new ActionDispatcher<User>('ServerMiddlewareActions-removeMember');
-  final ActionDispatcher<Null> fetchAllMembers = new ActionDispatcher<Null>('ServerMiddlewareActions-fetchAllMembers');
+  final ActionDispatcher<Meal> removeMeal =
+      new ActionDispatcher<Meal>('ServerMiddlewareActions-removeMeal');
+  final ActionDispatcher<User> removeMember =
+      new ActionDispatcher<User>('ServerMiddlewareActions-removeMember');
+  final ActionDispatcher<Null> fetchAllMembers =
+      new ActionDispatcher<Null>('ServerMiddlewareActions-fetchAllMembers');
   final ActionDispatcher<Null> fetchAllActivities =
       new ActionDispatcher<Null>('ServerMiddlewareActions-fetchAllActivities');
-  final ActionDispatcher<Null> fetchAllMeals = new ActionDispatcher<Null>('ServerMiddlewareActions-fetchAllMeals');
-  final ActionDispatcher<Null> fetchAllShifts = new ActionDispatcher<Null>('ServerMiddlewareActions-fetchAllShifts');
+  final ActionDispatcher<Null> fetchAllMeals =
+      new ActionDispatcher<Null>('ServerMiddlewareActions-fetchAllMeals');
+  final ActionDispatcher<Null> fetchAllShifts =
+      new ActionDispatcher<Null>('ServerMiddlewareActions-fetchAllShifts');
   final ActionDispatcher<int> fetchShiftsForUser =
       new ActionDispatcher<int>('ServerMiddlewareActions-fetchShiftsForUser');
   final ActionDispatcher<bool> registerClockEvent =
@@ -60,19 +69,33 @@ class _$ServerMiddlewareActions extends ServerMiddlewareActions {
 class ServerMiddlewareActionsNames {
   static final ActionName<AdminSignInPayload> signInAdmin =
       new ActionName<AdminSignInPayload>('ServerMiddlewareActions-signInAdmin');
-  static final ActionName<Null> logOut = new ActionName<Null>('ServerMiddlewareActions-logOut');
-  static final ActionName<String> resetPassword = new ActionName<String>('ServerMiddlewareActions-resetPassword');
-  static final ActionName<User> updateOrCreateUser = new ActionName<User>('ServerMiddlewareActions-updateOrCreateUser');
+  static final ActionName<Null> logOut =
+      new ActionName<Null>('ServerMiddlewareActions-logOut');
+  static final ActionName<String> resetPassword =
+      new ActionName<String>('ServerMiddlewareActions-resetPassword');
+  static final ActionName<User> updateOrCreateUser =
+      new ActionName<User>('ServerMiddlewareActions-updateOrCreateUser');
   static final ActionName<Activity> updateOrCreateActivity =
-      new ActionName<Activity>('ServerMiddlewareActions-updateOrCreateActivity');
-  static final ActionName<Meal> updateOrCreateMeal = new ActionName<Meal>('ServerMiddlewareActions-updateOrCreateMeal');
-  static final ActionName<Activity> removeActivity = new ActionName<Activity>('ServerMiddlewareActions-removeActivity');
-  static final ActionName<Meal> removeMeal = new ActionName<Meal>('ServerMiddlewareActions-removeMeal');
-  static final ActionName<User> removeMember = new ActionName<User>('ServerMiddlewareActions-removeMember');
-  static final ActionName<Null> fetchAllMembers = new ActionName<Null>('ServerMiddlewareActions-fetchAllMembers');
-  static final ActionName<Null> fetchAllActivities = new ActionName<Null>('ServerMiddlewareActions-fetchAllActivities');
-  static final ActionName<Null> fetchAllMeals = new ActionName<Null>('ServerMiddlewareActions-fetchAllMeals');
-  static final ActionName<Null> fetchAllShifts = new ActionName<Null>('ServerMiddlewareActions-fetchAllShifts');
-  static final ActionName<int> fetchShiftsForUser = new ActionName<int>('ServerMiddlewareActions-fetchShiftsForUser');
-  static final ActionName<bool> registerClockEvent = new ActionName<bool>('ServerMiddlewareActions-registerClockEvent');
+      new ActionName<Activity>(
+          'ServerMiddlewareActions-updateOrCreateActivity');
+  static final ActionName<Meal> updateOrCreateMeal =
+      new ActionName<Meal>('ServerMiddlewareActions-updateOrCreateMeal');
+  static final ActionName<Activity> removeActivity =
+      new ActionName<Activity>('ServerMiddlewareActions-removeActivity');
+  static final ActionName<Meal> removeMeal =
+      new ActionName<Meal>('ServerMiddlewareActions-removeMeal');
+  static final ActionName<User> removeMember =
+      new ActionName<User>('ServerMiddlewareActions-removeMember');
+  static final ActionName<Null> fetchAllMembers =
+      new ActionName<Null>('ServerMiddlewareActions-fetchAllMembers');
+  static final ActionName<Null> fetchAllActivities =
+      new ActionName<Null>('ServerMiddlewareActions-fetchAllActivities');
+  static final ActionName<Null> fetchAllMeals =
+      new ActionName<Null>('ServerMiddlewareActions-fetchAllMeals');
+  static final ActionName<Null> fetchAllShifts =
+      new ActionName<Null>('ServerMiddlewareActions-fetchAllShifts');
+  static final ActionName<int> fetchShiftsForUser =
+      new ActionName<int>('ServerMiddlewareActions-fetchShiftsForUser');
+  static final ActionName<bool> registerClockEvent =
+      new ActionName<bool>('ServerMiddlewareActions-registerClockEvent');
 }

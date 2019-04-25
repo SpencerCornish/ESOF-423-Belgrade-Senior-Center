@@ -1,6 +1,5 @@
 import 'dart:html' hide History;
 
-import 'package:bsc/src/model/emergencyContact.dart';
 import 'package:date_format/date_format.dart';
 import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
@@ -33,6 +32,7 @@ class EditMemberState {
   bool addressIsValid;
   bool hasInvalid;
   bool memIsValid;
+  bool emValid;
 
   // Other ui state
   bool edit;
@@ -61,6 +61,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
     ..addressIsValid = true
     ..hasInvalid = true
     ..memIsValid = true
+    ..emValid = true
     ..edit = false
     ..dropDownActive = false
     ..promptForMemberDeletion = false
@@ -114,15 +115,16 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
     nodeList.add(_renderPageHeader());
     state.edit ? nodeList.addAll(_renderEditHeader(user)) : nodeList.addAll(_renderHeader(user));
     nodeList.addAll(_renderMembership(user));
-    nodeList.add(_renderAddress(user));
-    nodeList.add(_renderNumber(user));
-    nodeList.add(_renderTextArea(user, "Dietary Restrictions", user.dietaryRestrictions));
-    nodeList.add(_renderTextArea(user, "Disabilities", user.disabilities));
-    nodeList.add(_renderTextArea(user, "Medical Issues", user.medicalIssues));
-    nodeList.addAll(_renderListRows(user.emergencyContacts, "Emergency Contact"));
-    nodeList.addAll(_renderListRows(user.services, "Available Service"));
-    nodeList.add(_renderCheckboxes());
-    nodeList.add(_renderDeleteModal());
+    nodeList
+      ..add(_renderAddress(user))
+      ..add(_renderNumber(user))
+      ..add(_renderEmergencyContact(user))
+      ..add(_renderTextArea(user, "Dietary Restrictions", user.dietaryRestrictions))
+      ..add(_renderTextArea(user, "Disabilities", user.disabilities))
+      ..add(_renderTextArea(user, "Medical Issues", user.medicalIssues))
+      ..add(_renderTextArea(user, "Available Service", user.services.join(",")))
+      ..add(_renderCheckboxes())
+      ..add(_renderDeleteModal());
 
     return nodeList;
   }
@@ -511,85 +513,78 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
         ],
     ];
 
-  ///[_renderListRows] function for the list type items
-  ///will show at least one or as many as member has
-  List<VNode> _renderListRows(BuiltList<dynamic> list, String type) {
-    List<VNode> nodeList = <VNode>[];
-
-    if (list.isNotEmpty) {
-      nodeList.add(
-        new VDivElement()
-          ..className = 'box'
-          ..children = [
-            new VDivElement()
-              ..className = 'columns is-mobile is-centered is-vcentered'
-              ..children = [
-                new VDivElement()
-                  ..className = 'column is-narrow'
-                  ..children = [
-                    new VLabelElement()
-                      ..className = "label"
-                      ..text = type + "${list.length > 1 ? 's' : ''}",
-                  ],
-                new VDivElement()
-                  ..className = 'column'
-                  ..children = _renderListRowsHelper(list, type),
-              ],
-          ],
-      );
-    } else {
-      nodeList.add(new VDivElement()
-        ..className = 'box'
+  ///[_renderEmergencyContact] create emergency contact input
+  _renderEmergencyContact(User user) => new VDivElement()
+    ..className = 'columns is-mobile is-centered is-vcentered'
+    ..children = [
+      new VDivElement()
+        ..className = 'column is-2 is-offset-1'
         ..children = [
+          new VLabelElement()
+            ..className = 'label'
+            ..text = "Emergency Contact"
+        ],
+      new VDivElement()
+        ..className = 'column'
+        ..children = [
+          new VLabelElement()
+            ..className = 'label'
+            ..text = "Contact Name",
           new VDivElement()
-            ..className = 'columns is-mobile is-centered is-vcentered'
+            ..className = "control"
             ..children = [
-              new VDivElement()
-                ..className = 'column is-narrow'
-                ..children = [
-                  new VLabelElement()
-                    ..className = "label"
-                    ..text = type,
-                ],
-              new VDivElement()
-                ..className = 'column'
-                ..children = [
-                  new VDivElement()
-                    ..className = "field"
-                    ..children = [
-                      new VDivElement()
-                        ..className = "control"
-                        ..children = [
-                          new VInputElement()
-                            ..className = "input ${state.edit ? '' : 'is-static'}"
-                            ..defaultValue = checkText("")
-                            ..readOnly = !state.edit,
-                        ],
-                    ],
-                ],
+              new VInputElement()
+                ..onInput = _firstNameValidation
+                ..className = "input ${state.edit ? '' : 'is-static'} ${state.emValid ? '' : 'is-danger'}"
+                ..id = "emName"
+                ..defaultValue = checkText(user.emergencyContactName)
+                ..readOnly = !state.edit,
+              new VParagraphElement()
+                ..className = 'help is-danger ${state.emValid ? 'is-invisible' : ''}'
+                ..text = 'Need full name number and ralationship',
             ],
-        ]);
-    }
-    return nodeList;
-  }
-
-  ///[_renderListRowsHelper] helper function to create the input boxes for list type
-  List<VNode> _renderListRowsHelper(BuiltList<dynamic> list, String type) {
-    List<VNode> nodeList = <VNode>[];
-
-    for (Object item in list) {
-      nodeList.add(new VDivElement()
-        ..className = "control"
+        ],
+      new VDivElement()
+        ..className = 'column'
         ..children = [
-          new VInputElement()
-            ..className = "input ${state.edit ? '' : 'is-static'}"
-            ..id = type
-            ..defaultValue = checkText(item.toString())
-            ..readOnly = !state.edit,
-        ]);
-    }
-    return nodeList;
-  }
+          new VLabelElement()
+            ..className = 'label'
+            ..text = "Cell or Messsage Phone",
+          new VDivElement()
+            ..className = "control"
+            ..children = [
+              new VInputElement()
+                ..onInput = _emergencyValidation
+                ..className = "input ${state.edit ? '' : 'is-static'} ${state.emValid ? '' : 'is-danger'}"
+                ..id = "emNumber"
+                ..defaultValue = checkText(user.emergencyContactNumber)
+                ..readOnly = !state.edit,
+              new VParagraphElement()
+                ..className = 'help is-danger ${state.emValid ? 'is-invisible' : ''}'
+                ..text = 'Need full name number and ralationship',
+            ],
+        ],
+      new VDivElement()
+        ..className = 'column'
+        ..children = [
+          new VLabelElement()
+            ..className = 'label'
+            ..text = "Relationship to Member",
+          new VDivElement()
+            ..className = "control"
+            ..children = [
+              new VInputElement()
+                ..onInput = _emergencyValidation
+                ..className = "input ${state.edit ? '' : 'is-static'} ${state.emValid ? '' : 'is-danger'}"
+                ..id = "emRelation"
+                ..defaultValue = checkText(user.emergencyContactRelation)
+                ..readOnly = !state.edit,
+              new VParagraphElement()
+                ..className = 'help is-danger ${state.emValid ? 'is-invisible' : ''}'
+                ..text = 'Need full name number and ralationship',
+            ],
+        ],
+    ];
 
   ///[_renderTextArea] create each row ot text area items with a given label
   _renderTextArea(User user, String label, String defaultValue) => new VDivElement()
@@ -629,6 +624,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
                     ..className = 'checkbox'
                     ..id = 'medRelease-input'
                     ..onClick = _medCheckBoxCheck
+                    ..checked = state.medBool
                 ]
             ],
           new VDivElement()
@@ -652,6 +648,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
                     ..className = 'checkbox'
                     ..id = 'waiverRelease-input'
                     ..onClick = _waiverCheckBoxCheck
+                    ..checked = state.waiverBool
                 ]
             ],
           new VDivElement()
@@ -675,6 +672,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
                     ..className = 'checkbox'
                     ..id = 'intakeForm-input'
                     ..onClick = _intakeBoxCheck
+                    ..checked = state.intakeBool
                 ]
             ],
           new VDivElement()
@@ -698,6 +696,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
                     ..className = 'checkbox'
                     ..id = 'mealOption-input'
                     ..onClick = _checkBoxCheck
+                    ..checked = state.mealBool
                 ]
             ],
           new VDivElement()
@@ -740,6 +739,20 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
     bool isValid = Validator.name(last.value);
     //Sets new state
     setState((NewMemberProps, NewMemberState) => NewMemberState..lastNameIsValid = isValid);
+  }
+
+  /// [_emergencyValidation] Validation for last name
+  void _emergencyValidation(_) {
+    //Gets last field
+    InputElement name = querySelector('#emName');
+    InputElement number = querySelector('#emNumber');
+    InputElement relation = querySelector('#emRelation');
+    //Validates with validator class
+    bool nameValid = Validator.name(name.value);
+    bool numValid = Validator.phoneNumber(number.value);
+    bool relValid = Validator.name(relation.value);
+    //Sets new state
+    setState((NewMemberProps, NewMemberState) => NewMemberState..emValid = (nameValid && numValid && relValid));
   }
 
   /// [_emailValidator] Validation for email using Spencer's function from constants.dart
@@ -828,6 +841,10 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
     InputElement memStart = querySelector('#Start');
     InputElement memRenew = querySelector('#Renewal');
     InputElement position = querySelector('#Position');
+    InputElement emName = querySelector('#emName');
+    InputElement emNumber = querySelector('#emNumber');
+    InputElement emRel = querySelector('#emRelation');
+    TextAreaElement service = querySelector('#Available_Service');
 
     User userToUpdate = props.userMap[props.selectedMemberUID].rebuild((builder) => builder
       ..firstName = first.value
@@ -842,8 +859,10 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
       ..medicalIssues = medical.value
       ..membershipStart = DateTime.parse(memStart.value)
       ..membershipRenewal = DateTime.parse(memRenew.value)
-      ..emergencyContacts = new ListBuilder<EmergencyContact>()
-      ..services = new ListBuilder<String>()
+      ..emergencyContactName = emName.value
+      ..emergencyContactNumber = emNumber.value
+      ..emergencyContactRelation = emRel.value
+      ..services = new ListBuilder<String>(service.value.split(","))
       ..position = position.value
       ..forms = new ListBuilder<String>()
       ..homeDeliver = state.mealBool
