@@ -1,28 +1,9 @@
 import 'package:test/test.dart';
 import 'package:bsc/src/constants.dart';
 
+import 'test_data.dart';
+
 void main() {
-  //Vars for testing
-  final emails = <String, bool>{
-    "daniel.bachler@comcast.net": true,
-    "daniel.bachler.comcast.net": false,
-    "daniel.bachler@comcast": false,
-    "@google": false,
-    "": false,
-    "1": false,
-    "1@1.1": false
-  };
-
-  final phoneNumbers = <String, bool>{
-    "4252734489": true,
-    "425-273-4489": true,
-    "1-425-273-4489": true,
-    "1(425)273-4489": true,
-    "1": false,
-    "123456789123": false,
-    "dan": false
-  };
-
   group('Constants -', () {
     //Testing for Validator Class
     test('nameValidator only denies blank strings', () {
@@ -30,10 +11,10 @@ void main() {
       expect(Validator.name("test"), true);
     });
     test('emailValidator correctly checks emails', () {
-      emails.forEach((email, isValid) => expect(Validator.email(email), isValid));
+      testEmails.forEach((email, isValid) => expect(Validator.email(email), isValid));
     });
     test('phoneNumberValidator works correctly', () {
-      phoneNumbers.forEach((number, isValid) => expect(Validator.phoneNumber(number), isValid));
+      testPhones.forEach((number, isValid) => expect(Validator.phoneNumber(number), isValid));
     });
 
     //Validator.addressValidator currently only returns true, redo when method written
