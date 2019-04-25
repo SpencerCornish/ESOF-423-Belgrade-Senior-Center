@@ -734,7 +734,10 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
   }
 
   _removeActivityClick() {
-    print("REMOVE THE ACTIVITY");
+    final activity = props.activityMap[props.selectedActivityUID];
+    if (activity == null) return;
+    props.actions.server.removeActivity(activity);
+    history.push(Routes.viewActivity);
   }
 
   ///[_addUserClick] actually adds a user to this activity and hides the modal

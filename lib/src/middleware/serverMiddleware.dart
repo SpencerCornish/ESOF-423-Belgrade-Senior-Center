@@ -45,15 +45,21 @@ abstract class ServerMiddlewareActions extends ReduxActions {
   /// [updateOrCreateMeal] attempts to update a meal. If it is unsuccessful, it creates a new one.
   ActionDispatcher<Meal> updateOrCreateMeal;
 
-  // TODO: Authenticate this call
+  /// [removeActivity] removes an activity from the database.
+  ActionDispatcher<Activity> removeActivity;
+
+  /// [removeMeal] removes an Meal from the database.
+  ActionDispatcher<Meal> removeMeal;
+
+  /// [removeMember] removes an Member from the database.
+  ActionDispatcher<User> removeMember;
+
   /// [fetchAllMembers] fetches the list of all Members in the database.
   ActionDispatcher<Null> fetchAllMembers;
 
-  // TODO: Authenticate this call
   /// [fetchAllActivities] fetches the list of all Activities in the database.
   ActionDispatcher<Null> fetchAllActivities;
 
-  // TODO: Authenticate this call
   /// [fetchAllMeals] fetches the list of all meals in the database.
   ActionDispatcher<Null> fetchAllMeals;
 
@@ -77,6 +83,9 @@ createServerMiddleware(FirebaseClient client) => (new MiddlewareBuilder<App, App
       ..add<User>(ServerMiddlewareActionsNames.updateOrCreateUser, _addOrUpdateUser(client))
       ..add<Activity>(ServerMiddlewareActionsNames.updateOrCreateActivity, _addOrUpdateActivity(client))
       ..add<Meal>(ServerMiddlewareActionsNames.updateOrCreateMeal, _addOrUpdateMeal(client))
+      ..add<User>(ServerMiddlewareActionsNames.removeMember, _removeMember(client))
+      ..add<Activity>(ServerMiddlewareActionsNames.removeActivity, _removeActivity(client))
+      ..add<Meal>(ServerMiddlewareActionsNames.removeMeal, _removeMeal(client))
       ..add<Null>(ServerMiddlewareActionsNames.fetchAllMembers, _fetchAllMembers(client))
       ..add<Null>(ServerMiddlewareActionsNames.fetchAllActivities, _fetchAllActivities(client))
       ..add<Null>(ServerMiddlewareActionsNames.fetchAllMeals, _fetchAllMeals(client))
@@ -148,6 +157,36 @@ _addOrUpdateMeal(FirebaseClient client) => (
     ) async {
       client.addOrUpdateMeal(
         action.payload.toFirestore(),
+        documentID: action.payload.uid,
+      );
+    };
+
+_removeMember(FirebaseClient client) => (
+      MiddlewareApi<App, AppBuilder, AppActions> api,
+      ActionHandler next,
+      Action<User> action,
+    ) async {
+      client.removeMember(
+        documentID: action.payload.docUID,
+      );
+    };
+
+_removeActivity(FirebaseClient client) => (
+      MiddlewareApi<App, AppBuilder, AppActions> api,
+      ActionHandler next,
+      Action<Activity> action,
+    ) async {
+      client.removeActivity(
+        documentID: action.payload.uid,
+      );
+    };
+
+_removeMeal(FirebaseClient client) => (
+      MiddlewareApi<App, AppBuilder, AppActions> api,
+      ActionHandler next,
+      Action<Meal> action,
+    ) async {
+      client.removeMeal(
         documentID: action.payload.uid,
       );
     };

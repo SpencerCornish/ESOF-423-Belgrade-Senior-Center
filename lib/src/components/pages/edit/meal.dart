@@ -384,7 +384,10 @@ class EditMeal extends Component<EditMealProps, EditMealState> {
   }
 
   _removeMealClick() {
-    print("DELETE A MEAL");
+    final meal = props.mealMap[props.selectedMealUID];
+    if (meal == null) return;
+    props.actions.server.removeMeal(meal);
+    history.push(Routes.viewMeal);
   }
 
   ///[_editClick] listener for the click action of the edit button to put page into an edit state

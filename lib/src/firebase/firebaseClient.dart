@@ -40,7 +40,6 @@ class FirebaseClient {
   }
 
   Future _userLoginEvent(fb.User userPayload) async {
-    //TODO: Set up emergency contacts
     User newUser;
 
     fs.QuerySnapshot queryData = await _refs.userFromLoginUID(userPayload.uid).get();
@@ -235,8 +234,6 @@ class FirebaseClient {
     return new BuiltMap<String, User>.from(dataSet);
   }
 
-  // getMeals (TODO: by date/date range?)
-
   /// [getAllMeals] get all meal documents
   Future<BuiltMap<String, Meal>> getAllMeals() async {
     Map<String, Meal> dataSet = <String, Meal>{};
@@ -249,9 +246,6 @@ class FirebaseClient {
     }
     return new BuiltMap<String, Meal>.from(dataSet);
   }
-
-  /// [getMeal] get just one meal document by unique identifier
-  getMeal(String uid) => _refs.meal(uid).get();
 
   /// [getAllActivities] this will get all class documents
   Future<BuiltMap<String, Activity>> getAllActivities() async {
@@ -266,23 +260,6 @@ class FirebaseClient {
     return new BuiltMap<String, Activity>.from(dataSet);
   }
 
-  /// [getClassByStartDate] return a group of documents by start date
-  getClassByStartDate(DateTime date) {
-    final start = new DateTime(date.year, date.month, date.day);
-    final end = new DateTime(date.year, date.month, date.day, 23, 59, 59);
-
-    return _refs
-        .allActivities()
-        .where("start_time", "=>", start.toIso8601String())
-        .where("start_time", "<=", end.toIso8601String());
-  }
-
-  /// [getClassTaughtBy] return a group of documents by instructor
-  getClassTaughtBy(String instructor) => _refs.allActivities().where("instructor", "==", instructor);
-
-  /// [getClass] get a single class document by unique identifier
-  // getClass(String uid) => _refs.singleClass(uid).get();
-
   /// [updateUser] update existing user by unique identifier. key is any user field and value is the new value
   String addOrUpdateUser(Map<String, dynamic> userData, {String documentID}) {
     fs.DocumentReference ref = _refs.userFromDocumentUID(documentID);
@@ -292,7 +269,7 @@ class FirebaseClient {
 
   /// [updateActivity]
   String addOrUpdateActivity(Map<String, dynamic> activityData, {String documentID}) {
-    fs.DocumentReference ref = _refs.singleClass(documentID);
+    fs.DocumentReference ref = _refs.activity(documentID);
     ref.set(activityData, fs.SetOptions(merge: true));
     return ref.id;
   }
@@ -304,28 +281,18 @@ class FirebaseClient {
     return ref.id;
   }
 
-  /// [updateClass] update existing class by unique identifier. key is any class field and value is the new value
-  void updateClass(String documentID, Map<String, dynamic> value) {
-    _refs.singleClass(documentID).set(value, fs.SetOptions(merge: true));
-  }
-
-  /// [updateMeal] update existing meal by unique identifier. key is any meal field and value is the new value
-  void updateMeal(String documentID, Map<String, dynamic> value) {
-    _refs.meal(documentID).set(value, fs.SetOptions(merge: true));
-  }
-
   /// [deleteUser] delete existing user by unique identifier
-  void deleteUser(String documentID) {
+  void removeMember({String documentID}) async {
     _refs.userFromDocumentUID(documentID).delete();
   }
 
   /// [deleteClass] delete existing class by unique identifier
-  void deleteClass(String documentID) {
-    _refs.singleClass(documentID).delete();
+  void removeActivity({String documentID}) async {
+    _refs.activity(documentID).delete();
   }
 
   /// [deleteMeal] delete existing meal by unique identifier
-  void deleteMeal(String documentID) {
+  void removeMeal({String documentID}) async {
     _refs.meal(documentID).delete();
   }
 }

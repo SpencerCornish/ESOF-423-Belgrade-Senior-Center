@@ -885,7 +885,10 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
   }
 
   _memberDeleteClick() {
-    print("DELETE A MEMBER");
+    final member = props.userMap[props.selectedMemberUID];
+    if (member == null) return;
+    props.actions.server.removeMember(member);
+    history.push(Routes.viewMembers);
   }
 
   ///[_editClick] listener for the click action of the edit button to put page into an edit state
