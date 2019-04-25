@@ -91,7 +91,7 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
     users = _sort(users, 0, users.length - 1);
     for (User user in users) {
       nodeList.add(new VTableRowElement()
-        ..className = 'tr'
+        ..className = 'tr tr-hoverable'
         ..children = [
           new VTableCellElement()
             ..className = tdClass(user.lastName)
@@ -102,7 +102,7 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
           new VTableCellElement()
             ..children = [
               new VButtonElement()
-                ..className = "button is-success is-rounded"
+                ..className = "button is-success is-rounded is-small"
                 ..onClick = ((_) => _onActClick(user.docUID))
                 ..children = [
                   new VSpanElement()
@@ -116,7 +116,7 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
           new VTableCellElement()
             ..children = [
               new VButtonElement()
-                ..className = "button is-rounded"
+                ..className = "button is-rounded is-small"
                 ..onClick = ((_) => _onUserClick(user.docUID))
                 ..children = [
                   new VSpanElement()

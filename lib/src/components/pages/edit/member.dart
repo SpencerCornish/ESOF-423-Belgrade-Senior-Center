@@ -8,6 +8,7 @@ import 'package:wui_builder/vhtml.dart';
 import 'package:built_collection/built_collection.dart';
 
 import '../../../constants.dart';
+import '../../core/modal.dart';
 import '../../core/nav.dart';
 import '../../core/pageRepeats.dart';
 import '../../../model/user.dart';
@@ -23,6 +24,7 @@ class EditMemberProps {
 
 /// [EditMemberState] state class for the edit member page
 class EditMemberState {
+  // Validation State
   bool firstNameIsValid;
   bool lastNameIsValid;
   bool emailIsValid;
@@ -32,9 +34,12 @@ class EditMemberState {
   bool hasInvalid;
   bool memIsValid;
 
+  // Other ui state
   bool edit;
   bool dropDownActive;
   int listsCreated;
+
+  bool promptForMemberDeletion;
   String role;
   bool mealBool;
   bool medBool;
@@ -58,6 +63,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
     ..memIsValid = true
     ..edit = false
     ..dropDownActive = false
+    ..promptForMemberDeletion = false
     ..listsCreated = 0
     ..role = props.userMap[props.selectedMemberUID].role
     ..mealBool = props.userMap[props.selectedMemberUID].homeDeliver
@@ -105,6 +111,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
   ///[_pageElements] helper function to add all fields to the render method
   List<VNode> _pageElements(User user) {
     List<VNode> nodeList = <VNode>[];
+    nodeList.add(_renderPageHeader());
     state.edit ? nodeList.addAll(_renderEditHeader(user)) : nodeList.addAll(_renderHeader(user));
     nodeList.addAll(_renderMembership(user));
     nodeList.add(_renderAddress(user));
@@ -115,6 +122,8 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
     nodeList.addAll(_renderListRows(user.emergencyContacts, "Emergency Contact"));
     nodeList.addAll(_renderListRows(user.services, "Available Service"));
     nodeList.add(_renderCheckboxes());
+    nodeList.add(_renderDeleteModal());
+
     return nodeList;
   }
 
@@ -181,14 +190,38 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
         new VDivElement()
           ..className = 'column is-2'
           ..children = [
-            renderSubmit(
-                _submitClick,
-                Validator.canActivateSubmit(
-                    state.firstNameIsValid, state.memIsValid, state.addressIsValid, state.lastNameIsValid)),
+            new VLabelElement()
+              ..className = 'label'
+              ..text = "Role",
+            _roleHelper(user),
           ],
       ]);
     return nodeList;
   }
+
+  _renderPageHeader() => new VDivElement()
+    ..className = 'columns'
+    ..children = [
+      new VDivElement()
+        ..className = 'column is-narrow'
+        ..children = [
+          new Vh1()
+            ..className = 'title'
+            ..text = "Member Edit"
+        ],
+      new VDivElement()..className = 'column',
+      new VDivElement()
+        ..className = 'column is-narrow'
+        ..children = [
+          renderEditSubmitButton(
+              edit: state.edit,
+              onEditClick: _editClick,
+              onSubmitClick: _submitClick,
+              onDeleteClick: _promptForMemberDeletionClick,
+              submitIsDisabled: Validator.canActivateSubmit(
+                  state.firstNameIsValid, state.memIsValid, state.addressIsValid, state.lastNameIsValid)),
+        ],
+    ];
 
   ///[_renderHeader] makes the title bar of the editMember page
   List<VNode> _renderHeader(User user) {
@@ -216,11 +249,6 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
               ..className = 'subtitle is-5'
               ..text = "Preferred Name: " + user.firstName,
             _renderPosition(user),
-          ],
-        new VDivElement()
-          ..className = 'column is-one-fifth is-offset-1'
-          ..children = [
-            renderEdit(_editClick),
           ],
       ]);
     return nodeList;
@@ -685,6 +713,16 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
         ]
     ];
 
+  VNode _renderDeleteModal() => new ConfirmModal(ConfirmModalProps()
+    ..isOpen = state.promptForMemberDeletion
+    ..cancelButtonStyle = ""
+    ..cancelButtonText = "Cancel"
+    ..submitButtonStyle = "is-danger"
+    ..submitButtonText = "Remove"
+    ..message = "Are you sure you want to remove this member? This cannot be undone."
+    ..onCancel = _cancelMemberDeleteClick
+    ..onConfirm = _memberDeleteClick);
+
   //Input validation for each field
 
   /// [_firstNameValidation]Validation for first name
@@ -780,7 +818,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
   }
 
   ///[_submitClick] listener to grab all available data on page and push to firebase
-  _submitClick(_) {
+  _submitClick() {
     InputElement first = querySelector('#First_Name');
     InputElement last = querySelector('#Last_Name');
     InputElement email = querySelector('#Email');
@@ -842,8 +880,23 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
     setState((props, state) => state..role = "admin");
   }
 
+  _promptForMemberDeletionClick() {
+    setState((props, state) => state..promptForMemberDeletion = true);
+  }
+
+  _cancelMemberDeleteClick() {
+    setState((props, state) => state..promptForMemberDeletion = false);
+  }
+
+  _memberDeleteClick() {
+    final member = props.userMap[props.selectedMemberUID];
+    if (member == null) return;
+    props.actions.server.removeMember(member);
+    history.push(Routes.viewMembers);
+  }
+
   ///[_editClick] listener for the click action of the edit button to put page into an edit state
-  _editClick(_) {
+  _editClick() {
     setState((props, state) => state..edit = !state.edit);
   }
 

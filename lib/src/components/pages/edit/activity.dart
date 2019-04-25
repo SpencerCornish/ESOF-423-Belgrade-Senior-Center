@@ -10,6 +10,7 @@ import 'package:built_collection/built_collection.dart';
 import '../../../model/activity.dart';
 import '../../../state/app.dart';
 import '../../core/nav.dart';
+import '../../core/modal.dart';
 import '../../core/pageRepeats.dart';
 import '../../../model/user.dart';
 
@@ -26,7 +27,8 @@ class EditActivityProps {
 class EditActivityState {
   bool edit;
   String userToDelete;
-  bool showDeletePrompt;
+  bool showDeleteUserPrompt;
+  bool showDeleteActivityPrompt;
   bool showAddUserPrompt;
   bool timeIsValid;
   bool activityNameIsValid;
@@ -45,7 +47,8 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
   EditActivityState getInitialState() => EditActivityState()
     ..edit = false
     ..showAddUserPrompt = false
-    ..showDeletePrompt = false
+    ..showDeleteUserPrompt = false
+    ..showDeleteActivityPrompt = false
     ..userToDelete = ''
     ..activityNameIsValid = true
     ..instructorNameIsValid = true
@@ -72,7 +75,8 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
           ..user = props.user),
         new VDivElement()
           ..children = [
-            _renderPromptForDeletion(act),
+            _renderPromptForUserDeletion(act),
+            _renderPromptForActivityDeletion(),
             _renderAddUser(act, state.userToDelete),
             _activityCreation(act),
           ]
@@ -92,17 +96,28 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
               new VDivElement()
                 ..className = 'box'
                 ..children = [
-                  //create the Title of Box
                   new VDivElement()
-                    ..className = 'field is-grouped is-grouped-left'
+                    ..className = 'columns'
                     ..children = [
                       new VDivElement()
-                        ..className = 'cloumn has-text-centered'
+                        ..className = 'column is-narrow'
                         ..children = [
                           new Vh1()
                             ..className = 'title'
                             ..text = "Activity Edit"
-                        ]
+                        ],
+                      new VDivElement()..className = 'column',
+                      new VDivElement()
+                        ..className = 'column is-narrow'
+                        ..children = [
+                          renderEditSubmitButton(
+                              edit: state.edit,
+                              onEditClick: _editClick,
+                              onSubmitClick: _submitClick,
+                              onDeleteClick: _promptForRemoveActivityClick,
+                              submitIsDisabled:
+                                  Validator.canActivateSubmit(state.activityNameIsValid, state.timeIsValid)),
+                        ],
                     ],
                   //create the input fields for activity name and instructor's name
                   new VDivElement()
@@ -124,9 +139,6 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
                     ..className = 'title'
                     ..text = "Attendees",
                   _renderAttendance(act),
-                  //create the submit button
-                  renderEditSubmitButton(state.edit, _editClick, _submitClick,
-                      Validator.canActivateSubmit(state.activityNameIsValid, state.timeIsValid)),
                 ]
             ]
         ]
@@ -488,6 +500,16 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
         ]);
     }
 
+    if (act.users.length == 0) {
+      nodeList.add(new VTableRowElement()
+        ..className = 'tr'
+        ..children = [
+          new VParagraphElement()
+            ..className = 'has-text-grey'
+            ..text = "No attendees added"
+        ]);
+    }
+
     return new VTableElement()
       ..className = 'table is-narrow is-striped is-fullwidth'
       ..id = "attendance"
@@ -517,7 +539,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
     if (state.edit) {
       return new VButtonElement()
         ..className = "button is-small is-rounded"
-        ..onClick = ((_) => _promptForDeleteClick(userID))
+        ..onClick = ((_) => _promptForRemoveUserClick(userID))
         ..children = [
           new VSpanElement()
             ..className = 'icon'
@@ -530,40 +552,25 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
     return new VParagraphElement();
   }
 
-  ///[_renderPromptForDeletion] modal that double checks the member is the inteded member for removal
-  VNode _renderPromptForDeletion(Activity act) => new VDivElement()
-    ..className = "modal ${state.showDeletePrompt ? 'is-active' : ''}"
-    ..children = [
-      new VDivElement()..className = 'modal-background',
-      new VDivElement()
-        ..className = 'modal-card'
-        ..children = [
-          new Vsection()
-            ..className = 'modal-card-head'
-            ..children = [
-              new VParagraphElement()
-                ..className = 'title is-4'
-                ..text = 'Remove User from Activity?'
-            ],
-          new Vsection()
-            ..className = 'modal-card-body'
-            ..children = [
-              new VParagraphElement()..text = "Are you sure you want to remove this user?",
-            ],
-          new Vfooter()
-            ..className = 'modal-card-foot'
-            ..children = [
-              new VButtonElement()
-                ..className = 'button is-danger is-rounded'
-                ..text = "Yes"
-                ..onClick = (_) => _removeClick(act),
-              new VButtonElement()
-                ..className = 'button is-rounded'
-                ..text = "No"
-                ..onClick = _cancelDeletionClick
-            ],
-        ],
-    ];
+  VNode _renderPromptForUserDeletion(Activity act) => new ConfirmModal(ConfirmModalProps()
+    ..isOpen = state.showDeleteUserPrompt
+    ..cancelButtonStyle = ""
+    ..cancelButtonText = "Cancel"
+    ..submitButtonStyle = "is-danger"
+    ..submitButtonText = "Remove"
+    ..message = "Are you sure you want to remove this user?"
+    ..onCancel = _cancelRemoveUserClick
+    ..onConfirm = () => _removeUserClick(act));
+
+  VNode _renderPromptForActivityDeletion() => new ConfirmModal(ConfirmModalProps()
+    ..isOpen = state.showDeleteActivityPrompt
+    ..cancelButtonStyle = ""
+    ..cancelButtonText = "Cancel"
+    ..submitButtonStyle = "is-danger"
+    ..submitButtonText = "Remove"
+    ..message = "Are you sure you want to remove this activity? This cannot be undone."
+    ..onCancel = _cancelRemoveActivityClick
+    ..onConfirm = _removeActivityClick);
 
   ///[_rederAddUser] modal containing list of members able to be added to current activity
   VNode _renderAddUser(Activity act, String uid) => new VDivElement()
@@ -637,6 +644,16 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
 
     return items;
   }
+
+  _promptForRemoveUserClick(String userID) => setState((props, state) => state
+    ..showDeleteUserPrompt = true
+    ..userToDelete = userID);
+
+  _cancelRemoveUserClick() => setState((props, state) => state..showDeleteUserPrompt = false);
+
+  _promptForRemoveActivityClick() => setState((props, state) => state..showDeleteActivityPrompt = true);
+
+  _cancelRemoveActivityClick() => setState((props, state) => state..showDeleteActivityPrompt = false);
 
   ///[_capView] converts capacity from the stored number (or lack there of) to a pretty output
   String _capView(String text) {
@@ -712,27 +729,25 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
     }
   }
 
-  ///[_promptForDeleteClick] sets the state to show the deletion modal for a user
-  _promptForDeleteClick(String userID) => setState((props, state) => state
-    ..showDeletePrompt = true
-    ..userToDelete = userID);
-
-  ///[_cancelDeletionClick] sets the state to hide the deletion modal with no action
-  _cancelDeletionClick(_) => setState((props, state) => state..showDeletePrompt = false);
-
   ///[_addClick] sets the state to show the addUser modal
   _addClick(_) => setState((props, state) => state..showAddUserPrompt = true);
 
   ///[_cancelAddClick]sets the state to hide the addUser modal with no action
   _cancelAddClick(_) => setState((props, state) => state..showAddUserPrompt = false);
 
-  ///[_removeClick] actually removes a user from this activity and hides the modal
-  _removeClick(Activity act) {
+  _removeUserClick(Activity act) {
     props.actions.server.updateOrCreateActivity(act.rebuild((builder) => builder..users.remove(state.userToDelete)));
     props.actions.server.fetchAllActivities();
     setState((props, state) => state
-      ..showDeletePrompt = false
+      ..showDeleteUserPrompt = false
       ..userToDelete = '');
+  }
+
+  _removeActivityClick() {
+    final activity = props.activityMap[props.selectedActivityUID];
+    if (activity == null) return;
+    props.actions.server.removeActivity(activity);
+    history.push(Routes.viewActivity);
   }
 
   ///[_addUserClick] actually adds a user to this activity and hides the modal
@@ -743,13 +758,13 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
   }
 
   ///[_editClick] listener for the click action of the edit button to put page into an edit state
-  _editClick(_) {
+  _editClick() {
     setState((props, state) => state..edit = !state.edit);
   }
 
   //method used for the submit click
   //timeEnd-input, timeStart-input, capacity-input, location-input, instructorName-input, act-input
-  _submitClick(_) {
+  _submitClick() {
     InputElement activity = querySelector('#act-input');
     InputElement instructor = querySelector('#instructorName-input');
     InputElement location = querySelector('#location-input');

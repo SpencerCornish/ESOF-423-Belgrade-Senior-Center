@@ -68,7 +68,7 @@ class ViewMeal extends Component<ViewMealProps, ViewMealState> {
                       _renderHeader(),
                       new VTableElement()
                         ..className = 'table is-narrow is-striped is-fullwidth'
-                        ..children = createRows(),
+                        ..children = _createRows(),
                     ],
                 ],
             ],
@@ -76,7 +76,7 @@ class ViewMeal extends Component<ViewMealProps, ViewMealState> {
     ];
 
   /// [createRows] Scaling function to make rows based on amount of information available
-  List<VNode> createRows() {
+  List<VNode> _createRows() {
     List<Meal> meals;
     List<VNode> nodeList = new List();
     if (!state.searching) {
@@ -88,7 +88,7 @@ class ViewMeal extends Component<ViewMealProps, ViewMealState> {
     nodeList.addAll(titleRow(title));
     for (Meal meal in meals) {
       nodeList.add(new VTableRowElement()
-        ..className = 'tr'
+        ..className = 'tr tr-hoverable'
         ..children = [
           new VTableCellElement()
             ..className = tdClass(_menuSubstring(meal.menu.toString()))
@@ -99,7 +99,7 @@ class ViewMeal extends Component<ViewMealProps, ViewMealState> {
           new VTableCellElement()
             ..children = [
               new VButtonElement()
-                ..className = "button is-rounded"
+                ..className = "button is-rounded is-small"
                 ..onClick = ((_) => _onMealClick(meal.uid))
                 ..children = [
                   new VSpanElement()
