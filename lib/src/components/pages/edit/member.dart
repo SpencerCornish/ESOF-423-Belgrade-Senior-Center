@@ -245,9 +245,6 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
             new Vh4()
               ..className = 'title is-4'
               ..text = user.firstName + " " + user.lastName,
-            new Vh5()
-              ..className = 'subtitle is-5'
-              ..text = "Preferred Name: " + user.firstName,
             _renderPosition(user),
           ],
       ]);
