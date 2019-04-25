@@ -16,13 +16,13 @@ To run the webapp, simply open in your web browser of choice, and follow the dir
 
 When the page is loaded you must login, this step uses Google authentication for security. You will then be redirected to a dashboard page that will show The current logged in member's time punches. On the top of every page there is a navigation bar that links to every other page on the site.
 
-Under the `View` tab there are links to different tables that will show the information currently stored in the main database.
+Under the `View` tab there are links to different tables that will show the information currently stored by the system. Clicking on any of these rows within said tables will allow editing and deletion of the data.
 
 Under the `New` tab there are links to different forms that will create a member, meal or activity and store the information in the main database when submitted. The forms have built in validation to ensure data is entered properly.
 
 ## View Pages
 
-To view the current members (and their associated shifts), meals, or activities you can hover over the `View` tab in the top left of the screen then select which category you would like to view (Admin's will have the added option to view all shifts).
+To view the current members (and their associated shifts), meals, or activities you can hover over the `View` tab in the top left of the screen then select which category you would like to view (Admins will have the added option to view all shifts).
 
 You are able to search through the list by keywords.
 
