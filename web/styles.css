@@ -48,3 +48,7 @@ nav {
 html {
     background: url("assets/images/bg.jpg") repeat;
 }
+
+.tr-hoverable:hover td{
+    background-color: whitesmoke;
+}
