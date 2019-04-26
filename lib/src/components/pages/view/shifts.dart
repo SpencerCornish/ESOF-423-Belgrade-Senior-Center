@@ -205,7 +205,7 @@ class ViewShift extends Component<ViewShiftProps, ViewShiftState> {
   }
 
   ///[_onRefreshClick] reloads the data for the page
-  _onRefreshClick() {
-    props.actions.server.fetchAllShifts();
+  _onRefreshClick(_) {
+    _requestData(props.allShifts);
   }
 }
