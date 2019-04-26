@@ -43,8 +43,8 @@ abstract class Shift implements Built<Shift, ShiftBuilder> {
         '\"${punchID}\"',
         '\"${fName}\"',
         '\"${lName}\"',
-        '\"${inTime}\"',
-        '\"${outTime}\"',
+        '\"${inTime.toIso8601String()}\"',
+        '\"${outTime.toIso8601String()}\"',
         '\"${durationWorked}\"',
       ].join(',') +
       '\n';
