@@ -215,7 +215,7 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
       return (new VDivElement()
         ..className = "modal ${state.showMod ? 'is-active' : ''}"
         ..children = [
-          new VDivElement()..className = 'modal-background',
+          new VDivElement()..className = 'modal-background animated fadeIn fastest',
           new VDivElement()
             ..className = 'modal-card'
             ..children = [
