@@ -94,7 +94,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
             ..className = 'column is-three-quarters'
             ..children = [
               new VDivElement()
-                ..className = 'box'
+                ..className = 'box animated fadeIn fastest'
                 ..children = [
                   new VDivElement()
                     ..className = 'columns'
@@ -576,7 +576,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
   VNode _renderAddUser(Activity act, String uid) => new VDivElement()
     ..className = "modal ${state.showAddUserPrompt ? 'is-active' : ''}"
     ..children = [
-      new VDivElement()..className = 'modal-background',
+      new VDivElement()..className = 'modal-background animated fadeIn fastest',
       new VDivElement()
         ..className = 'modal-card'
         ..children = [

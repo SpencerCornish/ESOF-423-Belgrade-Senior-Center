@@ -82,7 +82,7 @@ class ViewShift extends Component<ViewShiftProps, ViewShiftState> {
                 ..className = 'column is-four-fifths'
                 ..children = [
                   new VDivElement()
-                    ..className = 'box is-4'
+                    ..className = 'box is-4 animated fadeIn fastest'
                     ..children = [
                       new VDivElement()
                         ..className = 'columns is-mobile'
@@ -156,6 +156,7 @@ class ViewShift extends Component<ViewShiftProps, ViewShiftState> {
 
       for (Shift shift in props.shiftList) {
         User user = props.userMap[shift.userID];
+        if (user == null) continue;
         if (user.firstName.toLowerCase().contains(search.value.toLowerCase())) {
           found.add(shift);
         } else if (user.lastName.toLowerCase().contains(search.value.toLowerCase())) {
@@ -205,7 +206,7 @@ class ViewShift extends Component<ViewShiftProps, ViewShiftState> {
   }
 
   ///[_onRefreshClick] reloads the data for the page
-  _onRefreshClick(_) {
+  _onRefreshClick() {
     _requestData(props.allShifts);
   }
 }

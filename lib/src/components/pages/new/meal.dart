@@ -60,7 +60,7 @@ class NewMeal extends Component<NewMealProps, NewMealState> {
             ..className = 'column is-three-quarters'
             ..children = [
               new VDivElement()
-                ..className = 'box'
+                ..className = 'box animated fadeIn fastest'
                 ..children = [
                   //create the Title of Box
                   new VDivElement()

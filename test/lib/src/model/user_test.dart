@@ -32,7 +32,7 @@ void main() {
     'services': serviceList,
   });
   final mockUserCsv =
-      '"data_UID","Bachler","Dan","test@example.com","443 E Main Street Bozeman, MT 59715","phoneNumber","phoneNumber","position","admin","dietaryRestrictions","disabilities","medicalIssues","2/27/2019","2/27/2019"\n';
+      '"data_UID","Bachler","Dan","test@example.com","443 E Main Street Bozeman, MT 59715","phoneNumber","phoneNumber","position","admin","dietaryRestrictions","disabilities","medicalIssues","","","","servicea,serviceb","2/27/2019","2/27/2019"\n';
   group('User -', () {
     test('fromFirebase factory produces accurate model file', () {
       User userFromTestData = new User.fromFirebase(mockFirestoreUserData, new BuiltList<EmergencyContact>(),

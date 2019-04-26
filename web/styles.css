@@ -49,6 +49,22 @@ html {
     background: url("assets/images/bg.jpg") repeat;
 }
 
-.tr-hoverable:hover td{
+.tr-hoverable td {
+    transition: .1s;
+
+
+    background-color: white;
+}
+
+.tr-hoverable:hover td {
     background-color: whitesmoke;
+}
+
+.navbar-dropdown {
+    z-index: -100;
+}
+
+.fastest {
+    animation-duration: 200ms;
+
 }

@@ -76,7 +76,7 @@ class EditMeal extends Component<EditMealProps, EditMealState> {
             ..className = 'column is-three-quarters'
             ..children = [
               new VDivElement()
-                ..className = 'box'
+                ..className = 'box animated fadeIn fastest'
                 ..children = [
                   new VDivElement()
                     ..className = 'columns'

@@ -101,7 +101,7 @@ class EditMember extends Component<EditMemberProps, EditMemberState> {
                   ..className = 'column is-four-fifths'
                   ..children = [
                     new VDivElement()
-                      ..className = 'box is-4'
+                      ..className = 'box is-4 animated fadeIn fastest'
                       ..children = _pageElements(user),
                   ],
               ],

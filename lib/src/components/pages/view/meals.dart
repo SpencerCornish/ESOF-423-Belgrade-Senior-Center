@@ -63,7 +63,7 @@ class ViewMeal extends Component<ViewMealProps, ViewMealState> {
                 ..className = 'column is-four-fifths'
                 ..children = [
                   new VDivElement()
-                    ..className = 'box is-4'
+                    ..className = 'box is-4 animated fadeIn fastest'
                     ..children = [
                       _renderHeader(),
                       new VTableElement()

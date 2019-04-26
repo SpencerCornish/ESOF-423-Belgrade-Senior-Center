@@ -77,7 +77,7 @@ class Nav extends Component<NavProps, NavState> {
                       new VSpanElement()..text = 'New',
                     ],
                   new VDivElement()
-                    ..className = "navbar-dropdown"
+                    ..className = "navbar-dropdown animated slideInDown fastest"
                     ..children = [
                       new Va()
                         ..className = "navbar-item"
@@ -107,7 +107,7 @@ class Nav extends Component<NavProps, NavState> {
                       new VSpanElement()..text = 'View',
                     ],
                   new VDivElement()
-                    ..className = "navbar-dropdown"
+                    ..className = "navbar-dropdown animated slideInDown fastest"
                     ..children = [
                       new Va()
                         ..className = "navbar-item"

@@ -71,7 +71,7 @@ class NewActivity extends Component<NewActivityProps, NewActivityState> {
             ..className = 'column is-three-quarters'
             ..children = [
               new VDivElement()
-                ..className = 'box'
+                ..className = 'box animated fadeIn fastest'
                 ..children = [
                   //create the Title of Box
                   new VDivElement()
