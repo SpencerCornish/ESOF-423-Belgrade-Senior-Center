@@ -91,7 +91,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
 
   ///[_renderBox] renders all input fields
   _renderBox() => new VDivElement()
-    ..className = 'box'
+    ..className = 'box animated fadeIn fastest'
     ..children = [
       //create the Title of Box
       new VDivElement()

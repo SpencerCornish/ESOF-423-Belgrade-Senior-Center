@@ -23,7 +23,7 @@ class ConfirmModal extends PComponent<ConfirmModalProps> {
   render() => new VDivElement()
     ..className = "modal ${props.isOpen ? 'is-active' : ''}"
     ..children = [
-      new VDivElement()..className = 'modal-background',
+      new VDivElement()..className = 'modal-background animated fadeIn faster',
       new VDivElement()
         ..className = 'modal-card'
         ..children = [

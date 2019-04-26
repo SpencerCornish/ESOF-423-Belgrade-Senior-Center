@@ -94,7 +94,7 @@ class EditActivity extends Component<EditActivityProps, EditActivityState> {
             ..className = 'column is-three-quarters'
             ..children = [
               new VDivElement()
-                ..className = 'box'
+                ..className = 'box animated fadeIn fastest'
                 ..children = [
                   new VDivElement()
                     ..className = 'columns'

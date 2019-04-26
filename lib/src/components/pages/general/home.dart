@@ -63,7 +63,7 @@ class Home extends PComponent<HomeProps> {
             ..className = 'column is-three-fifths-widescreen is-two-thirds-desktop is-half-tablet'
             ..children = [
               new VDivElement()
-                ..className = 'box'
+                ..className = 'box animated fadeIn faster'
                 ..children = [
                   new Vh1()
                     ..className = 'title has-text-centered'
