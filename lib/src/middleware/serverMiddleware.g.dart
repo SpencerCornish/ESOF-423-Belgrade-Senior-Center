@@ -23,6 +23,10 @@ class _$ServerMiddlewareActions extends ServerMiddlewareActions {
       new ActionDispatcher<Activity>('ServerMiddlewareActions-updateOrCreateActivity');
   final ActionDispatcher<Meal> updateOrCreateMeal =
       new ActionDispatcher<Meal>('ServerMiddlewareActions-updateOrCreateMeal');
+  final ActionDispatcher<Activity> removeActivity =
+      new ActionDispatcher<Activity>('ServerMiddlewareActions-removeActivity');
+  final ActionDispatcher<Meal> removeMeal = new ActionDispatcher<Meal>('ServerMiddlewareActions-removeMeal');
+  final ActionDispatcher<User> removeMember = new ActionDispatcher<User>('ServerMiddlewareActions-removeMember');
   final ActionDispatcher<Null> fetchAllMembers = new ActionDispatcher<Null>('ServerMiddlewareActions-fetchAllMembers');
   final ActionDispatcher<Null> fetchAllActivities =
       new ActionDispatcher<Null>('ServerMiddlewareActions-fetchAllActivities');
@@ -41,6 +45,9 @@ class _$ServerMiddlewareActions extends ServerMiddlewareActions {
     updateOrCreateUser.setDispatcher(dispatcher);
     updateOrCreateActivity.setDispatcher(dispatcher);
     updateOrCreateMeal.setDispatcher(dispatcher);
+    removeActivity.setDispatcher(dispatcher);
+    removeMeal.setDispatcher(dispatcher);
+    removeMember.setDispatcher(dispatcher);
     fetchAllMembers.setDispatcher(dispatcher);
     fetchAllActivities.setDispatcher(dispatcher);
     fetchAllMeals.setDispatcher(dispatcher);
@@ -59,6 +66,9 @@ class ServerMiddlewareActionsNames {
   static final ActionName<Activity> updateOrCreateActivity =
       new ActionName<Activity>('ServerMiddlewareActions-updateOrCreateActivity');
   static final ActionName<Meal> updateOrCreateMeal = new ActionName<Meal>('ServerMiddlewareActions-updateOrCreateMeal');
+  static final ActionName<Activity> removeActivity = new ActionName<Activity>('ServerMiddlewareActions-removeActivity');
+  static final ActionName<Meal> removeMeal = new ActionName<Meal>('ServerMiddlewareActions-removeMeal');
+  static final ActionName<User> removeMember = new ActionName<User>('ServerMiddlewareActions-removeMember');
   static final ActionName<Null> fetchAllMembers = new ActionName<Null>('ServerMiddlewareActions-fetchAllMembers');
   static final ActionName<Null> fetchAllActivities = new ActionName<Null>('ServerMiddlewareActions-fetchAllActivities');
   static final ActionName<Null> fetchAllMeals = new ActionName<Null>('ServerMiddlewareActions-fetchAllMeals');

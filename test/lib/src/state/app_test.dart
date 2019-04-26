@@ -1,6 +1,5 @@
 import 'package:bsc/src/constants.dart';
 import 'package:bsc/src/model/activity.dart';
-import 'package:bsc/src/model/emergencyContact.dart';
 import 'package:bsc/src/model/meal.dart';
 import 'package:built_redux/built_redux.dart';
 import 'package:test/test.dart';
@@ -35,7 +34,9 @@ void main() {
             ..waiverRelease = false
             ..intakeForm = false
             ..dietaryRestrictions = ''
-            ..emergencyContacts = new ListBuilder<EmergencyContact>()
+            ..emergencyContactName = ''
+            ..emergencyContactNumber = ''
+            ..emergencyContactRelation = ''
             ..membershipStart = new DateTime.fromMillisecondsSinceEpoch(0)
             ..membershipRenewal = new DateTime.fromMillisecondsSinceEpoch(0)
             ..disabilities = ''

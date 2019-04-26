@@ -1,21 +1,23 @@
 import 'dart:html' hide History;
 
+import 'package:bsc/src/components/core/pageRepeats.dart';
 import 'package:wui_builder/components.dart';
 import 'package:wui_builder/wui_builder.dart';
 import 'package:wui_builder/vhtml.dart';
 import 'package:built_collection/built_collection.dart';
 
 import '../../../constants.dart';
-import '../../../model/emergencyContact.dart';
 import '../../../state/app.dart';
 import '../../core/nav.dart';
 import '../../../model/user.dart';
 
+/// [NewMemberProps] class for the new member page passed in propeerties
 class NewMemberProps {
   AppActions actions;
   User user;
 }
 
+/// [NewMemberState] state class for the new member page
 class NewMemberState {
   bool firstNameIsValid;
   bool lastNameIsValid;
@@ -30,9 +32,11 @@ class NewMemberState {
   bool intakeBool;
   bool hasInvalid;
   bool memIsValid;
+  bool emValid;
   String role;
 }
 
+/// [NewMember] class to create the new meal page for creating an meal
 class NewMember extends Component<NewMemberProps, NewMemberState> {
   NewMember(props) : super(props);
 
@@ -51,6 +55,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     ..intakeBool = false
     ..hasInvalid = true
     ..memIsValid = false
+    ..emValid = true
     ..role = "member";
 
   History _history;
@@ -71,7 +76,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
         ]
     ];
 
-  //create the text boxes that are used to create new users
+  /// [_userCreation] create the text boxes that are used to create new users
   VNode _userCreation() => new VDivElement()
     ..className = 'container'
     ..children = [
@@ -80,448 +85,553 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
         ..children = [
           new VDivElement()
             ..className = 'column is-three-quarters'
+            ..children = [_renderBox()]
+        ]
+    ];
+
+  ///[_renderBox] renders all input fields
+  _renderBox() => new VDivElement()
+    ..className = 'box animated fadeIn fastest'
+    ..children = [
+      //create the Title of Box
+      new VDivElement()
+        ..className = 'field is-grouped is-grouped-left'
+        ..children = [
+          new VDivElement()
+            ..className = 'cloumn has-text-centered'
+            ..children = [
+              new Vh1()
+                ..className = 'title'
+                ..text = "User Creation"
+            ]
+        ],
+      //create the First and Last Name Input field
+      _renderName(),
+      //create the Email Input field
+      _renderEmail(),
+      //create the Phone Number Input field
+      _renderPhone(),
+      //create the Address Input field
+      _renderAddress(),
+      //create the Dietary Restrictions Input field
+      _renderRestricitons(),
+      //create the Disabilities Input field
+      _renderDissability(),
+      //create the Medical Issue Input field
+      _renderMedIssue(),
+      //create the Membership Start Date Input field and renewal
+      _renderMembershipDates(),
+      //text area for services
+      _renderTextArea(),
+      //create emergency contact input
+      _renderEmergencyContact(),
+      //create the drop down menu for establishing the type of user
+      new VDivElement()
+        ..className = 'columns is-centered'
+        ..children = [
+          new VDivElement()
+            ..className = 'column is-three-quarters'
+            ..children = [_renderRoleBox()],
+        ],
+      new VDivElement()
+        ..className = 'columns is-centered'
+        ..children = [
+          new VDivElement()
+            ..className = 'column is-half'
+            ..children = [_renderCheckboxes()],
+        ],
+      //create the submit button
+      renderSubmit(
+          _submitClick,
+          Validator.canActivateSubmit(
+              state.firstNameIsValid, state.memIsValid, state.addressIsValid, state.lastNameIsValid))
+    ];
+
+  ///[_renderName] renders Name label and input
+  VNode _renderName() => new VDivElement()
+    ..className = 'field is-grouped'
+    ..children = [
+      new VDivElement()
+        ..className = 'field is-horizontal'
+        ..children = [
+          new VDivElement()
+            ..className = 'field-body'
             ..children = [
               new VDivElement()
-                ..className = 'box'
+                ..className = 'field'
+                ..id = 'fName-lab'
                 ..children = [
-                  //create the Title of Box
-                  new VDivElement()
-                    ..className = 'field is-grouped is-grouped-left'
+                  new VLabelElement()
+                    ..className = 'label'
                     ..children = [
-                      new VDivElement()
-                        ..className = 'cloumn has-text-centered'
-                        ..children = [
-                          new Vh1()
-                            ..className = 'title'
-                            ..text = "User Creation"
-                        ]
+                      new VSpanElement()..text = "First Name",
+                      new VSpanElement()
+                        ..className = "has-text-danger"
+                        ..text = '*'
+                    ]
+                ],
+              new VDivElement()
+                ..className = 'field is-horizontal'
+                ..children = [
+                  new VParagraphElement()
+                    ..className = 'control'
+                    ..children = [
+                      new VInputElement()
+                        ..className = 'input ${state.firstNameIsValid ? '' : 'is-danger'}'
+                        ..onInput = _firstNameValidation
+                        ..id = 'fName-input'
+                        ..placeholder = "First Name",
+                      new VParagraphElement()
+                        ..className = 'help is-danger ${state.firstNameIsValid ? 'is-invisible' : ''}'
+                        ..text = 'First name is required'
                     ],
-                  //create the First and Last Name Input field
-                  new VDivElement()
-                    ..className = 'field is-grouped'
+                  new VParagraphElement()
+                    ..className = 'field'
                     ..children = [
                       new VDivElement()
                         ..className = 'field is-horizontal'
                         ..children = [
                           new VDivElement()
-                            ..className = 'field-body'
+                            ..className = 'field-label is-normal'
+                            ..id = 'lName-lab'
                             ..children = [
-                              new VDivElement()
-                                ..className = 'field'
-                                ..id = 'fName-lab'
+                              new VLabelElement()
+                                ..className = 'label'
                                 ..children = [
-                                  new VLabelElement()
-                                    ..className = 'label'
-                                    ..children = [
-                                      new VSpanElement()..text = "First Name",
-                                      new VSpanElement()
-                                        ..className = "has-text-danger"
-                                        ..text = '*'
-                                    ]
-                                ],
-                              new VDivElement()
-                                ..className = 'field is-horizontal'
-                                ..children = [
-                                  new VParagraphElement()
-                                    ..className = 'control'
-                                    ..children = [
-                                      new VInputElement()
-                                        ..className = 'input ${state.firstNameIsValid ? '' : 'is-danger'}'
-                                        ..onInput = _firstNameValidation
-                                        ..id = 'fName-input'
-                                        ..placeholder = "First Name",
-                                      new VParagraphElement()
-                                        ..className = 'help is-danger ${state.firstNameIsValid ? 'is-invisible' : ''}'
-                                        ..text = 'First name is required'
-                                    ],
-                                  new VParagraphElement()
-                                    ..className = 'field'
-                                    ..children = [
-                                      new VDivElement()
-                                        ..className = 'field is-horizontal'
-                                        ..children = [
-                                          new VDivElement()
-                                            ..className = 'field-label is-normal'
-                                            ..id = 'lName-lab'
-                                            ..children = [
-                                              new VLabelElement()
-                                                ..className = 'label'
-                                                ..children = [
-                                                  new VSpanElement()..text = "Last Name",
-                                                  new VSpanElement()
-                                                    ..className = "has-text-danger"
-                                                    ..text = '*'
-                                                ]
-                                            ],
-                                          new VDivElement()
-                                            ..className = 'field'
-                                            ..children = [
-                                              new VParagraphElement()
-                                                ..className = 'control is-expanded'
-                                                ..children = [
-                                                  new VInputElement()
-                                                    ..className = 'input ${state.lastNameIsValid ? '' : 'is-danger'}'
-                                                    ..onInput = _lastNameValidation
-                                                    ..id = 'lName-input'
-                                                    ..placeholder = "Last Name",
-                                                  new VParagraphElement()
-                                                    ..className =
-                                                        'help is-danger ${state.lastNameIsValid ? 'is-invisible' : ''}'
-                                                    ..text = 'Last name is required'
-                                                ]
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ],
-                    ],
-
-                  //create the Email Input field
-                  new VDivElement()
-                    ..className = 'field is-horizontal'
-                    ..children = [
-                      new VDivElement()
-                        ..className = 'field-label is-normal'
-                        ..children = [
-                          new VLabelElement()
-                            ..className = 'label'
-                            ..text = "Email",
-                        ],
-                      new VDivElement()
-                        ..className = 'field-body'
-                        ..children = [
-                          new VDivElement()
-                            ..className = 'field'
-                            ..children = [
-                              new VDivElement()
-                                ..className = 'control'
-                                ..children = [
-                                  new VInputElement()
-                                    ..onInput = _emailValidator
-                                    ..className = 'input ${state.emailIsValid ? '' : 'is-danger'}'
-                                    ..id = 'email-input'
-                                    ..placeholder = "name@example.com"
-                                    ..type = 'email',
-                                  new VParagraphElement()
-                                    ..className = 'help is-danger ${state.emailIsValid ? 'is-invisible' : ''}'
-                                    ..text = 'Email is invalid'
-                                ]
-                            ]
-                        ]
-                    ],
-
-                  //create the Phone Number Input field
-                  new VDivElement()
-                    ..className = 'field is-grouped'
-                    ..children = [
-                      new VDivElement()
-                        ..className = 'field is-horizontal'
-                        ..children = [
-                          new VDivElement()
-                            ..className = 'field-body'
-                            ..children = [
-                              new VDivElement()
-                                ..className = 'field'
-                                ..id = 'phoneNum-label'
-                                ..children = [
-                                  new VLabelElement()
-                                    ..className = 'label'
-                                    ..text = "Phone Number",
-                                ],
-                              new VDivElement()
-                                ..className = 'field is-horizontal'
-                                ..children = [
-                                  new VParagraphElement()
-                                    ..className = 'control'
-                                    ..children = [
-                                      new VInputElement()
-                                        ..onInput = _phoneNumberValidator
-                                        ..className = 'input ${state.phoneNumberIsValid ? '' : 'is-danger'}'
-                                        ..id = 'phoneNum-input'
-                                        ..placeholder = "888-888-88888"
-                                        ..type = 'tel',
-                                      new VParagraphElement()
-                                        ..className = 'help is-danger ${state.phoneNumberIsValid ? 'is-invisible' : ''}'
-                                        ..text = 'Phone number is invalid'
-                                    ],
-                                  //create the Cell Phone Number Input field
-                                  new VParagraphElement()
-                                    ..className = 'field'
-                                    ..children = [
-                                      new VDivElement()
-                                        ..className = 'field is-horizontal'
-                                        ..children = [
-                                          new VDivElement()
-                                            ..className = 'field-label is-normal'
-                                            ..id = 'cellNum-label'
-                                            ..children = [
-                                              new VLabelElement()
-                                                ..className = 'label'
-                                                ..text = "Cell Number"
-                                            ],
-                                          new VDivElement()
-                                            ..className = 'field'
-                                            ..children = [
-                                              new VParagraphElement()
-                                                ..className = 'control is-expanded'
-                                                ..children = [
-                                                  new VInputElement()
-                                                    ..onInput = _cellNumberValidator
-                                                    ..className = 'input ${state.cellNumberIsValid ? '' : 'is-danger'}'
-                                                    ..id = 'cellNum-input'
-                                                    ..placeholder = "888-888-88888"
-                                                    ..type = 'tel',
-                                                  new VParagraphElement()
-                                                    ..className =
-                                                        'help is-danger ${state.cellNumberIsValid ? 'is-invisible' : ''}'
-                                                    ..text = 'Cell number is invalid'
-                                                ]
-                                            ]
-                                        ]
-                                    ]
+                                  new VSpanElement()..text = "Last Name",
+                                  new VSpanElement()
+                                    ..className = "has-text-danger"
+                                    ..text = '*'
                                 ]
                             ],
-                        ]
-                    ],
-
-                  //create the Address Input field
-                  new VDivElement()
-                    ..className = 'field is-horizontal'
-                    ..children = [
-                      new VDivElement()
-                        ..className = 'field-label is-normal'
-                        ..children = [
-                          new VLabelElement()
-                            ..className = 'label'
-                            ..children = [
-                              new VSpanElement()..text = "Mailing Address",
-                              new VSpanElement()
-                                ..className = "has-text-danger"
-                                ..text = '*'
-                            ]
-                        ],
-                      new VDivElement()
-                        ..className = 'field-body'
-                        ..children = [
                           new VDivElement()
                             ..className = 'field'
                             ..children = [
-                              new VDivElement()
-                                ..className = 'control'
+                              new VParagraphElement()
+                                ..className = 'control is-expanded'
                                 ..children = [
                                   new VInputElement()
-                                    ..onInput = _addressValidator
-                                    ..className = 'input ${state.addressIsValid ? '' : 'is-danger'}'
-                                    ..id = 'address-input'
-                                    ..placeholder = "US Only",
+                                    ..className = 'input ${state.lastNameIsValid ? '' : 'is-danger'}'
+                                    ..onInput = _lastNameValidation
+                                    ..id = 'lName-input'
+                                    ..placeholder = "Last Name",
                                   new VParagraphElement()
-                                    ..className = 'help is-danger ${state.addressIsValid ? 'is-invisible' : ''}'
-                                    ..text = 'Address is invalid'
+                                    ..className = 'help is-danger ${state.lastNameIsValid ? 'is-invisible' : ''}'
+                                    ..text = 'Last name is required'
                                 ]
                             ]
-                        ]
-                    ],
-
-                  //create the Dietary Restrictions Input field
-                  new VDivElement()
-                    ..className = 'field is-horizontal'
-                    ..children = [
-                      new VDivElement()
-                        ..className = 'field-label is-normal'
-                        ..children = [
-                          new VLabelElement()
-                            ..className = 'label'
-                            ..text = "Dietary Restrictions",
-                        ],
-                      new VDivElement()
-                        ..className = 'field-body'
-                        ..children = [
-                          new VDivElement()
-                            ..className = 'field'
-                            ..children = [
-                              new VDivElement()
-                                ..className = 'control'
-                                ..children = [
-                                  new VInputElement()
-                                    ..className = 'input'
-                                    ..id = 'diet-input'
-                                    ..placeholder = "e.g. Lactose Intolerant"
-                                ]
-                            ]
-                        ]
-                    ],
-
-                  //create the Disabilities Input field
-                  new VDivElement()
-                    ..className = 'field is-horizontal'
-                    ..children = [
-                      new VDivElement()
-                        ..className = 'field-label is-normal'
-                        ..children = [
-                          new VLabelElement()
-                            ..className = 'label'
-                            ..text = "Disabilities",
-                        ],
-                      new VDivElement()
-                        ..className = 'field-body'
-                        ..children = [
-                          new VDivElement()
-                            ..className = 'field'
-                            ..children = [
-                              new VDivElement()
-                                ..className = 'control'
-                                ..children = [
-                                  new VInputElement()
-                                    ..className = 'input'
-                                    ..id = 'disabilities-input'
-                                    ..placeholder = "e.g. Blind"
-                                ]
-                            ]
-                        ]
-                    ],
-
-                  //create the Medical Issue Input field
-                  new VDivElement()
-                    ..className = 'field is-horizontal'
-                    ..children = [
-                      new VDivElement()
-                        ..className = 'field-label is-normal'
-                        ..children = [
-                          new VLabelElement()
-                            ..className = 'label'
-                            ..text = "Medical Issues",
-                        ],
-                      new VDivElement()
-                        ..className = 'field-body'
-                        ..children = [
-                          new VDivElement()
-                            ..className = 'field'
-                            ..children = [
-                              new VDivElement()
-                                ..className = 'control'
-                                ..children = [
-                                  new VInputElement()
-                                    ..className = 'input'
-                                    ..id = 'medicalIssue-input'
-                                    ..placeholder = "e.g. ADD/ADHD"
-                                ]
-                            ]
-                        ]
-                    ],
-
-                  //create the Membership Start Date Input field
-                  new VDivElement()
-                    ..className = 'field is-grouped'
-                    ..children = [
-                      new VDivElement()
-                        ..className = 'field is-horizontal'
-                        ..children = [
-                          new VDivElement()
-                            ..className = 'field-body'
-                            ..children = [
-                              new VDivElement()
-                                ..className = 'field'
-                                ..id = 'memStart-label'
-                                ..children = [
-                                  new VLabelElement()
-                                    ..className = 'label'
-                                    ..children = [
-                                      new VSpanElement()..text = "Membership Start",
-                                      new VSpanElement()
-                                        ..className = "has-text-danger"
-                                        ..text = '*'
-                                    ]
-                                ],
-                              new VDivElement()
-                                ..className = 'field is-horizontal'
-                                ..children = [
-                                  new VParagraphElement()
-                                    ..className = 'control'
-                                    ..children = [
-                                      new VInputElement()
-                                        ..className = 'input'
-                                        ..id = 'memStart-input'
-                                        ..onInput = _membershipValidator
-                                        ..type = 'date'
-                                    ],
-                                  //create the Membership Renewal Date Input field
-                                  new VParagraphElement()
-                                    ..className = 'field'
-                                    ..children = [
-                                      new VDivElement()
-                                        ..className = 'field is-horizontal'
-                                        ..children = [
-                                          new VDivElement()
-                                            ..className = 'field-label is-normal'
-                                            ..id = 'memRenew-label'
-                                            ..children = [
-                                              new VLabelElement()
-                                                ..className = 'label'
-                                                ..children = [
-                                                  new VSpanElement()..text = "Memership Renewal",
-                                                  new VSpanElement()
-                                                    ..className = "has-text-danger"
-                                                    ..text = '*'
-                                                ]
-                                            ],
-                                          new VDivElement()
-                                            ..className = 'field'
-                                            ..children = [
-                                              new VParagraphElement()
-                                                ..className = 'control is-expanded'
-                                                ..children = [
-                                                  new VInputElement()
-                                                    ..onInput = _membershipValidator
-                                                    ..className = 'input'
-                                                    ..id = 'memRenew-input'
-                                                    ..type = 'date',
-                                                  new VParagraphElement()
-                                                    ..className =
-                                                        'help is-danger ${state.memIsValid ? 'is-invisible' : ''}'
-                                                    ..text = "Renewal Date is before Start Date"
-                                                ]
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ],
-                        ]
-                    ],
-                  //create the drop down menu for establishing the type of user
-                  new VDivElement()
-                    ..className = 'columns is-centered'
-                    ..children = [
-                      new VDivElement()
-                        ..className = 'column is-three-quarters'
-                        ..children = [_renderRoleBox()],
-                    ],
-                  new VDivElement()
-                    ..className = 'columns is-centered'
-                    ..children = [
-                      new VDivElement()
-                        ..className = 'column is-half'
-                        ..children = [_renderCheckboxes()],
-                    ],
-                  //create the submit button
-                  new VDivElement()
-                    ..className = 'field is-grouped is-grouped-right'
-                    ..children = [
-                      new VDivElement()
-                        ..className = 'control'
-                        ..children = [
-                          new VButtonElement()
-                            ..className = 'button is-link is-rounded'
-                            ..disabled = _canActivateSubmit()
-                            ..text = "Submit"
-                            ..onClick = _submitClick
                         ]
                     ]
+                ]
+            ]
+        ],
+    ];
+
+  ///[_renderEmail] renders Email label and input
+  VNode _renderEmail() => new VDivElement()
+    ..className = 'field is-horizontal'
+    ..children = [
+      new VDivElement()
+        ..className = 'field-label is-normal'
+        ..children = [
+          new VLabelElement()
+            ..className = 'label'
+            ..text = "Email",
+        ],
+      new VDivElement()
+        ..className = 'field-body'
+        ..children = [
+          new VDivElement()
+            ..className = 'field'
+            ..children = [
+              new VDivElement()
+                ..className = 'control'
+                ..children = [
+                  new VInputElement()
+                    ..onInput = _emailValidator
+                    ..className = 'input ${state.emailIsValid ? '' : 'is-danger'}'
+                    ..id = 'email-input'
+                    ..placeholder = "name@example.com"
+                    ..type = 'email',
+                  new VParagraphElement()
+                    ..className = 'help is-danger ${state.emailIsValid ? 'is-invisible' : ''}'
+                    ..text = 'Email is invalid'
                 ]
             ]
         ]
     ];
 
+  ///[_renderPhone] renders Phone label and input
+  VNode _renderPhone() => new VDivElement()
+    ..className = 'field is-grouped'
+    ..children = [
+      new VDivElement()
+        ..className = 'field is-horizontal'
+        ..children = [
+          new VDivElement()
+            ..className = 'field-body'
+            ..children = [
+              new VDivElement()
+                ..className = 'field'
+                ..id = 'phoneNum-label'
+                ..children = [
+                  new VLabelElement()
+                    ..className = 'label'
+                    ..text = "Phone Number",
+                ],
+              new VDivElement()
+                ..className = 'field is-horizontal'
+                ..children = [
+                  new VParagraphElement()
+                    ..className = 'control'
+                    ..children = [
+                      new VInputElement()
+                        ..onInput = _phoneNumberValidator
+                        ..className = 'input ${state.phoneNumberIsValid ? '' : 'is-danger'}'
+                        ..id = 'phoneNum-input'
+                        ..placeholder = "888-888-88888"
+                        ..type = 'tel',
+                      new VParagraphElement()
+                        ..className = 'help is-danger ${state.phoneNumberIsValid ? 'is-invisible' : ''}'
+                        ..text = 'Phone number is invalid'
+                    ],
+                  //create the Cell Phone Number Input field
+                  new VParagraphElement()
+                    ..className = 'field'
+                    ..children = [
+                      new VDivElement()
+                        ..className = 'field is-horizontal'
+                        ..children = [
+                          new VDivElement()
+                            ..className = 'field-label is-normal'
+                            ..id = 'cellNum-label'
+                            ..children = [
+                              new VLabelElement()
+                                ..className = 'label'
+                                ..text = "Cell Number"
+                            ],
+                          new VDivElement()
+                            ..className = 'field'
+                            ..children = [
+                              new VParagraphElement()
+                                ..className = 'control is-expanded'
+                                ..children = [
+                                  new VInputElement()
+                                    ..onInput = _cellNumberValidator
+                                    ..className = 'input ${state.cellNumberIsValid ? '' : 'is-danger'}'
+                                    ..id = 'cellNum-input'
+                                    ..placeholder = "888-888-88888"
+                                    ..type = 'tel',
+                                  new VParagraphElement()
+                                    ..className = 'help is-danger ${state.cellNumberIsValid ? 'is-invisible' : ''}'
+                                    ..text = 'Cell number is invalid'
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+        ]
+    ];
+
+  ///[_renderAddress] renders Address label and input
+  VNode _renderAddress() => new VDivElement()
+    ..className = 'field is-horizontal'
+    ..children = [
+      new VDivElement()
+        ..className = 'field-label is-normal'
+        ..children = [
+          new VLabelElement()
+            ..className = 'label'
+            ..children = [
+              new VSpanElement()..text = "Mailing Address",
+              new VSpanElement()
+                ..className = "has-text-danger"
+                ..text = '*'
+            ]
+        ],
+      new VDivElement()
+        ..className = 'field-body'
+        ..children = [
+          new VDivElement()
+            ..className = 'field'
+            ..children = [
+              new VDivElement()
+                ..className = 'control'
+                ..children = [
+                  new VInputElement()
+                    ..onInput = _addressValidator
+                    ..className = 'input ${state.addressIsValid ? '' : 'is-danger'}'
+                    ..id = 'address-input'
+                    ..placeholder = "1111 Example st. Belgrade, MT 59714",
+                  new VParagraphElement()
+                    ..className = 'help is-danger ${state.addressIsValid ? 'is-invisible' : ''}'
+                    ..text = 'Address is invalid'
+                ]
+            ]
+        ]
+    ];
+
+  ///[_renderRestricitons] renders Restricitons label and input
+  VNode _renderRestricitons() => new VDivElement()
+    ..className = 'field is-horizontal'
+    ..children = [
+      new VDivElement()
+        ..className = 'field-label is-normal'
+        ..children = [
+          new VLabelElement()
+            ..className = 'label'
+            ..text = "Dietary Restrictions",
+        ],
+      new VDivElement()
+        ..className = 'field-body'
+        ..children = [
+          new VDivElement()
+            ..className = 'field'
+            ..children = [
+              new VDivElement()
+                ..className = 'control'
+                ..children = [
+                  new VInputElement()
+                    ..className = 'input'
+                    ..id = 'diet-input'
+                    ..placeholder = "e.g. Lactose Intolerant"
+                ]
+            ]
+        ]
+    ];
+
+  ///[_renderDissability] renders dissability label and input
+  VNode _renderDissability() => new VDivElement()
+    ..className = 'field is-horizontal'
+    ..children = [
+      new VDivElement()
+        ..className = 'field-label is-normal'
+        ..children = [
+          new VLabelElement()
+            ..className = 'label'
+            ..text = "Disabilities",
+        ],
+      new VDivElement()
+        ..className = 'field-body'
+        ..children = [
+          new VDivElement()
+            ..className = 'field'
+            ..children = [
+              new VDivElement()
+                ..className = 'control'
+                ..children = [
+                  new VInputElement()
+                    ..className = 'input'
+                    ..id = 'disabilities-input'
+                    ..placeholder = "e.g. Blind"
+                ]
+            ]
+        ]
+    ];
+
+  ///[_renderMedIssue] renders meddical isses label and input
+  VNode _renderMedIssue() => new VDivElement()
+    ..className = 'field is-horizontal'
+    ..children = [
+      new VDivElement()
+        ..className = 'field-label is-normal'
+        ..children = [
+          new VLabelElement()
+            ..className = 'label'
+            ..text = "Medical Issues",
+        ],
+      new VDivElement()
+        ..className = 'field-body'
+        ..children = [
+          new VDivElement()
+            ..className = 'field'
+            ..children = [
+              new VDivElement()
+                ..className = 'control'
+                ..children = [
+                  new VInputElement()
+                    ..className = 'input'
+                    ..id = 'medicalIssue-input'
+                    ..placeholder = "e.g. ADD/ADHD"
+                ]
+            ]
+        ]
+    ];
+
+  ///[_renderEmergencyContact] create emergency contact input
+  _renderEmergencyContact() => new VDivElement()
+    ..className = 'columns is-mobile is-centered is-vcentered'
+    ..children = [
+      new VDivElement()
+        ..className = 'column is-2 is-offset-1'
+        ..children = [
+          new VLabelElement()
+            ..className = 'label'
+            ..text = "Emergency Contact"
+        ],
+      new VDivElement()
+        ..className = 'column'
+        ..children = [
+          new VLabelElement()
+            ..className = 'label'
+            ..text = "Contact Name",
+          new VDivElement()
+            ..className = "control"
+            ..children = [
+              new VInputElement()
+                ..onInput = _firstNameValidation
+                ..className = "input ${state.emValid ? '' : 'is-danger'}"
+                ..id = "emName"
+                ..placeholder = "Contact Name",
+              new VParagraphElement()
+                ..className = 'help is-danger ${state.emValid ? 'is-invisible' : ''}'
+                ..text = 'Need full name number and ralationship',
+            ],
+        ],
+      new VDivElement()
+        ..className = 'column'
+        ..children = [
+          new VLabelElement()
+            ..className = 'label'
+            ..text = "Cell or Messsage Phone",
+          new VDivElement()
+            ..className = "control"
+            ..children = [
+              new VInputElement()
+                ..onInput = _emergencyValidation
+                ..className = "input ${state.emValid ? '' : 'is-danger'}"
+                ..id = "emNumber"
+                ..placeholder = "888-888-8888",
+              new VParagraphElement()
+                ..className = 'help is-danger ${state.emValid ? 'is-invisible' : ''}'
+                ..text = 'Need full name number and ralationship',
+            ],
+        ],
+      new VDivElement()
+        ..className = 'column'
+        ..children = [
+          new VLabelElement()
+            ..className = 'label'
+            ..text = "Relationship to Member",
+          new VDivElement()
+            ..className = "control"
+            ..children = [
+              new VInputElement()
+                ..onInput = _emergencyValidation
+                ..className = "input ${state.emValid ? '' : 'is-danger'}"
+                ..id = "emRelation"
+                ..placeholder = "e.g. Mother",
+              new VParagraphElement()
+                ..className = 'help is-danger ${state.emValid ? 'is-invisible' : ''}'
+                ..text = 'Need full name number and ralationship',
+            ],
+        ],
+    ];
+
+  ///[_renderTextArea] text area for services
+  _renderTextArea() => new VDivElement()
+    ..className = 'columns is-mobile is-centered is-vcentered'
+    ..children = [
+      new VDivElement()
+        ..className = 'column is-2'
+        ..children = [
+          new Vlabel()
+            ..className = 'label'
+            ..text = "Available Service",
+        ],
+      new VDivElement()
+        ..className = 'column is-four-fifths'
+        ..children = [
+          new VTextAreaElement()
+            ..className = 'textarea'
+            ..placeholder = "Service 1, Service 2"
+            ..id = "Available_Service"
+        ],
+    ];
+
+  ///[_renderMembershipDates] renders membership start label and input and calls to render membership renewal
+  VNode _renderMembershipDates() => new VDivElement()
+    ..className = 'field is-grouped'
+    ..children = [
+      new VDivElement()
+        ..className = 'field is-horizontal'
+        ..children = [
+          new VDivElement()
+            ..className = 'field-body'
+            ..children = [
+              new VDivElement()
+                ..className = 'field'
+                ..id = 'memStart-label'
+                ..children = [
+                  new VLabelElement()
+                    ..className = 'label'
+                    ..children = [
+                      new VSpanElement()..text = "Membership Start",
+                      new VSpanElement()
+                        ..className = "has-text-danger"
+                        ..text = '*'
+                    ]
+                ],
+              new VDivElement()
+                ..className = 'field is-horizontal'
+                ..children = [
+                  new VParagraphElement()
+                    ..className = 'control'
+                    ..children = [
+                      new VInputElement()
+                        ..className = 'input'
+                        ..id = 'memStart-input'
+                        ..onInput = _membershipValidator
+                        ..type = 'date'
+                    ],
+                  //create the Membership Renewal Date Input field
+                  _renderRenewal(),
+                ]
+            ],
+        ]
+    ];
+
+  ///[_renderRenewal] renders membership renewal label and input
+  VNode _renderRenewal() => new VParagraphElement()
+    ..className = 'field'
+    ..children = [
+      new VDivElement()
+        ..className = 'field is-horizontal'
+        ..children = [
+          new VDivElement()
+            ..className = 'field-label is-normal'
+            ..id = 'memRenew-label'
+            ..children = [
+              new VLabelElement()
+                ..className = 'label'
+                ..children = [
+                  new VSpanElement()..text = "Memership Renewal",
+                  new VSpanElement()
+                    ..className = "has-text-danger"
+                    ..text = '*'
+                ]
+            ],
+          new VDivElement()
+            ..className = 'field'
+            ..children = [
+              new VParagraphElement()
+                ..className = 'control is-expanded'
+                ..children = [
+                  new VInputElement()
+                    ..onInput = _membershipValidator
+                    ..className = 'input'
+                    ..id = 'memRenew-input'
+                    ..type = 'date',
+                  new VParagraphElement()
+                    ..className = 'help is-danger ${state.memIsValid ? 'is-invisible' : ''}'
+                    ..text = "Renewal Date is before Start Date"
+                ]
+            ]
+        ]
+    ];
+
+  ///[_renderRoleBox] creates a box describing the choices of role
   VNode _renderRoleBox() => new VDivElement()
     ..className = 'box'
     ..children = [
@@ -571,7 +681,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
         ],
     ];
 
-  ///[roleHelper] creates dropdown for role selection
+  ///[_renderRolePicker] creates dropdown for role selection
   VNode _renderRolePicker() => new VDivElement()
     ..className = 'dropdown ${state.dropDownActive ? 'is-active' : ''}'
     ..children = [
@@ -611,6 +721,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
         ],
     ];
 
+  ///[_renderRoleBox] creates a box with all needed checkboxes
   VNode _renderCheckboxes() => new VDivElement()
     ..className = 'box'
     ..children = [
@@ -710,7 +821,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
 
   //Input validation for each field
 
-  //Validation for first name
+  /// [_firstNameValidation]Validation for first name
   void _firstNameValidation(_) {
     //Gets first field
     InputElement first = querySelector('#fName-input');
@@ -718,10 +829,9 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     bool isValid = Validator.name(first.value);
     //Sets new state
     setState((NewMemberProps, NewMemberState) => NewMemberState..firstNameIsValid = isValid);
-    _canActivateSubmit;
   }
 
-  //Validation for last name
+  /// [_lastNameValidation] Validation for last name
   void _lastNameValidation(_) {
     //Gets last field
     InputElement last = querySelector('#lName-input');
@@ -729,10 +839,23 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     bool isValid = Validator.name(last.value);
     //Sets new state
     setState((NewMemberProps, NewMemberState) => NewMemberState..lastNameIsValid = isValid);
-    _canActivateSubmit;
   }
 
-  //Validation for email using Spencer's function from constants.dart
+  /// [_emergencyValidation] Validation for last name
+  void _emergencyValidation(_) {
+    //Gets last field
+    InputElement name = querySelector('#emName');
+    InputElement number = querySelector('#emNumber');
+    InputElement relation = querySelector('#emRelation');
+    //Validates with validator class
+    bool nameValid = Validator.name(name.value);
+    bool numValid = Validator.phoneNumber(number.value);
+    bool relValid = Validator.name(relation.value);
+    //Sets new state
+    setState((NewMemberProps, NewMemberState) => NewMemberState..emValid = (nameValid && numValid && relValid));
+  }
+
+  /// [_emailValidator] Validation for email using Spencer's function from constants.dart
   void _emailValidator(_) {
     //Gets email field
     InputElement email = querySelector('#email-input');
@@ -753,6 +876,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
   //1-425-273-4489
   //+1-425-273-4489
 
+  /// [_membershipValidator] Validation for membership
   void _membershipValidator(_) {
     InputElement memStart = querySelector('#memStart-input');
     InputElement memRenew = querySelector('#memRenew-input');
@@ -764,10 +888,9 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     } catch (_) {
       state.memIsValid = false;
     }
-    _canActivateSubmit;
   }
 
-  //Validation for phone number, doesnt check if blank
+  /// [_phoneNumberValidator] Validation for phone number, doesnt check if blank
   void _phoneNumberValidator(_) {
     //Gets phone field and then value from field
     InputElement phone = querySelector('#phoneNum-input');
@@ -782,7 +905,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     setState((NewMemberProps, NewMemberState) => NewMemberState..phoneNumberIsValid = isValid);
   }
 
-  //Validation for cell number, doesnt check if blank
+  /// [_cellNumberValidator] Validation for cell number, doesnt check if blank
   void _cellNumberValidator(_) {
     //Gets cell field and then value from field
     InputElement cell = querySelector('#cellNum-input');
@@ -797,25 +920,18 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     setState((NewMemberProps, NewMemberState) => NewMemberState..cellNumberIsValid = isValid);
   }
 
+  /// [_addressValidator] Validation for address
   void _addressValidator(_) {
     InputElement address = querySelector("#address-input");
     bool isValid = Validator.address(address.value);
     setState((NewMemberProps, NewMemberState) => NewMemberState..addressIsValid = isValid);
-    _canActivateSubmit();
   }
 
-  bool _canActivateSubmit() {
-    if (state.firstNameIsValid && state.lastNameIsValid && state.addressIsValid && state.memIsValid) {
-      return false; //enables button on false
-    }
-    return true; //disables button on true
-  }
-
-  //method used for the submit click
+  /// [_submitClick] method used for the submit click
   //will need to send fName-input, lName-input, email-input,
   //cellNum-input, phoneNum-input, address-input, diet-input,
   //disabilities-input, medicalIssue-input, memStart-input , and memRenew-input, and role type to database
-  _submitClick(_) {
+  _submitClick() {
     InputElement first = querySelector('#fName-input');
     InputElement last = querySelector('#lName-input');
     InputElement email = querySelector('#email-input');
@@ -827,6 +943,10 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
     InputElement medical = querySelector('#medicalIssue-input');
     InputElement memStart = querySelector('#memStart-input');
     InputElement memRenew = querySelector('#memRenew-input');
+    InputElement emName = querySelector('#emName');
+    InputElement emNumber = querySelector('#emNumber');
+    InputElement emRel = querySelector('#emRelation');
+    TextAreaElement service = querySelector('#Available_Service');
 
     //create a new user object
     User newUser = (new UserBuilder()
@@ -841,8 +961,10 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
           ..medicalIssues = medical.value
           ..membershipStart = DateTime.parse(memStart.value)
           ..membershipRenewal = DateTime.parse(memRenew.value)
-          ..emergencyContacts = new ListBuilder<EmergencyContact>()
-          ..services = new ListBuilder<String>()
+          ..emergencyContactName = emName.value
+          ..emergencyContactNumber = emNumber.value
+          ..emergencyContactRelation = emRel.value
+          ..services = new ListBuilder<String>(service.value.split(","))
           ..role = state.role
           ..position = "NULL"
           ..forms = new ListBuilder<String>()
@@ -853,40 +975,47 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
         .build();
 
     props.actions.server.updateOrCreateUser(newUser);
-    props.actions.server.fetchAllMembers();
 
-    history.push(Routes.dashboard);
+    history.push(Routes.viewMembers);
   }
 
+  /// [_dropDownClick] function to change state and open dropdown
   _dropDownClick(_) {
     setState((props, state) => state..dropDownActive = !state.dropDownActive);
   }
 
+  /// [_changeRoleMemClick] function to change state and close dropdown
   _changeRoleMemClick(_) {
     setState((props, state) => state..role = "member");
   }
 
+  /// [_changeRoleVolClick] function to change state and close dropdown
   _changeRoleVolClick(_) {
     setState((props, state) => state..role = "volunteer");
   }
 
+  /// [_changeRoleAdminClick] function to change state and close dropdown
   _changeRoleAdminClick(_) {
     setState((props, state) => state..role = "admin");
   }
 
   //Every time this function is called (when the check box is ticked), it flips the state of mealBool (true when ticked, false when unticked)
+  /// [_checkBoxCheck] function to change state and tick checkbox
   _checkBoxCheck(_) {
     setState((props, state) => state..mealBool = !state.mealBool);
   }
 
+  /// [_medCheckBoxCheck] function to change state and tick checkbox
   _medCheckBoxCheck(_) {
     setState((props, state) => state..medBool = !state.medBool);
   }
 
+  /// [_waiverCheckBoxCheck] function to change state and tick checkbox
   _waiverCheckBoxCheck(_) {
     setState((props, state) => state..waiverBool = !state.waiverBool);
   }
 
+  /// [_intakeBoxCheck] function to change state and tick checkbox
   _intakeBoxCheck(_) {
     setState((props, state) => state..intakeBool = !state.intakeBool);
   }

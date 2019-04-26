@@ -22,9 +22,7 @@ This is a non-exhaustive list of the tools and technologies we are using.
   - [Serverless Functions](https://firebase.google.com/docs/functions/)
   - [Cloud Firestore](https://firebase.google.com/docs/firestore/)
   - [Hosting](https://firebase.google.com/docs/hosting/)
-  - [Storage](https://firebase.google.com/docs/storage/)
 - [Travis CI](https://travis-ci.org/), for Continuous integration
-- [LGTM (Looks good to me)](https://lgtm.com/), for Javascript dependency security vulnerability detection.
 - [Plant UML](http://plantuml.com/), for UML diagram.
 
 ## Directory Layout
@@ -46,13 +44,21 @@ This is a non-exhaustive list of the tools and technologies we are using.
 
 - THe `sass` directory will eventually contain any custom styling for the project.
 
-[Old UML Diagram:](./readme_assets/classDiagram.png)
+## UML Diagrams
 
-![Class Diagram](./readme_assets/classDiagram.png)
+[Final:](./readme_assets/BSCDiagram.png)
 
-[UML Diagram:](./readme_assets/classDiagram2.png)
+![Class Diagram](./readme_assets/BSCDiagram.png)
+
+### Older Versions
+
+[Feature Complete:](./readme_assets/classDiagram2.png)
 
 ![Class Diagram](./readme_assets/classDiagram2.png)
+
+[First:](./readme_assets/classDiagram.png)
+
+![Class Diagram](./readme_assets/classDiagram.png)
 
 ## Directions for Building from Source Code
 
@@ -119,6 +125,13 @@ In Dart 2, generating coverage is surprisingly difficult for Chrome platform tes
 *It's also possible to view the raw, unmapped coverage data by looking under the coverage tab, if necessary.*
 
 **For example reports of test coverage, [click here](test/coverage-reports/). These are not necessarily up to date.**
+
+### Issue Links Documenting Dart 2.x Coverage Bugs
+
+Here are the links to the various google issues related to the issues with coverage collection in Dart 2.x:
+
+- [Dart SDK Issue](https://github.com/dart-lang/test/issues/36)
+- [Chromium Bug](https://bugs.chromium.org/p/chromium/issues/detail?id=818806)
 
 ## Setting up Automated Weekly Build and Test
 

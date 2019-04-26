@@ -6,6 +6,7 @@ import 'package:wui_builder/vhtml.dart';
 import 'package:built_collection/built_collection.dart';
 
 import '../../core/nav.dart';
+import '../../core/pageRepeats.dart';
 import '../../../model/user.dart';
 import '../../../model/shift.dart';
 import '../../../state/app.dart';
@@ -43,76 +44,26 @@ class ViewShift extends Component<ViewShiftProps, ViewShiftState> {
     if (props.user.role.toLowerCase() != "admin" && props.user.role.toLowerCase() != "volunteer") {
       history.push(Routes.dashboard);
     }
-    _requestData();
+    _requestData(props.allShifts);
   }
 
   @override
   void componentWillUpdate(ViewShiftProps newProps, ViewShiftState newState) {
     // We have transitioned between page types
     if (props.allShifts != newProps.allShifts) {
-      _requestData();
+      _requestData(newProps.allShifts);
     }
     super.componentWillUpdate(newProps, newState);
   }
 
-  void _requestData() {
-    if (props.allShifts && props.user.role == "admin") {
+  ///[_requestData] re-fetches data when it is needed
+  void _requestData(bool allShifts) {
+    if (allShifts && props.user.role == "admin") {
       props.actions.server.fetchAllShifts();
     } else {
       props.actions.server.fetchShiftsForUser(0);
     }
     props.actions.server.fetchAllMembers();
-  }
-
-  /// [createRows] Scaling function to make rows based on amount of information available
-  List<VNode> createRows() {
-    List<VNode> nodeList = new List();
-    List<Shift> list;
-    if (state.searching) {
-      list = state.found;
-    } else {
-      list = props.shiftList.toList();
-    }
-
-    nodeList.addAll(titleRow());
-    for (Shift shift in list) {
-      User user = props.userMap[shift.userID];
-
-      nodeList.add(new VTableRowElement()
-        ..className = 'tr'
-        ..children = [
-          new VTableCellElement()
-            ..className = tdClass(shift.inTime.toString())
-            ..text = checkText("${user?.firstName ?? shift.userID}"),
-          new VTableCellElement()
-            ..className = tdClass(shift.inTime.toString())
-            ..text = checkText("${user?.lastName ?? shift.userID}"),
-          new VTableCellElement()
-            ..className = tdClass(shift.inTime.toString())
-            ..text = checkText("${formatTime(shift.inTime)}"),
-          new VTableCellElement()
-            ..className = tdClass(shift.outTime.toString())
-            ..text = checkText("${formatTime(shift.outTime)}"),
-        ]);
-    }
-    return nodeList;
-  }
-
-  String checkText(String text) => text != '' ? text : "N/A";
-
-  String tdClass(String text) => text != '' ? 'td' : "td has-text-grey";
-
-  /// [titleRow] helper function to create the title row
-  List<VNode> titleRow() {
-    List<VNode> nodeList = new List();
-    for (String title in title) {
-      nodeList.add(
-        new VTableCellElement()
-          ..className = 'title is-5'
-          ..text = title,
-      );
-    }
-    return nodeList;
   }
 
   @override
@@ -131,7 +82,7 @@ class ViewShift extends Component<ViewShiftProps, ViewShiftState> {
                 ..className = 'column is-four-fifths'
                 ..children = [
                   new VDivElement()
-                    ..className = 'box is-4'
+                    ..className = 'box is-4 animated fadeIn fastest'
                     ..children = [
                       new VDivElement()
                         ..className = 'columns is-mobile'
@@ -144,62 +95,57 @@ class ViewShift extends Component<ViewShiftProps, ViewShiftState> {
                                 ..text = props.allShifts ? 'Volunteer Shift Data' : 'My Shifts',
                               new Vh1()
                                 ..className = 'subtitle is-7'
-                                ..text = " as of: ${DateTime.now().month}/${DateTime.now().day}/${DateTime.now().year}",
+                                ..text = " as of: ${formatTime(DateTime.now())}",
                             ],
-                          new VDivElement()
-                            ..className = 'column is-narrow'
-                            ..children = [
-                              new VDivElement()
-                                ..className = 'field'
-                                ..children = [
-                                  new VParagraphElement()
-                                    ..className = 'control has-icons-left'
-                                    ..children = [
-                                      new VInputElement()
-                                        ..className = 'input'
-                                        ..placeholder = 'Search'
-                                        ..onKeyUp = _searchListener
-                                        ..id = 'Search'
-                                        ..type = 'text',
-                                      new VSpanElement()
-                                        ..className = 'icon is-left'
-                                        ..children = [new Vi()..className = 'fas fa-search'],
-                                    ],
-                                ],
-                            ],
-                          new VDivElement()
-                            ..className = 'column is-narrow'
-                            ..children = [
-                              new VDivElement()
-                                ..className = 'field'
-                                ..children = [
-                                  new VDivElement()
-                                    ..className = 'control'
-                                    ..children = [
-                                      new VParagraphElement()
-                                        ..className = 'button is-rounded'
-                                        ..onClick = _onExportCsvClick
-                                        ..children = [
-                                          new VSpanElement()
-                                            ..className = 'icon'
-                                            ..children = [new Vi()..className = 'fas fa-file-csv'],
-                                          new VSpanElement()..text = 'Export',
-                                        ],
-                                    ],
-                                ],
-                            ],
-                          _renderRefresh(),
+                          renderSearch(_searchListener),
+                          renderExport(_onExportCsvClick),
+                          renderRefresh(_onRefreshClick),
                         ],
                       new VTableElement()
                         ..className = 'table is-narrow is-striped is-fullwidth'
-                        ..children = createRows(),
+                        ..children = _createRows(),
                     ],
                 ],
             ],
         ],
     ];
 
-  _searchListener(_) {
+  /// [_createRows] Scaling function to make rows based on amount of information available
+  List<VNode> _createRows() {
+    List<VNode> nodeList = new List();
+    List<Shift> list;
+    if (state.searching) {
+      list = state.found;
+    } else {
+      list = props.shiftList.toList();
+    }
+
+    nodeList.addAll(titleRow(title));
+    for (Shift shift in list) {
+      User user = props.userMap[shift.userID];
+      if (user == null) continue;
+      nodeList.add(new VTableRowElement()
+        ..className = 'tr tr-hoverable'
+        ..children = [
+          new VTableCellElement()
+            ..className = tdClass(shift.inTime.toString())
+            ..text = checkText("${user?.firstName ?? 'Deleted'}"),
+          new VTableCellElement()
+            ..className = tdClass(shift.inTime.toString())
+            ..text = checkText("${user?.lastName ?? 'Deleted'}"),
+          new VTableCellElement()
+            ..className = tdClass(shift.inTime.toString())
+            ..text = checkText("${formatTime(shift.inTime)}"),
+          new VTableCellElement()
+            ..className = tdClass(shift.outTime.toString())
+            ..text = checkText("${formatTime(shift.outTime)}"),
+        ]);
+    }
+    return nodeList;
+  }
+
+  ///[_searchListener] function to ensure the table is showing data that matches the search criteria
+  _searchListener() {
     InputElement search = querySelector('#Search');
     if (search.value.isEmpty) {
       setState((ViewShiftProps, ViewShiftState) => ViewShiftState
@@ -210,6 +156,7 @@ class ViewShift extends Component<ViewShiftProps, ViewShiftState> {
 
       for (Shift shift in props.shiftList) {
         User user = props.userMap[shift.userID];
+        if (user == null) continue;
         if (user.firstName.toLowerCase().contains(search.value.toLowerCase())) {
           found.add(shift);
         } else if (user.lastName.toLowerCase().contains(search.value.toLowerCase())) {
@@ -231,29 +178,8 @@ class ViewShift extends Component<ViewShiftProps, ViewShiftState> {
     }
   }
 
-  _renderRefresh() => new VDivElement()
-    ..className = 'column is-narrow'
-    ..children = [
-      new VDivElement()
-        ..className = 'field'
-        ..children = [
-          new VDivElement()
-            ..className = 'control'
-            ..children = [
-              new VParagraphElement()
-                ..className = 'button is-rounded'
-                ..onClick = _onRefreshClick
-                ..children = [
-                  new VSpanElement()
-                    ..className = 'icon'
-                    ..children = [new Vi()..className = 'fas fa-sync-alt'],
-                  new VSpanElement()..text = 'Refresh',
-                ],
-            ],
-        ],
-    ];
-
-  _onExportCsvClick(_) {
+  ///[_onExportCsvClick] exports the currently shown data to a csv file
+  _onExportCsvClick() {
     List<Shift> list;
     if (state.searching) {
       list = state.found;
@@ -279,7 +205,8 @@ class ViewShift extends Component<ViewShiftProps, ViewShiftState> {
     downloadLink.dispatchEvent(event);
   }
 
-  _onRefreshClick(_) {
-    props.actions.server.fetchAllShifts();
+  ///[_onRefreshClick] reloads the data for the page
+  _onRefreshClick() {
+    _requestData(props.allShifts);
   }
 }

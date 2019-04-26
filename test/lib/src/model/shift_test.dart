@@ -11,6 +11,11 @@ void main() {
     "in_time": testInTime.toIso8601String(),
     "out_time": testOutTime.toIso8601String(),
   });
+  final mockShiftCsv = '"testUID","foo","bar","' +
+      testInTime.toIso8601String() +
+      '","' +
+      testOutTime.toIso8601String() +
+      '","-48:00:00.000000"\n';
   group('Shift -', () {
     test('fromFirebase factory produces accurate model file', () {
       Shift shiftFromTestData = new Shift.fromFirebase('', mockFirestoreShiftData);
@@ -29,6 +34,12 @@ void main() {
       final firebaseMap = shiftFromTestData.toFirebase();
 
       expect(firebaseMap, mockFirestoreShiftData);
+    });
+
+    test('toCsv function properly formatted csv file of the activity', () {
+      Shift testShift = new Shift.fromFirebase('testUID', mockFirestoreShiftData);
+      String temp = testShift.toCsv("foo", "bar");
+      expect(temp, mockShiftCsv);
     });
   });
 }

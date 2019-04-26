@@ -63,7 +63,7 @@ class Dashboard extends PComponent<DashboardProps> {
         ..className = 'column is-$size'
         ..children = [
           new VDivElement()
-            ..className = 'card'
+            ..className = 'card animated fadeIn fastest'
             ..children = [
               new VDivElement()
                 ..className = 'card-header'
