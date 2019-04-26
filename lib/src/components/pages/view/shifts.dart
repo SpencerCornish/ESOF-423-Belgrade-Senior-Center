@@ -189,7 +189,7 @@ class ViewShift extends Component<ViewShiftProps, ViewShiftState> {
 
     List<String> lines = list
         .map((shift) =>
-            shift.toCsv(props.userMap[shift.userID].firstName ?? '', props.userMap[shift.userID].lastName ?? ''))
+            shift.toCsv(props.userMap[shift.userID]?.firstName ?? '', props.userMap[shift.userID]?.lastName ?? ''))
         .toList();
 
     // Add the header row

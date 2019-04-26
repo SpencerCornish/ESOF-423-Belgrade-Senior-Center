@@ -524,7 +524,7 @@ class NewMember extends Component<NewMemberProps, NewMemberState> {
                 ..placeholder = "e.g. Mother",
               new VParagraphElement()
                 ..className = 'help is-danger ${state.emValid ? 'is-invisible' : ''}'
-                ..text = 'Need full name number and ralationship',
+                ..text = 'Need full name number and relationship',
             ],
         ],
     ];
