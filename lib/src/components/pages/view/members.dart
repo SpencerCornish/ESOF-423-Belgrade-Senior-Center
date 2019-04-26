@@ -193,7 +193,7 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
     ];
 
   ///[_searchListener] function to ensure the table is showing data that matches the search criteria
-  _searchListener(_) {
+  _searchListener() {
     InputElement search = querySelector('#Search');
     if (search.value.isEmpty) {
       setState((ViewMemberProps, ViewMembersState) => ViewMembersState
@@ -221,11 +221,17 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
           found.add(user);
         } else if (user.phoneNumber.contains(search.value)) {
           found.add(user);
+        } else if (user.emergencyContactName.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(user);
+        } else if (user.emergencyContactNumber.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(user);
+        } else if (user.emergencyContactRelation.toLowerCase().contains(search.value.toLowerCase())) {
+          found.add(user);
         } else if (user.position.toLowerCase().contains(search.value.toLowerCase())) {
           found.add(user);
         } else if (user.role.toLowerCase().contains(search.value.toLowerCase())) {
           found.add(user);
-        } else if (user.services.contains(search.value)) {
+        } else if (user.services.toString().contains(search.value)) {
           found.add(user);
         } else if (user.membershipRenewal.toString().contains(search.value)) {
           found.add(user);
@@ -247,7 +253,7 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
   }
 
   ///[_onExportCsvClick] exports the currently shown data to a csv file
-  _onExportCsvClick(_) {
+  _onExportCsvClick() {
     List<String> lines;
     if (!state.searching) {
       lines = props.userMap.values.map((user) => user.toCsv()).toList();
@@ -269,7 +275,7 @@ class ViewMembers extends Component<ViewMembersProps, ViewMembersState> {
   }
 
   ///[_onRefreshClick] reloads the data for the page
-  _onRefreshClick(_) {
+  _onRefreshClick() {
     props.actions.server.fetchAllMembers();
   }
 

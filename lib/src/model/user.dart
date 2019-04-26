@@ -46,8 +46,14 @@ abstract class User implements Built<User, UserBuilder> {
   /// [dietaryRestrictions] is a comma separated list of restricted dietary items for the user
   String get dietaryRestrictions;
 
-  /// [emergencyContacts] is a built list of [EmergencyContact] objects
-  BuiltList<EmergencyContact> get emergencyContacts;
+  /// [emergencyContactName] is the name of an emergency contact
+  String get emergencyContactName;
+
+  /// [emergencyContactNumber] is the number of the emergency contact
+  String get emergencyContactNumber;
+
+  /// [emergencyContactRelation] is the relationship of the emergency contact to the user
+  String get emergencyContactRelation;
 
   /// [membershipStart] is a DateTime object representing the time at which the user's membership began
   DateTime get membershipStart;
@@ -111,7 +117,9 @@ abstract class User implements Built<User, UserBuilder> {
         ..role = firestoreData['role'].toLowerCase()
         ..dietaryRestrictions = firestoreData['dietary_restrictions']
         ..homeDeliver = firestoreData['homeDelivery'] ?? false
-        ..emergencyContacts = emergencyContact.toBuilder()
+        ..emergencyContactName = firestoreData['emergency_ContactName'] ?? ''
+        ..emergencyContactNumber = firestoreData['emergency_ContactNumber'] ?? ''
+        ..emergencyContactRelation = firestoreData['emergency_ContactRelation'] ?? ''
         ..membershipStart = DateTime.parse(firestoreData['membership_start'])
         ..membershipRenewal = DateTime.parse(firestoreData['membership_renewal'])
         ..disabilities = firestoreData['disabilities']
@@ -137,7 +145,9 @@ abstract class User implements Built<User, UserBuilder> {
         'medRelease': medRelease,
         'waiverRelease': waiverRelease,
         'intakeForm': intakeForm,
-        'emergency_contacts': emergencyContacts.toList(),
+        'emergency_ContactName': emergencyContactName,
+        'emergency_ContactNumber': emergencyContactNumber,
+        'emergency_ContactRelation': emergencyContactRelation,
         'membership_start': membershipStart.toIso8601String(),
         'membership_renewal': membershipRenewal.toIso8601String(),
         'disabilities': disabilities,
@@ -161,6 +171,10 @@ abstract class User implements Built<User, UserBuilder> {
         '\"${dietaryRestrictions}\"',
         '\"${disabilities}\"',
         '\"${medicalIssues}\"',
+        '\"${emergencyContactName}\"',
+        '\"${emergencyContactNumber}\"',
+        '\"${emergencyContactRelation}\"',
+        '\"${services.join(',')}\"',
         '\"${membershipStart.month}/${membershipStart.day}/${membershipStart.year}\"',
         '\"${membershipRenewal.month}/${membershipRenewal.day}/${membershipRenewal.year}\"',
       ].join(',') +

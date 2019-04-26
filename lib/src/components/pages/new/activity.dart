@@ -496,7 +496,7 @@ class NewActivity extends Component<NewActivityProps, NewActivityState> {
 
   /// [_submitClick] method used for the submit click
   //timeEnd-input, timeStart-input, capacity-input, location-input, instructorName-input, act-input
-  _submitClick(_) {
+  _submitClick() {
     InputElement activity = querySelector('#act-input');
     InputElement instructor = querySelector('#instructorName-input');
     InputElement location = querySelector('#location-input');

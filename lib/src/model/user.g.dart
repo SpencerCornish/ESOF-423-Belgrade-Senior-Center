@@ -28,7 +28,11 @@ class _$User extends User {
   @override
   final String dietaryRestrictions;
   @override
-  final BuiltList<EmergencyContact> emergencyContacts;
+  final String emergencyContactName;
+  @override
+  final String emergencyContactNumber;
+  @override
+  final String emergencyContactRelation;
   @override
   final DateTime membershipStart;
   @override
@@ -65,7 +69,9 @@ class _$User extends User {
       this.address,
       this.role,
       this.dietaryRestrictions,
-      this.emergencyContacts,
+      this.emergencyContactName,
+      this.emergencyContactNumber,
+      this.emergencyContactRelation,
       this.membershipStart,
       this.membershipRenewal,
       this.disabilities,
@@ -102,8 +108,14 @@ class _$User extends User {
     if (dietaryRestrictions == null) {
       throw new BuiltValueNullFieldError('User', 'dietaryRestrictions');
     }
-    if (emergencyContacts == null) {
-      throw new BuiltValueNullFieldError('User', 'emergencyContacts');
+    if (emergencyContactName == null) {
+      throw new BuiltValueNullFieldError('User', 'emergencyContactName');
+    }
+    if (emergencyContactNumber == null) {
+      throw new BuiltValueNullFieldError('User', 'emergencyContactNumber');
+    }
+    if (emergencyContactRelation == null) {
+      throw new BuiltValueNullFieldError('User', 'emergencyContactRelation');
     }
     if (membershipStart == null) {
       throw new BuiltValueNullFieldError('User', 'membershipStart');
@@ -145,7 +157,9 @@ class _$User extends User {
         address == other.address &&
         role == other.role &&
         dietaryRestrictions == other.dietaryRestrictions &&
-        emergencyContacts == other.emergencyContacts &&
+        emergencyContactName == other.emergencyContactName &&
+        emergencyContactNumber == other.emergencyContactNumber &&
+        emergencyContactRelation == other.emergencyContactRelation &&
         membershipStart == other.membershipStart &&
         membershipRenewal == other.membershipRenewal &&
         disabilities == other.disabilities &&
@@ -181,17 +195,23 @@ class _$User extends User {
                                                                         $jc(
                                                                             $jc(
                                                                                 $jc(
-                                                                                    $jc($jc(0, loginUID.hashCode),
-                                                                                        docUID.hashCode),
-                                                                                    firstName.hashCode),
-                                                                                lastName.hashCode),
-                                                                            email.hashCode),
-                                                                        phoneNumber.hashCode),
-                                                                    mobileNumber.hashCode),
-                                                                address.hashCode),
-                                                            role.hashCode),
-                                                        dietaryRestrictions.hashCode),
-                                                    emergencyContacts.hashCode),
+                                                                                    $jc(
+                                                                                        $jc(
+                                                                                            $jc(
+                                                                                                $jc(0,
+                                                                                                    loginUID.hashCode),
+                                                                                                docUID.hashCode),
+                                                                                            firstName.hashCode),
+                                                                                        lastName.hashCode),
+                                                                                    email.hashCode),
+                                                                                phoneNumber.hashCode),
+                                                                            mobileNumber.hashCode),
+                                                                        address.hashCode),
+                                                                    role.hashCode),
+                                                                dietaryRestrictions.hashCode),
+                                                            emergencyContactName.hashCode),
+                                                        emergencyContactNumber.hashCode),
+                                                    emergencyContactRelation.hashCode),
                                                 membershipStart.hashCode),
                                             membershipRenewal.hashCode),
                                         disabilities.hashCode),
@@ -218,7 +238,9 @@ class _$User extends User {
           ..add('address', address)
           ..add('role', role)
           ..add('dietaryRestrictions', dietaryRestrictions)
-          ..add('emergencyContacts', emergencyContacts)
+          ..add('emergencyContactName', emergencyContactName)
+          ..add('emergencyContactNumber', emergencyContactNumber)
+          ..add('emergencyContactRelation', emergencyContactRelation)
           ..add('membershipStart', membershipStart)
           ..add('membershipRenewal', membershipRenewal)
           ..add('disabilities', disabilities)
@@ -277,11 +299,18 @@ class UserBuilder implements Builder<User, UserBuilder> {
   String get dietaryRestrictions => _$this._dietaryRestrictions;
   set dietaryRestrictions(String dietaryRestrictions) => _$this._dietaryRestrictions = dietaryRestrictions;
 
-  ListBuilder<EmergencyContact> _emergencyContacts;
-  ListBuilder<EmergencyContact> get emergencyContacts =>
-      _$this._emergencyContacts ??= new ListBuilder<EmergencyContact>();
-  set emergencyContacts(ListBuilder<EmergencyContact> emergencyContacts) =>
-      _$this._emergencyContacts = emergencyContacts;
+  String _emergencyContactName;
+  String get emergencyContactName => _$this._emergencyContactName;
+  set emergencyContactName(String emergencyContactName) => _$this._emergencyContactName = emergencyContactName;
+
+  String _emergencyContactNumber;
+  String get emergencyContactNumber => _$this._emergencyContactNumber;
+  set emergencyContactNumber(String emergencyContactNumber) => _$this._emergencyContactNumber = emergencyContactNumber;
+
+  String _emergencyContactRelation;
+  String get emergencyContactRelation => _$this._emergencyContactRelation;
+  set emergencyContactRelation(String emergencyContactRelation) =>
+      _$this._emergencyContactRelation = emergencyContactRelation;
 
   DateTime _membershipStart;
   DateTime get membershipStart => _$this._membershipStart;
@@ -341,7 +370,9 @@ class UserBuilder implements Builder<User, UserBuilder> {
       _address = _$v.address;
       _role = _$v.role;
       _dietaryRestrictions = _$v.dietaryRestrictions;
-      _emergencyContacts = _$v.emergencyContacts?.toBuilder();
+      _emergencyContactName = _$v.emergencyContactName;
+      _emergencyContactNumber = _$v.emergencyContactNumber;
+      _emergencyContactRelation = _$v.emergencyContactRelation;
       _membershipStart = _$v.membershipStart;
       _membershipRenewal = _$v.membershipRenewal;
       _disabilities = _$v.disabilities;
@@ -387,7 +418,9 @@ class UserBuilder implements Builder<User, UserBuilder> {
               address: address,
               role: role,
               dietaryRestrictions: dietaryRestrictions,
-              emergencyContacts: emergencyContacts.build(),
+              emergencyContactName: emergencyContactName,
+              emergencyContactNumber: emergencyContactNumber,
+              emergencyContactRelation: emergencyContactRelation,
               membershipStart: membershipStart,
               membershipRenewal: membershipRenewal,
               disabilities: disabilities,
@@ -402,9 +435,6 @@ class UserBuilder implements Builder<User, UserBuilder> {
     } catch (_) {
       String _$failedField;
       try {
-        _$failedField = 'emergencyContacts';
-        emergencyContacts.build();
-
         _$failedField = 'forms';
         forms.build();
 
