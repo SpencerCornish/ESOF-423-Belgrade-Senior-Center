@@ -6,7 +6,6 @@ import 'package:bsc/src/model/emergencyContact.dart';
 void main() {
   final formList = ['forma', 'formb'];
   final serviceList = ['servicea', 'serviceb'];
-  final emergencyContactList = [];
   final mockFirestoreUserData = new Map<String, dynamic>.from({
     'login_uid': "Login_UID",
     'first_name': "Dan",
