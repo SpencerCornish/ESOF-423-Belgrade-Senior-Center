@@ -185,7 +185,7 @@ class ViewMeal extends Component<ViewMealProps, ViewMealState> {
     ];
 
   ///[_searchListener] function to ensure the table is showing data that matches the search criteria
-  _searchListener(_) {
+  _searchListener() {
     InputElement search = querySelector('#Search');
     if (search.value.isEmpty) {
       setState((ViewMealProps, ViewMealState) => ViewMealState
@@ -221,7 +221,7 @@ class ViewMeal extends Component<ViewMealProps, ViewMealState> {
   }
 
   ///[_onExportCsvClick] exports the currently shown data to a csv file
-  _onExportCsvClick(_) {
+  _onExportCsvClick() {
     List<String> lines;
     if (!state.searching) {
       lines = props.mealMap.values.map((meal) => meal.toCsv()).toList();
@@ -243,7 +243,7 @@ class ViewMeal extends Component<ViewMealProps, ViewMealState> {
   }
 
   ///[_onRefreshClick] reloads the data for the page
-  _onRefreshClick(_) {
+  _onRefreshClick() {
     props.actions.server.fetchAllMeals();
   }
 

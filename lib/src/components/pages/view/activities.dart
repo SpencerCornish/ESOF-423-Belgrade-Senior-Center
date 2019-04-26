@@ -98,9 +98,9 @@ class ViewActivity extends Component<ViewActivityProps, ViewActivityState> {
             ..className = 'subtitle is-7'
             ..text = " as of: ${formatTime(DateTime.now())}",
         ],
-      renderSearch(_searchListener()),
-      renderExport(_onExportCsvClick()),
-      renderRefresh(_onRefreshClick()),
+      renderSearch(_searchListener),
+      renderExport(_onExportCsvClick),
+      renderRefresh(_onRefreshClick),
     ];
 
   /// [_createRows] Scaling function to make rows based on amount of information available
