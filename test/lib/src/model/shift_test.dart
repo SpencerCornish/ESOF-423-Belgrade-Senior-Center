@@ -16,6 +16,7 @@ void main() {
       '","' +
       testOutTime.toIso8601String() +
       '","-48:00:00.000000"\n';
+      
   group('Shift -', () {
     test('fromFirebase factory produces accurate model file', () {
       Shift shiftFromTestData = new Shift.fromFirebase('', mockFirestoreShiftData);
